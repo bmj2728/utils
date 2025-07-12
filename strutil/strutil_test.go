@@ -99,7 +99,8 @@ func TestCleanWhitespace(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := cleanWhitespace(tt.input)
 			result := CleanWhitespace(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).CleanWhitespace().String()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("cleanWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
 			}
 		})
