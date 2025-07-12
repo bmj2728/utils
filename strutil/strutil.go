@@ -63,9 +63,9 @@ func IsURL(s string) bool {
 	panic("Implement me!")
 }
 
-// IsUUID verifies if the provided string is a valid UUID by attempting to parse it. Returns true if valid, false otherwise.
+// IsUUID verifies if the provided string has a valid UUID format. Returns true if valid, false otherwise.
 func IsUUID(s string) bool {
-	_, err := uuid.Parse(s)
+	err := uuid.Validate(s)
 	if err != nil {
 		return false
 	}

@@ -60,6 +60,9 @@ func TestIsUUID(t *testing.T) {
 	}{
 		{"ValidUUID", "550e8400-e29b-41d4-a716-446655440000", true},
 		{"ValidUUIDUppercase", "550E8400-E29B-41D4-A716-446655440000", true},
+		{"ValidUUIDURN", "urn:uuid:550E8400-E29B-41D4-A716-446655440000", true},
+		{"ValidUUIDMS", "{550E8400-E29B-41D4-A716-446655440000}", true},
+		{"ValidUUIDNoDash", "550E8400E29B41D4A716446655440000", true},
 		{"InvalidUUID_TooShort", "550e8400-e29b-41d4-a716-44665544", false},
 		{"InvalidUUID_ExtraChars", "550e8400-e29b-41d4-a716-446655440000-extra", false},
 		{"InvalidUUID_Malformed", "550e8400-e29b-41d4ZXa716-446655440000", false},
