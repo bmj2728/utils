@@ -1,6 +1,7 @@
 package strutil
 
 import (
+	"github.com/google/uuid"
 	"testing"
 )
 
@@ -13,6 +14,14 @@ func TestNewUUID(t *testing.T) {
 	// Check UUID format (very basic validation)
 	if len(uuid1) != 36 || len(uuid2) != 36 || len(uuid3) != 36 || len(uuid4) != 36 {
 		t.Errorf("Generated UUIDs are not of valid length")
+	}
+
+	e1 := uuid.Validate(uuid1)
+	e2 := uuid.Validate(uuid2)
+	e3 := uuid.Validate(uuid3)
+	e4 := uuid.Validate(uuid4)
+	if e1 != nil || e2 != nil || e3 != nil || e4 != nil {
+		t.Errorf("Generated UUIDs are not valid UUIDs")
 	}
 
 	// Ensure different UUIDs are generated each time
