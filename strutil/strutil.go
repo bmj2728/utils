@@ -15,7 +15,7 @@ func NewUUID() string {
 // NewUUIDV7 generates and returns a new random UUID as a string using UUID V7
 // It is recommended to use V7 unless legacy compatibility is required
 func NewUUIDV7() string {
-	u, err := uuid.NewRandom()
+	u, err := uuid.NewV7()
 	if err != nil {
 		return ""
 	}

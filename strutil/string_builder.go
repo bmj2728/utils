@@ -132,11 +132,11 @@ func (sb *StringBuilder) Transform(fn func(string) string) *StringBuilder {
 
 // Terminal Methods
 func (sb *StringBuilder) String() string {
-	panic("Implement me!")
+	return sb.value
 }
 
 func (sb *StringBuilder) Error() error {
-	panic("Implement me!")
+	return sb.err
 }
 
 func (sb *StringBuilder) Must() string {
@@ -144,5 +144,5 @@ func (sb *StringBuilder) Must() string {
 }
 
 func (sb *StringBuilder) Result() (string, error) {
-	panic("Implement me!")
+	return sb.value, sb.err
 }
