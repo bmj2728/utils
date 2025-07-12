@@ -15,12 +15,13 @@ func NewUUID() string {
 // String Generation
 
 // RandomString generates a random alphanumeric string of the specified length using the AlphaNumeric character set.
+// This uses math/rand and is NOT cryptographically secure.
+// For security-sensitive applications, use crypto/rand directly.
 func RandomString(length int) string {
 	return randomFromCharset(length, AlphaNumeric)
 }
 
 // RandomHex generates a random hexadecimal string of the specified length.
-// If the length is less than 1, an empty string is returned.
 func RandomHex(length int) string {
 	return randomFromCharset(length, HexChars)
 }
@@ -52,8 +53,13 @@ func IsURL(s string) bool {
 	panic("Implement me!")
 }
 
+// IsUUID verifies if the provided string is a valid UUID by attempting to parse it. Returns true if valid, false otherwise.
 func IsUUID(s string) bool {
-	panic("Implement me!")
+	_, err := uuid.Parse(s)
+	if err != nil {
+		return false
+	}
+	return true
 }
 
 // Basic Manipulation

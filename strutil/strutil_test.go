@@ -46,3 +46,28 @@ func TestRandomStringFunctions(t *testing.T) {
 		})
 	}
 }
+func TestIsUUID(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"ValidUUID", "550e8400-e29b-41d4-a716-446655440000", true},
+		{"ValidUUIDUppercase", "550E8400-E29B-41D4-A716-446655440000", true},
+		{"InvalidUUID_TooShort", "550e8400-e29b-41d4-a716-44665544", false},
+		{"InvalidUUID_ExtraChars", "550e8400-e29b-41d4-a716-446655440000-extra", false},
+		{"InvalidUUID_Malformed", "550e8400-e29b-41d4ZXa716-446655440000", false},
+		{"CompletelyInvalid", "not-a-uuid", false},
+		{"EmptyString", "", false},
+		{"NilUUID", "00000000-0000-0000-0000-000000000000", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsUUID(tt.input)
+			if result != tt.expected {
+				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
