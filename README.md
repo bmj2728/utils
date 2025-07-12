@@ -49,9 +49,9 @@ strutil.IsEmail(email)
 strutil.SanitizeUsername(rawName)
 ```
 
-#### Builder API
+#### StringBuilder API
 
-The builder API allows for chaining multiple operations:
+The string builder API allows for chaining multiple operations:
 
 ```
 // Chain multiple operations
@@ -88,7 +88,7 @@ Then use the functions or builders as needed:
 // Using functional API
 strutil.Slugify("Hello World!")
 
-// Using builder API
+// Using string builder API
 strutil.New(userInput).
     CleanWhitespace().
     RequireNotEmpty().
