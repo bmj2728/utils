@@ -1,5 +1,7 @@
 package strutil
 
+import "errors"
+
 // Fluent StringBuilder API
 
 // StringBuilder Type & Core Methods
@@ -94,8 +96,13 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 }
 
 // Validation Methods (can set error)
+
+// RequireEmail validates if the StringBuilder's value is a valid email format, sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireEmail() *StringBuilder {
-	panic("Implement me!")
+	if !IsEmail(sb.value) {
+		sb.err = errors.New("invalid email address")
+	}
+	return sb
 }
 
 func (sb *StringBuilder) RequireURL() *StringBuilder {

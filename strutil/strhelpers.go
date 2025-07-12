@@ -1,6 +1,9 @@
 package strutil
 
-import "strings"
+import (
+	"net/mail"
+	"strings"
+)
 
 // cleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.) from the input string and returns the result.
 func cleanWhitespace(s string) string {
@@ -13,4 +16,10 @@ func cleanWhitespace(s string) string {
 		}
 	}
 	return b.String()
+}
+
+// isEmail checks if the provided string s is a valid email address format and returns true if valid, false otherwise.
+func isEmail(s string) bool {
+	_, err := mail.ParseAddress(s)
+	return err == nil
 }

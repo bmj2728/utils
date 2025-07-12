@@ -55,8 +55,10 @@ func randomFromCharset(length int, charset string) string {
 }
 
 // Validation
+
+// IsEmail checks if the input string is in a valid email address format and returns true if valid, false otherwise.
 func IsEmail(s string) bool {
-	panic("Implement me!")
+	return isEmail(s)
 }
 
 func IsURL(s string) bool {
