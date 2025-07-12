@@ -97,8 +97,9 @@ func TestCleanWhitespace(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := cleanWhitespace(tt.input)
-			if result != tt.expected {
+			helperResult := cleanWhitespace(tt.input)
+			result := CleanWhitespace(tt.input)
+			if result != tt.expected || helperResult != tt.expected {
 				t.Errorf("cleanWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
 			}
 		})
