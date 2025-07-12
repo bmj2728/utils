@@ -1,19 +1,46 @@
 package strutil
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"math/rand"
+)
 
 // UUID Generation
+
+// NewUUID generates and returns a new random UUID as a string.
 func NewUUID() string {
 	return uuid.NewString()
 }
 
 // String Generation
+
+// RandomString generates a random alphanumeric string of the specified length using the AlphaNumeric character set.
 func RandomString(length int) string {
-	panic("Implement me!")
+	return randomFromCharset(length, AlphaNumeric)
 }
 
+// RandomHex generates a random hexadecimal string of the specified length.
+// If the length is less than 1, an empty string is returned.
 func RandomHex(length int) string {
-	panic("Implement me!")
+	return randomFromCharset(length, HexChars)
+}
+
+// RandomUrlSafe generates a random URL-safe string of the specified length using characters suitable for URLs.
+func RandomUrlSafe(length int) string {
+	return randomFromCharset(length, UrlSafe)
+}
+
+// randomFromCharset generates a random string of the specified length using characters from the provided charset.
+func randomFromCharset(length int, charset string) string {
+	if length < 1 {
+		return ""
+	}
+
+	s := make([]byte, length)
+	for i := range s {
+		s[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(s)
 }
 
 // Validation
