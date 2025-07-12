@@ -1,0 +1,74 @@
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  default: standard
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+
+    # Additional linters
+    - dupl
+    - gocyclo
+    - goconst
+    - misspell
+    - unconvert
+    - gosec
+    - lll
+
+  settings:
+    dupl:
+      threshold: 100
+    gocyclo:
+      min-complexity: 15
+    govet:
+      disable:
+        - fieldalignment
+    lll:
+      line-length: 120
+    misspell:
+      locale: US
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+    gosec:
+      excludes:
+        - G404
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+
+
+  exclusions:
+    generated: strict
+    rules:
+      - path: "_test\\.go"
+        linters:
+          - dupl
+          - goconst
+          - gosec
+          - gocyclo
+      - path: "_test\\.go"
+        text: "G404:"
+      - path: ".*\\.pb\\.go"
+        linters:
+          - lll
+
+formatters:
+  enable:
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/bmj2728/utils
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
