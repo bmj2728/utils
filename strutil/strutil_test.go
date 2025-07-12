@@ -200,8 +200,16 @@ func TestIsEmail(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isValidEmail(tt.input)
 			result := IsEmail(tt.input)
-			if result != tt.expected {
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			builderErr := New(tt.input).RequireEmail().Error()
+			if isValidEmail(tt.input) && builderErr != nil {
+				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			if builderErr != nil && builderErr.Error() != "invalid email address" {
 				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 		})

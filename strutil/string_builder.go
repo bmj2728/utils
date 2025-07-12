@@ -123,14 +123,20 @@ func (sb *StringBuilder) RequireEmail() *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
-	if !IsEmail(sb.value) {
+	if !isValidEmail(sb.value) {
 		sb.err = errors.New("invalid email address")
 	}
 	return sb
 }
 
 func (sb *StringBuilder) RequireURL() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	if !isValidUrl(sb.value) {
+		sb.err = errors.New("invalid URL")
+	}
+	return sb
 }
 
 func (sb *StringBuilder) RequireUUID() *StringBuilder {

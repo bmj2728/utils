@@ -2,6 +2,7 @@ package strutil
 
 import (
 	"net/mail"
+	"net/url"
 	"strings"
 	"unicode"
 )
@@ -45,8 +46,20 @@ func collapseWhitespace(s string) string {
 	return b.String()
 }
 
-// isEmail checks if the provided string s is a valid email address format and returns true if valid, false otherwise.
-func isEmail(s string) bool {
+// isValidEmail checks if the provided string s is a valid email address format and returns true if valid, false otherwise.
+func isValidEmail(s string) bool {
 	_, err := mail.ParseAddress(s)
 	return err == nil
+}
+
+func isValidUrl(s string) bool {
+	_, err := url.ParseRequestURI(s)
+	if err != nil {
+		return false
+	}
+	u, err := url.Parse(s)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		return false
+	}
+	return true
 }
