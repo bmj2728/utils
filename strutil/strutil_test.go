@@ -109,8 +109,100 @@ func TestCleanWhitespace(t *testing.T) {
 			helperResult := cleanWhitespace(tt.input)
 			result := CleanWhitespace(tt.input)
 			builderResult := New(tt.input).CleanWhitespace().String()
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderError := New(tt.input).CleanWhitespace().Error()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected || builderError != nil {
 				t.Errorf("cleanWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestNormalizeWhitespace(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"NoWhitespace", "hello world", "hello world"},
+		{"ExtraWhitespace", "hello     world", "hello world"},
+		{"Tabs", "hello\t\tworld", "hello world"},
+		{"Newlines", "hello\n\nworld", "hello world"},
+		{"CarriageReturns", "hello\r\rworld", "hello world"},
+		{"MixedWhitespace", "hello  \t\tworld\n\n\r\r", "hello world"},
+		{"Empty", "", ""},
+		{"LeadingWhitespace", "   hello world", "hello world"},
+		{"TrailingWhitespace", "hello world   ", "hello world"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := normalizeWhitespace(tt.input)
+			result := NormalizeWhitespace(tt.input)
+			builderResult := New(tt.input).NormalizeWhitespace().String()
+			builderError := New(tt.input).NormalizeWhitespace().Error()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected || builderError != nil {
+				t.Errorf("normalizeWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestCollapseWhitespace(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"NoWhitespace", "hello world", "hello world"},
+		{"ExtraWhitespace", "hello     world", "hello world"},
+		{"Tabs", "hello\t\tworld", "hello world"},
+		{"Newlines", "hello\n\nworld", "hello world"},
+		{"CarriageReturns", "hello\r\rworld", "hello world"},
+		{"MixedWhitespace", "hello  \t\tworld\n\n\r\r", "hello world "},
+		{"Empty", "", ""},
+		{"LeadingWhitespace", "   hello world", " hello world"},
+		{"LeadingAndTrailingWhitespace", "   hello world   ", " hello world "},
+		{"TrailingWhitespace", "hello world   ", "hello world "},
+		{"LeadingTrailingWhitespaceMixed", " hello   world\n\r\t   ", " hello world "},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := collapseWhitespace(tt.input)
+			result := CollapseWhitespace(tt.input)
+			builderResult := New(tt.input).CollapseWhitespace().String()
+			builderError := New(tt.input).CollapseWhitespace().Error()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected || builderError != nil {
+				t.Errorf("collapseWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestIsEmail(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"ValidEmail", "somebody@gmail.com", true},
+		{"ValidEmailUppercase", "SOMEBODY@GMAIL.COM", true},
+		{"ValidEmailNoDomain", "somebody@", false},
+		{"ValidEmailNoUsername", "@gmail.com", false},
+		{"ValidEmailNoTld", "somebody@gmail", true},
+		{"ValidEmailMultiLevelDomain", "somebody@place.uk.co", true},
+		{"ValidEmailWithSpecial", "john.doe@gmail.com", true},
+		{"ValidEmailWithSpecials", "john.doe!#$%&'*+-/=?^_`{|}~@gmail.com", true},
+		{"ValidEmailIllegalSpecial", "john.doe @gmail.com", false},
+		{"ValidIllegalLeadingPeriod", ".somebody@gmail.com", false},
+		{"ValidEmailIllegalDoublePeriod", "john..doe@gmail.com", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsEmail(tt.input)
+			if result != tt.expected {
+				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 		})
 	}

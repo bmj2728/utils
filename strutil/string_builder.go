@@ -23,7 +23,28 @@ func New(s string) *StringBuilder {
 
 // CleanWhitespace removes all whitespace characters from the StringBuilder's value and returns the updated StringBuilder.
 func (sb *StringBuilder) CleanWhitespace() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
 	sb.value = cleanWhitespace(sb.value)
+	return sb
+}
+
+// NormalizeWhitespace collapses consecutive whitespace characters into a single space and trims leading and trailing spaces.
+func (sb *StringBuilder) NormalizeWhitespace() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = normalizeWhitespace(sb.value)
+	return sb
+}
+
+// CollapseWhitespace collapses consecutive whitespace characters in the StringBuilder's value into a single space and preserves leading and trailing spaces.
+func (sb *StringBuilder) CollapseWhitespace() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = collapseWhitespace(sb.value)
 	return sb
 }
 
@@ -99,6 +120,9 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 
 // RequireEmail validates if the StringBuilder's value is a valid email format, sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireEmail() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
 	if !IsEmail(sb.value) {
 		sb.err = errors.New("invalid email address")
 	}
@@ -131,18 +155,26 @@ func (sb *StringBuilder) Transform(fn func(string) string) *StringBuilder {
 }
 
 // Terminal Methods
+
+// String returns the current string value of the StringBuilder instance.
 func (sb *StringBuilder) String() string {
 	return sb.value
 }
 
+// Error returns the error stored in the StringBuilder instance, or nil if no error is set.
 func (sb *StringBuilder) Error() error {
 	return sb.err
 }
 
+// Must returns the final string value or panics if an error is present in the StringBuilder instance.
 func (sb *StringBuilder) Must() string {
-	panic("Implement me!")
+	if sb.err != nil {
+		panic(sb.err)
+	}
+	return sb.value
 }
 
+// Result returns the current value of the StringBuilder along with any associated error.
 func (sb *StringBuilder) Result() (string, error) {
 	return sb.value, sb.err
 }

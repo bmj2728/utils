@@ -87,6 +87,16 @@ func CleanWhitespace(s string) string {
 	return cleanWhitespace(s)
 }
 
+// NormalizeWhitespace removes excess whitespace by trimming and collapsing multiple whitespace characters into single spaces.
+func NormalizeWhitespace(s string) string {
+	return normalizeWhitespace(s)
+}
+
+// CollapseWhitespace reduces all consecutive whitespace characters in a string to a single space, preserving leading and trailing whitespace.
+func CollapseWhitespace(s string) string {
+	return collapseWhitespace(s)
+}
+
 // HTML Sanitization
 func StripHTML(s string) string {
 	panic("Implement me!")
