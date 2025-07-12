@@ -82,7 +82,7 @@ func Truncate(s string, length int, suffix string) string {
 }
 
 func CleanWhitespace(s string) string {
-	panic("Implement me!")
+	return cleanWhitespace(s)
 }
 
 // HTML Sanitization

@@ -80,3 +80,27 @@ func TestIsUUID(t *testing.T) {
 		})
 	}
 }
+
+func TestCleanWhitespace(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"NoWhitespace", "hello world", "helloworld"},
+		{"Whitespace", "hello world ", "helloworld"},
+		{"Tabs", "hello\tworld", "helloworld"},
+		{"Newlines", "hello\nworld", "helloworld"},
+		{"CarriageReturns", "hello\rworld", "helloworld"},
+		{"MixedWhitespace", "hello\tworld\n\r", "helloworld"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := cleanWhitespace(tt.input)
+			if result != tt.expected {
+				t.Errorf("cleanWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}

@@ -1,7 +1,5 @@
 package strutil
 
-import "strings"
-
 // Fluent StringBuilder API
 
 // StringBuilder Type & Core Methods
@@ -11,28 +9,20 @@ type StringBuilder struct {
 }
 
 // Constructor
+
+// New creates and returns a new StringBuilder instance initialized with the provided string.
 func New(s string) *StringBuilder {
 	return &StringBuilder{
 		value: s,
 	}
 }
 
-// Manipulation Methods (all return *StringBuilder)
+// Manipulation Methods
+
+// CleanWhitespace removes all whitespace characters from the StringBuilder's value and returns the updated StringBuilder.
 func (sb *StringBuilder) CleanWhitespace() *StringBuilder {
 	sb.value = cleanWhitespace(sb.value)
 	return sb
-}
-
-func cleanWhitespace(s string) string {
-	var b strings.Builder
-	b.Grow(len(s))
-
-	for _, c := range s {
-		if c != ' ' && c != '\t' && c != '\n' && c != '\r' {
-			b.WriteRune(c)
-		}
-	}
-	return b.String()
 }
 
 func (sb *StringBuilder) StripHTML() *StringBuilder {
