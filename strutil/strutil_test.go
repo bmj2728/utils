@@ -7,15 +7,21 @@ import (
 func TestNewUUID(t *testing.T) {
 	uuid1 := NewUUID()
 	uuid2 := NewUUID()
+	uuid3 := NewUUIDV7()
+	uuid4 := NewUUIDV7()
 
 	// Check UUID format (very basic validation)
-	if len(uuid1) != 36 || len(uuid2) != 36 {
+	if len(uuid1) != 36 || len(uuid2) != 36 || len(uuid3) != 36 || len(uuid4) != 36 {
 		t.Errorf("Generated UUIDs are not of valid length")
 	}
 
 	// Ensure different UUIDs are generated each time
 	if uuid1 == uuid2 {
 		t.Errorf("Expected NewUUID to generate unique values, but got identical UUIDs: %s and %s", uuid1, uuid2)
+	}
+
+	if uuid3 == uuid4 {
+		t.Errorf("Expected NewUUIDV7 to generate unique values, but got identical UUIDs: %s and %s", uuid3, uuid4)
 	}
 }
 

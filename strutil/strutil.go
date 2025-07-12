@@ -12,6 +12,16 @@ func NewUUID() string {
 	return uuid.NewString()
 }
 
+// NewUUIDV7 generates and returns a new random UUID as a string using UUID V7
+// It is recommended to use V7 unless legacy compatibility is required
+func NewUUIDV7() string {
+	u, err := uuid.NewRandom()
+	if err != nil {
+		return ""
+	}
+	return u.String()
+}
+
 // String Generation
 
 // RandomString generates a random alphanumeric string of the specified length using the AlphaNumeric character set.
