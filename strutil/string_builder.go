@@ -134,7 +134,7 @@ func (sb *StringBuilder) RequireEmail() *StringBuilder {
 		return sb
 	}
 	if !isValidEmail(sb.value) {
-		sb.err = errors.New("invalid email address")
+		sb.err = errors.New(ErrInvalidEmail)
 	}
 	return sb
 }
@@ -145,7 +145,7 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 		return sb
 	}
 	if !isValidUrl(sb.value) {
-		sb.err = errors.New("invalid URL")
+		sb.err = errors.New(ErrInvalidURL)
 	}
 	return sb
 }
@@ -156,7 +156,7 @@ func (sb *StringBuilder) RequireUUID() *StringBuilder {
 		return sb
 	}
 	if !isValidUUID(sb.value) {
-		sb.err = errors.New("invalid UUID")
+		sb.err = errors.New(ErrInvalidUUID)
 	}
 	return sb
 }
@@ -167,12 +167,12 @@ func (sb *StringBuilder) RequireLength(min, max int) *StringBuilder {
 		return sb
 	}
 	if min < 0 || max < 0 {
-		sb.err = errors.New("invalid length range")
+		sb.err = errors.New(ErrInvalidLengthRange)
 		return sb
 	} else if min > max {
-		sb.err = errors.New("invalid length range")
+		sb.err = errors.New(ErrInvalidLengthRange)
 	} else if !isLengthInRange(sb.value, min, max) {
-		sb.err = errors.New("invalid length")
+		sb.err = errors.New(ErrInvalidLength)
 	}
 	return sb
 }
@@ -183,7 +183,7 @@ func (sb *StringBuilder) RequireNotEmpty() *StringBuilder {
 		return sb
 	}
 	if isEmpty(sb.value) {
-		sb.err = errors.New("empty string")
+		sb.err = errors.New(ErrInvalidEmpty)
 	}
 	return sb
 }
@@ -194,7 +194,7 @@ func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
 		return sb
 	}
 	if isEmptyNormalized(sb.value) {
-		sb.err = errors.New("empty string after whitespace normalization")
+		sb.err = errors.New(ErrInvalidEmptyAfterNormalization)
 	}
 	return sb
 }
@@ -205,7 +205,7 @@ func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
 		return sb
 	}
 	if !isAlphaNumericString(sb.value) {
-		sb.err = errors.New("invalid string")
+		sb.err = errors.New(ErrInvalidNotAlphaNumeric)
 	}
 	return sb
 }
