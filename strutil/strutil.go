@@ -110,6 +110,16 @@ func Truncate(s string, length int, suffix string) string {
 	panic("Implement me!")
 }
 
+// KeepAlpha removes all non-alphabetic characters from the input string, optionally keeping whitespace if ws is true.
+func KeepAlpha(s string, ws bool) string {
+	return alpha(s, ws)
+}
+
+// KeepAlphaNumeric removes all non-alphanumeric characters from the input string, optionally preserving whitespace if ws is true.
+func KeepAlphaNumeric(s string, ws bool) string {
+	return alphaNumeric(s, ws)
+}
+
 func CleanWhitespace(s string) string {
 	return cleanWhitespace(s)
 }
@@ -244,5 +254,13 @@ func ToCamelCase(s string) string {
 }
 
 func ToKebabCase(s string) string {
+	panic("Implement me!")
+}
+
+func ToTitleCase(s string) string {
+	panic("Implement me!")
+}
+
+func ToPascalCase(s string) string {
 	panic("Implement me!")
 }

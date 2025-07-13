@@ -48,6 +48,24 @@ func (sb *StringBuilder) CollapseWhitespace() *StringBuilder {
 	return sb
 }
 
+// KeepAlpha removes all non-alphabetic characters from the StringBuilder's value, optionally retaining whitespace if ws is true.
+func (sb *StringBuilder) KeepAlpha(ws bool) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = alpha(sb.value, ws)
+	return sb
+}
+
+// KeepAlphaNumeric removes all non-alphanumeric characters from the StringBuilder's value, optionally preserving whitespace.
+func (sb *StringBuilder) KeepAlphaNumeric(ws bool) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = alphaNumeric(sb.value, ws)
+	return sb
+}
+
 func (sb *StringBuilder) StripHTML() *StringBuilder {
 	panic("Implement me!")
 }
@@ -105,6 +123,14 @@ func (sb *StringBuilder) ToCamelCase() *StringBuilder {
 }
 
 func (sb *StringBuilder) ToKebabCase() *StringBuilder {
+	panic("Implement me!")
+}
+
+func (sb *StringBuilder) ToTitleCase() *StringBuilder {
+	panic("Implement me!")
+}
+
+func (sb *StringBuilder) ToPascalCase() *StringBuilder {
 	panic("Implement me!")
 }
 

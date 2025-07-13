@@ -2,6 +2,7 @@ package strutil
 
 import (
 	"github.com/google/uuid"
+	"github.com/mrz1836/go-sanitize"
 	"net/mail"
 	"net/url"
 	"strings"
@@ -122,4 +123,14 @@ func isAlphaNumericRune(r rune) bool {
 		return false
 	}
 	return true
+}
+
+// alpha removes all non-alphabetic characters from the given string, optionally retaining whitespace if ws is true.
+func alpha(s string, ws bool) string {
+	return sanitize.Alpha(s, ws)
+}
+
+// alphaNumeric removes all non-alphanumeric characters from the input string, optionally preserving whitespace if ws is true.
+func alphaNumeric(s string, ws bool) string {
+	return sanitize.AlphaNumeric(s, ws)
 }
