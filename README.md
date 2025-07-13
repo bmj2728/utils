@@ -95,6 +95,39 @@ strutil.New(userInput).
     Result()
 ```
 
+## Testing
+
+This project follows Go's standard testing practices. Each package includes comprehensive tests to ensure functionality, edge cases, and regression prevention.
+
+### Running Tests Locally
+
+To run all tests in the project:
+
+```
+go test ./...
+```
+
+For verbose output:
+
+```
+go test -v ./...
+```
+
+To run tests for a specific package:
+
+```
+go test ./strutil
+```
+
+### Continuous Integration
+
+This project uses GitHub Actions for continuous integration. The workflow automatically runs:
+
+1. **Linting** - Using golangci-lint to ensure code quality
+2. **Testing** - Running all tests to verify functionality
+
+The CI workflow runs on all pull requests and pushes to the main branch, ensuring code quality and functionality are maintained.
+
 ## License
 
 This project is licensed under the terms of the LICENSE file included in the repository.

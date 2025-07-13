@@ -108,12 +108,22 @@ func (sb *StringBuilder) ToKebabCase() *StringBuilder {
 	panic("Implement me!")
 }
 
+// ToLower converts all characters in the StringBuilder's value to lowercase and returns the updated StringBuilder.
 func (sb *StringBuilder) ToLower() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toLower(sb.value)
+	return sb
 }
 
+// ToUpper converts the StringBuilder's current value to uppercase and returns the updated StringBuilder.
 func (sb *StringBuilder) ToUpper() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toUpper(sb.value)
+	return sb
 }
 
 // Validation Methods (can set error)
@@ -185,6 +195,17 @@ func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
 	}
 	if isEmptyNormalized(sb.value) {
 		sb.err = errors.New("empty string after whitespace normalization")
+	}
+	return sb
+}
+
+// RequireAlphaNumeric ensures the StringBuilder's value contains only alphanumeric characters, setting an error if invalid.
+func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	if !isAlphaNumericString(sb.value) {
+		sb.err = errors.New("invalid string")
 	}
 	return sb
 }

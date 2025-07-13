@@ -379,3 +379,30 @@ func TestIsEmptyNormalized(t *testing.T) {
 		})
 	}
 }
+
+func TestToUpper(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"ToUpperNormal", "hello world", "HELLO WORLD"},
+		{"ToUpperEmptyString", "", ""},
+		{"ToUpperSingleChar", "a", "A"},
+		{"ToUpperSingleCharUpper", "A", "A"},
+		{"ToUpperWithSpecials", "hello world!@#$%^&*()_+", "HELLO WORLD!@#$%^&*()_+"},
+		{"ToUpperWithWhitespace", "hello world", "HELLO WORLD"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := toUpper(tt.input)
+			result := ToUpper(tt.input)
+			builderResult := New(tt.input).ToUpper().String()
+			builderError := New(tt.input).ToUpper().Error()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected || builderError != nil {
+				t.Errorf("ToUpper(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}

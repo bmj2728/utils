@@ -95,3 +95,31 @@ func isEmpty(s string) bool {
 func isEmptyNormalized(s string) bool {
 	return len(normalizeWhitespace(s)) == 0
 }
+
+// toUpper converts the input string to uppercase and returns the result.
+func toUpper(s string) string {
+	return strings.ToUpper(s)
+}
+
+// toLower converts all characters in the input string to their lowercase equivalents and returns the resulting string.
+func toLower(s string) string {
+	return strings.ToLower(s)
+}
+
+// isAlphaNumericString checks whether a given string consists only of alphanumeric characters (letters and digits).
+func isAlphaNumericString(s string) bool {
+	for _, c := range s {
+		if !isAlphaNumericRune(c) {
+			return false
+		}
+	}
+	return true
+}
+
+// isAlphaNumericRune determines if the given rune is an alphanumeric character (letter or digit).
+func isAlphaNumericRune(r rune) bool {
+	if !unicode.IsLetter(r) && !unicode.IsDigit(r) {
+		return false
+	}
+	return true
+}

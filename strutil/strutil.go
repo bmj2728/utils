@@ -85,7 +85,22 @@ func IsEmptyNormalized(s string) bool {
 	return isEmptyNormalized(s)
 }
 
+// IsAlphaNumericString checks if the input string consists only of alphanumeric characters (letters and digits).
+func IsAlphaNumericString(s string) bool {
+	return isAlphaNumericString(s)
+}
+
 // Basic Manipulation
+
+// ToUpper converts the input string to uppercase and returns the result.
+func ToUpper(s string) string {
+	return toUpper(s)
+}
+
+// ToLower converts all characters in the input string to lowercase and returns the resulting string.
+func ToLower(s string) string {
+	return toLower(s)
+}
 
 func Slugify(s string) string {
 	panic("Implement me!")
