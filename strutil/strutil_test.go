@@ -406,3 +406,60 @@ func TestToUpper(t *testing.T) {
 		})
 	}
 }
+
+func TestToLower(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"ToLowerNormal", "Hello World", "hello world"},
+		{"ToLowerEmptyString", "", ""},
+		{"ToLowerSingleChar", "A", "a"},
+		{"ToLowerSingleCharLower", "a", "a"},
+		{"ToLowerWithSpecials", "HELLO WORLD!@#$%^&*()_+", "hello world!@#$%^&*()_+"},
+		{"ToLowerWithWhitespace", " HELLO WORLD ", " hello world "},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := toLower(tt.input)
+			result := ToLower(tt.input)
+			builderResult := New(tt.input).ToLower().String()
+			builderError := New(tt.input).ToLower().Error()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected || builderError != nil {
+				t.Errorf("ToLower(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestIsAlphaNumericString(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"AlphaNumericStringValid", "hello123", true},
+		{"AlphaNumericStringValidUpper", "HELLO123", true},
+		{"AlphaNumericStringInvalid", "hello world", false},
+		{"AlphaNumericStringInvalidSpecial", "hello world!", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isAlphaNumericString(tt.input)
+			result := IsAlphaNumericString(tt.input)
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			builderResult := New(tt.input).RequireAlphaNumeric().Error()
+			if isAlphaNumericString(tt.input) && builderResult != nil {
+				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			if builderResult != nil && builderResult.Error() != "invalid string" {
+				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
