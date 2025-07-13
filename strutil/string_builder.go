@@ -129,6 +129,7 @@ func (sb *StringBuilder) RequireEmail() *StringBuilder {
 	return sb
 }
 
+// RequireURL validates if the StringBuilder's value is a properly formatted URL, sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireURL() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -139,25 +140,75 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 	return sb
 }
 
+// RequireUUID validates whether the StringBuilder's value conforms to a valid UUID format, sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireUUID() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	if !isValidUUID(sb.value) {
+		sb.err = errors.New("invalid UUID")
+	}
+	return sb
 }
 
+// RequireLength validates that the StringBuilder's value length is within the specified min and max range. Sets an error if invalid.
 func (sb *StringBuilder) RequireLength(min, max int) *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	if min < 0 || max < 0 {
+		sb.err = errors.New("invalid length range")
+		return sb
+	} else if min > max {
+		sb.err = errors.New("invalid length range")
+	} else if !isLengthInRange(sb.value, min, max) {
+		sb.err = errors.New("invalid length")
+	}
+	return sb
 }
 
+// RequireNotEmpty ensures the StringBuilder's value is not empty, sets an error if it is, and returns the instance.
 func (sb *StringBuilder) RequireNotEmpty() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	if isEmpty(sb.value) {
+		sb.err = errors.New("empty string")
+	}
+	return sb
+}
+
+// RequireNotEmptyNormalized ensures the StringBuilder's value is not empty after normalizing whitespace, setting an error otherwise.
+func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	if isEmptyNormalized(sb.value) {
+		sb.err = errors.New("empty string after whitespace normalization")
+	}
+	return sb
 }
 
 // Control Flow
+
+// If conditionally applies the provided function to the StringBuilder if the condition is true and no error exists.
 func (sb *StringBuilder) If(condition bool, fn func(*StringBuilder) *StringBuilder) *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	if condition {
+		return fn(sb)
+	}
+	return sb
 }
 
+// Transform applies a custom transformation function to the StringBuilder's value and returns the updated instance.
 func (sb *StringBuilder) Transform(fn func(string) string) *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = fn(sb.value)
+	return sb
 }
 
 // Terminal Methods

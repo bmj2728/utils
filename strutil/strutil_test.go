@@ -61,6 +61,7 @@ func TestRandomStringFunctions(t *testing.T) {
 		})
 	}
 }
+
 func TestIsUUID(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -82,8 +83,16 @@ func TestIsUUID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isValidUUID(tt.input)
 			result := IsUUID(tt.input)
-			if result != tt.expected {
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			builderErr := New(tt.input).RequireUUID().Error()
+			if isValidUUID(tt.input) && builderErr != nil {
+				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			if builderErr != nil && builderErr.Error() != "invalid UUID" {
 				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 		})
@@ -211,6 +220,161 @@ func TestIsEmail(t *testing.T) {
 			}
 			if builderErr != nil && builderErr.Error() != "invalid email address" {
 				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestIsUrl(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"ValidUrl", "https://www.google.com", true},
+		{"ValidUrlUppercase", "HTTPS://WWW.GOOGLE.COM", true},
+		{"ValidUrlNoScheme", "www.google.com", false},
+		{"ValidUrlNoHost", "https://", false},
+		{"ValidUrlNoSchemeOrHost", ":", false},
+		{"ValidUrlWithPath", "https://www.google.com/search", true},
+		{"ValidUrlWithPathAndQuery", "https://www.google.com/search?q=hello", true},
+		{"ValidUrlWithPathAndQueryAndFragment", "https://www.google.com/search?q=hello#fragment", true},
+		{"ValidUrlWithPathAndQueryAndFragmentAndParams", "https://www.google.com/search?q=hello#fragment&param1=value1&param2=value2", true},
+		{"ValidUrlWithPathAndQueryAndFragmentAndParamsAndTrailingSlash", "https://www.google.com/search?q=hello#fragment&param1=value1&param2=value2/", true},
+		{"ValidURLWithPort", "https://www.google.com:443", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isValidUrl(tt.input)
+			result := IsURL(tt.input)
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			builderErr := New(tt.input).RequireURL().Error()
+			if isValidUrl(tt.input) && builderErr != nil {
+				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			if builderErr != nil && builderErr.Error() != "invalid URL" {
+				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestIsValidLength(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		min      int
+		max      int
+		expected bool
+	}{
+		{"ValidLength", "hello world", 0, 20, true},
+		{"ValidLengthMin", "hello world", 5, 20, true},
+		{"ValidLengthMax", "hello world", 0, 20, true},
+		{"ValidLengthMinMax", "hello world", 5, 20, true},
+		{"InvalidLengthMin", "hello world", 20, 30, false},
+		{"InvalidLengthMax", "hello world", 0, 5, false},
+		{"InvalidLengthMinMax", "hello world", 20, 5, false},
+		{"InvalidLengthNegativeMin", "hello world", -1, 20, false},
+		{"InvalidLengthNegativeMax", "hello world", 0, -1, false},
+		{"InvalidLengthNegativeMinMax", "hello world", -1, -1, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isLengthInRange(tt.input, tt.min, tt.max)
+			result := IsValidLength(tt.input, tt.min, tt.max)
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
+			}
+
+			builderErr := New(tt.input).RequireLength(tt.min, tt.max).Error()
+			if isLengthInRange(tt.input, tt.min, tt.max) && builderErr != nil {
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
+			}
+			if (tt.min < 0 || tt.max < 0) && builderErr.Error() != "invalid length range" {
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), "invalid length range")
+			}
+
+			if tt.min > tt.max && builderErr.Error() != "invalid length range" {
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), "invalid length range")
+			}
+
+			if tt.min > 0 && tt.max > 0 && tt.min <= tt.max && !isLengthInRange(tt.input, tt.min, tt.max) && builderErr.Error() != "invalid length" {
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), "invalid length")
+			}
+		})
+	}
+}
+
+func TestIsEmpty(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"EmptyString", "", true},
+		{"NonEmptyString", "hello world", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isEmpty(tt.input)
+			result := IsEmpty(tt.input)
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+
+			builderErr := New(tt.input).RequireNotEmpty().Error()
+			if !isEmpty(tt.input) && builderErr != nil {
+				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			if isEmpty(tt.input) && builderErr.Error() != "empty string" {
+				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, builderErr.Error(), "empty string")
+			}
+		})
+	}
+
+}
+
+func TestIsEmptyNormalized(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"EmptyString", "", true},
+		{"NonEmptyString", "hello world", false},
+		{"EmptyStringWithWhitespace", "   ", true},
+		{"NonEmptyStringWithWhitespace", "   hello world   ", false},
+		{"EmptyStringWithTabs", "\t\t", true},
+		{"NonEmptyStringWithTabs", "\t\thello world\t\t", false},
+		{"EmptyStringWithNewlines", "\n\n", true},
+		{"NonEmptyStringWithNewlines", "\n\nhello world\n\n", false},
+		{"EmptyStringWithCarriageReturns", "\r\r", true},
+		{"NonEmptyStringWithCarriageReturns", "\r\rhello world\r\r", false},
+		{"EmptyStringWithMixedWhitespace", "\t\t\n\n\r\r", true},
+		{"NonEmptyStringWithMixedWhitespace", "\t\t\n\n\r\rhello world\t\t\n\n\r\r", false},
+		{"EmptyStringWithMixedWhitespaceAndTabs", "\t\t\n\n\r\r   ", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isEmptyNormalized(tt.input)
+			result := IsEmptyNormalized(tt.input)
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+
+			builderErr := New(tt.input).RequireNotEmptyNormalized().Error()
+
+			if !isEmptyNormalized(tt.input) && builderErr != nil {
+				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			if isEmptyNormalized(tt.input) && builderErr.Error() != "empty string after whitespace normalization" {
+				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, builderErr.Error(), "empty string after whitespace normalization")
 			}
 		})
 	}

@@ -1,6 +1,7 @@
 package strutil
 
 import (
+	"github.com/google/uuid"
 	"net/mail"
 	"net/url"
 	"strings"
@@ -52,6 +53,7 @@ func isValidEmail(s string) bool {
 	return err == nil
 }
 
+// isValidUrl checks if the provided string is a valid URL with a defined scheme and host. Returns true if valid, false otherwise.
 func isValidUrl(s string) bool {
 	_, err := url.ParseRequestURI(s)
 	if err != nil {
@@ -62,4 +64,34 @@ func isValidUrl(s string) bool {
 		return false
 	}
 	return true
+}
+
+// isValidUUID checks if the provided string is a valid UUID. Returns true if valid, otherwise false.
+func isValidUUID(s string) bool {
+	err := uuid.Validate(s)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+// isLengthInRange checks if the length of the string s is within the inclusive range specified by min and max values.
+func isLengthInRange(s string, min, max int) bool {
+	if min < 0 || max < 0 {
+		return false
+	}
+	if min > max {
+		return false
+	}
+	return len(s) >= min && len(s) <= max
+}
+
+// isEmpty checks if the provided string is empty and returns true if it is, otherwise false.
+func isEmpty(s string) bool {
+	return len(s) == 0
+}
+
+// isEmptyNormalized checks if the input string is empty after normalizing and trimming whitespace.
+func isEmptyNormalized(s string) bool {
+	return len(normalizeWhitespace(s)) == 0
 }

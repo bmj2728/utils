@@ -67,14 +67,26 @@ func IsURL(s string) bool {
 
 // IsUUID verifies if the provided string has a valid UUID format. Returns true if valid, false otherwise.
 func IsUUID(s string) bool {
-	err := uuid.Validate(s)
-	if err != nil {
-		return false
-	}
-	return true
+	return isValidUUID(s)
+}
+
+// IsValidLength checks if the length of the given string s is within the inclusive range defined by min and max values.
+func IsValidLength(s string, min, max int) bool {
+	return isLengthInRange(s, min, max)
+}
+
+// IsEmpty checks if the provided string is empty and returns true if it is, otherwise false.
+func IsEmpty(s string) bool {
+	return isEmpty(s)
+}
+
+// IsEmptyNormalized checks if the normalized version of the input string is empty after trimming and collapsing whitespace.
+func IsEmptyNormalized(s string) bool {
+	return isEmptyNormalized(s)
 }
 
 // Basic Manipulation
+
 func Slugify(s string) string {
 	panic("Implement me!")
 }
