@@ -28,6 +28,14 @@ utils/
 └── testutil/        # Test helpers
 ```
 
+## Recent Updates
+
+The project has recently added several new features:
+
+- **HTML Sanitization**: Added functions for sanitizing HTML content with various security levels
+- **Lorem Ipsum Generation**: Added comprehensive lorem ipsum generation for text, emails, URLs, and more
+
+
 ## Current Implementation
 
 ### String Utilities (`strutil`)
@@ -71,6 +79,17 @@ strutil.KeepAlpha(input, false)
 
 // Keep only alphanumeric characters
 strutil.KeepAlphaNumeric(input, true)
+
+// HTML sanitization
+strutil.StripHTML(input)
+strutil.SanitizeHTML(input)
+
+// Lorem ipsum generation
+strutil.LoremWord()
+strutil.LoremSentence()
+strutil.LoremParagraph()
+strutil.LoremEmail()
+strutil.LoremURL()
 ```
 
 #### StringBuilder API
@@ -156,8 +175,10 @@ The CI workflow runs on all pull requests and pushes to the main branch, ensurin
 
 This project leverages several excellent open-source libraries:
 
-- [go-sanitize](https://github.com/mrz1836/go-sanitize) - A powerful Go sanitization package that provides robust string cleaning and sanitization functions. The `strutil` package uses go-sanitize for its `KeepAlpha` and `KeepAlphaNumeric` functions.
+- [go-sanitize](https://github.com/mrz1836/go-sanitize) - A powerful Go sanitization package that provides robust string cleaning and sanitization functions.
 - [google/uuid](https://github.com/google/uuid) - A robust UUID implementation for Go.
+- [lorelai](https://github.com/UltiRequiem/lorelai) - A versatile lorem ipsum generator used for creating placeholder text, emails, URLs, and more.
+- [bluemonday](https://github.com/microcosm-cc/bluemonday) - A HTML sanitizer implementation used for the HTML sanitization functions.
 
 ## License
 
