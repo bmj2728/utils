@@ -83,7 +83,7 @@ func TestRandomStringFunctions(t *testing.T) {
 	}
 }
 
-func TestBasicConstructors(t *testing.T) {
+func TestBasicConstructor(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    string

@@ -380,6 +380,18 @@ func (sb *StringBuilder) If(condition bool, fn func(*StringBuilder) *StringBuild
 }
 
 // Transform applies a custom transformation function to the StringBuilder's value and returns the updated instance.
+//
+// Examples:
+//
+// s := New("Hello World!").Transform(strings.ToUpper)
+//
+// result: "HELLO WORLD!"
+//
+//	s := New("Hello World!).Transform(func(input string) string {
+//		return input + " Goodbye!"
+//	})
+//
+// result: "Hello World! Goodbye!"
 func (sb *StringBuilder) Transform(fn func(string) string) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -400,10 +412,10 @@ func (sb *StringBuilder) Error() error {
 	return sb.err
 }
 
-// Must returns the final string value or panics if an error is present in the StringBuilder instance.
+// Must returns the final string value or nil string if an error is present in the StringBuilder instance.
 func (sb *StringBuilder) Must() string {
 	if sb.err != nil {
-		panic(sb.err)
+		return ""
 	}
 	return sb.value
 }
