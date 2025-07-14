@@ -571,3 +571,53 @@ func TestIsAlphaString(t *testing.T) {
 		})
 	}
 }
+
+func TestKeepAlphaNumeric(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		ws       bool
+		expected string
+	}{
+		{"KeepAlphaNumericRemoveSpace", "hello world 123", false, "helloworld123"},
+		{"KeepAlphaNumericPreserveSpace", "hello world 123", true, "hello world 123"},
+		{"KeepAlphaNumericNoSpaceSpecialsValid", "hello! world! 123!@#$%^&*()", false, "helloworld123"},
+		{"KeepAlphaNumericPreserveSpaceSpecialsValid", "hello! world! 123!@#$%^&*()", true, "hello world 123"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := alphaNumeric(tt.input, tt.ws)
+			result := KeepAlphaNumeric(tt.input, tt.ws)
+			builderResult := New(tt.input).KeepAlphaNumeric(tt.ws).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("KeepAlphaNumeric(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestKeepAlpha(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		ws       bool
+		expected string
+	}{
+		{"KeepAlphaRemoveSpace", "hello world", false, "helloworld"},
+		{"KeepAlphaPreserveSpace", "hello world", true, "hello world"},
+		{"KeepAlphaRemoveSpaceDigits", "hello world 123", false, "helloworld"},
+		{"KeepAlphaPreserveSpaceDigits", "hello world 123", true, "hello world "},
+		{"KeepAlphaNoSpaceSpecialsValid", "hello! world! 123!@#$%^&*()", false, "helloworld"},
+		{"KeepAlphaPreserveSpaceSpecialsValid", "hello! world! 123!@#$%^&*()", true, "hello world "},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := alpha(tt.input, tt.ws)
+			result := KeepAlpha(tt.input, tt.ws)
+			builderResult := New(tt.input).KeepAlpha(tt.ws).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("KeepAlpha(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
