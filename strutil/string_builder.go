@@ -19,6 +19,71 @@ func New(s string) *StringBuilder {
 	}
 }
 
+// NewRandom creates a new StringBuilder with a random alphanumeric string of the specified length.
+func NewRandom(length int) *StringBuilder {
+	return &StringBuilder{
+		value: randomFromCharset(length, AlphaNumeric),
+	}
+}
+
+// NewRandomHex generates a new StringBuilder containing a random hexadecimal string of the specified length.
+func NewRandomHex(length int) *StringBuilder {
+	return &StringBuilder{
+		value: randomFromCharset(length, HexChars),
+	}
+}
+
+// NewRandomURLSafe generates a StringBuilder initialized with a random URL-safe string of the given length.
+func NewRandomURLSafe(length int) *StringBuilder {
+	return &StringBuilder{
+		value: randomFromCharset(length, UrlSafe),
+	}
+}
+
+// NewUUID creates and returns a new StringBuilder instance with a generated UUID value.
+func NewUUID() *StringBuilder {
+	return &StringBuilder{
+		value: makeUUID(),
+	}
+}
+
+// NewUUIDV7 generates a new UUID version 7 and returns it wrapped in a StringBuilder instance.
+func NewUUIDV7() *StringBuilder {
+	return &StringBuilder{
+		value: makeUUIDV7(),
+	}
+}
+
+// NewLoremWord creates a new StringBuilder instance with a randomly generated word as its initial value.
+func NewLoremWord() *StringBuilder {
+	return &StringBuilder{
+		value: loremWord(),
+	}
+}
+
+// NewLoremWords creates a new StringBuilder initialized with a string containing the specified number of lorem ipsum words.
+func NewLoremWords(count int) *StringBuilder {
+	return &StringBuilder{
+		value: loremWords(count),
+	}
+}
+
+// NewLoremSentence creates and returns a new StringBuilder initialized with a randomly generated lorem ipsum sentence.
+func NewLoremSentence() *StringBuilder {
+	return &StringBuilder{
+		value: loremSentence(),
+	}
+}
+
+// NewLoremSentenceCustom creates a new StringBuilder instance containing a lorem ipsum sentence with the specified word count.
+func NewLoremSentenceCustom(length int) *StringBuilder {
+	return &StringBuilder{
+		value: loremSentenceCustom(length),
+	}
+}
+
+// TODO: add lorem ipsum builders
+
 // Manipulation Methods
 
 // CleanWhitespace removes all whitespace characters from the StringBuilder's value and returns the updated StringBuilder.

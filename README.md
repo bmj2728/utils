@@ -34,6 +34,24 @@ utils/
 
 The `strutil` package provides comprehensive string manipulation, validation, and sanitization functions. It offers both a functional API and a fluent builder pattern.
 
+#### Error Constants
+
+The package provides standardized error constants for validation failures:
+
+```
+// Error constants for validation
+ErrInvalidEmail                   = "invalid email address"
+ErrInvalidURL                     = "invalid URL"
+ErrInvalidUUID                    = "invalid UUID"
+ErrInvalidLengthRange             = "invalid length range"
+ErrInvalidLength                  = "invalid length"
+ErrInvalidEmpty                   = "empty string"
+ErrInvalidEmptyAfterNormalization = "empty string after whitespace normalization"
+ErrInvalidNotAlphaNumeric         = "string contains non-alphanumeric characters"
+```
+
+These constants are used throughout the package for consistent error messaging and can be checked when using the builder API's validation methods.
+
 #### Functional API
 
 The functional API provides standalone functions for string operations:
@@ -47,6 +65,12 @@ strutil.IsEmail(email)
 
 // Sanitize user input
 strutil.SanitizeUsername(rawName)
+
+// Keep only alphabetic characters
+strutil.KeepAlpha(input, false)
+
+// Keep only alphanumeric characters
+strutil.KeepAlphaNumeric(input, true)
 ```
 
 #### StringBuilder API
@@ -127,6 +151,13 @@ This project uses GitHub Actions for continuous integration. The workflow automa
 2. **Testing** - Running all tests to verify functionality
 
 The CI workflow runs on all pull requests and pushes to the main branch, ensuring code quality and functionality are maintained.
+
+## Acknowledgements
+
+This project leverages several excellent open-source libraries:
+
+- [go-sanitize](https://github.com/mrz1836/go-sanitize) - A powerful Go sanitization package that provides robust string cleaning and sanitization functions. The `strutil` package uses go-sanitize for its `KeepAlpha` and `KeepAlphaNumeric` functions.
+- [google/uuid](https://github.com/google/uuid) - A robust UUID implementation for Go.
 
 ## License
 

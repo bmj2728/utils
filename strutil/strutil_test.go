@@ -6,10 +6,14 @@ import (
 )
 
 func TestNewUUID(t *testing.T) {
-	uuid1 := NewUUID()
-	uuid2 := NewUUID()
-	uuid3 := NewUUIDV7()
-	uuid4 := NewUUIDV7()
+	uuid1 := GenerateUUID()
+	uuid2 := GenerateUUID()
+	uuid3 := GenerateUUIDV7()
+	uuid4 := GenerateUUIDV7()
+	uuid5 := NewUUID()
+	uuid6 := NewUUID()
+	uuid7 := NewUUIDV7()
+	uuid8 := NewUUIDV7()
 
 	// Check UUID format (very basic validation)
 	if len(uuid1) != 36 || len(uuid2) != 36 || len(uuid3) != 36 || len(uuid4) != 36 {
@@ -20,17 +24,29 @@ func TestNewUUID(t *testing.T) {
 	e2 := uuid.Validate(uuid2)
 	e3 := uuid.Validate(uuid3)
 	e4 := uuid.Validate(uuid4)
-	if e1 != nil || e2 != nil || e3 != nil || e4 != nil {
+	e5 := uuid.Validate(uuid5.String())
+	e6 := uuid.Validate(uuid6.String())
+	e7 := uuid.Validate(uuid7.String())
+	e8 := uuid.Validate(uuid8.String())
+	if e1 != nil || e2 != nil || e3 != nil || e4 != nil || e5 != nil || e6 != nil || e7 != nil || e8 != nil {
 		t.Errorf("Generated UUIDs are not valid UUIDs")
 	}
 
 	// Ensure different UUIDs are generated each time
 	if uuid1 == uuid2 {
-		t.Errorf("Expected NewUUID to generate unique values, but got identical UUIDs: %s and %s", uuid1, uuid2)
+		t.Errorf("Expected GenerateUUID to generate unique values, but got identical UUIDs: %s and %s", uuid1, uuid2)
 	}
 
 	if uuid3 == uuid4 {
-		t.Errorf("Expected NewUUIDV7 to generate unique values, but got identical UUIDs: %s and %s", uuid3, uuid4)
+		t.Errorf("Expected GenerateUUIDV7 to generate unique values, but got identical UUIDs: %s and %s", uuid3, uuid4)
+	}
+
+	if uuid5.String() == uuid6.String() {
+		t.Errorf("Expected NewUUID() to generate unique values, but got identical UUIDs: %s and %s", uuid5.String(), uuid6.String())
+	}
+
+	if uuid7.String() == uuid8.String() {
+		t.Errorf("Expected NewUUIDV7 to generate unique values, but got identical UUIDs: %s and %s", uuid7.String(), uuid8.String())
 	}
 }
 
@@ -42,21 +58,82 @@ func TestRandomStringFunctions(t *testing.T) {
 	}{
 		{"RandomString", RandomString, 10},
 		{"RandomStringZeroLen", RandomString, 0},
+		{"RandomStringNegLen", RandomString, -1},
 		{"RandomHex", RandomHex, 16},
 		{"RandomHexZeroLen", RandomHex, 0},
+		{"RandomHexNegLen", RandomHex, -1},
 		{"RandomUrlSafe", RandomUrlSafe, 8},
 		{"RandomUrlSafeZeroLen", RandomUrlSafe, 0},
+		{"RandomUrlSafeNegLen", RandomUrlSafe, -1},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := tt.function(tt.length)
-			if len(result) != tt.length {
+			if tt.length > 0 && len(result) != tt.length {
 				t.Errorf("Expected length %d, got %d for %s", tt.length, len(result), tt.name)
 			}
-
 			if tt.length == 0 && result != "" {
 				t.Errorf("Expected empty string for length 0, but got %s", result)
+			}
+			if tt.length < 0 && result != "" {
+				t.Errorf("Expected empty string for negative length, but got %s", result)
+			}
+		})
+	}
+}
+
+func TestBasicConstructors(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"Empty", "", ""},
+		{"Normal", "hello world", "hello world"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := New(tt.input).String()
+			if result != tt.expected {
+				t.Errorf("Expected %q, got %q for %s", tt.expected, result, tt.name)
+			}
+		})
+	}
+}
+
+func TestStringBuilderConstructors(t *testing.T) {
+	tests := []struct {
+		name     string
+		function func(int) *StringBuilder
+		length   int
+	}{
+		{"NewRandom", NewRandom, 10},
+		{"NewRandomZero", NewRandom, 0},
+		{"NewRandomNeg", NewRandom, -1},
+		{"NewRandomHex", NewRandomHex, 6},
+		{"NewRandomHexZero", NewRandomHex, 0},
+		{"NewRandomHexNeg", NewRandomHex, -1},
+		{"NewRandomURLSafe", NewRandomURLSafe, 8},
+		{"NewRandomURLSafeZero", NewRandomURLSafe, 0},
+		{"NewRandomURLSafeNeg", NewRandomURLSafe, -1},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.function(tt.length)
+			if result == nil {
+				t.Errorf("Expected non-nil result for %s", tt.name)
+			}
+			if result.String() == "" && tt.length > 0 {
+				t.Errorf("Expected non-empty string for %s", tt.name)
+			}
+			if result.String() != "" && tt.length == 0 {
+				t.Errorf("Expected empty string for %s", tt.name)
+			}
+			if result.String() != "" && tt.length < 0 {
+				t.Errorf("Expected empty string for %s", tt.name)
 			}
 		})
 	}

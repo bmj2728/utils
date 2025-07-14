@@ -2,24 +2,19 @@ package strutil
 
 import (
 	"github.com/google/uuid"
-	"math/rand"
 )
 
 // UUID Generation
 
-// NewUUID generates and returns a new random UUID as a string.
-func NewUUID() string {
+// GenerateUUID generates and returns a new random UUID as a string.
+func GenerateUUID() string {
 	return uuid.NewString()
 }
 
-// NewUUIDV7 generates and returns a new random UUID as a string using UUID V7
+// GenerateUUIDV7 generates and returns a new random UUID as a string using UUID V7
 // It is recommended to use V7 unless legacy compatibility is required
-func NewUUIDV7() string {
-	u, err := uuid.NewV7()
-	if err != nil {
-		return ""
-	}
-	return u.String()
+func GenerateUUIDV7() string {
+	return makeUUIDV7()
 }
 
 // String Generation
@@ -41,17 +36,61 @@ func RandomUrlSafe(length int) string {
 	return randomFromCharset(length, UrlSafe)
 }
 
-// randomFromCharset generates a random string of the specified length using characters from the provided charset.
-func randomFromCharset(length int, charset string) string {
-	if length < 1 {
-		return ""
-	}
+// LoremWord generates and returns a random lorem ipsum word as a string.
+func LoremWord() string {
+	return loremWord()
+}
 
-	s := make([]byte, length)
-	for i := range s {
-		s[i] = charset[rand.Intn(len(charset))]
-	}
-	return string(s)
+// LoremWords generates a string containing the specified number of lorem ipsum words.
+func LoremWords(count int) string {
+	return loremWords(count)
+}
+
+// LoremSentence generates and returns a placeholder sentence of 8 words using lorem ipsum text.
+func LoremSentence() string {
+	return loremSentence()
+}
+
+// LoremSentenceCustom generates a lorem ipsum sentence with the specified word count. Returns the generated string.
+func LoremSentenceCustom(count int) string {
+	return loremSentenceCustom(count)
+}
+
+// LoremSentences generates a string containing the specified number of 8 word lorem ipsum sentences.
+func LoremSentences(count int) string {
+	return loremSentences(count)
+}
+
+// LoremSentencesVariable generates variable length lorem sentences with lengths between specified min and max values.
+// The parameter 'count' specifies the number of sentences to generate.
+func LoremSentencesVariable(count, min, max int) string {
+	panic("Implement me!")
+}
+
+// LoremParagraph generates and returns a string containing a randomly generated Lorem Ipsum paragraph of 45 words.
+func LoremParagraph() string {
+	panic("Implement me!")
+}
+
+// LoremParagraphs generates and returns a specified number of lorem ipsum paragraphs as a single string.
+// The parameter 'count' specifies the number of paragraphs to generate.
+func LoremParagraphs(count int) string {
+	panic("Implement me!")
+}
+
+// LoremDomain generates and returns a placeholder domain name in string format.
+func LoremDomain() string {
+	panic("Implement me!")
+}
+
+// LoremURL generates and returns a string representing a placeholder or mock URL, intended for testing or default usage.
+func LoremURL() string {
+	panic("Implement me!")
+}
+
+// LoremEmail generates and returns a placeholder or mock email address as a string.
+func LoremEmail() string {
+	panic("Implement me!")
 }
 
 // Validation
@@ -61,6 +100,7 @@ func IsEmail(s string) bool {
 	return isValidEmail(s)
 }
 
+// IsURL determines whether the input string is a valid URL with a scheme and host. Returns true if valid, otherwise false.
 func IsURL(s string) bool {
 	return isValidUrl(s)
 }
@@ -135,6 +175,7 @@ func CollapseWhitespace(s string) string {
 }
 
 // HTML Sanitization
+
 func StripHTML(s string) string {
 	panic("Implement me!")
 }
@@ -148,6 +189,7 @@ func SanitizeHTML(s string, allowedTags []string) string {
 }
 
 // File/Path Safety
+
 func SanitizeFilename(s string) string {
 	panic("Implement me!")
 }
@@ -157,6 +199,7 @@ func SanitizePath(s string) string {
 }
 
 // General Sanitization
+
 func RemoveNonPrintable(s string) string {
 	panic("Implement me!")
 }
@@ -170,6 +213,7 @@ func StripAnsi(s string) string {
 }
 
 // User Input Sanitization
+
 func SanitizeEmail(s string) string {
 	panic("Implement me!")
 }
@@ -183,6 +227,7 @@ func SanitizeSearchQuery(s string) string {
 }
 
 // Format-Specific Sanitization
+
 func SanitizePhone(s string) string {
 	panic("Implement me!")
 }
@@ -220,6 +265,7 @@ func MaskSSN(s string) string {
 }
 
 // Security Sanitization
+
 func SanitizeEnvValue(s string) string {
 	panic("Implement me!")
 }
@@ -245,6 +291,7 @@ func EscapeSQL(s string) string {
 }
 
 // Case Conversion
+
 func ToSnakeCase(s string) string {
 	panic("Implement me!")
 }

@@ -1,13 +1,28 @@
 package strutil
 
 import (
+	lorelai "github.com/UltiRequiem/lorelai/pkg"
 	"github.com/google/uuid"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/mrz1836/go-sanitize"
+	"math/rand"
 	"net/mail"
 	"net/url"
 	"strings"
 	"unicode"
 )
+
+func makeUUID() string {
+	return uuid.NewString()
+}
+
+func makeUUIDV7() string {
+	u, err := uuid.NewV7()
+	if err != nil {
+		return ""
+	}
+	return u.String()
+}
 
 // cleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.) from the input string and returns the result.
 func cleanWhitespace(s string) string {
@@ -125,6 +140,20 @@ func isAlphaNumericRune(r rune) bool {
 	return true
 }
 
+// randomFromCharset generates a random string of the specified length using characters from the provided charset.
+func randomFromCharset(length int, charset string) string {
+	if length < 1 {
+		return ""
+	}
+	s := make([]byte, length)
+	for i := range s {
+		s[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(s)
+}
+
+//TODO: Needs tests
+
 // alpha removes all non-alphabetic characters from the given string, optionally retaining whitespace if ws is true.
 func alpha(s string, ws bool) string {
 	return sanitize.Alpha(s, ws)
@@ -133,4 +162,65 @@ func alpha(s string, ws bool) string {
 // alphaNumeric removes all non-alphanumeric characters from the input string, optionally preserving whitespace if ws is true.
 func alphaNumeric(s string, ws bool) string {
 	return sanitize.AlphaNumeric(s, ws)
+}
+
+// stripHTML removes all HTML tags and sanitizes the input string to prevent potential security risks.
+func stripHTML(s string) string {
+	p := bluemonday.StrictPolicy()
+	return p.Sanitize(s)
+}
+
+// sanitizeHTML sanitizes an input HTML string by removing potentially unsafe or harmful content.
+func sanitizeHTML(s string) string {
+	p := bluemonday.UGCPolicy()
+	return p.Sanitize(s)
+}
+
+// sanitizeHTMLCustom sanitizes the input HTML string by allowing only the specified elements in allowedElements.
+func sanitizeHTMLCustom(s string, allowedElements []string) string {
+	p := bluemonday.NewPolicy()
+	//TODO: extend implementation to better address complex options
+	p.AllowElements(allowedElements...)
+	return p.Sanitize(s)
+}
+
+// loremWord generates and returns a single random word as a string.
+func loremWord() string {
+	return lorelai.Word()
+}
+
+// loremWords generates a string containing the specified number of lorem ipsum words. If less than 1 returns a nil string
+func loremWords(count int) string {
+	if count < 1 {
+		return ""
+	}
+	return lorelai.LoremWords(count)
+}
+
+// loremSentence returns a randomly generated lorem ipsum sentence as a string.
+func loremSentence() string {
+	return lorelai.Sentence()
+}
+
+// loremSentenceCustom generates a lorem ipsum sentence with the specified number of words determined by the length parameter.
+func loremSentenceCustom(length int) string {
+	if length < 1 {
+		return ""
+	}
+	return lorelai.FormattedLoremWords(length)
+}
+
+// loremSentences generates a string containing the specified number of randomly generated lorem ipsum sentences.
+func loremSentences(count int) string {
+	if count < 1 {
+		return ""
+	}
+	sentences := ""
+	for i := 0; i < count; i++ {
+		if sentences != "" {
+			sentences += " "
+		}
+		sentences += loremSentence()
+	}
+	return sentences
 }
