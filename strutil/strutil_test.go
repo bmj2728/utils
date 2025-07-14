@@ -761,3 +761,40 @@ func TestLoremSentenceCustom(t *testing.T) {
 		})
 	}
 }
+
+func TestLoremSentences(t *testing.T) {
+	tests := []struct {
+		name     string
+		count    int
+		expected int
+	}{
+		{"LoremSentences1", 1, 8},
+		{"LoremSentences3", 3, 24},
+		{"LoremSentences10", 10, 80},
+		{"LoremSentencesZero", 0, 0},
+		{"LoremSentencesNegative", -1, 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremSentences(tt.count)
+			result := LoremSentences(tt.count)
+			builderResult := NewLoremSentences(tt.count).String()
+			if tt.count < 1 && (helperResult != "" || builderResult != "" || result != "") {
+				t.Errorf("LoremSentencesNotNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			if tt.count > 0 && (helperResult == "" || builderResult == "" || result == "") {
+				t.Errorf("LoremSentencesIsNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			helperResultCount := len(strings.Split(helperResult, " "))
+			resultCount := len(strings.Split(result, " "))
+			builderResultCount := len(strings.Split(builderResult, " "))
+			if tt.count > 0 && (helperResultCount != tt.expected || resultCount != tt.expected || builderResultCount != tt.expected) {
+				t.Errorf("LoremSentencesLen1 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			}
+			if tt.count < 1 && (helperResultCount != tt.expected+1 || resultCount != tt.expected+1 || builderResultCount != tt.expected+1) {
+				t.Errorf("LoremSentenceslen2 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			}
+		})
+	}
+}
