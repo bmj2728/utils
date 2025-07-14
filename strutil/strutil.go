@@ -148,10 +148,12 @@ func ToLower(s string) string {
 }
 
 func Slugify(s string) string {
+	//TODO implement
 	panic("Implement me!")
 }
 
 func Truncate(s string, length int, suffix string) string {
+	//TODO implement
 	panic("Implement me!")
 }
 

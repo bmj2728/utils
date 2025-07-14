@@ -2,6 +2,7 @@ package strutil
 
 import (
 	"github.com/google/uuid"
+	"strings"
 	"testing"
 )
 
@@ -15,8 +16,17 @@ func TestNewUUID(t *testing.T) {
 	uuid7 := NewUUIDV7()
 	uuid8 := NewUUIDV7()
 
+	uuidLength := 36
+
 	// Check UUID format (very basic validation)
-	if len(uuid1) != 36 || len(uuid2) != 36 || len(uuid3) != 36 || len(uuid4) != 36 {
+	if len(uuid1) != uuidLength ||
+		len(uuid2) != uuidLength ||
+		len(uuid3) != uuidLength ||
+		len(uuid4) != uuidLength ||
+		len(uuid5.String()) != uuidLength ||
+		len(uuid6.String()) != uuidLength ||
+		len(uuid7.String()) != uuidLength ||
+		len(uuid8.String()) != uuidLength {
 		t.Errorf("Generated UUIDs are not of valid length")
 	}
 
@@ -617,6 +627,136 @@ func TestKeepAlpha(t *testing.T) {
 			builderResult := New(tt.input).KeepAlpha(tt.ws).String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
 				t.Errorf("KeepAlpha(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestLoremWord(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{"LoremWord1"},
+		{"LoremWord2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremWord()
+			result := LoremWord()
+			builderResult := NewLoremWord().String()
+			if helperResult == "" || builderResult == "" || result == "" {
+				t.Errorf("LoremWord - %q, %q, %q", result, helperResult, builderResult)
+			}
+
+		})
+	}
+}
+
+func TestLoremWords(t *testing.T) {
+	tests := []struct {
+		name  string
+		count int
+	}{
+		{"LoremWords1", 1},
+		{"LoremWords30", 30},
+		{"LoremWords100", 100},
+		{"LoremWordsZero", 0},
+		{"LoremWordsNegative", -1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremWords(tt.count)
+			result := LoremWords(tt.count)
+			builderResult := NewLoremWords(tt.count).String()
+
+			if tt.count < 1 && (helperResult != "" || builderResult != "" || result != "") {
+				t.Errorf("LoremWords - %q, %q, %q", result, helperResult, builderResult)
+			}
+			if tt.count > 0 && (helperResult == "" || builderResult == "" || result == "") {
+				t.Errorf("LoremWords - %q, %q, %q", result, helperResult, builderResult)
+			}
+
+			helperResultCount := len(strings.Split(helperResult, " ")) - 1
+			helperArr := strings.Split(helperResult, " ")
+			resultCount := len(strings.Split(result, " ")) - 1
+			resultArr := strings.Split(result, " ")
+			builderResultCount := len(strings.Split(builderResult, " ")) - 1
+			builderArr := strings.Split(builderResult, " ")
+			if tt.count > 0 && (helperResultCount != tt.count || resultCount != tt.count || builderResultCount != tt.count) {
+				t.Errorf("LoremWords(%d, %d, %d) - expected %d - words: %q / %q / %q", resultCount, helperResultCount, builderResultCount, tt.count, resultArr, helperArr, builderArr)
+			}
+		})
+	}
+}
+
+func TestLoremSentence(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{"LoremSentence1"},
+		{"LoremSentence2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremSentence()
+			result := LoremSentence()
+			builderResult := NewLoremSentence().String()
+			if helperResult == "" || builderResult == "" || result == "" {
+				t.Errorf("LoremSentence - %q, %q, %q", result, helperResult, builderResult)
+			}
+			helperResultCount := len(strings.Split(helperResult, " "))
+			resultCount := len(strings.Split(result, " "))
+			builderResultCount := len(strings.Split(builderResult, " "))
+			if helperResultCount != 8 || builderResultCount != 8 || resultCount != 8 {
+				t.Errorf("LoremSentence - expected 8 - words: %d / %d / %d", resultCount, helperResultCount, builderResultCount)
+			}
+
+			if helperResult[0] < 'A' || helperResult[0] > 'Z' || result[0] < 'A' || result[0] > 'Z' || builderResult[0] < 'A' || builderResult[0] > 'Z' {
+				t.Errorf("LoremSentence - first character not uppercase: %q / %q / %q", helperResult[0], result[0], builderResult[0])
+			}
+
+			if helperResult[len(helperResult)-1] != '.' || result[len(result)-1] != '.' || builderResult[len(builderResult)-1] != '.' {
+				t.Errorf("LoremSentence - last character not period: %q / %q / %q", helperResult[len(helperResult)-1], result[len(result)-1], builderResult[len(builderResult)-1])
+			}
+		})
+	}
+}
+
+func TestLoremSentenceCustom(t *testing.T) {
+	tests := []struct {
+		name   string
+		length int
+	}{
+		{"LoremSentenceCustom1", 1},
+		{"LoremSentenceCustom11", 11},
+		{"LoremSentenceCustom25", 25},
+		{"LoremSentenceCustomZero", 0},
+		{"LoremSentenceCustomNeg", -1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremSentenceCustom(tt.length)
+			result := LoremSentenceCustom(tt.length)
+			builderResult := NewLoremSentenceCustom(tt.length).String()
+			if tt.length > 0 && (helperResult == "" || builderResult == "" || result == "") {
+				t.Errorf("LoremSentenceCustom - %q, %q, %q", result, helperResult, builderResult)
+			}
+			if tt.length < 1 && (helperResult != "" || builderResult != "" || result != "") {
+				t.Errorf("LoremSentenceCustom - %q, %q, %q", result, helperResult, builderResult)
+			}
+			helperResultCount := len(strings.Split(helperResult, " "))
+			resultCount := len(strings.Split(result, " "))
+			builderResultCount := len(strings.Split(builderResult, " "))
+			if tt.length > 0 && (helperResultCount != tt.length || builderResultCount != tt.length || resultCount != tt.length) {
+				t.Errorf("LoremSentenceCustom - expected %d - words: %d / %d / %d", tt.length, resultCount, helperResultCount, builderResultCount)
+			}
+
+			if tt.length > 0 && (helperResult[0] < 'A' || helperResult[0] > 'Z' || result[0] < 'A' || result[0] > 'Z' || builderResult[0] < 'A' || builderResult[0] > 'Z') {
+				t.Errorf("LoremSentenceCustom - first character not uppercase: %q / %q / %q", helperResult[0], result[0], builderResult[0])
+			}
+
+			if tt.length > 0 && (helperResult[len(helperResult)-1] != '.' || result[len(result)-1] != '.' || builderResult[len(builderResult)-1] != '.') {
+				t.Errorf("LoremSentenceCustom - last character not period: %q / %q / %q", helperResult[len(helperResult)-1], result[len(result)-1], builderResult[len(builderResult)-1])
 			}
 		})
 	}
