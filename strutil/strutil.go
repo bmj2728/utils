@@ -64,33 +64,33 @@ func LoremSentences(count int) string {
 // LoremSentencesVariable generates variable length lorem sentences with lengths between specified min and max values.
 // The parameter 'count' specifies the number of sentences to generate.
 func LoremSentencesVariable(count, min, max int) string {
-	panic("Implement me!")
+	return loremSentencesVariable(count, min, max)
 }
 
 // LoremParagraph generates and returns a string containing a randomly generated Lorem Ipsum paragraph of 45 words.
 func LoremParagraph() string {
-	panic("Implement me!")
+	return loremParagraph()
 }
 
 // LoremParagraphs generates and returns a specified number of lorem ipsum paragraphs as a single string.
 // The parameter 'count' specifies the number of paragraphs to generate.
 func LoremParagraphs(count int) string {
-	panic("Implement me!")
+	return loremParagraphs(count)
 }
 
 // LoremDomain generates and returns a placeholder domain name in string format.
 func LoremDomain() string {
-	panic("Implement me!")
+	return loremDomain()
 }
 
 // LoremURL generates and returns a string representing a placeholder or mock URL, intended for testing or default usage.
 func LoremURL() string {
-	panic("Implement me!")
+	return loremURL()
 }
 
 // LoremEmail generates and returns a placeholder or mock email address as a string.
 func LoremEmail() string {
-	panic("Implement me!")
+	return loremEmail()
 }
 
 // Validation
