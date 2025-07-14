@@ -540,3 +540,34 @@ func TestIsAlphaNumericString(t *testing.T) {
 		})
 	}
 }
+
+func TestIsAlphaString(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"AlphaStringValid", "hello", true},
+		{"AlphaStringValidUpper", "HELLO", true},
+		{"AlphaStringInvalid", "hello world", false},
+		{"AlphaStringInvalidSpecial", "hello world!", false},
+		{"AlphaStringInvalidNumber", "rogue1", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isAlphaString(tt.input)
+			result := IsAlphaString(tt.input)
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			builderResult := New(tt.input).RequireAlpha().Error()
+			if isAlphaString(tt.input) && builderResult != nil {
+				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
+			}
+			if builderResult != nil && builderResult.Error() != ErrInvalidNotAlpha {
+				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, builderResult.Error(), ErrInvalidNotAlpha)
+			}
+		})
+	}
+}

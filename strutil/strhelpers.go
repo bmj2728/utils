@@ -132,6 +132,16 @@ func isAlphaNumericString(s string) bool {
 	return true
 }
 
+// isAlphaString checks if the given string consists only of alphabetic characters. Returns true if all characters are letters.
+func isAlphaString(s string) bool {
+	for _, c := range s {
+		if !unicode.IsLetter(c) {
+			return false
+		}
+	}
+	return true
+}
+
 // isAlphaNumericRune determines if the given rune is an alphanumeric character (letter or digit).
 func isAlphaNumericRune(r rune) bool {
 	if !unicode.IsLetter(r) && !unicode.IsDigit(r) {

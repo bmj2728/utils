@@ -130,6 +130,11 @@ func IsAlphaNumericString(s string) bool {
 	return isAlphaNumericString(s)
 }
 
+// IsAlphaString checks if the given string contains only alphabetic characters. Returns true if all characters are letters.
+func IsAlphaString(s string) bool {
+	return isAlphaString(s)
+}
+
 // Basic Manipulation
 
 // ToUpper converts the input string to uppercase and returns the result.
@@ -160,6 +165,7 @@ func KeepAlphaNumeric(s string, ws bool) string {
 	return alphaNumeric(s, ws)
 }
 
+// CleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.) from the input string and returns the result.
 func CleanWhitespace(s string) string {
 	return cleanWhitespace(s)
 }

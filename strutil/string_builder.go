@@ -355,6 +355,17 @@ func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
 	return sb
 }
 
+// RequireAlpha ensures the StringBuilder's value contains only alphabetic characters, setting an error if invalid.
+func (sb *StringBuilder) RequireAlpha() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	if !isAlphaString(sb.value) {
+		sb.err = errors.New(ErrInvalidNotAlpha)
+	}
+	return sb
+}
+
 // Control Flow
 
 // If conditionally applies the provided function to the StringBuilder if the condition is true and no error exists.
