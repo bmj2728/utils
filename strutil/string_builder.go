@@ -167,6 +167,24 @@ func (sb *StringBuilder) CollapseWhitespace() *StringBuilder {
 	return sb
 }
 
+// ReplaceWhitespace replaces all whitespace characters in the StringBuilder's value with the specified replacement string.
+func (sb *StringBuilder) ReplaceWhitespace(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = replaceWhitespace(sb.value, replacement)
+	return sb
+}
+
+// ReplaceSpaces replaces all spaces in the StringBuilder's value with the specified replacement string.
+func (sb *StringBuilder) ReplaceSpaces(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = replaceSpaces(sb.value, replacement)
+	return sb
+}
+
 // KeepAlpha removes all non-alphabetic characters from the StringBuilder's value, optionally retaining whitespace if ws is true.
 func (sb *StringBuilder) KeepAlpha(ws bool) *StringBuilder {
 	if sb.err != nil {
@@ -185,16 +203,35 @@ func (sb *StringBuilder) KeepAlphaNumeric(ws bool) *StringBuilder {
 	return sb
 }
 
+// StripHTML removes all HTML tags from the StringBuilder's value and returns the updated StringBuilder.
 func (sb *StringBuilder) StripHTML() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = stripHTML(sb.value)
+	return sb
 }
 
 func (sb *StringBuilder) EscapeHTML() *StringBuilder {
 	panic("Implement me!")
 }
 
-func (sb *StringBuilder) SanitizeHTML(allowedTags []string) *StringBuilder {
-	panic("Implement me!")
+// SanitizeHTML sanitizes the StringBuilder's value by removing potentially unsafe or harmful HTML content.
+func (sb *StringBuilder) SanitizeHTML() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = sanitizeHTML(sb.value)
+	return sb
+}
+
+// SanitizeHTMLCustom sanitizes the StringBuilder's value, allowing only specified HTML tags, and returns the updated StringBuilder.
+func (sb *StringBuilder) SanitizeHTMLCustom(allowedTags []string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = sanitizeHTMLCustom(sb.value, allowedTags)
+	return sb
 }
 
 func (sb *StringBuilder) Slugify() *StringBuilder {

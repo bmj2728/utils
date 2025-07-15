@@ -150,6 +150,26 @@ func isAlphaNumericRune(r rune) bool {
 	return true
 }
 
+// isWhiteSpaceRune checks if the given rune is classified as a whitespace character based on Unicode standards.
+func isWhiteSpaceRune(r rune) bool {
+	return unicode.IsSpace(r)
+}
+
+// replaceWhitespace replaces all whitespace characters in the input string with the specified replacement string.
+func replaceWhitespace(s string, replacement string) string {
+	for i, c := range s {
+		if isWhiteSpaceRune(c) {
+			s = s[:i] + replacement + s[i+1:]
+		}
+	}
+	return s
+}
+
+// replaceSpaces replaces all spaces in the input string with the specified replacement string.
+func replaceSpaces(s string, replacement string) string {
+	return strings.ReplaceAll(s, " ", replacement)
+}
+
 // randomFromCharset generates a random string of the specified length using characters from the provided charset.
 func randomFromCharset(length int, charset string) string {
 	if length < 1 {

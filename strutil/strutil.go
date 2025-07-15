@@ -152,6 +152,16 @@ func ToLower(s string) string {
 	return toLower(s)
 }
 
+// ReplaceWhitespace replaces all whitespace characters in the input string with the given replacement string.
+func ReplaceWhitespace(s string, replacement string) string {
+	return replaceWhitespace(s, replacement)
+}
+
+// ReplaceSpaces replaces all spaces in the input string with the specified replacement string.
+func ReplaceSpaces(s string, replacement string) string {
+	return replaceSpaces(s, replacement)
+}
+
 func Slugify(s string) string {
 	//TODO implement
 	panic("Implement me!")
@@ -189,15 +199,23 @@ func CollapseWhitespace(s string) string {
 
 // HTML Sanitization
 
+// StripHTML removes all HTML tags from the input string and sanitizes it to ensure safe content.
 func StripHTML(s string) string {
-	panic("Implement me!")
+	return stripHTML(s)
+}
+
+// SanitizeHTML removes potentially unsafe or harmful content from the input HTML string.
+func SanitizeHTML(s string) string {
+	return sanitizeHTML(s)
+}
+
+// SanitizeHTMLCustom sanitizes an HTML string, allowing only the tags specified in the allowedTags slice.
+// Returns a sanitized string with disallowed HTML elements removed or escaped.
+func SanitizeHTMLCustom(s string, allowedTags []string) string {
+	return sanitizeHTMLCustom(s, allowedTags)
 }
 
 func EscapeHTML(s string) string {
-	panic("Implement me!")
-}
-
-func SanitizeHTML(s string, allowedTags []string) string {
 	panic("Implement me!")
 }
 
