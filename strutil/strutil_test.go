@@ -941,6 +941,33 @@ func TestLoremParagraphs(t *testing.T) {
 	}
 }
 
+func TestIsDomain(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"IsDomainValidBasic", "example.com", true},
+		{"IsDomainValidMultiLevel", "example.com.au", true},
+		{"IsDomainValidSubDomain", "www.example.com", true},
+		{"IsDomainValidSubDomainMultiLevel", "www.example.com.au", true},
+		{"IsDomainValidEmpty", "", false},
+		{"IsDomainValidInvalidNoTLD", "example", false},
+		{"IsDomainValidInvalidTrailingPeriod", "example.com.", false},
+		{"IsDomainValidInvalidLeadingPeriod", ".example.com", false},
+		{"IsDomainValidTooLong", "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz.com", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsDomain(tt.input)
+			if result != tt.expected {
+				t.Errorf("IsDomain - expected %t - got %t", tt.expected, result)
+			}
+		})
+	}
+}
+
 func TestLoremDomain(t *testing.T) {
 	tests := []struct {
 		name string
@@ -958,6 +985,51 @@ func TestLoremDomain(t *testing.T) {
 			}
 			if !isValidDomain(result) || !isValidDomain(builderResult) || !isValidDomain(helperResult) {
 				t.Errorf("LoremDomain - invalid domain: %q / %q / %q", result, builderResult, helperResult)
+			}
+		})
+	}
+}
+
+func TestLoremURL(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{"LoremURL1"},
+		{"LoremURL2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremURL()
+			result := LoremURL()
+			builderResult := NewLoremURL().String()
+			if result == "" || builderResult == "" || helperResult == "" {
+				t.Errorf("LoremURL - %q, %q", result, builderResult)
+			}
+			if !isValidURL(result) || !isValidURL(builderResult) || !isValidURL(helperResult) {
+				t.Errorf("LoremURL - invalid url: %q / %q", result, builderResult)
+			}
+
+		})
+	}
+}
+
+func TestLoremEmail(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{"LoremEmail1"},
+		{"LoremEmail2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremEmail()
+			result := LoremEmail()
+			builderResult := NewLoremEmail().String()
+			if result == "" || builderResult == "" || helperResult == "" {
+				t.Errorf("LoremEmail - %q, %q", result, builderResult)
+			}
+			if !isValidEmail(result) || !isValidEmail(builderResult) || !isValidEmail(helperResult) {
+				t.Errorf("LoremEmail - invalid email: %q / %q", result, builderResult)
 			}
 		})
 	}

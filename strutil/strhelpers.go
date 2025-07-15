@@ -83,6 +83,17 @@ func isValidURL(s string) bool {
 	return true
 }
 
+// isValidDomain validates whether a given string conforms to a valid domain name format based on specified rules.
+func isValidDomain(domain string) bool {
+	if domain == "" {
+		return false
+	}
+
+	domainRegex := regexp.MustCompile(`^(` + LabelRegex + `\.)+` + TLDRegex + `$`)
+
+	return domainRegex.MatchString(strings.TrimSpace(domain))
+}
+
 // isValidUUID checks if the provided string is a valid UUID. Returns true if valid, otherwise false.
 func isValidUUID(s string) bool {
 	err := uuid.Validate(s)
@@ -153,17 +164,6 @@ func isWhiteSpaceRune(r rune) bool {
 	return unicode.IsSpace(r)
 }
 
-// isValidDomain validates whether a given string conforms to a valid domain name format based on specified rules.
-func isValidDomain(domain string) bool {
-	if domain == "" {
-		return false
-	}
-
-	domainRegex := regexp.MustCompile(`^(` + LabelRegex + `\.)+` + TLDRegex + `$`)
-
-	return domainRegex.MatchString(strings.TrimSpace(domain))
-}
-
 // replaceWhitespace replaces all whitespace characters in the input string with the specified replacement string.
 func replaceWhitespace(s string, replacement string) string {
 	for i, c := range s {
@@ -191,8 +191,6 @@ func randomFromCharset(length int, charset string) string {
 	return string(s)
 }
 
-//TODO: Needs tests
-
 // alpha removes all non-alphabetic characters from the given string, optionally retaining whitespace if ws is true.
 func alpha(s string, ws bool) string {
 	return sanitize.Alpha(s, ws)
@@ -202,6 +200,8 @@ func alpha(s string, ws bool) string {
 func alphaNumeric(s string, ws bool) string {
 	return sanitize.AlphaNumeric(s, ws)
 }
+
+//TODO: Needs tests
 
 // stripHTML removes all HTML tags and sanitizes the input string to prevent potential security risks.
 func stripHTML(s string) string {
