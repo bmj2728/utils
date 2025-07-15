@@ -33,7 +33,7 @@ func RandomHex(length int) string {
 
 // RandomUrlSafe generates a random URL-safe string of the specified length using characters suitable for URLs.
 func RandomUrlSafe(length int) string {
-	return randomFromCharset(length, UrlSafe)
+	return randomFromCharset(length, URLSafe)
 }
 
 // LoremWord generates and returns a random lorem ipsum word as a string.
@@ -107,7 +107,7 @@ func IsEmail(s string) bool {
 
 // IsURL determines whether the input string is a valid URL with a scheme and host. Returns true if valid, otherwise false.
 func IsURL(s string) bool {
-	return isValidUrl(s)
+	return isValidURL(s)
 }
 
 // IsDomain checks if a given string is a valid domain name format as per defined rules.

@@ -333,13 +333,13 @@ func TestIsUrl(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := isValidUrl(tt.input)
+			helperResult := isValidURL(tt.input)
 			result := IsURL(tt.input)
 			if result != tt.expected || helperResult != tt.expected {
 				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			builderErr := New(tt.input).RequireURL().Error()
-			if isValidUrl(tt.input) && builderErr != nil {
+			if isValidURL(tt.input) && builderErr != nil {
 				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			if builderErr != nil && builderErr.Error() != ErrInvalidURL {

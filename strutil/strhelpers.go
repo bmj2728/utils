@@ -70,8 +70,8 @@ func isValidEmail(s string) bool {
 	return err == nil
 }
 
-// isValidUrl checks if the provided string is a valid URL with a defined scheme and host. Returns true if valid, false otherwise.
-func isValidUrl(s string) bool {
+// isValidURL checks if the provided string is a valid URL with a defined scheme and host. Returns true if valid, false otherwise.
+func isValidURL(s string) bool {
 	_, err := url.ParseRequestURI(s)
 	if err != nil {
 		return false
@@ -86,10 +86,7 @@ func isValidUrl(s string) bool {
 // isValidUUID checks if the provided string is a valid UUID. Returns true if valid, otherwise false.
 func isValidUUID(s string) bool {
 	err := uuid.Validate(s)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 // isLengthInRange checks if the length of the string s is within the inclusive range specified by min and max values.
@@ -161,14 +158,8 @@ func isValidDomain(domain string) bool {
 	if domain == "" {
 		return false
 	}
-	const (
-		// A-Z, a-z, 0-9, and hyphen. No starting/ending hyphen. 1-63 chars.
-		labelRegex = `[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?`
-		// TLD must be at least two letters long.
-		tldRegex = `[a-zA-Z]{2,}`
-	)
 
-	domainRegex := regexp.MustCompile(`^(` + labelRegex + `\.)+` + tldRegex + `$`)
+	domainRegex := regexp.MustCompile(`^(` + LabelRegex + `\.)+` + TLDRegex + `$`)
 
 	return domainRegex.MatchString(strings.TrimSpace(domain))
 }

@@ -36,7 +36,7 @@ func NewRandomHex(length int) *StringBuilder {
 // NewRandomURLSafe generates a StringBuilder initialized with a random URL-safe string of the given length.
 func NewRandomURLSafe(length int) *StringBuilder {
 	return &StringBuilder{
-		value: randomFromCharset(length, UrlSafe),
+		value: randomFromCharset(length, URLSafe),
 	}
 }
 
@@ -337,7 +337,7 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
-	if !isValidUrl(sb.value) {
+	if !isValidURL(sb.value) {
 		sb.err = errors.New(ErrInvalidURL)
 	}
 	return sb
