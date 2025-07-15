@@ -1,14 +1,10 @@
 package strutil
 
-import (
-	"github.com/google/uuid"
-)
-
 // UUID Generation
 
 // GenerateUUID generates and returns a new random UUID as a string.
 func GenerateUUID() string {
-	return uuid.NewString()
+	return makeUUID()
 }
 
 // GenerateUUIDV7 generates and returns a new random UUID as a string using UUID V7
