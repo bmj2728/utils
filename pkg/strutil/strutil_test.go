@@ -1034,3 +1034,57 @@ func TestLoremEmail(t *testing.T) {
 		})
 	}
 }
+
+func TestReplaceWhitespace(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"ReplaceWhiteSpaceDash", "a b\nc\rd\fe\vf\tg", "-", "a-b-c-d-e-f-g"},
+		{"ReplaceWhiteSpaceSpace", "a b\nc\rd\fe\vf\tg", " ", "a b c d e f g"},
+		{"ReplaceWhiteSpaceSlash", "a b\nc\rd\fe\vf\tg", "/", "a/b/c/d/e/f/g"},
+		{"ReplaceWhiteSpaceText", "a b\nc\rd\fe\vf\tg", ", and ", "a, and b, and c, and d, and e, and f, and g"},
+		{"ReplaceWhiteSpaceEmpty", "", " ", ""},
+		{"ReplaceWhiteSpaceEmptyReplacement", "", " ", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := replaceWhitespace(tt.input, tt.replacement)
+			result := ReplaceWhitespace(tt.input, tt.replacement)
+			builderResult := New(tt.input).ReplaceWhitespace(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ReplaceWhitespace - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestReplaceSpaces(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"ReplaceSpacesDash", "a b\nc\rd\fe\vf\tg", "-", "a-b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesSpace", "a b\nc\rd\fe\vf\tg", " ", "a b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesSlash", "a b\nc\rd\fe\vf\tg", "/", "a/b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesText", "a b\nc\rd\fe\vf\tg", ", and ", "a, and b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesEmpty", "", " ", ""},
+		{"ReplaceSpacesEmptyReplacement", "", " ", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := replaceSpaces(tt.input, tt.replacement)
+			result := ReplaceSpaces(tt.input, tt.replacement)
+			builderResult := New(tt.input).ReplaceSpaces(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ReplaceSpaces - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}

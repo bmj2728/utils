@@ -1,16 +1,17 @@
 package strutil
 
 import (
-	lorelai "github.com/UltiRequiem/lorelai/pkg"
-	"github.com/google/uuid"
-	"github.com/microcosm-cc/bluemonday"
-	"github.com/mrz1836/go-sanitize"
 	"math/rand"
 	"net/mail"
 	"net/url"
 	"regexp"
 	"strings"
 	"unicode"
+
+	lorelai "github.com/UltiRequiem/lorelai/pkg"
+	"github.com/google/uuid"
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/mrz1836/go-sanitize"
 )
 
 func makeUUID() string {
@@ -25,7 +26,8 @@ func makeUUIDV7() string {
 	return u.String()
 }
 
-// cleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.) from the input string and returns the result.
+// cleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.)
+// from the input string and returns the result.
 func cleanWhitespace(s string) string {
 	var b strings.Builder
 	b.Grow(len(s))
@@ -43,7 +45,8 @@ func normalizeWhitespace(s string) string {
 	return strings.Join(strings.Fields(s), " ")
 }
 
-// collapseWhitespace reduces all consecutive whitespace characters in the input string to a single space preserving leading and trailing whitespace.
+// collapseWhitespace reduces all consecutive whitespace characters in the input string to a single space preserving
+// leading and trailing whitespace.
 func collapseWhitespace(s string) string {
 	var b strings.Builder
 	b.Grow(len(s))
@@ -64,13 +67,15 @@ func collapseWhitespace(s string) string {
 	return b.String()
 }
 
-// isValidEmail checks if the provided string s is a valid email address format and returns true if valid, false otherwise.
+// isValidEmail checks if the provided string s is a valid email address format
+// and returns true if valid, false otherwise.
 func isValidEmail(s string) bool {
 	_, err := mail.ParseAddress(s)
 	return err == nil
 }
 
-// isValidURL checks if the provided string is a valid URL with a defined scheme and host. Returns true if valid, false otherwise.
+// isValidURL checks if the provided string is a valid URL with a defined scheme and host.
+// Returns true if valid, false otherwise.
 func isValidURL(s string) bool {
 	_, err := url.ParseRequestURI(s)
 	if err != nil {
@@ -141,7 +146,8 @@ func isAlphaNumericString(s string) bool {
 	return true
 }
 
-// isAlphaString checks if the given string consists only of alphabetic characters. Returns true if all characters are letters.
+// isAlphaString checks if the given string consists only of alphabetic characters.
+// Returns true if all characters are letters.
 func isAlphaString(s string) bool {
 	for _, c := range s {
 		if !unicode.IsLetter(c) {
@@ -166,9 +172,13 @@ func isWhiteSpaceRune(r rune) bool {
 
 // replaceWhitespace replaces all whitespace characters in the input string with the specified replacement string.
 func replaceWhitespace(s string, replacement string) string {
-	for i, c := range s {
+	if isEmpty(s) {
+		return s
+	}
+
+	for _, c := range s {
 		if isWhiteSpaceRune(c) {
-			s = s[:i] + replacement + s[i+1:]
+			s = strings.Replace(s, string(c), replacement, 1)
 		}
 	}
 	return s
@@ -196,7 +206,8 @@ func alpha(s string, ws bool) string {
 	return sanitize.Alpha(s, ws)
 }
 
-// alphaNumeric removes all non-alphanumeric characters from the input string, optionally preserving whitespace if ws is true.
+// alphaNumeric removes all non-alphanumeric characters from the input string,
+// optionally preserving whitespace if ws is true.
 func alphaNumeric(s string, ws bool) string {
 	return sanitize.AlphaNumeric(s, ws)
 }
@@ -228,7 +239,8 @@ func loremWord() string {
 	return lorelai.Word()
 }
 
-// loremWords generates a string containing the specified number of lorem ipsum words. If less than 1 returns a nil string
+// loremWords generates a string containing the specified number of lorem ipsum words.
+// If less than 1 returns a nil string
 func loremWords(count int) string {
 	if count < 1 {
 		return ""
@@ -241,7 +253,8 @@ func loremSentence() string {
 	return lorelai.Sentence()
 }
 
-// loremSentenceCustom generates a lorem ipsum sentence with the specified number of words determined by the length parameter.
+// loremSentenceCustom generates a lorem ipsum sentence with the specified number of words
+// determined by the length parameter.
 func loremSentenceCustom(length int) string {
 	if length < 1 {
 		return ""
@@ -279,7 +292,8 @@ func loremSentencesCustom(count int, length int) string {
 	return sentences
 }
 
-// loremSentenceVariable generates a specified number of lorem ipsum sentences with random lengths between min and max values.
+// loremSentenceVariable generates a specified number of lorem ipsum sentences
+// with random lengths between min and max values.
 func loremSentencesVariable(count, min, max int) string {
 	if count < 1 || min > max {
 		return ""
@@ -300,7 +314,8 @@ func loremParagraph() string {
 }
 
 // loremParagraphs generates a specified number of lorem ipsum paragraphs and returns them as a single string.
-// The parameter 'count' determines the number of paragraphs to generate. Returns an empty string if count is less than 1.
+// The parameter 'count' determines the number of paragraphs to generate.
+// Returns an empty string if count is less than 1.
 func loremParagraphs(count int) string {
 	if count < 1 {
 		return ""

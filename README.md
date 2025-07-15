@@ -1,5 +1,16 @@
 # Utils - The Missing Go Utilities Package
 
+
+<!-- Badges -->
+[![ci/cd](https://github.com/bmj2728/utils/actions/workflows/go.yml/badge.svg)](https://github.com/bmj2728/utils/actions)
+[![codecov](https://codecov.io/gh/bmj2728/utils/branch/main/graph/badge.svg)](https://codecov.io/gh/bmj2728/utils)
+[![Go Report Card](https://goreportcard.com/badge/github.com/bmj2728/utils)](https://goreportcard.com/report/github.com/bmj2728/utils)
+[![Go Reference](https://pkg.go.dev/badge/github.com/bmj2728/utils.svg)](https://pkg.go.dev/github.com/bmj2728/utils)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/bmj2728/utils)](https://golang.org/)
+
+> **Status**: Pre-release (approaching v0.1.0) - API may change
+
 A comprehensive collection of utility packages for Go, designed to fill the gaps in the standard library and provide a consistent, well-tested set of tools for common programming tasks.
 
 ## Overview
