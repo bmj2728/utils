@@ -252,7 +252,7 @@ func loremSentencesCustom(count int, length int) string {
 
 // loremSentenceVariable generates a specified number of lorem ipsum sentences with random lengths between min and max values.
 func loremSentencesVariable(count, min, max int) string {
-	if count < 1 {
+	if count < 1 || min > max {
 		return ""
 	}
 	sentences := ""

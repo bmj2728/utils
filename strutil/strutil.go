@@ -61,6 +61,11 @@ func LoremSentences(count int) string {
 	return loremSentences(count)
 }
 
+// LoremSentencesCustom generates multiple lorem ipsum sentences with specified sentence count and word length per sentence.
+func LoremSentencesCustom(count int, length int) string {
+	return loremSentencesCustom(count, length)
+}
+
 // LoremSentencesVariable generates variable length lorem sentences with lengths between specified min and max values.
 // The parameter 'count' specifies the number of sentences to generate.
 func LoremSentencesVariable(count, min, max int) string {

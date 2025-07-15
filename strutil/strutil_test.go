@@ -798,3 +798,82 @@ func TestLoremSentences(t *testing.T) {
 		})
 	}
 }
+
+func TestLoremSentencesCustom(t *testing.T) {
+	tests := []struct {
+		name     string
+		count    int
+		length   int
+		expected int
+	}{
+		{"LoremSentencesCustom1", 1, 1, 1},
+		{"LoremSentencesCustom11", 3, 7, 21},
+		{"LoremSentencesCustom25", 5, 12, 60},
+		{"LoremSentencesCustomZero", 0, 0, 0},
+		{"LoremSentencesCustomNeg", -1, 0, 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremSentencesCustom(tt.count, tt.length)
+			result := LoremSentencesCustom(tt.count, tt.length)
+			builderResult := NewLoremSentencesCustom(tt.count, tt.length).String()
+			if tt.count < 1 && (helperResult != "" || builderResult != "" || result != "") {
+				t.Errorf("LoremSentencesCustomNotNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			if tt.count > 0 && (helperResult == "" || builderResult == "" || result == "") {
+				t.Errorf("LoremSentencesCustomIsNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			helperResultCount := len(strings.Split(helperResult, " "))
+			resultCount := len(strings.Split(result, " "))
+			builderResultCount := len(strings.Split(builderResult, " "))
+			if tt.count > 0 && (helperResultCount != tt.expected || resultCount != tt.expected || builderResultCount != tt.expected) {
+				t.Errorf("LoremSentencesCustomLen1 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			}
+			if tt.count < 1 && (helperResultCount != tt.expected+1 || resultCount != tt.expected+1 || builderResultCount != tt.expected+1) {
+				t.Errorf("LoremSentencesCustomLen2 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			}
+		})
+	}
+}
+
+func TestLoremSentencesVariable(t *testing.T) {
+	tests := []struct {
+		name  string
+		count int
+		min   int
+		max   int
+	}{
+		{"LoremSentencesVariable1", 1, 1, 10},
+		{"LoremSentencesVariable3", 3, 1, 10},
+		{"LoremSentencesVariable10", 5, 6, 14},
+		{"LoremSentencesVariableZero", 0, 0, 0},
+		{"LoremSentencesVariableNeg", -1, 0, 0},
+		{"LoremSentencesVariableInvalid", 3, 10, 1},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremSentencesVariable(tt.count, tt.min, tt.max)
+			result := LoremSentencesVariable(tt.count, tt.min, tt.max)
+			builderResult := NewLoremSentencesVariable(tt.count, tt.min, tt.max).String()
+			if tt.count < 1 && (helperResult != "" || builderResult != "" || result != "") {
+				t.Errorf("LoremSentencesVariableNotNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			if tt.count > 0 && tt.min <= tt.max && (helperResult == "" || builderResult == "" || result == "") {
+				t.Errorf("LoremSentencesVariableIsNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			helperResultCount := len(strings.Split(helperResult, " "))
+			resultCount := len(strings.Split(result, " "))
+			builderResultCount := len(strings.Split(builderResult, " "))
+			minRange := tt.min * tt.count
+			maxRange := tt.max * tt.count
+			if tt.count > 0 && tt.min <= tt.max && (helperResultCount < minRange || helperResultCount > maxRange || resultCount < minRange || resultCount > maxRange || builderResultCount < minRange || builderResultCount > maxRange) {
+				t.Errorf("LoremSentencesVariableLen1 - expected %d - %d - %d - %d - sentences: %d / %d / %d / %d", tt.count, tt.min, tt.max, minRange, helperResultCount, resultCount, builderResultCount, maxRange)
+			}
+			if tt.max < tt.min && (helperResult != "" || builderResult != "" || result != "") {
+				t.Errorf("LoremSentencesVariableLen2 - expected %d - %d - %d - %d - sentences: %d / %d / %d / %d", tt.count, tt.min, tt.max, minRange, helperResultCount, resultCount, builderResultCount, maxRange)
+			}
+		})
+	}
+}
