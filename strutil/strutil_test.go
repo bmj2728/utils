@@ -877,3 +877,66 @@ func TestLoremSentencesVariable(t *testing.T) {
 		})
 	}
 }
+
+func TestLoremParagraph(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{"LoremParagraph1"},
+		{"LoremParagraph2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremParagraph()
+			result := LoremParagraph()
+			builderResult := NewLoremParagraph().String()
+			if helperResult == "" || builderResult == "" || result == "" {
+				t.Errorf("LoremParagraph - %q, %q, %q", result, helperResult, builderResult)
+			}
+			helperResultCount := len(strings.Split(helperResult, " "))
+			resultCount := len(strings.Split(result, " "))
+			builderResultCount := len(strings.Split(builderResult, " "))
+			if helperResultCount != 45 || builderResultCount != 45 || resultCount != 45 {
+				t.Errorf("LoremParagraph - expected 45 - words: %d / %d / %d", resultCount, helperResultCount, builderResultCount)
+			}
+		})
+	}
+}
+
+func TestLoremParagraphs(t *testing.T) {
+	tests := []struct {
+		name     string
+		count    int
+		expected int
+	}{
+		{"LoremParagraphs1", 1, 45},
+		{"LoremParagraphs3", 3, 133},
+		{"LoremParagraphs10", 10, 441},
+		{"LoremParagraphs1000", 1000, 44001},
+		{"LoremParagraphsZero", 0, 0},
+		{"LoremParagraphsNegative", -1, 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremParagraphs(tt.count)
+			result := LoremParagraphs(tt.count)
+			builderResult := NewLoremParagraphs(tt.count).String()
+			if tt.count < 1 && (helperResult != "" || builderResult != "" || result != "") {
+				t.Errorf("LoremParagraphsNotNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			if tt.count > 0 && (helperResult == "" || builderResult == "" || result == "") {
+				t.Errorf("LoremParagraphsIsNil - %q, %q, %q", result, helperResult, builderResult)
+			}
+			helperResultCount := len(strings.Split(helperResult, " "))
+			resultCount := len(strings.Split(result, " "))
+			builderResultCount := len(strings.Split(builderResult, " "))
+			if tt.count > 0 && (helperResultCount != tt.expected || resultCount != tt.expected || builderResultCount != tt.expected) {
+				t.Errorf("LoremParagraphsLen1 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			}
+			if tt.count < 1 && (helperResultCount != tt.expected+1 || resultCount != tt.expected+1 || builderResultCount != tt.expected+1) {
+				t.Errorf("LoremParagraphsLen2 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			}
+		})
+	}
+}
