@@ -28,4 +28,7 @@ const (
 
 	// ErrInvalidNotAlpha indicates that the string contains non-alphabetic characters.
 	ErrInvalidNotAlpha = "string contains non-alphabetic characters"
+
+	// ErrInvalidDomain indicates that the provided string is not a valid domain.
+	ErrInvalidDomain = "invalid domain"
 )

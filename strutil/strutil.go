@@ -110,6 +110,11 @@ func IsURL(s string) bool {
 	return isValidUrl(s)
 }
 
+// IsDomain checks if a given string is a valid domain name format as per defined rules.
+func IsDomain(domain string) bool {
+	return isValidDomain(domain)
+}
+
 // IsUUID verifies if the provided string has a valid UUID format. Returns true if valid, false otherwise.
 func IsUUID(s string) bool {
 	return isValidUUID(s)

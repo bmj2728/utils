@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/mail"
 	"net/url"
+	"regexp"
 	"strings"
 	"unicode"
 )
@@ -153,6 +154,23 @@ func isAlphaNumericRune(r rune) bool {
 // isWhiteSpaceRune checks if the given rune is classified as a whitespace character based on Unicode standards.
 func isWhiteSpaceRune(r rune) bool {
 	return unicode.IsSpace(r)
+}
+
+// isValidDomain validates whether a given string conforms to a valid domain name format based on specified rules.
+func isValidDomain(domain string) bool {
+	if domain == "" {
+		return false
+	}
+	const (
+		// A-Z, a-z, 0-9, and hyphen. No starting/ending hyphen. 1-63 chars.
+		labelRegex = `[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?`
+		// TLD must be at least two letters long.
+		tldRegex = `[a-zA-Z]{2,}`
+	)
+
+	domainRegex := regexp.MustCompile(`^(` + labelRegex + `\.)+` + tldRegex + `$`)
+
+	return domainRegex.MatchString(strings.TrimSpace(domain))
 }
 
 // replaceWhitespace replaces all whitespace characters in the input string with the specified replacement string.

@@ -940,3 +940,25 @@ func TestLoremParagraphs(t *testing.T) {
 		})
 	}
 }
+
+func TestLoremDomain(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{"LoremDomain1"},
+		{"LoremDomain2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := loremDomain()
+			result := LoremDomain()
+			builderResult := NewLoremDomain().String()
+			if helperResult == "" || builderResult == "" || result == "" {
+				t.Errorf("LoremDomain - %q, %q, %q", result, helperResult, builderResult)
+			}
+			if !isValidDomain(result) || !isValidDomain(builderResult) || !isValidDomain(helperResult) {
+				t.Errorf("LoremDomain - invalid domain: %q / %q / %q", result, builderResult, helperResult)
+			}
+		})
+	}
+}

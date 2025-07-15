@@ -321,6 +321,17 @@ func (sb *StringBuilder) RequireEmail() *StringBuilder {
 	return sb
 }
 
+// RequireDomain ensures that the value of the StringBuilder is a valid domain, setting an error if validation fails.
+func (sb *StringBuilder) RequireDomain() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	if !isValidDomain(sb.value) {
+		sb.err = errors.New(ErrInvalidDomain)
+	}
+	return sb
+}
+
 // RequireURL validates if the StringBuilder's value is a properly formatted URL, sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireURL() *StringBuilder {
 	if sb.err != nil {
