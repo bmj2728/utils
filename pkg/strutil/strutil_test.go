@@ -1538,3 +1538,86 @@ func TestNormalizeDiacritics(t *testing.T) {
 		})
 	}
 }
+
+func TestTrimChars(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		chars    string
+		expected string
+	}{
+		{"TrimChars", "Hello World!!!", "!", "Hello World"},
+		{"TrimCharsEmpty", "Hello World!!!", "", "Hello World!!!"},
+		{"TrimCharsEmptyInput", "", "", ""},
+		{"TrimCharsLeading", "Hello World!!!", "H", "ello World!!!"},
+		{"TrimCharsTrailing", "Hello World!!!", "!", "Hello World"},
+		{"TrimCharsPrefix", "x-Hello World!!!", "x-", "Hello World!!!"},
+		{"TrimCharsSuffix", "Hello World-alpha", "-alpha", "Hello World"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := trimChars(tt.input, tt.chars)
+			result := TrimChars(tt.input, tt.chars)
+			builderResult := New(tt.input).TrimChars(tt.chars).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("TrimChars - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestTrimCharsLeft(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		chars    string
+		expected string
+	}{
+		{"TrimCharsL", "Hello World!!!", "!", "Hello World!!!"},
+		{"TrimCharsLEmpty", "Hello World!!!", "", "Hello World!!!"},
+		{"TrimCharsLEmptyInput", "", "", ""},
+		{"TrimCharsLLeading", "Hello World!!!", "H", "ello World!!!"},
+		{"TrimCharsLTrailing", "Hello World!!!", "!", "Hello World!!!"},
+		{"TrimCharsLPrefix", "x-Hello World!!!", "x-", "Hello World!!!"},
+		{"TrimCharsLSuffix", "Hello World-alpha", "-alpha", "Hello World-alpha"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := trimCharsLeft(tt.input, tt.chars)
+			result := TrimCharsLeft(tt.input, tt.chars)
+			builderResult := New(tt.input).TrimCharsLeft(tt.chars).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("TrimCharsLeft - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestTrimCharsRight(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		chars    string
+		expected string
+	}{
+		{"TrimCharsR", "Hello World!!!", "!", "Hello World"},
+		{"TrimCharsREmpty", "Hello World!!!", "", "Hello World!!!"},
+		{"TrimCharsREmptyInput", "", "", ""},
+		{"TrimCharsRLeading", "Hello World!!!", "H", "Hello World!!!"},
+		{"TrimCharsRTrailing", "Hello World!!!", "!", "Hello World"},
+		{"TrimCharsRPrefix", "x-Hello World!!!", "x-", "x-Hello World!!!"},
+		{"TrimCharsRSuffix", "Hello World-alpha", "-alpha", "Hello World"},
+	}
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := trimCharsRight(tt.input, tt.chars)
+			result := TrimCharsRight(tt.input, tt.chars)
+			builderResult := New(tt.input).TrimCharsRight(tt.chars).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("TrimCharsRight - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}

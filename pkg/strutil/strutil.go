@@ -1,3 +1,29 @@
+// Package strutil provides utilities for string manipulation and analysis.
+// functions are available as part of a functional api as well as
+// a fluent builder api
+//
+// This package includes functions for:
+//   - String generation
+//   - Text processing manipulation
+//   - Text sanitizing functions
+//
+// # Usage
+//
+// Basic example to create a url-safe slug using the functional api:
+//
+//	 title := "The Fantasic Four: First Steps"
+//		slug := strutil.Slugify(title, 100)
+//		fmt.Print(slug) // Output: the-fantastic-four-first-steps
+//
+// Using the fluent api:
+//
+//		slug := strutil.New("The Fantasic Four: First Steps").Slugify(100).String()
+//	 fmt.Print(slug) // Output: the-fantastic-four-first-steps
+//
+// # Performance Considerations
+//
+// Most functions are designed for moderate-sized strings.
+// For large text processing, consider streaming approaches.
 package strutil
 
 // UUID Generation
@@ -181,6 +207,21 @@ func TrimLeft(s string) string {
 // TrimRight removes all trailing whitespace characters from the given string.
 func TrimRight(s string) string {
 	return trimRight(s)
+}
+
+// TrimChars removes all leading and trailing occurrences of specified characters from the input string.
+func TrimChars(s string, chars string) string {
+	return trimChars(s, chars)
+}
+
+// TrimCharsLeft removes all leading characters specified in 'chars' from the input string 's'.
+func TrimCharsLeft(s string, chars string) string {
+	return trimCharsLeft(s, chars)
+}
+
+// TrimCharsRight removes all specified characters from the end of the given string.
+func TrimCharsRight(s string, chars string) string {
+	return trimCharsRight(s, chars)
 }
 
 // AlphaReplace replaces all non-alphabetic characters in the input string with the specified replacement string.

@@ -414,6 +414,21 @@ func trimRight(s string) string {
 	return strings.TrimRight(s, WhiteSpace)
 }
 
+// trimChars removes all leading and trailing occurrences of the characters specified in chars from the string s.
+func trimChars(s string, chars string) string {
+	return strings.Trim(s, chars)
+}
+
+// trimCharsLeft removes all leading characters found in 'chars' from the string 's'.
+func trimCharsLeft(s string, chars string) string {
+	return strings.TrimLeft(s, chars)
+}
+
+// trimCharsRight removes all occurrences of the specified characters from the end of the given string.
+func trimCharsRight(s string, chars string) string {
+	return strings.TrimRight(s, chars)
+}
+
 // normalizeDiacritics removes diacritical marks (accents) from the input string, returning the normalized version.
 func normalizeDiacritics(s string) string {
 	return godiacritics.Normalize(s)
@@ -427,43 +442,26 @@ func slugify(s string, length int) string {
 		return ""
 	}
 
-	// make lower
-	s = toLower(s)
-
-	// ensure trimmed
-	s = trim(s)
-
-	// replace any non-alphanumeric with an "-"
-	for i, c := range s {
-		if !isAlphaNumericRune(c) {
-			s = s[:i] + "-" + s[i+1:]
-		}
-	}
-
-	//make sure we don't dupe
-	i := 1
-	for i > 0 {
-		s = strings.ReplaceAll(s, "--", "-")
-		if strings.Contains(s, "--") {
-			continue
-		} else {
-			i = 0
-		}
-	}
-
-	//cleanup leading and trailing dashes
-	if s[len(s)-1] == '-' {
-		s = s[:len(s)-1]
-	}
-	if s[0] == '-' {
-		s = s[1:]
-	}
-
 	//clean the diacritics
 	s = normalizeDiacritics(s)
 
+	// replace non-alphanumerics
+	s = alphaNumericReplace(s, " ")
+
+	// normalize whitespace
+	s = normalizeWhitespace(s)
+
+	// replace whitespace with "-"
+	s = replaceSpaces(s, "-")
+
+	// make lower
+	s = toLower(s)
+
 	// if a length is provided, truncate to that length
 	s = truncate(s, length, "")
+
+	// ensure no misbehaving "-"
+	s = trimChars(s, "-")
 
 	return s
 }

@@ -278,6 +278,35 @@ func (sb *StringBuilder) TrimRight() *StringBuilder {
 	return sb
 }
 
+// TrimChars removes all leading and trailing characters specified in the input string from the StringBuilder's value.
+func (sb *StringBuilder) TrimChars(chars string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = trimChars(sb.value, chars)
+	return sb
+}
+
+// TrimCharsLeft removes all leading occurrences of the specified characters from the string
+// and returns the updated StringBuilder.
+func (sb *StringBuilder) TrimCharsLeft(chars string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = trimCharsLeft(sb.value, chars)
+	return sb
+}
+
+// TrimCharsRight removes all occurrences of the specified characters from the end of the string
+// and returns the StringBuilder.
+func (sb *StringBuilder) TrimCharsRight(chars string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = trimCharsRight(sb.value, chars)
+	return sb
+}
+
 // AlphaReplace replaces all alphabetical characters in the StringBuilder's value with the specified replacement string.
 func (sb *StringBuilder) AlphaReplace(replacement string) *StringBuilder {
 	if sb.err != nil {
