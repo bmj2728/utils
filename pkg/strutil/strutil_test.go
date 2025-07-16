@@ -1487,3 +1487,54 @@ func TestSlugify(t *testing.T) {
 		})
 	}
 }
+
+func TestEscapeHTML(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"EscapeHTML",
+			"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>",
+			"&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. &lt;/p&gt;"},
+		{"EscapeHTMLEmpty", "", ""},
+		{"EscapeHTMLSpecialChars", "Hello! @#$%^&*() World", "Hello! @#$%^&amp;*() World"},
+		{"EscapeHTMLAll", `"\&<>`, "&quot;\\&amp;&lt;&gt;"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := escapeHTML(tt.input)
+			result := EscapeHTML(tt.input)
+			builderResult := New(tt.input).EscapeHTML().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("EscapeHTML - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestNormalizeDiacritics(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"NormDiacriticAcute", "café", "cafe"},
+		{"NormDiacriticCedilla", "façade", "facade"},
+		{"NormDiacriticUmlaut", "naïve", "naive"},
+		{"NormDiacriticTilde", "jalapeño", "jalapeno"},
+		{"NormDiacriticCircumGraveAcute", "élevàtor ôperàtor", "elevator operator"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := normalizeDiacritics(tt.input)
+			result := NormalizeDiacritics(tt.input)
+			builderResult := New(tt.input).NormalizeDiacritics().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("NormalizeDiacritics - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}

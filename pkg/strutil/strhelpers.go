@@ -264,8 +264,6 @@ func escapeHTML(s string) string {
 		switch r {
 		case '"':
 			b.WriteString("&quot;")
-		case '\'':
-			b.WriteString("&#39;")
 		case '&':
 			b.WriteString("&amp;")
 		case '<':
