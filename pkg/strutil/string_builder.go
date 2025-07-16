@@ -255,6 +255,24 @@ func (sb *StringBuilder) Trim() *StringBuilder {
 	return sb
 }
 
+// TrimLeft removes all leading whitespace characters from the string stored in the StringBuilder and updates its value.
+func (sb *StringBuilder) TrimLeft() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = trimLeft(sb.value)
+	return sb
+}
+
+// TrimRight removes trailing whitespace or specified characters from the end of the StringBuilder's value.
+func (sb *StringBuilder) TrimRight() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = trimRight(sb.value)
+	return sb
+}
+
 // AlphaReplace replaces all alphabetical characters in the StringBuilder's value with the specified replacement string.
 func (sb *StringBuilder) AlphaReplace(replacement string) *StringBuilder {
 	if sb.err != nil {
