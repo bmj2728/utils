@@ -1,6 +1,6 @@
 package strutil
 
-const (
+var (
 
 	// ErrInvalidEmail indicates that the input string is not in a valid email address format.
 	ErrInvalidEmail = "invalid email address"

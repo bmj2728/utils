@@ -1,9 +1,10 @@
 package strutil
 
 import (
-	"github.com/google/uuid"
 	"strings"
 	"testing"
+
+	"github.com/google/uuid"
 )
 
 func TestNewUUID(t *testing.T) {

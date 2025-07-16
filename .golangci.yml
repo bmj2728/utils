@@ -45,6 +45,7 @@ linters:
       check-type-assertions: true
       check-blank: true
 
+
   exclusions:
     generated: strict
     rules:
@@ -53,6 +54,7 @@ linters:
           - dupl
           - goconst
           - gosec
+          - gocyclo
       - path: "_test\\.go"
         text: "G404:"
       - path: ".*\\.pb\\.go"

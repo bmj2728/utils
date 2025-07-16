@@ -2,6 +2,7 @@ package version
 
 import (
 	"fmt"
+	"regexp"
 	"runtime"
 	"runtime/debug"
 )
@@ -26,6 +27,9 @@ type BuildInfo struct {
 
 // GetVersion returns just the version string
 func GetVersion() string {
+	if !IsValidSemVer(Version) {
+		return "v0.0.0-dev.unknown"
+	}
 	return Version
 }
 
@@ -53,9 +57,9 @@ func GetBuildInfo() *BuildInfo {
 func (bi *BuildInfo) String() string {
 	if bi.CommitHash != "unknown" {
 		return fmt.Sprintf("%s (commit: %s, built: %s, %s)",
-			bi.Version, bi.CommitHash, bi.BuildDate, bi.Platform)
+			GetVersion(), bi.CommitHash, bi.BuildDate, bi.Platform)
 	}
-	return fmt.Sprintf("%s (%s)", bi.Version, bi.Platform)
+	return fmt.Sprintf("%s (%s)", GetVersion(), bi.Platform)
 }
 
 // IsDevelopment returns true if this is a development build
@@ -65,8 +69,20 @@ func (bi *BuildInfo) IsDevelopment() bool {
 
 // GetShortCommit returns the first 7 characters of the commit hash
 func (bi *BuildInfo) GetShortCommit() string {
+	if bi.CommitHash == "unknown" || bi.CommitHash == "" {
+		return "unknown"
+	}
 	if len(bi.CommitHash) >= 7 {
 		return bi.CommitHash[:7]
 	}
 	return bi.CommitHash
+}
+
+// semVerPattern is the regex pattern for semantic version validation
+const semVerPattern = `^v\d+\.\d+\.\d+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$`
+
+// IsValidSemVer checks if the given version string follows semantic versioning format
+func IsValidSemVer(version string) bool {
+	match, _ := regexp.MatchString(semVerPattern, version)
+	return match
 }
