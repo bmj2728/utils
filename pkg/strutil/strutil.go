@@ -168,6 +168,32 @@ func ReplaceSpaces(s string, replacement string) string {
 	return replaceSpaces(s, replacement)
 }
 
+// Trim removes all leading and trailing white spaces from the given string and returns the trimmed result.
+func Trim(s string) string {
+	return trim(s)
+}
+
+// TrimLeft removes all leading whitespace characters from the input string `s`.
+func TrimLeft(s string) string {
+	return trimLeft(s)
+}
+
+// TrimRight removes all trailing whitespace characters from the given string.
+func TrimRight(s string) string {
+	return trimRight(s)
+}
+
+// AlphaReplace replaces all non-alphabetic characters in the input string with the specified replacement string.
+func AlphaReplace(s string, replacement string) string {
+	return alphaReplace(s, replacement)
+}
+
+// AlphaNumericReplace replaces all non-alphanumeric characters in the input string
+// with the specified replacement string.
+func AlphaNumericReplace(s string, replacement string) string {
+	return alphaNumericReplace(s, replacement)
+}
+
 func Slugify(s string) string {
 	//TODO implement
 	panic("Implement me!")

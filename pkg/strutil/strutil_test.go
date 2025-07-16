@@ -1326,3 +1326,28 @@ func TestSanitizeHTMLCustom(t *testing.T) {
 		})
 	}
 }
+
+func TestTrim(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"TrimSpace", " abc ", "abc"},
+		{"TrimSpaceEmpty", " ", ""},
+		{"TrimSpaceEmptyInput", "", ""},
+		{"TrimSpaceLeading", " abc", "abc"},
+		{"TrimSpaceTrailing", "abc ", "abc"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := trim(tt.input)
+			result := Trim(tt.input)
+			builderResult := New(tt.input).Trim().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("Trim - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}

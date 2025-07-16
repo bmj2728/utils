@@ -34,6 +34,10 @@ const (
 
 	// URLSafe defines a set of characters considered safe for use in URLs, including alphanumeric characters and "-_".
 	URLSafe = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
+
+	// WhiteSpace represents a string containing common whitespace characters:
+	// space, tab, newline, carriage return, vertical tab, and form feed.
+	WhiteSpace = " \t\n\r\v\f"
 )
 
 const (

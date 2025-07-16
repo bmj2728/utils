@@ -212,6 +212,27 @@ func alphaNumeric(s string, ws bool) string {
 	return sanitize.AlphaNumeric(s, ws)
 }
 
+// alphaReplace replaces all non-alphabetic characters in the input string with the specified replacement string.
+func alphaReplace(s string, replacement string) string {
+	for i, c := range s {
+		if !unicode.IsLetter(c) {
+			s = s[:i] + replacement + s[i+1:]
+		}
+	}
+	return s
+}
+
+// alphaNumericReplace replaces all non-alphanumeric characters
+// in the input string with the specified replacement string.
+func alphaNumericReplace(s string, replacement string) string {
+	for i, c := range s {
+		if !isAlphaNumericRune(c) {
+			s = s[:i] + replacement + s[i+1:]
+		}
+	}
+	return s
+}
+
 //TODO: Needs tests
 
 // stripHTML removes all HTML tags and sanitizes the input string to prevent potential security risks.
@@ -354,4 +375,37 @@ func truncate(s string, length int, suffix string) string {
 		return ""
 	}
 	return s[:length] + suffix
+}
+
+// trim removes all leading and trailing white spaces from the input string and returns the trimmed result.
+func trim(s string) string {
+	return strings.TrimSpace(s)
+}
+
+// trimLeft removes all leading whitespace characters from the input string `s` based on the defined `WhiteSpace` set.
+func trimLeft(s string) string {
+	return strings.TrimLeft(s, WhiteSpace)
+}
+
+// trimRight removes all trailing whitespace characters from the provided string.
+func trimRight(s string) string {
+	return strings.TrimRight(s, WhiteSpace)
+}
+
+func slugify(s string, length int) string {
+	// if a length is provided, truncate to that length
+	if length > 0 {
+		s = truncate(s, length, "")
+	}
+	// ensure trimmed
+	s = trim(s)
+	// replace any non-alphanumeric with an "-"
+	for i, c := range s {
+		if !isAlphaNumericRune(c) {
+			s = s[:i] + "-" + s[i+1:]
+		}
+	}
+	// make lower
+	s = toLower(s)
+	return s
 }

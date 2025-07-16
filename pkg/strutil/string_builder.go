@@ -246,6 +246,34 @@ func (sb *StringBuilder) SanitizeHTMLCustom(allowedTags []string) *StringBuilder
 	return sb
 }
 
+// Trim removes leading and trailing whitespace or specific characters from the StringBuilder's value.
+func (sb *StringBuilder) Trim() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = trim(sb.value)
+	return sb
+}
+
+// AlphaReplace replaces all alphabetical characters in the StringBuilder's value with the specified replacement string.
+func (sb *StringBuilder) AlphaReplace(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = alphaReplace(sb.value, replacement)
+	return sb
+}
+
+// AlphaNumericReplace replaces all alphanumeric characters in the StringBuilder value
+// with the specified replacement string.
+func (sb *StringBuilder) AlphaNumericReplace(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = alphaNumericReplace(sb.value, replacement)
+	return sb
+}
+
 func (sb *StringBuilder) Slugify() *StringBuilder {
 	panic("Implement me!")
 }
@@ -327,7 +355,8 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 
 // Validation Methods (can set error)
 
-// RequireEmail validates if the StringBuilder's value is a valid email format, sets an error if invalid, and returns the instance.
+// RequireEmail validates if the StringBuilder's value is a valid email format,
+// sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireEmail() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -349,7 +378,8 @@ func (sb *StringBuilder) RequireDomain() *StringBuilder {
 	return sb
 }
 
-// RequireURL validates if the StringBuilder's value is a properly formatted URL, sets an error if invalid, and returns the instance.
+// RequireURL validates if the StringBuilder's value is a properly formatted URL,
+// sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireURL() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -360,7 +390,8 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 	return sb
 }
 
-// RequireUUID validates whether the StringBuilder's value conforms to a valid UUID format, sets an error if invalid, and returns the instance.
+// RequireUUID validates whether the StringBuilder's value conforms to a valid UUID format,
+// sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireUUID() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -371,7 +402,8 @@ func (sb *StringBuilder) RequireUUID() *StringBuilder {
 	return sb
 }
 
-// RequireLength validates that the StringBuilder's value length is within the specified min and max range. Sets an error if invalid.
+// RequireLength validates that the StringBuilder's value length is within the specified min and max range.
+// Sets an error if invalid.
 func (sb *StringBuilder) RequireLength(min, max int) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -398,7 +430,8 @@ func (sb *StringBuilder) RequireNotEmpty() *StringBuilder {
 	return sb
 }
 
-// RequireNotEmptyNormalized ensures the StringBuilder's value is not empty after normalizing whitespace, setting an error otherwise.
+// RequireNotEmptyNormalized ensures the StringBuilder's value is not empty after normalizing whitespace,
+// setting an error otherwise.
 func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -409,7 +442,8 @@ func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
 	return sb
 }
 
-// RequireAlphaNumeric ensures the StringBuilder's value contains only alphanumeric characters, setting an error if invalid.
+// RequireAlphaNumeric ensures the StringBuilder's value contains only alphanumeric characters,
+// setting an error if invalid.
 func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
 	if sb.err != nil {
 		return sb
