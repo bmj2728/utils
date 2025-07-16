@@ -194,9 +194,10 @@ func AlphaNumericReplace(s string, replacement string) string {
 	return alphaNumericReplace(s, replacement)
 }
 
-func Slugify(s string) string {
-	//TODO implement
-	panic("Implement me!")
+// Slugify converts a string to a URL-friendly slug, ensuring lowercase, trimming, truncation,
+// and replacing non-alphanumerics.
+func Slugify(s string, length int) string {
+	return slugify(s, length)
 }
 
 // Truncate shortens the input string s to the specified length and appends the given suffix if truncation occurs.
@@ -250,6 +251,8 @@ func SanitizeHTML(s string) string {
 func SanitizeHTMLCustom(s string, allowedTags []string) string {
 	return sanitizeHTMLCustom(s, allowedTags)
 }
+
+//TODO additional sections
 
 func EscapeHTML(s string) string {
 	panic("Implement me!")

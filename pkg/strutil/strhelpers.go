@@ -214,9 +214,9 @@ func alphaNumeric(s string, ws bool) string {
 
 // alphaReplace replaces all non-alphabetic characters in the input string with the specified replacement string.
 func alphaReplace(s string, replacement string) string {
-	for i, c := range s {
+	for _, c := range s {
 		if !unicode.IsLetter(c) {
-			s = s[:i] + replacement + s[i+1:]
+			s = strings.Replace(s, string(c), replacement, 1)
 		}
 	}
 	return s
@@ -225,15 +225,13 @@ func alphaReplace(s string, replacement string) string {
 // alphaNumericReplace replaces all non-alphanumeric characters
 // in the input string with the specified replacement string.
 func alphaNumericReplace(s string, replacement string) string {
-	for i, c := range s {
+	for _, c := range s {
 		if !isAlphaNumericRune(c) {
-			s = s[:i] + replacement + s[i+1:]
+			s = strings.Replace(s, string(c), replacement, 1)
 		}
 	}
 	return s
 }
-
-//TODO: Needs tests
 
 // stripHTML removes all HTML tags and sanitizes the input string to prevent potential security risks.
 func stripHTML(s string) string {
@@ -392,7 +390,10 @@ func trimRight(s string) string {
 	return strings.TrimRight(s, WhiteSpace)
 }
 
+// slugify converts a given string into a URL-friendly slug, ensuring lowercase, truncation, and hyphenation if needed.
 func slugify(s string, length int) string {
+	// make lower
+	s = toLower(s)
 	// if a length is provided, truncate to that length
 	if length > 0 {
 		s = truncate(s, length, "")
@@ -405,7 +406,14 @@ func slugify(s string, length int) string {
 			s = s[:i] + "-" + s[i+1:]
 		}
 	}
-	// make lower
-	s = toLower(s)
+	//cleanup leading and trailing dashes
+	if s[len(s)-1] == '-' {
+		s = s[:len(s)-1]
+	}
+	if s[0] == '-' {
+		s = s[1:]
+	}
+	//make sure we don't dupe
+	s = strings.ReplaceAll(s, "--", "-")
 	return s
 }

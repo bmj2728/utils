@@ -292,8 +292,13 @@ func (sb *StringBuilder) AlphaNumericReplace(replacement string) *StringBuilder 
 	return sb
 }
 
-func (sb *StringBuilder) Slugify() *StringBuilder {
-	panic("Implement me!")
+// Slugify converts the string into a URL-friendly slug with a maximum length specified by the parameter.
+func (sb *StringBuilder) Slugify(length int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = slugify(sb.value, length)
+	return sb
 }
 
 // Truncate shortens the string to the specified length and appends the provided suffix if truncation occurs.

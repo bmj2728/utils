@@ -1351,3 +1351,130 @@ func TestTrim(t *testing.T) {
 		})
 	}
 }
+
+func TestTrimLeft(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"TrimLeftSpace", " abc ", "abc "},
+		{"TrimLeftSpaceEmpty", " ", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := trimLeft(tt.input)
+			result := TrimLeft(tt.input)
+			builderResult := New(tt.input).TrimLeft().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("TrimLeft - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestTrimRight(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"TrimRightSpace", " abc ", " abc"},
+		{"TrimRightSpaceEmpty", " ", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := trimRight(tt.input)
+			result := TrimRight(tt.input)
+			builderResult := New(tt.input).TrimRight().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("TrimRight - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestAlphaReplace(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"AlphaReplace", "1234567890", "x", "xxxxxxxxxx"},
+		{"AlphaReplaceEmpty", "Hello World!!!", "-", "Hello-World---"},
+		{"AlphaReplaceEmpty", "", "x", ""},
+		{"AlphaReplaceEmptyReplacement", "   ", "x", "xxx"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := alphaReplace(tt.input, tt.replacement)
+			result := AlphaReplace(tt.input, tt.replacement)
+			builderResult := New(tt.input).AlphaReplace(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("AlphaReplace - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestAlphaNumericReplace(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"AlphaNumericReplace1", "abcd1234", "x", "abcd1234"},
+		{"AlphaNumericReplace2", "a b c d e f", "-", "a-b-c-d-e-f"},
+		{"AlphaNumericReplace3", "a b c d e f", "", "abcdef"},
+		{"AlphaNumericBlank", "", "x", ""},
+		{"AlphaNumericBlankReplacement", "a b c d e f", "", "abcdef"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := alphaNumericReplace(tt.input, tt.replacement)
+			result := AlphaNumericReplace(tt.input, tt.replacement)
+			builderResult := New(tt.input).AlphaNumericReplace(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("AlphaNumericReplace - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestSlugify(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		expected string
+	}{
+		{"Slugify",
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+			45,
+			"lorem-ipsum-dolor-sit-amet-consectetur-adipi"},
+		{"SlugifyEmpty", "Sed porttitor orci lacinia ipsum efficitur eleifend.", 21, "sed-porttitor-orci-la"},
+		{"SlugifyEmptyReplacement", "Donec risus mauris, facilisis eu egestas sed, convallis a ligula. " +
+			"Morbi pharetra placerat dapibus. Praesent vitae nisl viverra, malesuada felis non, tincidunt arcu. " +
+			"Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer " +
+			"nisi justo, ultricies vel enim auctor, viverra tincidunt turpis.",
+			125,
+			"donec-risus-mauris-facilisis-eu-egestas-sed-convallis-a-ligula-morbi-phar" +
+				"etra-placerat-dapibus-praesent-vitae-nisl-viverr"},
+		{"SlugifySpecialLeadTrail", "!Hello World!", 21, "hello-world"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := slugify(tt.input, tt.length)
+			result := Slugify(tt.input, tt.length)
+			builderResult := New(tt.input).Slugify(tt.length).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("Slugify - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
