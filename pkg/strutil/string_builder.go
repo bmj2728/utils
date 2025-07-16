@@ -297,6 +297,15 @@ func (sb *StringBuilder) AlphaNumericReplace(replacement string) *StringBuilder 
 	return sb
 }
 
+// NormalizeDiacritics removes diacritical marks from the string and replaces them with their non-accented counterparts.
+func (sb *StringBuilder) NormalizeDiacritics() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = normalizeDiacritics(sb.value)
+	return sb
+}
+
 // Slugify converts the string into a URL-friendly slug with a maximum length specified by the parameter.
 func (sb *StringBuilder) Slugify(length int) *StringBuilder {
 	if sb.err != nil {

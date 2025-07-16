@@ -1,3 +1,5 @@
+github.com/Regis24GmbH/go-diacritics v1.0.0 h1:uuJos5zP2NTSw0CWUGxVVBKppJDEBKwxzRLDDSUP/To=
+github.com/Regis24GmbH/go-diacritics v1.0.0/go.mod h1:OnN7PH/WIJrugpbXybxw4DW6lXSjALVr1GtiX2p7QDw=
 github.com/UltiRequiem/lorelai v1.1.1 h1:NiMUpAh80eCjKiGM8lLVurDYmLnIirxrrM3UzcqX6kc=
 github.com/UltiRequiem/lorelai v1.1.1/go.mod h1:blYS+vGJtpTz1DoG6qHdQqHbRMmS3bUfYVw3hqksrxk=
 github.com/aymerick/douceur v0.2.0 h1:Mv+mAeH1Q+n9Fr+oyamOlAkUNPWPlA8PPGR0QAaYuPk=
@@ -18,5 +20,7 @@ github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOf
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
 golang.org/x/net v0.42.0 h1:jzkYrhi3YQWD6MLBJcsklgQsoAcw89EcZbJw8Z614hs=
 golang.org/x/net v0.42.0/go.mod h1:FF1RA5d3u7nAYA4z2TkclSCKh68eSXtiFwcWQpPXdt8=
+golang.org/x/text v0.27.0 h1:4fGWRpyh641NLlecmyl4LOe6yDdfaYNrGb2zdfo4JV4=
+golang.org/x/text v0.27.0/go.mod h1:1D28KMCvyooCX9hBiosv5Tz/+YLxj0j7XhWjpSUF7CU=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=

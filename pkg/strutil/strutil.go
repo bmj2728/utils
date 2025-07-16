@@ -194,6 +194,11 @@ func AlphaNumericReplace(s string, replacement string) string {
 	return alphaNumericReplace(s, replacement)
 }
 
+// NormalizeDiacritics removes diacritical marks (accents) from the input string and returns the normalized version.
+func NormalizeDiacritics(s string) string {
+	return normalizeDiacritics(s)
+}
+
 // Slugify converts a string to a URL-friendly slug, ensuring lowercase, trimming, truncation,
 // and replacing non-alphanumerics.
 func Slugify(s string, length int) string {

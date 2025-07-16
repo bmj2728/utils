@@ -8,6 +8,7 @@ import (
 	"strings"
 	"unicode"
 
+	godiacritics "github.com/Regis24GmbH/go-diacritics"
 	lorelai "github.com/UltiRequiem/lorelai/pkg"
 	"github.com/google/uuid"
 	"github.com/microcosm-cc/bluemonday"
@@ -415,22 +416,43 @@ func trimRight(s string) string {
 	return strings.TrimRight(s, WhiteSpace)
 }
 
+// normalizeDiacritics removes diacritical marks (accents) from the input string, returning the normalized version.
+func normalizeDiacritics(s string) string {
+	return godiacritics.Normalize(s)
+}
+
 // slugify converts a given string into a URL-friendly slug, ensuring lowercase, truncation, and hyphenation if needed.
 func slugify(s string, length int) string {
+
+	//early return if empty string
+	if s == "" || length < 1 {
+		return ""
+	}
+
 	// make lower
 	s = toLower(s)
-	// if a length is provided, truncate to that length
-	if length > 0 {
-		s = truncate(s, length, "")
-	}
+
 	// ensure trimmed
 	s = trim(s)
+
 	// replace any non-alphanumeric with an "-"
 	for i, c := range s {
 		if !isAlphaNumericRune(c) {
 			s = s[:i] + "-" + s[i+1:]
 		}
 	}
+
+	//make sure we don't dupe
+	i := 1
+	for i > 0 {
+		s = strings.ReplaceAll(s, "--", "-")
+		if strings.Contains(s, "--") {
+			continue
+		} else {
+			i = 0
+		}
+	}
+
 	//cleanup leading and trailing dashes
 	if s[len(s)-1] == '-' {
 		s = s[:len(s)-1]
@@ -438,7 +460,12 @@ func slugify(s string, length int) string {
 	if s[0] == '-' {
 		s = s[1:]
 	}
-	//make sure we don't dupe
-	s = strings.ReplaceAll(s, "--", "-")
+
+	//clean the diacritics
+	s = normalizeDiacritics(s)
+
+	// if a length is provided, truncate to that length
+	s = truncate(s, length, "")
+
 	return s
 }

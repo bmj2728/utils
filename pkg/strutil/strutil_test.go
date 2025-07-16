@@ -1455,7 +1455,7 @@ func TestSlugify(t *testing.T) {
 		{"Slugify",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
 			45,
-			"lorem-ipsum-dolor-sit-amet-consectetur-adipi"},
+			"lorem-ipsum-dolor-sit-amet-consectetur-adipis"},
 		{"SlugifyEmpty", "Sed porttitor orci lacinia ipsum efficitur eleifend.", 21, "sed-porttitor-orci-la"},
 		{"SlugifyEmptyReplacement", "Donec risus mauris, facilisis eu egestas sed, convallis a ligula. " +
 			"Morbi pharetra placerat dapibus. Praesent vitae nisl viverra, malesuada felis non, tincidunt arcu. " +
@@ -1463,9 +1463,9 @@ func TestSlugify(t *testing.T) {
 			"nisi justo, ultricies vel enim auctor, viverra tincidunt turpis.",
 			125,
 			"donec-risus-mauris-facilisis-eu-egestas-sed-convallis-a-ligula-morbi-phar" +
-				"etra-placerat-dapibus-praesent-vitae-nisl-viverr"},
+				"etra-placerat-dapibus-praesent-vitae-nisl-viverra-ma"},
 		{"SlugifySpecialLeadTrail", "!Hello World!", 21, "hello-world"},
-		{"SlugifyMultipleSpaces", "Hello   World   Test", 15, "hello-world-test"},
+		{"SlugifyMultipleSpaces", "Hello   World   Test", 16, "hello-world-test"},
 		{"SlugifySpecialChars", "Hello! @#$%^&*() World", 11, "hello-world"},
 		{"SlugifyNonAscii", "Café & Résumé", 12, "cafe-resume"},
 		{"SlugifyEmpty", "", 10, ""},
