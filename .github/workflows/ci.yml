@@ -29,12 +29,18 @@ jobs:
 
       - name: Verify go mod tidy
         run: |
+          go mod download
           go mod tidy
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "go mod tidy resulted in changes"
-            git status --porcelain
+          if [[ -n $(git status --porcelain go.mod go.sum) ]]; then
+            echo "Error: go.mod and/or go.sum are not tidy."
+            echo "Please run 'go mod tidy' locally and commit the changes."
+            echo "Diff:"
+            git diff
             exit 1
+          else
+            echo "Success: Go modules are tidy."
           fi
+
 
       - name: Verify go fmt
         run: |
