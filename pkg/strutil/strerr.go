@@ -11,7 +11,8 @@ var (
 	// ErrInvalidUUID represents an error message indicating that the provided value is not a valid UUID format.
 	ErrInvalidUUID = "invalid UUID"
 
-	// ErrInvalidLengthRange signifies that the length range provided is invalid, such as when min is greater than max or negative.
+	// ErrInvalidLengthRange signifies that the length range provided is invalid,
+	// such as when min is greater than max or negative.
 	ErrInvalidLengthRange = "invalid length range"
 
 	// ErrInvalidLength indicates that the length of the string is outside the allowed range.

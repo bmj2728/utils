@@ -41,6 +41,7 @@ const (
 	// LabelRegex defines a regular expression for validating domain labels, ensuring they meet DNS hostname requirements.
 	LabelRegex = `[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?`
 
-	// TLDRegex is a regular expression that matches valid top-level domain (TLD) strings consisting of 2 or more alphabetic characters.
+	// TLDRegex is a regular expression that matches valid top-level domain (TLD) strings
+	// consisting of 2 or more alphabetic characters.
 	TLDRegex = `[a-zA-Z]{2,}`
 )

@@ -331,11 +331,21 @@ func TestIsUrl(t *testing.T) {
 		{"ValidUrlNoHost", "https://", false},
 		{"ValidUrlNoSchemeOrHost", ":", false},
 		{"ValidUrlWithPath", "https://www.google.com/search", true},
-		{"ValidUrlWithPathAndQuery", "https://www.google.com/search?q=hello", true},
-		{"ValidUrlWithPathAndQueryAndFragment", "https://www.google.com/search?q=hello#fragment", true},
-		{"ValidUrlWithPathAndQueryAndFragmentAndParams", "https://www.google.com/search?q=hello#fragment&param1=value1&param2=value2", true},
-		{"ValidUrlWithPathAndQueryAndFragmentAndParamsAndTrailingSlash", "https://www.google.com/search?q=hello#fragment&param1=value1&param2=value2/", true},
-		{"ValidURLWithPort", "https://www.google.com:443", true},
+		{"ValidUrlWithPathAndQuery",
+			"https://www.google.com/search?q=hello",
+			true},
+		{"ValidUrlWithPathAndQueryAndFragment",
+			"https://www.google.com/search?q=hello#fragment",
+			true},
+		{"ValidUrlWithPathAndQueryAndFragmentAndParams",
+			"https://www.google.com/search?q=hello#fragment&param1=value1&param2=value2",
+			true},
+		{"ValidUrlWithPathAndQueryAndFragmentAndParamsAndTrailingSlash",
+			"https://www.google.com/search?q=hello#fragment&param1=value1&param2=value2/",
+			true},
+		{"ValidURLWithPort",
+			"https://www.google.com:443",
+			true},
 	}
 
 	for _, tt := range tests {
@@ -389,14 +399,20 @@ func TestIsValidLength(t *testing.T) {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
 			}
 			if (tt.min < 0 || tt.max < 0) && builderErr.Error() != ErrInvalidLengthRange {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLengthRange)
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
+					tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLengthRange)
 			}
 
 			if tt.min > tt.max && builderErr.Error() != ErrInvalidLengthRange {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLengthRange)
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
+					tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLengthRange)
 			}
 
-			if tt.min > 0 && tt.max > 0 && tt.min <= tt.max && !isLengthInRange(tt.input, tt.min, tt.max) && builderErr.Error() != ErrInvalidLength {
+			if tt.min > 0 &&
+				tt.max > 0 &&
+				tt.min <= tt.max &&
+				!isLengthInRange(tt.input, tt.min, tt.max) &&
+				builderErr.Error() != ErrInvalidLength {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLength)
 			}
 		})
@@ -690,7 +706,8 @@ func TestLoremWords(t *testing.T) {
 			builderResultCount := len(strings.Split(builderResult, " ")) - 1
 			builderArr := strings.Split(builderResult, " ")
 			if tt.count > 0 && (helperResultCount != tt.count || resultCount != tt.count || builderResultCount != tt.count) {
-				t.Errorf("LoremWords(%d, %d, %d) - expected %d - words: %q / %q / %q", resultCount, helperResultCount, builderResultCount, tt.count, resultArr, helperArr, builderArr)
+				t.Errorf("LoremWords(%d, %d, %d) - expected %d - words: %q / %q / %q",
+					resultCount, helperResultCount, builderResultCount, tt.count, resultArr, helperArr, builderArr)
 			}
 		})
 	}
@@ -718,12 +735,20 @@ func TestLoremSentence(t *testing.T) {
 				t.Errorf("LoremSentence - expected 8 - words: %d / %d / %d", resultCount, helperResultCount, builderResultCount)
 			}
 
-			if helperResult[0] < 'A' || helperResult[0] > 'Z' || result[0] < 'A' || result[0] > 'Z' || builderResult[0] < 'A' || builderResult[0] > 'Z' {
-				t.Errorf("LoremSentence - first character not uppercase: %q / %q / %q", helperResult[0], result[0], builderResult[0])
+			if helperResult[0] < 'A' ||
+				helperResult[0] > 'Z' ||
+				result[0] < 'A' || result[0] > 'Z' ||
+				builderResult[0] < 'A' ||
+				builderResult[0] > 'Z' {
+				t.Errorf("LoremSentence - first character not uppercase: %q / %q / %q",
+					helperResult[0], result[0], builderResult[0])
 			}
 
-			if helperResult[len(helperResult)-1] != '.' || result[len(result)-1] != '.' || builderResult[len(builderResult)-1] != '.' {
-				t.Errorf("LoremSentence - last character not period: %q / %q / %q", helperResult[len(helperResult)-1], result[len(result)-1], builderResult[len(builderResult)-1])
+			if helperResult[len(helperResult)-1] != '.' ||
+				result[len(result)-1] != '.' ||
+				builderResult[len(builderResult)-1] != '.' {
+				t.Errorf("LoremSentence - last character not period: %q / %q / %q",
+					helperResult[len(helperResult)-1], result[len(result)-1], builderResult[len(builderResult)-1])
 			}
 		})
 	}
@@ -755,15 +780,27 @@ func TestLoremSentenceCustom(t *testing.T) {
 			resultCount := len(strings.Split(result, " "))
 			builderResultCount := len(strings.Split(builderResult, " "))
 			if tt.length > 0 && (helperResultCount != tt.length || builderResultCount != tt.length || resultCount != tt.length) {
-				t.Errorf("LoremSentenceCustom - expected %d - words: %d / %d / %d", tt.length, resultCount, helperResultCount, builderResultCount)
+				t.Errorf("LoremSentenceCustom - expected %d - words: %d / %d / %d",
+					tt.length, resultCount, helperResultCount, builderResultCount)
 			}
 
-			if tt.length > 0 && (helperResult[0] < 'A' || helperResult[0] > 'Z' || result[0] < 'A' || result[0] > 'Z' || builderResult[0] < 'A' || builderResult[0] > 'Z') {
-				t.Errorf("LoremSentenceCustom - first character not uppercase: %q / %q / %q", helperResult[0], result[0], builderResult[0])
+			if tt.length > 0 &&
+				(helperResult[0] < 'A' ||
+					helperResult[0] > 'Z' ||
+					result[0] < 'A' ||
+					result[0] > 'Z' ||
+					builderResult[0] < 'A' ||
+					builderResult[0] > 'Z') {
+				t.Errorf("LoremSentenceCustom - first character not uppercase: %q / %q / %q",
+					helperResult[0], result[0], builderResult[0])
 			}
 
-			if tt.length > 0 && (helperResult[len(helperResult)-1] != '.' || result[len(result)-1] != '.' || builderResult[len(builderResult)-1] != '.') {
-				t.Errorf("LoremSentenceCustom - last character not period: %q / %q / %q", helperResult[len(helperResult)-1], result[len(result)-1], builderResult[len(builderResult)-1])
+			if tt.length > 0 &&
+				(helperResult[len(helperResult)-1] != '.' ||
+					result[len(result)-1] != '.' ||
+					builderResult[len(builderResult)-1] != '.') {
+				t.Errorf("LoremSentenceCustom - last character not period: %q / %q / %q",
+					helperResult[len(helperResult)-1], result[len(result)-1], builderResult[len(builderResult)-1])
 			}
 		})
 	}
@@ -796,11 +833,17 @@ func TestLoremSentences(t *testing.T) {
 			helperResultCount := len(strings.Split(helperResult, " "))
 			resultCount := len(strings.Split(result, " "))
 			builderResultCount := len(strings.Split(builderResult, " "))
-			if tt.count > 0 && (helperResultCount != tt.expected || resultCount != tt.expected || builderResultCount != tt.expected) {
-				t.Errorf("LoremSentencesLen1 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			if tt.count > 0 && (helperResultCount != tt.expected ||
+				resultCount != tt.expected ||
+				builderResultCount != tt.expected) {
+				t.Errorf("LoremSentencesLen1 - expected %d - sentences: %d / %d / %d",
+					tt.expected, helperResultCount, resultCount, builderResultCount)
 			}
-			if tt.count < 1 && (helperResultCount != tt.expected+1 || resultCount != tt.expected+1 || builderResultCount != tt.expected+1) {
-				t.Errorf("LoremSentenceslen2 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			if tt.count < 1 && (helperResultCount != tt.expected+1 ||
+				resultCount != tt.expected+1 ||
+				builderResultCount != tt.expected+1) {
+				t.Errorf("LoremSentenceslen2 - expected %d - sentences: %d / %d / %d",
+					tt.expected, helperResultCount, resultCount, builderResultCount)
 			}
 		})
 	}
@@ -834,11 +877,17 @@ func TestLoremSentencesCustom(t *testing.T) {
 			helperResultCount := len(strings.Split(helperResult, " "))
 			resultCount := len(strings.Split(result, " "))
 			builderResultCount := len(strings.Split(builderResult, " "))
-			if tt.count > 0 && (helperResultCount != tt.expected || resultCount != tt.expected || builderResultCount != tt.expected) {
-				t.Errorf("LoremSentencesCustomLen1 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			if tt.count > 0 && (helperResultCount != tt.expected ||
+				resultCount != tt.expected ||
+				builderResultCount != tt.expected) {
+				t.Errorf("LoremSentencesCustomLen1 - expected %d - sentences: %d / %d / %d",
+					tt.expected, helperResultCount, resultCount, builderResultCount)
 			}
-			if tt.count < 1 && (helperResultCount != tt.expected+1 || resultCount != tt.expected+1 || builderResultCount != tt.expected+1) {
-				t.Errorf("LoremSentencesCustomLen2 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			if tt.count < 1 && (helperResultCount != tt.expected+1 ||
+				resultCount != tt.expected+1 ||
+				builderResultCount != tt.expected+1) {
+				t.Errorf("LoremSentencesCustomLen2 - expected %d - sentences: %d / %d / %d",
+					tt.expected, helperResultCount, resultCount, builderResultCount)
 			}
 		})
 	}
@@ -875,11 +924,19 @@ func TestLoremSentencesVariable(t *testing.T) {
 			builderResultCount := len(strings.Split(builderResult, " "))
 			minRange := tt.min * tt.count
 			maxRange := tt.max * tt.count
-			if tt.count > 0 && tt.min <= tt.max && (helperResultCount < minRange || helperResultCount > maxRange || resultCount < minRange || resultCount > maxRange || builderResultCount < minRange || builderResultCount > maxRange) {
-				t.Errorf("LoremSentencesVariableLen1 - expected %d - %d - %d - %d - sentences: %d / %d / %d / %d", tt.count, tt.min, tt.max, minRange, helperResultCount, resultCount, builderResultCount, maxRange)
+			if tt.count > 0 && tt.min <= tt.max &&
+				(helperResultCount < minRange ||
+					helperResultCount > maxRange ||
+					resultCount < minRange ||
+					resultCount > maxRange ||
+					builderResultCount < minRange ||
+					builderResultCount > maxRange) {
+				t.Errorf("LoremSentencesVariableLen1 - expected %d - %d - %d - %d - sentences: %d / %d / %d / %d",
+					tt.count, tt.min, tt.max, minRange, helperResultCount, resultCount, builderResultCount, maxRange)
 			}
 			if tt.max < tt.min && (helperResult != "" || builderResult != "" || result != "") {
-				t.Errorf("LoremSentencesVariableLen2 - expected %d - %d - %d - %d - sentences: %d / %d / %d / %d", tt.count, tt.min, tt.max, minRange, helperResultCount, resultCount, builderResultCount, maxRange)
+				t.Errorf("LoremSentencesVariableLen2 - expected %d - %d - %d - %d - sentences: %d / %d / %d / %d",
+					tt.count, tt.min, tt.max, minRange, helperResultCount, resultCount, builderResultCount, maxRange)
 			}
 		})
 	}
@@ -938,11 +995,19 @@ func TestLoremParagraphs(t *testing.T) {
 			helperResultCount := len(strings.Split(helperResult, " "))
 			resultCount := len(strings.Split(result, " "))
 			builderResultCount := len(strings.Split(builderResult, " "))
-			if tt.count > 0 && (helperResultCount != tt.expected || resultCount != tt.expected || builderResultCount != tt.expected) {
-				t.Errorf("LoremParagraphsLen1 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			if tt.count > 0 &&
+				(helperResultCount != tt.expected ||
+					resultCount != tt.expected ||
+					builderResultCount != tt.expected) {
+				t.Errorf("LoremParagraphsLen1 - expected %d - sentences: %d / %d / %d",
+					tt.expected, helperResultCount, resultCount, builderResultCount)
 			}
-			if tt.count < 1 && (helperResultCount != tt.expected+1 || resultCount != tt.expected+1 || builderResultCount != tt.expected+1) {
-				t.Errorf("LoremParagraphsLen2 - expected %d - sentences: %d / %d / %d", tt.expected, helperResultCount, resultCount, builderResultCount)
+			if tt.count < 1 &&
+				(helperResultCount != tt.expected+1 ||
+					resultCount != tt.expected+1 ||
+					builderResultCount != tt.expected+1) {
+				t.Errorf("LoremParagraphsLen2 - expected %d - sentences: %d / %d / %d",
+					tt.expected, helperResultCount, resultCount, builderResultCount)
 			}
 		})
 	}
@@ -962,7 +1027,9 @@ func TestIsDomain(t *testing.T) {
 		{"IsDomainValidInvalidNoTLD", "example", false},
 		{"IsDomainValidInvalidTrailingPeriod", "example.com.", false},
 		{"IsDomainValidInvalidLeadingPeriod", ".example.com", false},
-		{"IsDomainValidTooLong", "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz.com", false},
+		{"IsDomainValidTooLong",
+			"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz.com",
+			false},
 	}
 
 	for _, tt := range tests {
@@ -1091,6 +1158,170 @@ func TestReplaceSpaces(t *testing.T) {
 			builderResult := New(tt.input).ReplaceSpaces(tt.replacement).String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
 				t.Errorf("ReplaceSpaces - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestTruncate(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		suffix   string
+		expected string
+	}{
+		{"TruncateNormalNoSuffix", "abcdefghijklmnopqrstuvwxyz", 10, "", "abcdefghij"},
+		{"TruncateNormalEllipsis", "abcdefghijklmnopqrstuvwxyz", 10, "...", "abcdefghij..."},
+		{"TruncateNoChange", "abcde", 25, "", "abcde"},
+		{"TruncateNoChangeNoEllipsis", "abcde", 25, "...", "abcde"},
+		{"TruncateEmpty", "", 25, "", ""},
+		{"TruncateEmptySuffix", "", 25, "...", ""},
+		{"TruncateNegLen", "abcde", -1, "", ""},
+		{"TruncateNegLenSuffix", "abcde", -1, "...", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := truncate(tt.input, tt.length, tt.suffix)
+			result := Truncate(tt.input, tt.length, tt.suffix)
+			builderResult := New(tt.input).Truncate(tt.length, tt.suffix).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("Truncate - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestStripHTML(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"StripHTML1",
+			`<a onblur="alert(secret)" href="https://www.google.com">Google</a>`,
+			`Google`},
+		// New test cases:
+		{"StripScriptTag",
+			"<p>text</p><script>alert('XSS');</script>",
+			"text"},
+		{"StripJSInHref",
+			`<a href="javascript:alert('XSS')">Click Me</a>`,
+			`Click Me`},
+		{"StripImgOnError",
+			`<img src="image.png" onerror="alert('XSS');" />`,
+			``},
+		{"StripAllowSafeHTML",
+			"<p>This is <b>bold</b> and <em>emphasized</em> text.</p>",
+			"This is bold and emphasized text."},
+		{"HandlePlainText",
+			"This is a string with no HTML.",
+			"This is a string with no HTML."},
+		{"HandleEmptyInput",
+			"",
+			""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := stripHTML(tt.input)
+			result := StripHTML(tt.input)
+			builderResult := New(tt.input).StripHTML().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("StripHTML - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestSanitizeHTML(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"StripHTML1",
+			`<a onblur="alert(secret)" href="https://www.google.com">Google</a>`,
+			`<a href="https://www.google.com" rel="nofollow">Google</a>`},
+		// New test cases:
+		{"StripScriptTag",
+			"<p>text</p><script>alert('XSS');</script>",
+			"<p>text</p>"},
+		{"StripJSInHref",
+			`<a href="javascript:alert('XSS')">Click Me</a>`,
+			`Click Me`},
+		{"StripImgOnError",
+			`<img src="image.png" onerror="alert('XSS');" />`,
+			`<img src="image.png"/>`},
+		{"AllowSafeHTML",
+			"<p>This is <b>bold</b> and <em>emphasized</em> text.</p>",
+			"<p>This is <b>bold</b> and <em>emphasized</em> text.</p>"},
+		{"HandlePlainText",
+			"This is a string with no HTML.",
+			"This is a string with no HTML."},
+		{"HandleEmptyInput",
+			"",
+			""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := sanitizeHTML(tt.input)
+			result := SanitizeHTML(tt.input)
+			builderResult := New(tt.input).SanitizeHTML().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("SanitizeHTML - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestSanitizeHTMLCustom(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		allowed  []string
+		expected string
+	}{
+		{"StripHTML1",
+			`<a onblur="alert(secret)" href="https://www.google.com">Google</a>`,
+			[]string{"body", "p", "b", "em", "h1", "img"},
+			`Google`},
+		// New test cases:
+		{"StripScriptTag",
+			"<div><p>text</p><script>alert('XSS');</script><b>bold</b></div>",
+			[]string{"div", "p", "b"},
+			"<div><p>text</p><b>bold</b></div>"},
+		{"StripJSInHref",
+			`<html><body><div><p><h1><a href="javascript:alert('XSS')">Click Me</a></h1></p></div></body></html>`,
+			[]string{"body", "div", "p"},
+			`<body><div><p>Click Me</p></div></body>`},
+		{"StripImgOnError",
+			`<div><body><img src="image.png" onerror="alert('XSS');" /></body></div>`,
+			[]string{"body", "div"},
+			`<div><body></body></div>`},
+		{"AllowSafeHTML",
+			"<p>This is <b>bold</b> and <em>emphasized</em> text.</p>",
+			[]string{"p", "b", "em"},
+			"<p>This is <b>bold</b> and <em>emphasized</em> text.</p>"},
+		{"HandlePlainText",
+			"This is a string with no HTML.",
+			[]string{"p", "b", "em"},
+			"This is a string with no HTML."},
+		{"HandleEmptyInput",
+			"",
+			[]string{"p", "b", "em"},
+			""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := sanitizeHTMLCustom(tt.input, tt.allowed)
+			result := SanitizeHTMLCustom(tt.input, tt.allowed)
+			builderResult := New(tt.input).SanitizeHTMLCustom(tt.allowed).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("SanitizeHTMLCustom - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
 			}
 		})
 	}
