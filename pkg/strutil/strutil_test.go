@@ -1465,6 +1465,15 @@ func TestSlugify(t *testing.T) {
 			"donec-risus-mauris-facilisis-eu-egestas-sed-convallis-a-ligula-morbi-phar" +
 				"etra-placerat-dapibus-praesent-vitae-nisl-viverr"},
 		{"SlugifySpecialLeadTrail", "!Hello World!", 21, "hello-world"},
+		{"SlugifyMultipleSpaces", "Hello   World   Test", 15, "hello-world-test"},
+		{"SlugifySpecialChars", "Hello! @#$%^&*() World", 11, "hello-world"},
+		{"SlugifyNonAscii", "Café & Résumé", 12, "cafe-resume"},
+		{"SlugifyEmpty", "", 10, ""},
+		{"SlugifyZeroLength", "Hello World", 0, ""},
+		{"SlugifyNegativeLength", "Hello World", -1, ""},
+		{"SlugifyMultipleHyphens", "hello---world", 11, "hello-world"},
+		{"SlugifyLeadingHyphens", "---hello-world", 11, "hello-world"},
+		{"SlugifyTrailingHyphens", "hello-world---", 11, "hello-world"},
 	}
 
 	for _, tt := range tests {

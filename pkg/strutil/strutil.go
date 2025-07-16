@@ -252,11 +252,12 @@ func SanitizeHTMLCustom(s string, allowedTags []string) string {
 	return sanitizeHTMLCustom(s, allowedTags)
 }
 
-//TODO additional sections
-
+// EscapeHTML escapes special HTML characters in a string, replacing them with their corresponding HTML entity codes.
 func EscapeHTML(s string) string {
-	panic("Implement me!")
+	return escapeHTML(s)
 }
+
+//TODO additional sections
 
 // File/Path Safety
 

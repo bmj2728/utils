@@ -223,8 +223,13 @@ func (sb *StringBuilder) StripHTML() *StringBuilder {
 	return sb
 }
 
+// EscapeHTML escapes special HTML characters in the StringBuilder's value and returns the updated StringBuilder.
 func (sb *StringBuilder) EscapeHTML() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = escapeHTML(sb.value)
+	return sb
 }
 
 // SanitizeHTML sanitizes the StringBuilder's value by removing potentially unsafe or harmful HTML content.

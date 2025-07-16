@@ -245,12 +245,37 @@ func sanitizeHTML(s string) string {
 	return p.Sanitize(s)
 }
 
+//TODO: extend implementation to better address complex options
+
 // sanitizeHTMLCustom sanitizes the input HTML string by allowing only the specified elements in allowedElements.
 func sanitizeHTMLCustom(s string, allowedElements []string) string {
 	p := bluemonday.NewPolicy()
-	//TODO: extend implementation to better address complex options
 	p.AllowElements(allowedElements...)
 	return p.Sanitize(s)
+}
+
+// escapeHTML escapes special HTML characters in a string to their corresponding HTML entity codes.
+func escapeHTML(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+
+	for _, r := range s {
+		switch r {
+		case '"':
+			b.WriteString("&quot;")
+		case '\'':
+			b.WriteString("&#39;")
+		case '&':
+			b.WriteString("&amp;")
+		case '<':
+			b.WriteString("&lt;")
+		case '>':
+			b.WriteString("&gt;")
+		default:
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }
 
 // loremWord generates and returns a single random word as a string.
