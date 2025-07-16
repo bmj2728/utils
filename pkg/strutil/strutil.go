@@ -57,7 +57,8 @@ func LoremSentences(count int) string {
 	return loremSentences(count)
 }
 
-// LoremSentencesCustom generates multiple lorem ipsum sentences with specified sentence count and word length per sentence.
+// LoremSentencesCustom generates multiple lorem ipsum sentences with
+// the specified sentence count and word length per sentence.
 func LoremSentencesCustom(count int, length int) string {
 	return loremSentencesCustom(count, length)
 }
@@ -84,7 +85,8 @@ func LoremDomain() string {
 	return loremDomain()
 }
 
-// LoremURL generates and returns a string representing a placeholder or mock URL, intended for testing or default usage.
+// LoremURL generates and returns a string representing a placeholder or mock URL,
+// intended for testing or default usage.
 func LoremURL() string {
 	return loremURL()
 }
@@ -101,7 +103,8 @@ func IsEmail(s string) bool {
 	return isValidEmail(s)
 }
 
-// IsURL determines whether the input string is a valid URL with a scheme and host. Returns true if valid, otherwise false.
+// IsURL determines whether the input string is a valid URL with a scheme and host.
+// Returns true if valid, otherwise false.
 func IsURL(s string) bool {
 	return isValidURL(s)
 }
@@ -126,7 +129,8 @@ func IsEmpty(s string) bool {
 	return isEmpty(s)
 }
 
-// IsEmptyNormalized checks if the normalized version of the input string is empty after trimming and collapsing whitespace.
+// IsEmptyNormalized checks if the normalized version of the input string is empty
+// after trimming and collapsing whitespace.
 func IsEmptyNormalized(s string) bool {
 	return isEmptyNormalized(s)
 }
@@ -136,7 +140,8 @@ func IsAlphaNumericString(s string) bool {
 	return isAlphaNumericString(s)
 }
 
-// IsAlphaString checks if the given string contains only alphabetic characters. Returns true if all characters are letters.
+// IsAlphaString checks if the given string contains only alphabetic characters.
+// Returns true if all characters are letters.
 func IsAlphaString(s string) bool {
 	return isAlphaString(s)
 }
@@ -168,9 +173,9 @@ func Slugify(s string) string {
 	panic("Implement me!")
 }
 
+// Truncate shortens the input string s to the specified length and appends the given suffix if truncation occurs.
 func Truncate(s string, length int, suffix string) string {
-	//TODO implement
-	panic("Implement me!")
+	return truncate(s, length, suffix)
 }
 
 // KeepAlpha removes all non-alphabetic characters from the input string, optionally keeping whitespace if ws is true.
@@ -178,22 +183,26 @@ func KeepAlpha(s string, ws bool) string {
 	return alpha(s, ws)
 }
 
-// KeepAlphaNumeric removes all non-alphanumeric characters from the input string, optionally preserving whitespace if ws is true.
+// KeepAlphaNumeric removes all non-alphanumeric characters from the input string,
+// optionally preserving whitespace if ws is true.
 func KeepAlphaNumeric(s string, ws bool) string {
 	return alphaNumeric(s, ws)
 }
 
-// CleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.) from the input string and returns the result.
+// CleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.)
+// from the input string and returns the result.
 func CleanWhitespace(s string) string {
 	return cleanWhitespace(s)
 }
 
-// NormalizeWhitespace removes excess whitespace by trimming and collapsing multiple whitespace characters into single spaces.
+// NormalizeWhitespace removes excess whitespace by trimming and collapsing
+// multiple whitespace characters into single spaces.
 func NormalizeWhitespace(s string) string {
 	return normalizeWhitespace(s)
 }
 
-// CollapseWhitespace reduces all consecutive whitespace characters in a string to a single space, preserving leading and trailing whitespace.
+// CollapseWhitespace reduces all consecutive whitespace characters in a string to a single space,
+// preserving leading and trailing whitespace.
 func CollapseWhitespace(s string) string {
 	return collapseWhitespace(s)
 }

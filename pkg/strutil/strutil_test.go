@@ -53,11 +53,17 @@ func TestNewUUID(t *testing.T) {
 	}
 
 	if uuid5.String() == uuid6.String() {
-		t.Errorf("Expected NewUUID() to generate unique values, but got identical UUIDs: %s and %s", uuid5.String(), uuid6.String())
+		t.Errorf("Expected NewUUID() to generate unique values, but got identical UUIDs: %s and %s",
+			uuid5.String(),
+			uuid6.String(),
+		)
 	}
 
 	if uuid7.String() == uuid8.String() {
-		t.Errorf("Expected NewUUIDV7 to generate unique values, but got identical UUIDs: %s and %s", uuid7.String(), uuid8.String())
+		t.Errorf("Expected NewUUIDV7 to generate unique values, but got identical UUIDs: %s and %s",
+			uuid7.String(),
+			uuid8.String(),
+		)
 	}
 }
 

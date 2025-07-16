@@ -61,7 +61,8 @@ func NewLoremWord() *StringBuilder {
 	}
 }
 
-// NewLoremWords creates a new StringBuilder initialized with a string containing the specified number of lorem ipsum words.
+// NewLoremWords creates a new StringBuilder initialized with a string
+// containing the specified number of lorem ipsum words.
 func NewLoremWords(count int) *StringBuilder {
 	return &StringBuilder{
 		value: loremWords(count),
@@ -75,7 +76,8 @@ func NewLoremSentence() *StringBuilder {
 	}
 }
 
-// NewLoremSentenceCustom creates a new StringBuilder instance containing a lorem ipsum sentence with the specified word count.
+// NewLoremSentenceCustom creates a new StringBuilder instance containing
+// a lorem ipsum sentence with the specified word count.
 func NewLoremSentenceCustom(length int) *StringBuilder {
 	return &StringBuilder{
 		value: loremSentenceCustom(length),
@@ -89,14 +91,16 @@ func NewLoremSentences(count int) *StringBuilder {
 	}
 }
 
-// NewLoremSentencesCustom creates a new StringBuilder instance containing lorem ipsum sentences based on the given count and length.
+// NewLoremSentencesCustom creates a new StringBuilder instance
+// containing lorem ipsum sentences based on the given count and length.
 func NewLoremSentencesCustom(count int, length int) *StringBuilder {
 	return &StringBuilder{
 		value: loremSentencesCustom(count, length),
 	}
 }
 
-// NewLoremSentencesVariable generates a string of lorem ipsum sentences with count, min, and max controlling quantity and length.
+// NewLoremSentencesVariable generates a string of lorem ipsum sentences
+// with count, min, and max controlling quantity and length.
 func NewLoremSentencesVariable(count int, min int, max int) *StringBuilder {
 	return &StringBuilder{
 		value: loremSentencesVariable(count, min, max),
@@ -117,7 +121,8 @@ func NewLoremParagraphs(count int) *StringBuilder {
 	}
 }
 
-// NewLoremDomain creates and returns a new StringBuilder initialized with a domain string from the loremDomain function.
+// NewLoremDomain creates and returns a new StringBuilder initialized
+// with a domain string from the loremDomain function.
 func NewLoremDomain() *StringBuilder {
 	return &StringBuilder{
 		value: loremDomain(),
@@ -140,7 +145,8 @@ func NewLoremEmail() *StringBuilder {
 
 // Manipulation Methods
 
-// CleanWhitespace removes all whitespace characters from the StringBuilder's value and returns the updated StringBuilder.
+// CleanWhitespace removes all whitespace characters from the StringBuilder's value
+// and returns the updated StringBuilder.
 func (sb *StringBuilder) CleanWhitespace() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -149,7 +155,8 @@ func (sb *StringBuilder) CleanWhitespace() *StringBuilder {
 	return sb
 }
 
-// NormalizeWhitespace collapses consecutive whitespace characters into a single space and trims leading and trailing spaces.
+// NormalizeWhitespace collapses consecutive whitespace characters into a single space
+// and trims leading and trailing spaces.
 func (sb *StringBuilder) NormalizeWhitespace() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -158,7 +165,8 @@ func (sb *StringBuilder) NormalizeWhitespace() *StringBuilder {
 	return sb
 }
 
-// CollapseWhitespace collapses consecutive whitespace characters in the StringBuilder's value into a single space and preserves leading and trailing spaces.
+// CollapseWhitespace collapses consecutive whitespace characters in the StringBuilder's value into a single space
+// and preserves leading and trailing spaces.
 func (sb *StringBuilder) CollapseWhitespace() *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -167,7 +175,8 @@ func (sb *StringBuilder) CollapseWhitespace() *StringBuilder {
 	return sb
 }
 
-// ReplaceWhitespace replaces all whitespace characters in the StringBuilder's value with the specified replacement string.
+// ReplaceWhitespace replaces all whitespace characters in the StringBuilder's value
+// with the specified replacement string.
 func (sb *StringBuilder) ReplaceWhitespace(replacement string) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -185,7 +194,8 @@ func (sb *StringBuilder) ReplaceSpaces(replacement string) *StringBuilder {
 	return sb
 }
 
-// KeepAlpha removes all non-alphabetic characters from the StringBuilder's value, optionally retaining whitespace if ws is true.
+// KeepAlpha removes all non-alphabetic characters from the StringBuilder's value,
+// optionally retaining whitespace if ws is true.
 func (sb *StringBuilder) KeepAlpha(ws bool) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -194,7 +204,8 @@ func (sb *StringBuilder) KeepAlpha(ws bool) *StringBuilder {
 	return sb
 }
 
-// KeepAlphaNumeric removes all non-alphanumeric characters from the StringBuilder's value, optionally preserving whitespace.
+// KeepAlphaNumeric removes all non-alphanumeric characters from the StringBuilder's value,
+// optionally preserving whitespace.
 func (sb *StringBuilder) KeepAlphaNumeric(ws bool) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -225,7 +236,8 @@ func (sb *StringBuilder) SanitizeHTML() *StringBuilder {
 	return sb
 }
 
-// SanitizeHTMLCustom sanitizes the StringBuilder's value, allowing only specified HTML tags, and returns the updated StringBuilder.
+// SanitizeHTMLCustom sanitizes the StringBuilder's value, allowing only specified HTML tags,
+// and returns the updated StringBuilder.
 func (sb *StringBuilder) SanitizeHTMLCustom(allowedTags []string) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -238,8 +250,13 @@ func (sb *StringBuilder) Slugify() *StringBuilder {
 	panic("Implement me!")
 }
 
+// Truncate shortens the string to the specified length and appends the provided suffix if truncation occurs.
 func (sb *StringBuilder) Truncate(length int, suffix string) *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = truncate(sb.value, length, suffix)
+	return sb
 }
 
 func (sb *StringBuilder) RemoveNonPrintable() *StringBuilder {

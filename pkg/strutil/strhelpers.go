@@ -344,3 +344,14 @@ func loremURL() string {
 func loremEmail() string {
 	return lorelai.Email()
 }
+
+// truncate shortens the input string s to the specified length and appends the given suffix if truncation occurs.
+func truncate(s string, length int, suffix string) string {
+	if len(s) <= length {
+		return s
+	}
+	if length < 0 {
+		return ""
+	}
+	return s[:length] + suffix
+}
