@@ -2,29 +2,29 @@ package strutil
 
 import "regexp"
 
-// PhoneFormat represents the enumerated type for different phone number formatting styles.
-type PhoneFormat int
-
-// PhoneUS represents the US phone number format.
-// PhoneInternational represents the international phone number format.
-// PhoneDigitsOnly represents the phone number format containing only digits.
-const (
-	PhoneUS PhoneFormat = iota
-	PhoneInternational
-	PhoneDigitsOnly
-)
-
-// CharacterSet defines a custom type representing different character encoding sets.
-type CharacterSet int
-
-// UTF8 represents the UTF-8 character set, which is the default and Go native encoding.
-// ASCII represents the ASCII character set, which is safe and widely usable anywhere.
-// Latin1 represents the extended ASCII character set, also known as ISO-8859-1.
-const (
-	UTF8   CharacterSet = iota // Default: UTF8 Go native
-	ASCII                      // Safe, usable anywhere
-	Latin1                     // Extended ASCII (ISO-8859-1)
-)
+//// PhoneFormat represents the enumerated type for different phone number formatting styles.
+//type PhoneFormat int
+//
+//// PhoneUS represents the US phone number format.
+//// PhoneInternational represents the international phone number format.
+//// PhoneDigitsOnly represents the phone number format containing only digits.
+//const (
+//	PhoneUS PhoneFormat = iota
+//	PhoneInternational
+//	PhoneDigitsOnly
+//)
+//
+//// CharacterSet defines a custom type representing different character encoding sets.
+//type CharacterSet int
+//
+//// UTF8 represents the UTF-8 character set, which is the default and Go native encoding.
+//// ASCII represents the ASCII character set, which is safe and widely usable anywhere.
+//// Latin1 represents the extended ASCII character set, also known as ISO-8859-1.
+//const (
+//	UTF8   CharacterSet = iota // Default: UTF8 Go native
+//	ASCII                      // Safe, usable anywhere
+//	Latin1                     // Extended ASCII (ISO-8859-1)
+//)
 
 const (
 

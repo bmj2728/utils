@@ -1835,3 +1835,133 @@ func TestUncapitalize(t *testing.T) {
 		})
 	}
 }
+
+func TestToSnakeCaseWithIgnored(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		scream   bool
+		ignore   string
+		expected string
+	}{
+		{"ToSnakeCase", "Hello World!!!", false, "", "hello_world!!!"},
+		{"ToSnakeCaseEmpty", "  ", false, "", ""},
+		{"ToSnakeCaseNil", "", false, "", ""},
+		{"ToSnakeCaseDiacritic", "Golang Café.com", false, ".", "golang_cafe.com"},
+		{"ToSnakeCaseKebab", "hello-world+2", false, "+", "hello_world+2"},
+		{"ToSnakeCaseCamel", "helloWorld", false, "", "hello_world"},
+		{"ToSnakeCasePascal", "HelloWorld", false, ".", "hello_world"},
+		{"ToSnakeCaseSnake", "hello_world", false, "", "hello_world"},
+		{"ToSnakeCase", "Hello World!!!", true, "", "HELLO_WORLD!!!"},
+		{"ToSnakeCaseEmpty", "  ", true, "", ""},
+		{"ToSnakeCaseNil", "", true, "", ""},
+		{"ToSnakeCaseDiacritic", "Golang Café.com", true, ".", "GOLANG_CAFE.COM"},
+		{"ToSnakeCaseKebab", "hello-world", true, "-", "HELLO-WORLD"},
+		{"ToSnakeCaseCamel", "helloWorld", true, "", "HELLO_WORLD"},
+		{"ToSnakeCasePascal", "HelloWorld", true, "", "HELLO_WORLD"},
+		{"ToSnakeCaseSnake", "hello_world", true, "", "HELLO_WORLD"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := toSnakeCaseWithIgnore(tt.input, tt.scream, tt.ignore)
+			result := toSnakeCaseWithIgnore(tt.input, tt.scream, tt.ignore)
+			builderResult := New(tt.input).ToSnakeCaseWithIgnore(tt.scream, tt.ignore).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ToSnakeCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestToCamelCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"ToCamelCase", "helloWorld", "helloWorld"},
+		{"ToCamelCaseEmpty", "  ", ""},
+		{"ToCamelCaseNil", "", ""},
+		{"ToCamelCaseKebab", "hello-world", "helloWorld"},
+		{"ToCamelCaseSnake", "hello_world", "helloWorld"},
+		{"ToCamelCasePascal", "HelloWorld", "helloWorld"},
+		{"ToCamelCaseMessy", "I'm-a_messy.String", "imAMessyString"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := ToCamelCase(tt.input)
+			result := ToCamelCase(tt.input)
+			builderResult := New(tt.input).ToCamelCase().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ToCamelCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestToPascalCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"ToPascalCase", "helloWorld", "HelloWorld"},
+		{"ToPascalCaseEmpty", "  ", ""},
+		{"ToPascalCaseNil", "", ""},
+		{"ToPascalCaseKebab", "hello-world", "HelloWorld"},
+		{"ToPascalCaseSnake", "hello_world", "HelloWorld"},
+		{"ToPascalCasePascal", "HelloWorld", "HelloWorld"},
+		{"ToPascalCaseMessy", "I'm-a_messy.String", "ImAMessyString"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := ToPascalCase(tt.input)
+			result := ToPascalCase(tt.input)
+			builderResult := New(tt.input).ToPascalCase().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ToPascalCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestToDelimited(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		delim    uint8
+		scream   bool
+		expected string
+	}{
+		{"ToDelimCase", "Hello World!!!", '_', false, "hello_world!!!"},
+		{"ToDelimCaseEmpty", "  ", ' ', false, ""},
+		{"ToDelimCaseNil", "", ' ', false, ""},
+		{"ToDelimCaseDiacritic", "Golang Café.com", '.', false, "golang.cafe.com"},
+		{"ToDelimCaseKebab", "hello-world+2", '+', false, "hello+world+2"},
+		{"ToDelimCaseCamel", "helloWorld", '-', false, "hello-world"},
+		{"ToDelimCasePascal", "HelloWorld", '|', false, "hello|world"},
+		{"ToDelimCaseSnake", "hello_world", ' ', false, "hello world"},
+		{"ToDelimCase", "Hello World!!!", '_', true, "HELLO_WORLD!!!"},
+		{"ToDelimCaseEmpty", "  ", ' ', true, ""},
+		{"ToDelimCaseNil", "", ' ', true, ""},
+		{"ToDelimCaseDiacritic", "Golang Café.com", '.', true, "GOLANG.CAFE.COM"},
+		{"ToDelimCaseKebab", "hello-world", '-', true, "HELLO-WORLD"},
+		{"ToDelimCaseCamel", "helloWorld", '|', true, "HELLO|WORLD"},
+		{"ToDelimCasePascal", "HelloWorld", '*', true, "HELLO*WORLD"},
+		{"ToDelimCaseSnake", "hello_world", '&', true, "HELLO&WORLD"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := toDelimited(tt.input, tt.delim, "", tt.scream)
+			result := ToDelimited(tt.input, tt.delim, "", tt.scream)
+			builderResult := New(tt.input).ToDelimited(tt.delim, "", tt.scream).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ToPascalCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
