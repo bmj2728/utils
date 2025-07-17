@@ -539,6 +539,15 @@ func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) int {
 	return osaDamerauLevenshteinDistance(sb.value, other)
 }
 
+// LCS calculates and returns the length of the longest common subsequence (LCS) between
+// the StringBuilder value and another string.If an error exists in the StringBuilder instance, it returns -1.
+func (sb *StringBuilder) LCS(other string) int {
+	if sb.err != nil {
+		return -1
+	}
+	return lcs(sb.value, other)
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,

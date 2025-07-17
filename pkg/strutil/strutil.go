@@ -496,3 +496,8 @@ func DamerauLevenshteinDistance(s1, s2 string) int {
 func OSADamerauLevenshteinDistance(s1, s2 string) int {
 	return osaDamerauLevenshteinDistance(s1, s2)
 }
+
+// LCS calculates the length of the longest common subsequence between two input strings s1 and s2.
+func LCS(s1, s2 string) int {
+	return lcs(s1, s2)
+}

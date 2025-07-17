@@ -2058,3 +2058,40 @@ func TestOSADamerauLevenshteinDistance(t *testing.T) {
 		})
 	}
 }
+
+func TestLCS(t *testing.T) {
+	test := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected int
+	}{
+		{"LCS1", "hello", "hello", 5},
+		{"LCS2", "hello", "hello world", 5},
+		{"LCS3", "ABCDEFG", "abcdefg", 0},
+		{"LCS4", "ABCDEFG", "ABCDEFGH", 7},
+		{"LCS5", "hello", "world", 1},
+		{"LCS6", "My name is John", "My name is Jane", 13},
+		{"LCS7", "tpyo", "typo", 3},
+		{"LCS8", "teal", "tale", 3},
+		{"LCS9", "For All Mankind", "For All of Maknidn", 13},
+		{"LCS10", "ABCDEFG", "badcfeg", 0},
+		{"LCS11",
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+			56,
+		},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := lcs(tt.input1, tt.input2)
+			result := LCS(tt.input1, tt.input2)
+			builderResult := New(tt.input1).LCS(tt.input2)
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("LCS - expected %d - got %d / %d / %d",
+					tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
