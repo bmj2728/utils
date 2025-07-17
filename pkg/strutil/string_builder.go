@@ -445,31 +445,60 @@ func (sb *StringBuilder) SplitPascalCase() *StringBuilder {
 	return sb
 }
 
-// ToSnakeCase converts the string to snake_case. `norm` controls normalization
-// and `scream` enables uppercase snake case.
-func (sb *StringBuilder) ToSnakeCase(norm bool, scream bool) *StringBuilder {
+// ToSnakeCase converts the current string to snake_case or SCREAMING_SNAKE_CASE based on the scream parameter.
+func (sb *StringBuilder) ToSnakeCase(scream bool) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
-	sb.value = toSnakeCase(sb.value, norm, scream)
+	sb.value = toSnakeCase(sb.value, scream)
 	return sb
 }
 
-// ToKebabCase converts the string value to kebab-case format. Optionally normalizes and handles uppercase if specified.
-func (sb *StringBuilder) ToKebabCase(norm bool, scream bool) *StringBuilder {
+// ToSnakeCaseWithIgnore converts the StringBuilder's value to snake_case,
+// optionally in uppercase, ignoring specified characters.
+func (sb *StringBuilder) ToSnakeCaseWithIgnore(scream bool, ignore string) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
-	sb.value = toKebabCase(sb.value, norm, scream)
+	sb.value = toSnakeCaseWithIgnore(sb.value, scream, ignore)
 	return sb
 }
 
+// ToKebabCase converts the string in the StringBuilder to kebab-case or screaming-kebab-case based on the scream flag.
+func (sb *StringBuilder) ToKebabCase(scream bool) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toKebabCase(sb.value, scream)
+	return sb
+}
+
+// ToCamelCase converts the current string value to camel case format and updates the StringBuilder instance.
 func (sb *StringBuilder) ToCamelCase() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toCamelCase(sb.value)
+	return sb
 }
 
+// ToPascalCase converts the current string value of the StringBuilder
+// to PascalCase format and updates the StringBuilder.
 func (sb *StringBuilder) ToPascalCase() *StringBuilder {
-	panic("Implement me!")
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toPascalCase(sb.value)
+	return sb
+}
+
+// ToDelimited converts the string in the StringBuilder to a delimited format using the specified delimiter and options.
+func (sb *StringBuilder) ToDelimited(delim uint8, ignore string, scream bool) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toDelimited(sb.value, delim, ignore, scream)
+	return sb
 }
 
 // Validation Methods (can set error)

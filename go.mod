@@ -15,5 +15,6 @@ require (
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
+	github.com/iancoleman/strcase v0.3.0 // indirect
 	golang.org/x/net v0.42.0 // indirect
 )

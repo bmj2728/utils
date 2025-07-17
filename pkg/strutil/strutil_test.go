@@ -1630,33 +1630,32 @@ func TestToSnakeCase(t *testing.T) {
 	test := []struct {
 		name     string
 		input    string
-		norm     bool
 		scream   bool
 		expected string
 	}{
-		{"ToSnakeCase", "Hello World!!!", true, false, "hello_world"},
-		{"ToSnakeCaseEmpty", "  ", true, false, ""},
-		{"ToSnakeCaseNil", "", true, false, ""},
-		{"ToSnakeCaseDiacritic", "Golang Café", true, false, "golang_cafe"},
-		{"ToSnakeCaseKebab", "hello-world", true, false, "hello_world"},
-		{"ToSnakeCaseCamel", "helloWorld", true, false, "hello_world"},
-		{"ToSnakeCasePascal", "HelloWorld", true, false, "hello_world"},
-		{"ToSnakeCaseSnake", "hello_world", true, false, "hello_world"},
-		{"ToSnakeCase", "Hello World!!!", false, true, "HELLO_WORLD"},
-		{"ToSnakeCaseEmpty", "  ", false, true, ""},
-		{"ToSnakeCaseNil", "", false, true, ""},
-		{"ToSnakeCaseDiacritic", "Golang Café", false, true, "GOLANG_CAFÉ"},
-		{"ToSnakeCaseKebab", "hello-world", false, true, "HELLO_WORLD"},
-		{"ToSnakeCaseCamel", "helloWorld", false, true, "HELLO_WORLD"},
-		{"ToSnakeCasePascal", "HelloWorld", false, true, "HELLO_WORLD"},
-		{"ToSnakeCaseSnake", "hello_world", false, true, "HELLO_WORLD"},
+		{"ToSnakeCase", "Hello World!!!", false, "hello_world!!!"},
+		{"ToSnakeCaseEmpty", "  ", false, ""},
+		{"ToSnakeCaseNil", "", false, ""},
+		{"ToSnakeCaseDiacritic", "Golang Café", false, "golang_cafe"},
+		{"ToSnakeCaseKebab", "hello-world", false, "hello_world"},
+		{"ToSnakeCaseCamel", "helloWorld", false, "hello_world"},
+		{"ToSnakeCasePascal", "HelloWorld", false, "hello_world"},
+		{"ToSnakeCaseSnake", "hello_world", false, "hello_world"},
+		{"ToSnakeCase", "Hello World!!!", true, "HELLO_WORLD!!!"},
+		{"ToSnakeCaseEmpty", "  ", true, ""},
+		{"ToSnakeCaseNil", "", true, ""},
+		{"ToSnakeCaseDiacritic", "Golang Café", true, "GOLANG_CAFE"},
+		{"ToSnakeCaseKebab", "hello-world", true, "HELLO_WORLD"},
+		{"ToSnakeCaseCamel", "helloWorld", true, "HELLO_WORLD"},
+		{"ToSnakeCasePascal", "HelloWorld", true, "HELLO_WORLD"},
+		{"ToSnakeCaseSnake", "hello_world", true, "HELLO_WORLD"},
 	}
 
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := toSnakeCase(tt.input, tt.norm, tt.scream)
-			result := ToSnakeCase(tt.input, tt.norm, tt.scream)
-			builderResult := New(tt.input).ToSnakeCase(tt.norm, tt.scream).String()
+			helperResult := toSnakeCase(tt.input, tt.scream)
+			result := ToSnakeCase(tt.input, tt.scream)
+			builderResult := New(tt.input).ToSnakeCase(tt.scream).String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
 				t.Errorf("ToSnakeCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
 			}
@@ -1720,33 +1719,32 @@ func TestToKebabCase(t *testing.T) {
 	test := []struct {
 		name     string
 		input    string
-		norm     bool
 		scream   bool
 		expected string
 	}{
-		{"ToKebabCase", "Hello World!!!", true, false, "hello-world"},
-		{"ToKebabCaseEmpty", "  ", true, false, ""},
-		{"ToKebabCaseNil", "", true, false, ""},
-		{"ToKebabCaseDiacritic", "Golang Café", true, false, "golang-cafe"},
-		{"ToKebabCaseKebab", "hello-world", true, false, "hello-world"},
-		{"ToKebabCaseCamel", "helloWorld", true, false, "hello-world"},
-		{"ToKebabCasePascal", "HelloWorld", true, false, "hello-world"},
-		{"ToKebabCaseSnake", "hello_world", true, false, "hello-world"},
-		{"ToKebabCase", "Hello World!!!", false, true, "HELLO-WORLD"},
-		{"ToKebabCaseEmpty", "  ", false, true, ""},
-		{"ToKebabCaseNil", "", false, true, ""},
-		{"ToKebabCaseDiacritic", "Golang Café", false, true, "GOLANG-CAFÉ"},
-		{"ToKebabCaseKebab", "hello-world", false, true, "HELLO-WORLD"},
-		{"ToKebabCaseCamel", "helloWorld", false, true, "HELLO-WORLD"},
-		{"ToKebabCasePascal", "HelloWorld", false, true, "HELLO-WORLD"},
-		{"ToKebabCaseSnake", "hello_world", false, true, "HELLO-WORLD"},
+		{"ToKebabCase", "Hello World!!!", false, "hello-world!!!"},
+		{"ToKebabCaseEmpty", "  ", false, ""},
+		{"ToKebabCaseNil", "", false, ""},
+		{"ToKebabCaseDiacritic", "Golang Café", false, "golang-cafe"},
+		{"ToKebabCaseKebab", "hello-world", false, "hello-world"},
+		{"ToKebabCaseCamel", "helloWorld", false, "hello-world"},
+		{"ToKebabCasePascal", "HelloWorld", false, "hello-world"},
+		{"ToKebabCaseSnake", "hello_world", false, "hello-world"},
+		{"ToKebabCase", "Hello World!!!", true, "HELLO-WORLD!!!"},
+		{"ToKebabCaseEmpty", "  ", true, ""},
+		{"ToKebabCaseNil", "", true, ""},
+		{"ToKebabCaseDiacritic", "Golang Café", true, "GOLANG-CAFE"},
+		{"ToKebabCaseKebab", "hello-world", true, "HELLO-WORLD"},
+		{"ToKebabCaseCamel", "helloWorld", true, "HELLO-WORLD"},
+		{"ToKebabCasePascal", "HelloWorld", true, "HELLO-WORLD"},
+		{"ToKebabCaseSnake", "hello_world", true, "HELLO-WORLD"},
 	}
 
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := ToKebabCase(tt.input, tt.norm, tt.scream)
-			result := ToKebabCase(tt.input, tt.norm, tt.scream)
-			builderResult := New(tt.input).ToKebabCase(tt.norm, tt.scream).String()
+			helperResult := ToKebabCase(tt.input, tt.scream)
+			result := ToKebabCase(tt.input, tt.scream)
+			builderResult := New(tt.input).ToKebabCase(tt.scream).String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
 				t.Errorf("ToKebabCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
 			}

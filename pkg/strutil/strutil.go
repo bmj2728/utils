@@ -331,23 +331,36 @@ func SplitPascalCase(s string) string {
 	return splitPascalCase(s)
 }
 
-// ToSnakeCase converts a string to snake_case format with optional diacritic normalization and lowercasing.
-func ToSnakeCase(s string, norm bool, scream bool) string {
-	return toSnakeCase(s, norm, scream)
+// ToSnakeCase converts a string to snake_case format. If scream is true, the output will be in SCREAMING_SNAKE_CASE.
+func ToSnakeCase(s string, scream bool) string {
+	return toSnakeCase(s, scream)
 }
 
-// ToKebabCase converts a string to a kebab-case format.
-// It supports optional Unicode normalization and case transformation.
-func ToKebabCase(s string, norm bool, scream bool) string {
-	return toKebabCase(s, norm, scream)
+// ToSnakeCaseWithIgnore converts a string to snake_case format, optionally in uppercase, ignoring specified characters.
+func ToSnakeCaseWithIgnore(s string, scream bool, ignore string) string {
+	return toSnakeCaseWithIgnore(s, scream, ignore)
 }
 
+// ToKebabCase converts a string to kebab-case or screaming-kebab-case based on the scream flag.
+// Diacritics in the input string are normalized before conversion.
+func ToKebabCase(s string, scream bool) string {
+	return toKebabCase(s, scream)
+}
+
+// ToCamelCase converts a string to camel case format where the first letter
+// is lowercase and subsequent words are capitalized.
 func ToCamelCase(s string) string {
-	panic("Implement me!")
+	return toCamelCase(s)
 }
 
+// ToPascalCase converts a given string to PascalCase format, capitalizing the first letter of each word.
 func ToPascalCase(s string) string {
-	panic("Implement me!")
+	return toPascalCase(s)
+}
+
+// ToDelimited converts a string into a delimited format based on the specified delimiter and casing options.
+func ToDelimited(s string, delim uint8, ignore string, scream bool) string {
+	return toDelimited(s, delim, ignore, scream)
 }
 
 //TODO additional sections

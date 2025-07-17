@@ -12,6 +12,7 @@ import (
 	lorelai "github.com/UltiRequiem/lorelai/pkg"
 	"github.com/fatih/camelcase"
 	"github.com/google/uuid"
+	"github.com/iancoleman/strcase"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/mrz1836/go-sanitize"
 	"golang.org/x/text/cases"
@@ -486,24 +487,31 @@ func splitPascalCase(s string) string {
 	return splitCamelCase(s)
 }
 
-// toSnakeCase converts a string into snake_case format with optional diacritic normalization and lowercasing.
-func toSnakeCase(s string, norm bool, scream bool) string {
-	if CamelCaseRegex.MatchString(s) {
-		s = splitCamelCase(s)
-	}
-	if norm {
-		s = normalizeDiacritics(s)
-	}
-	s = alphaNumericReplace(s, " ")
-	s = normalizeWhitespace(s)
-	s = replaceSpaces(s, "_")
+// toSnakeCase converts a string to snake_case or SCREAMING_SNAKE_CASE based on the scream parameter.
+// It normalizes diacritical marks before formatting the string.
+func toSnakeCase(s string, scream bool) string {
+	s = normalizeDiacritics(s)
 	if !scream {
-		s = toLower(s)
+		s = strcase.ToSnake(s)
 	}
 	if scream {
-		s = toUpper(s)
+		s = strcase.ToScreamingSnake(s)
 	}
-	s = trimChars(s, "_")
+
+	return s
+}
+
+// toSnakeCaseWithIgnore converts a string to snake_case format, optionally
+// in uppercase, and ignores the specified ignore charset.
+func toSnakeCaseWithIgnore(s string, scream bool, ignore string) string {
+	s = normalizeDiacritics(s)
+	if !scream {
+		s = strcase.ToSnakeWithIgnore(s, ignore)
+	}
+	if scream {
+		s = toUpper(strcase.ToSnakeWithIgnore(s, ignore))
+	}
+
 	return s
 }
 
@@ -523,25 +531,17 @@ func uncapitalize(s string) string {
 	return toLower(s[:1]) + s[1:]
 }
 
-// toKebabCase converts a string to a kebab-case string, converting to lower case, or optionally, upper case
-// the norm parameter is used to indicate if Unicode normalization should occur
-func toKebabCase(s string, norm bool, scream bool) string {
-	if CamelCaseRegex.MatchString(s) {
-		s = splitCamelCase(s)
-	}
-	if norm {
-		s = normalizeDiacritics(s)
-	}
-	s = alphaNumericReplace(s, " ")
-	s = normalizeWhitespace(s)
-	s = replaceSpaces(s, "-")
+// toKebabCase converts a string to kebab-case or screaming-kebab-case depending on the scream flag.
+// The string is first normalized to remove diacritics before converting to the desired case format.
+func toKebabCase(s string, scream bool) string {
+	s = normalizeDiacritics(s)
 	if !scream {
-		s = toLower(s)
+		s = strcase.ToKebab(s)
 	}
 	if scream {
-		s = toUpper(s)
+		s = strcase.ToScreamingKebab(s)
 	}
-	s = trimChars(s, "-")
+
 	return s
 }
 
@@ -555,10 +555,21 @@ func toTitleCase(s string) string {
 	return cases.Title(language.English).String(s)
 }
 
+// toCamelCase converts a string to camel case format where
+// the first letter is lowercase and subsequent words are capitalized.
 func toCamelCase(s string) string {
-	panic("not implemented")
+	s = normalizeDiacritics(s)
+	return strcase.ToLowerCamel(s)
 }
 
+// toPascalCase converts a string to PascalCase format, where each word starts with an uppercase letter.
 func toPascalCase(s string) string {
-	panic("not implemented")
+	s = normalizeDiacritics(s)
+	return strcase.ToCamel(s)
+}
+
+// toDelimited converts a string to a delimited format using the specified delimiter and casing options.
+func toDelimited(s string, delim uint8, ignore string, scream bool) string {
+	s = normalizeDiacritics(s)
+	return strcase.ToScreamingDelimited(s, delim, ignore, scream)
 }
