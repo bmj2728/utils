@@ -503,13 +503,33 @@ func (sb *StringBuilder) ToDelimited(delim uint8, ignore string, scream bool) *S
 
 // Comparison Methods
 
-// LevehnsteinDistance calculates the Levenshtein distance between the StringBuilder's value and the provided string.
+// LevenshteinDistance calculates the Levenshtein distance between the StringBuilder's value and the provided string.
 // Returns -1 if an error is associated with the StringBuilder.
-func (sb *StringBuilder) LevehnsteinDistance(other string) int {
+//
+// It represents the minimum number of edits needed to convert one string into the other.
+// An edit is an insertion, deletion, or substitution of a single character.
+//
+// Additional information: https://en.wikipedia.org/wiki/Levenshtein_distance
+func (sb *StringBuilder) LevenshteinDistance(other string) int {
 	if sb.err != nil {
 		return -1
 	}
 	return levenshteinDistance(sb.value, other)
+}
+
+// DamerauLevenshteinDistance computes the edit distance between two strings,
+// including transpositions of adjacent characters.
+// Returns -1 if the StringBuilder contains an error.
+//
+// It represents the minimum number of operations to change one string to another.
+// An operation is an insertion, deletion/substitution of a single character, or transposition of adjacent characters.
+//
+// Additional information: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+func (sb *StringBuilder) DamerauLevenshteinDistance(other string) int {
+	if sb.err != nil {
+		return -1
+	}
+	return damerauLevenshteinDistance(sb.value, other)
 }
 
 // Validation Methods (can set error)

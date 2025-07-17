@@ -1977,15 +1977,46 @@ func TestLevenshteinDistance(t *testing.T) {
 		{"LevenshteinDistance2", "hello", "helloo", 1},
 		{"LevenshteinDistance3", "ABCDEFG", "abcdefg", 7},
 		{"LevenshteinDistance4", "ABCDEFG", "ABCDEFGH", 1},
-		{"LevehnsteinDistance5", "hello", "world", 4},
-		{"LevehnsteinDistance6", "My name is John", "My name is Jane", 3},
+		{"LevenshteinDistance5", "hello", "world", 4},
+		{"LevenshteinDistance6", "My name is John", "My name is Jane", 3},
+		{"LevenshteinDistance7", "tpyo", "typo", 2},
+		{"LevenshteinDistance8", "teal", "tale", 2},
 	}
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := levenshteinDistance(tt.input1, tt.input2)
-			result := levenshteinDistance(tt.input1, tt.input2)
-			if helperResult != tt.expected || result != tt.expected {
-				t.Errorf("LevenshteinDistance - expected %d - got %d / %d", tt.expected, helperResult, result)
+			result := LevenshteinDistance(tt.input1, tt.input2)
+			builderResult := New(tt.input1).LevenshteinDistance(tt.input2)
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("LevenshteinDistance - expected %d - got %d / %d / %d", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestDamerauLevenshteinDistance(t *testing.T) {
+	test := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected int
+	}{
+		{"DamerauLevenshteinDistanceDistance1", "hello", "hello", 0},
+		{"DamerauLevenshteinDistanceDistance2", "hello", "helloo", 1},
+		{"DamerauLevenshteinDistance3", "ABCDEFG", "abcdefg", 7},
+		{"DamerauLevenshteinDistance4", "ABCDEFG", "ABCDEFGH", 1},
+		{"DamerauLevenshteinDistance5", "hello", "world", 4},
+		{"DamerauLevenshteinDistance6", "My name is John", "My name is Jane", 3},
+		{"DamerauLevenshteinDistance7", "tpyo", "typo", 1},
+		{"DamerauLevenshteinDistance8", "teal", "tale", 2},
+	}
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := damerauLevenshteinDistance(tt.input1, tt.input2)
+			result := DamerauLevenshteinDistance(tt.input1, tt.input2)
+			builderResult := New(tt.input1).DamerauLevenshteinDistance(tt.input2)
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("LevenshteinDistance - expected %d - got %d / %d / %d", tt.expected, helperResult, result, builderResult)
 			}
 		})
 	}

@@ -575,6 +575,14 @@ func toDelimited(s string, delim uint8, ignore string, scream bool) string {
 	return strcase.ToScreamingDelimited(s, delim, ignore, scream)
 }
 
+// levenshteinDistance calculates the Levenshtein distance between two strings s1 and s2.
+// It determines the minimum number of single-character edits (insertions, deletions, or substitutions) required.
 func levenshteinDistance(s1, s2 string) int {
 	return edlib.LevenshteinDistance(s1, s2)
+}
+
+// damerauLevenshteinDistance calculates the Damerau-Levenshtein distance
+// between two strings to measure edit similarity.
+func damerauLevenshteinDistance(str1, str2 string) int {
+	return edlib.DamerauLevenshteinDistance(str1, str2)
 }

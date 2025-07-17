@@ -469,6 +469,21 @@ func EscapeSQL(s string) string {
 
 // Comparison Functions - edlib
 
+// LevenshteinDistance calculates the Levenshtein distance between two strings s1 and s2.
+// It represents the minimum number of edits needed to convert one string into the other.
+// An edit is an insertion, deletion, or substitution of a single character.
+//
+// Additional information: https://en.wikipedia.org/wiki/Levenshtein_distance
 func LevenshteinDistance(s1, s2 string) int {
 	return levenshteinDistance(s1, s2)
+}
+
+// DamerauLevenshteinDistance computes the edit distance between two strings,
+// including transpositions of adjacent characters.
+//
+// It represents the minimum number of operations to change one string to another.
+// An operation is an insertion, deletion/substitution of a single character, or transposition of adjacent characters.
+// Additional information: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+func DamerauLevenshteinDistance(s1, s2 string) int {
+	return damerauLevenshteinDistance(s1, s2)
 }
