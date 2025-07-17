@@ -2104,3 +2104,100 @@ func TestLCS(t *testing.T) {
 		})
 	}
 }
+
+func TestLCSBacktrack(t *testing.T) {
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected string
+	}{
+		{"LCSBacktrack1", "hello", "hello", "hello"},
+		{"LCSBacktrack2", "hello", "hello world", "hello"},
+		{"LCSBacktrack3", "ABCDEFG", "abcdefg", ""},
+		{"LCSBacktrack4", "ABCDEFG", "ABCDEFGH", "ABCDEFG"},
+		{"LCSBacktrack5", "rust", "golang", ""},
+		{"LCSBacktrack6", "My name is John", "My name is Jane", "My name is Jn"},
+		{"LCSBacktrack7", "tpyo", "typo", "tpo"},
+		{"LCSBacktrack8", "teal", "tale", "tal"},
+		{"LCSBacktrack9", "For All Mankind", "For All of Maknidn", "For All Manin"},
+		{"LCSBacktrack10",
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+			"Some text dolor sit amet, consectetur an end",
+			"oe  dolor sit amet, consectetur an e",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult, err := lcsBacktrack(tt.input1, tt.input2)
+			if err != nil {
+				t.Errorf("Error: %s", err)
+			}
+			result, err := LCSBacktrack(tt.input1, tt.input2)
+			if err != nil {
+				t.Errorf("Error: %s", err)
+			}
+			builderResult := New(tt.input1).LCSBacktrack(tt.input2)
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				*builderResult.comparison.GetLCSBacktrack() != tt.expected {
+				t.Errorf("LCSBacktrack - expected %s - got %s / %s / %s",
+					tt.expected, helperResult, result, *builderResult.comparison.GetLCSBacktrack())
+			}
+		})
+	}
+}
+
+func TestLCSBacktrackAll(t *testing.T) {
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected []string
+	}{
+		{"LCSBacktrackAll1", "hello", "hello", []string{"hello"}},
+		{"LCSBacktrackAll2", "hello", "hello world", []string{"hello"}},
+		{"LCSBacktrackAll3", "ABCDEFG", "abcdefg", []string{""}},
+		{"LCSBacktrackAll4", "ABCDEFG", "ABCDEFGH", []string{"ABCDEFG"}},
+		{"LCSBacktrackAll5", "rust", "golang", []string{""}},
+		{"LCSBacktrackAll6", "My name is John", "My name is Jane", []string{"My name is Jn"}},
+		{"LCSBacktrackAll7", "tpyo", "typo", []string{"tpo", "tyo"}},
+		{"LCSBacktrackAll8", "teal", "tale", []string{"tal"}},
+		{"LCSBacktrackAll9",
+			"For All Mankind",
+			"For All of Maknidn",
+			[]string{"For All Makin", "For All Manid", "For All Makid", "For All Maknd", "For All Manin"}},
+		{"LCSBacktrackAll10",
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+			"Some text dolor sit amet, consectetur an end",
+			[]string{"oe  dolor sit amet, consectetur an e", "om  dolor sit amet, consectetur an e"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult, err := lcsBacktrackAll(tt.input1, tt.input2)
+			if err != nil {
+				t.Errorf("Error: %s", err)
+			}
+			result, err := LCSBacktrackAll(tt.input1, tt.input2)
+			if err != nil {
+				t.Errorf("Error: %s", err)
+			}
+			builderResult := New(tt.input1).LCSBacktrackAll(tt.input2)
+			if tt.expected != nil && (!CompareStringSlices(tt.expected, helperResult, false) ||
+				!CompareStringSlices(tt.expected, result, false) ||
+				!CompareStringSlices(tt.expected, *builderResult.comparison.GetLCSBacktrackAll(), false)) {
+				t.Errorf("LCSBacktrackAllA - expected %s - got %s / %s / %s",
+					tt.expected, helperResult, result, *builderResult.comparison.GetLCSBacktrackAll())
+			}
+			if tt.expected == nil && (helperResult != nil ||
+				result != nil ||
+				*builderResult.comparison.GetLCSBacktrackAll() != nil) {
+				t.Errorf("LCSBacktrackAllB - expected %d - got %d / %d / %d",
+					len(tt.expected), len(helperResult), len(result), len(*builderResult.comparison.GetLCSBacktrackAll()))
+			}
+		})
+	}
+}

@@ -501,3 +501,15 @@ func OSADamerauLevenshteinDistance(s1, s2 string) int {
 func LCS(s1, s2 string) int {
 	return lcs(s1, s2)
 }
+
+// LCSBacktrack calculates the longest common subsequence (LCS) of
+// two input strings and returns the result or an error.
+func LCSBacktrack(s1, s2 string) (string, error) {
+	return lcsBacktrack(s1, s2)
+}
+
+// LCSBacktrackAll computes all longest common subsequences between two input strings s1 and s2.
+// Returns a slice of subsequences and an error if the computation fails.
+func LCSBacktrackAll(s1, s2 string) ([]string, error) {
+	return lcsBacktrackAll(s1, s2)
+}

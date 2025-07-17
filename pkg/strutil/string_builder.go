@@ -559,12 +559,35 @@ func (sb *StringBuilder) LCS(other string) *StringBuilder {
 	return sb
 }
 
-//func (sb *StringBuilder) LCSBacktrack(other string) string {
-//	if sb.err != nil {
-//		return ""
-//	}
-//
-//}
+// LCSBacktrack computes the longest common subsequence (LCS) between the StringBuilder's value and another string.
+// Updates the internal state with the computed LCS or sets an error if the operation fails.
+// Returns the StringBuilder instance for method chaining.
+func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	s, err := lcsBacktrack(sb.value, other)
+	if err != nil {
+		sb.err = err
+	}
+	sb.comparison.SetLCSBacktrack(&s)
+	return sb
+}
+
+// LCSBacktrackAll computes all longest common subsequences between the current StringBuilder value and another string.
+// Updates the comparison field with all subsequences if successful or records an error if the operation fails.
+// Returns the StringBuilder instance.
+func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	seqs, err := lcsBacktrackAll(sb.value, other)
+	if err != nil {
+		sb.err = err
+	}
+	sb.comparison.SetLCSBacktrackAll(&seqs)
+	return sb
+}
 
 // Validation Methods (can set error)
 

@@ -610,3 +610,13 @@ func lcsBacktrack(str1 string, str2 string) (string, error) {
 	}
 	return result, nil
 }
+
+// lcsBacktrackAll computes all longest common subsequences of two input strings.
+// Returns a slice of strings representing the subsequences and an error if the computation fails.
+func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
+	result, err := edlib.LCSBacktrackAll(str1, str2)
+	if err != nil {
+		return nil, errors.New(ErrLCSFailure)
+	}
+	return result, nil
+}

@@ -1,5 +1,7 @@
 package strutil
 
+import "slices"
+
 // EdLibData represents a structure for various edit distance and similarity measurement metrics.
 type EdLibData struct {
 	// LCS family
@@ -228,4 +230,27 @@ func (e *EdLibData) SetShingleSlice(shingleSlice *[]string) {
 // GetShingleSlice returns a pointer to the ShingleSlice field, which represents a slice of shingles.
 func (e *EdLibData) GetShingleSlice() *[]string {
 	return e.ShingleSlice
+}
+
+func CompareStringSlices(s1, s2 []string, nulls bool) bool {
+	// true if both nil and null = true
+	if nulls && s1 == nil && s2 == nil {
+		return true
+	}
+	// any other nil scenario is false
+	if s1 == nil || s2 == nil {
+		return false
+	}
+	// confirm length
+	if len(s1) != len(s2) {
+		return false
+	}
+	// confirm everything in one is in the other
+	for _, s := range s1 {
+		if slices.Contains(s2, s) {
+			continue
+		}
+		return false
+	}
+	return true
 }
