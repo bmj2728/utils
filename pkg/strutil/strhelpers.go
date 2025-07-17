@@ -6,6 +6,7 @@ import (
 	"net/mail"
 	"net/url"
 	"regexp"
+	"slices"
 	"strings"
 	"unicode"
 
@@ -619,4 +620,59 @@ func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
 		return nil, errors.New(ErrLCSFailure)
 	}
 	return result, nil
+}
+
+// compareStringSlices checks if two slices of strings are equal,
+// optionally treating nil slices as equal if nulls is true.
+func compareStringSlices(s1, s2 []string, nulls bool) bool {
+	if nulls && s1 == nil && s2 == nil {
+		return true
+	}
+	if s1 == nil || s2 == nil {
+		return false
+	}
+	if len(s1) != len(s2) {
+		return false
+	}
+	for _, s := range s1 {
+		if !slices.Contains(s2, s) {
+			return false
+		}
+		continue
+	}
+	for _, w := range s2 {
+		if !slices.Contains(s1, w) {
+			return false
+		}
+		continue
+	}
+	return true
+}
+
+// compareStringBuilderSlices compares two slices of StringBuilder for equality,
+// optionally considering nil slices as equal. The comparison ignores the order of elements
+// and uses the 'nulls' flag to determine nil-handling behavior.
+func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
+	if nulls && s1 == nil && s2 == nil {
+		return true
+	}
+	if s1 == nil || s2 == nil {
+		return false
+	}
+	if len(s1) != len(s2) {
+		return false
+	}
+	for _, s := range s1 {
+		if !slices.Contains(s2, s) {
+			return false
+		}
+		continue
+	}
+	for _, w := range s2 {
+		if !slices.Contains(s1, w) {
+			return false
+		}
+		continue
+	}
+	return true
 }

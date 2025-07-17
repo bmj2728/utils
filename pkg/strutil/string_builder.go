@@ -505,6 +505,12 @@ func (sb *StringBuilder) ToDelimited(delim uint8, ignore string, scream bool) *S
 
 // Comparison Methods
 
+// CompareStringBuilderSlices compares two slices of StringBuilder for equality, optionally allowing nil slices to be considered equal.
+// The order of elements in the slices does not affect the comparison, and the 'nulls' flag determines nil-handling behavior.
+func CompareStringBuilderSlices(a, b []StringBuilder, nulls bool) bool {
+	return compareStringBuilderSlices(a, b, nulls)
+}
+
 // LevenshteinDistance calculates the Levenshtein distance between the StringBuilder's value and the provided string.
 //
 // It represents the minimum number of edits needed to convert one string into the other.

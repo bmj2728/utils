@@ -467,7 +467,13 @@ func EscapeSQL(s string) string {
 	panic("Implement me!")
 }
 
-// Comparison Functions - edlib
+// Comparison Functions
+
+// CompareStringSlices compares two slices of strings for equality, with an option
+// to treat nil slices as equal if nulls is true.
+func CompareStringSlices(a, b []string, nulls bool) bool {
+	return compareStringSlices(a, b, nulls)
+}
 
 // LevenshteinDistance calculates the Levenshtein distance between two strings s1 and s2.
 // It represents the minimum number of edits needed to convert one string into the other.
