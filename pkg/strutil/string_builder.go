@@ -381,26 +381,6 @@ func (sb *StringBuilder) SanitizeUsername() *StringBuilder {
 	panic("Implement me!")
 }
 
-func (sb *StringBuilder) ToSnakeCase() *StringBuilder {
-	panic("Implement me!")
-}
-
-func (sb *StringBuilder) ToCamelCase() *StringBuilder {
-	panic("Implement me!")
-}
-
-func (sb *StringBuilder) ToKebabCase() *StringBuilder {
-	panic("Implement me!")
-}
-
-func (sb *StringBuilder) ToTitleCase() *StringBuilder {
-	panic("Implement me!")
-}
-
-func (sb *StringBuilder) ToPascalCase() *StringBuilder {
-	panic("Implement me!")
-}
-
 // ToLower converts all characters in the StringBuilder's value to lowercase and returns the updated StringBuilder.
 func (sb *StringBuilder) ToLower() *StringBuilder {
 	if sb.err != nil {
@@ -417,6 +397,50 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 	}
 	sb.value = toUpper(sb.value)
 	return sb
+}
+
+// SplitCamelCase splits the string stored in the StringBuilder into separate words based on camel case boundaries.
+func (sb *StringBuilder) SplitCamelCase() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = splitCamelCase(sb.value)
+	return sb
+}
+
+// SplitPascalCase splits a PascalCase string into separate words, modifying the StringBuilder's value in-place.
+func (sb *StringBuilder) SplitPascalCase() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = splitPascalCase(sb.value)
+	return sb
+}
+
+// ToSnakeCase converts the string to snake_case. `norm` controls normalization
+// and `scream` enables uppercase snake case.
+func (sb *StringBuilder) ToSnakeCase(norm bool, scream bool) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toSnakeCase(sb.value, norm, scream)
+	return sb
+}
+
+func (sb *StringBuilder) ToCamelCase() *StringBuilder {
+	panic("Implement me!")
+}
+
+func (sb *StringBuilder) ToKebabCase() *StringBuilder {
+	panic("Implement me!")
+}
+
+func (sb *StringBuilder) ToTitleCase() *StringBuilder {
+	panic("Implement me!")
+}
+
+func (sb *StringBuilder) ToPascalCase() *StringBuilder {
+	panic("Implement me!")
 }
 
 // Validation Methods (can set error)

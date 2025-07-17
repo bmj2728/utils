@@ -174,16 +174,6 @@ func IsAlphaString(s string) bool {
 
 // Basic Manipulation
 
-// ToUpper converts the input string to uppercase and returns the result.
-func ToUpper(s string) string {
-	return toUpper(s)
-}
-
-// ToLower converts all characters in the input string to lowercase and returns the resulting string.
-func ToLower(s string) string {
-	return toLower(s)
-}
-
 // ReplaceWhitespace replaces all whitespace characters in the input string with the given replacement string.
 func ReplaceWhitespace(s string, replacement string) string {
 	return replaceWhitespace(s, replacement)
@@ -303,6 +293,49 @@ func EscapeHTML(s string) string {
 	return escapeHTML(s)
 }
 
+// Case Conversion
+
+// ToUpper converts the input string to uppercase and returns the result.
+func ToUpper(s string) string {
+	return toUpper(s)
+}
+
+// ToLower converts all characters in the input string to lowercase and returns the resulting string.
+func ToLower(s string) string {
+	return toLower(s)
+}
+
+// SplitCamelCase splits a CamelCase string into separate words with spaces between them.
+func SplitCamelCase(s string) string {
+	return splitCamelCase(s)
+}
+
+// SplitPascalCase splits a PascalCase or camelCase string into space-separated words.
+func SplitPascalCase(s string) string {
+	return splitPascalCase(s)
+}
+
+// ToSnakeCase converts a string to snake_case format with optional diacritic normalization and lowercasing.
+func ToSnakeCase(s string, norm bool, scream bool) string {
+	return toSnakeCase(s, norm, scream)
+}
+
+func ToCamelCase(s string) string {
+	panic("Implement me!")
+}
+
+func ToKebabCase(s string) string {
+	panic("Implement me!")
+}
+
+func ToTitleCase(s string) string {
+	panic("Implement me!")
+}
+
+func ToPascalCase(s string) string {
+	panic("Implement me!")
+}
+
 //TODO additional sections
 
 // File/Path Safety
@@ -404,27 +437,5 @@ func SanitizeShellArg(s string) string {
 }
 
 func EscapeSQL(s string) string {
-	panic("Implement me!")
-}
-
-// Case Conversion
-
-func ToSnakeCase(s string) string {
-	panic("Implement me!")
-}
-
-func ToCamelCase(s string) string {
-	panic("Implement me!")
-}
-
-func ToKebabCase(s string) string {
-	panic("Implement me!")
-}
-
-func ToTitleCase(s string) string {
-	panic("Implement me!")
-}
-
-func ToPascalCase(s string) string {
 	panic("Implement me!")
 }

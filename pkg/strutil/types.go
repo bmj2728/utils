@@ -1,5 +1,7 @@
 package strutil
 
+import "regexp"
+
 // PhoneFormat represents the enumerated type for different phone number formatting styles.
 type PhoneFormat int
 
@@ -49,3 +51,5 @@ const (
 	// consisting of 2 or more alphabetic characters.
 	TLDRegex = `[a-zA-Z]{2,}`
 )
+
+var CamelCaseRegex = regexp.MustCompile(`([a-z0-9])([A-Z])|([A-Z])([A-Z][a-z])`)

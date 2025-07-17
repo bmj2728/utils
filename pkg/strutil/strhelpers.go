@@ -10,6 +10,7 @@ import (
 
 	godiacritics "github.com/Regis24GmbH/go-diacritics"
 	lorelai "github.com/UltiRequiem/lorelai/pkg"
+	"github.com/fatih/camelcase"
 	"github.com/google/uuid"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/mrz1836/go-sanitize"
@@ -442,6 +443,11 @@ func slugify(s string, length int) string {
 		return ""
 	}
 
+	// address camelCase/PascalCase
+	if CamelCaseRegex.MatchString(s) {
+		s = splitCamelCase(s)
+	}
+
 	//clean the diacritics
 	s = normalizeDiacritics(s)
 
@@ -463,5 +469,38 @@ func slugify(s string, length int) string {
 	// ensure no misbehaving "-"
 	s = trimChars(s, "-")
 
+	return s
+}
+
+// splitCamelCase splits a camelCase or PascalCase string into space-separated words using predefined rules.
+func splitCamelCase(s string) string {
+	entries := camelcase.Split(s)
+	return strings.Join(entries, " ")
+}
+
+// splitPascalCase splits a PascalCase or camelCase
+// string into space-separated words by leveraging the splitCamelCase function.
+func splitPascalCase(s string) string {
+	return splitCamelCase(s)
+}
+
+// toSnakeCase converts a string into snake_case format with optional diacritic normalization and lowercasing.
+func toSnakeCase(s string, norm bool, scream bool) string {
+	if CamelCaseRegex.MatchString(s) {
+		s = splitCamelCase(s)
+	}
+	if norm {
+		s = normalizeDiacritics(s)
+	}
+	s = alphaNumericReplace(s, " ")
+	s = normalizeWhitespace(s)
+	s = replaceSpaces(s, "_")
+	if !scream {
+		s = toLower(s)
+	}
+	if scream {
+		s = toUpper(s)
+	}
+	s = trimChars(s, "_")
 	return s
 }

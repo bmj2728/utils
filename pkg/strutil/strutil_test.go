@@ -1474,6 +1474,10 @@ func TestSlugify(t *testing.T) {
 		{"SlugifyMultipleHyphens", "hello---world", 11, "hello-world"},
 		{"SlugifyLeadingHyphens", "---hello-world", 11, "hello-world"},
 		{"SlugifyTrailingHyphens", "hello-world---", 11, "hello-world"},
+		{"SlugifyCamelCase", "camelCase", 100, "camel-case"},
+		{"SlugifyPascalCase", "PascalCase", 100, "pascal-case"},
+		{"SlugifySnakeCase", "snake_case", 100, "snake-case"},
+		{"SlugifyBlob", "somelongstringwecannotsplit", 100, "somelongstringwecannotsplit"},
 	}
 
 	for _, tt := range tests {
@@ -1617,6 +1621,96 @@ func TestTrimCharsRight(t *testing.T) {
 			builderResult := New(tt.input).TrimCharsRight(tt.chars).String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
 				t.Errorf("TrimCharsRight - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestToSnakeCase(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		norm     bool
+		scream   bool
+		expected string
+	}{
+		{"ToSnakeCase", "Hello World!!!", true, false, "hello_world"},
+		{"ToSnakeCaseEmpty", "  ", true, false, ""},
+		{"ToSnakeCaseNil", "", true, false, ""},
+		{"ToSnakeCaseDiacritic", "Golang Café", true, false, "golang_cafe"},
+		{"ToSnakeCaseKebab", "hello-world", true, false, "hello_world"},
+		{"ToSnakeCaseCamel", "helloWorld", true, false, "hello_world"},
+		{"ToSnakeCasePascal", "HelloWorld", true, false, "hello_world"},
+		{"ToSnakeCaseSnake", "hello_world", true, false, "hello_world"},
+		{"ToSnakeCase", "Hello World!!!", false, true, "HELLO_WORLD"},
+		{"ToSnakeCaseEmpty", "  ", false, true, ""},
+		{"ToSnakeCaseNil", "", false, true, ""},
+		{"ToSnakeCaseDiacritic", "Golang Café", false, true, "GOLANG_CAFÉ"},
+		{"ToSnakeCaseKebab", "hello-world", false, true, "HELLO_WORLD"},
+		{"ToSnakeCaseCamel", "helloWorld", false, true, "HELLO_WORLD"},
+		{"ToSnakeCasePascal", "HelloWorld", false, true, "HELLO_WORLD"},
+		{"ToSnakeCaseSnake", "hello_world", false, true, "HELLO_WORLD"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := toSnakeCase(tt.input, tt.norm, tt.scream)
+			result := ToSnakeCase(tt.input, tt.norm, tt.scream)
+			builderResult := New(tt.input).ToSnakeCase(tt.norm, tt.scream).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ToSnakeCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestSplitCamelCase(t *testing.T) {
+	test := []struct {
+		name     string
+		fn       func(string) string
+		input    string
+		expected string
+	}{
+		{"SplitCamelCaseCamel", SplitCamelCase, "helloWorld", "hello World"},
+		{"SplitCamelCasePascal", SplitCamelCase, "HelloWorld", "Hello World"},
+		{"SplitCamelCaseNil", SplitCamelCase, "", ""},
+		{"SplitCamelCaseAliasCamel", SplitPascalCase, "helloWorld", "hello World"},
+		{"SplitCamelCaseAliasPascal", SplitPascalCase, "HelloWorld", "Hello World"},
+		{"SplitCamelCaseAliasNil", SplitPascalCase, "", ""},
+		{"SplitCamelCaseLong", SplitCamelCase, "helloWorldHowAreYouToday", "hello World How Are You Today"},
+		{"SplitCamelCaseLongAlias", SplitPascalCase, "HelloWorldHowAreYouToday", "Hello World How Are You Today"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := tt.fn(tt.input)
+			result := tt.fn(tt.input)
+			if helperResult != tt.expected || result != tt.expected {
+				t.Errorf("SplitCamelCase - expected %q - got %q / %q", tt.expected, helperResult, result)
+			}
+		})
+	}
+}
+
+func TestSplitCamelCaseBuilder(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"SplitCamelCaseCamel", "helloWorld", "hello World"},
+		{"SplitCamelCasePascal", "HelloWorld", "Hello World"},
+		{"SplitCamelCaseNil", "", ""},
+		{"SplitCamelCaseAliasNil", "", ""},
+		{"SplitCamelCaseLong", "helloWorldHowAreYouToday", "hello World How Are You Today"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sb1 := New(tt.input).SplitCamelCase().String()
+			sb2 := New(tt.input).SplitPascalCase().String()
+			if sb1 != tt.expected || sb2 != tt.expected {
+				t.Errorf("SplitCamelCase - expected %q - got %q / %q", tt.expected, sb1, sb2)
 			}
 		})
 	}
