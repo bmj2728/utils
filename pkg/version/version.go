@@ -83,6 +83,6 @@ const semVerPattern = `^v\d+\.\d+\.\d+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$`
 
 // IsValidSemVer checks if the given version string follows semantic versioning format
 func IsValidSemVer(version string) bool {
-	match, _ := regexp.MatchString(semVerPattern, version)
-	return match
+	_, err := regexp.MatchString(semVerPattern, version)
+	return err == nil
 }

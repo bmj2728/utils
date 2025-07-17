@@ -399,7 +399,8 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 	return sb
 }
 
-// ToTitleCase converts the string value of the StringBuilder to title case and returns the updated StringBuilder instance.
+// ToTitleCase converts the string value of the StringBuilder to title case
+// and returns the updated StringBuilder instance.
 func (sb *StringBuilder) ToTitleCase() *StringBuilder {
 	if sb.err != nil {
 		return sb

@@ -305,7 +305,8 @@ func ToLower(s string) string {
 	return toLower(s)
 }
 
-// ToTitleCase converts the input string to title case, capitalizing the first letter of each word following English rules.
+// ToTitleCase converts the input string to title case, capitalizing
+// the first letter of each word following English rules.
 func ToTitleCase(s string) string {
 	return toTitleCase(s)
 }

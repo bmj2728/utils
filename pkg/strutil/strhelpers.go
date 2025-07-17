@@ -1,8 +1,6 @@
 package strutil
 
 import (
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 	"math/rand"
 	"net/mail"
 	"net/url"
@@ -16,6 +14,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/mrz1836/go-sanitize"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func makeUUID() string {
