@@ -45,8 +45,25 @@ utils/
 
 The project has recently added several new features:
 
+- **Case Functionality**: Added comprehensive case conversion functions (camelCase, PascalCase, snake_case, kebab-case, Title Case)
+- **String Comparison**: Added string comparison functions for measuring text similarity (Levenshtein, Damerau-Levenshtein)
 - **HTML Sanitization**: Added functions for sanitizing HTML content with various security levels
 - **Lorem Ipsum Generation**: Added comprehensive lorem ipsum generation for text, emails, URLs, and more
+
+## Roadmap
+
+Upcoming features planned for future releases:
+
+1. **Sanitization Functions**: Enhanced sanitization for various data types and contexts
+2. **Additional Comparison Functions**: 
+   - Longest Common Subsequence (LCS)
+   - Hamming Distance
+   - Jaro and Jaro-Winkler Distance
+   - Jaccard Similarity
+   - Q-gram Distance
+   - Sorensen-Dice Coefficient
+   - Normalization function for edit distance
+3. **Documentation Generation**: GitHub Actions for automatic documentation and pages generation
 
 
 ## Current Implementation
@@ -165,6 +182,17 @@ The following functions have been fully implemented and are ready for use:
 #### String Transformation
 - `ToUpper(s)` - Converts a string to uppercase
 - `ToLower(s)` - Converts a string to lowercase
+- `Capitalize(s)` - Capitalizes the first letter of a string
+- `Uncapitalize(s)` - Converts the first letter of a string to lowercase
+- `ToTitleCase(s)` - Converts a string to title case
+- `SplitCamelCase(s)` - Splits a camelCase string into space-separated words
+- `SplitPascalCase(s)` - Splits a PascalCase string into space-separated words
+- `ToSnakeCase(s, scream)` - Converts a string to snake_case or SCREAMING_SNAKE_CASE
+- `ToSnakeCaseWithIgnore(s, scream, ignore)` - Converts a string to snake_case with custom ignore characters
+- `ToKebabCase(s, scream)` - Converts a string to kebab-case or SCREAMING-KEBAB-CASE
+- `ToCamelCase(s)` - Converts a string to camelCase
+- `ToPascalCase(s)` - Converts a string to PascalCase
+- `ToDelimited(s, delim, ignore, scream)` - Converts a string to a custom delimited format
 - `ReplaceWhitespace(s, replacement)` - Replaces whitespace with a specified string
 - `ReplaceSpaces(s, replacement)` - Replaces spaces with a specified string
 - `Trim(s)` - Trims whitespace from both ends of a string
@@ -186,6 +214,11 @@ The following functions have been fully implemented and are ready for use:
 - `SanitizeHTML(s)` - Sanitizes HTML using UGC policy
 - `SanitizeHTMLCustom(s, allowedTags)` - Sanitizes HTML with custom allowed tags
 - `EscapeHTML(s)` - Escapes HTML special characters
+
+#### String Comparison
+- `LevenshteinDistance(s1, s2)` - Calculates the Levenshtein distance between two strings
+- `DamerauLevenshteinDistance(s1, s2)` - Calculates the Damerau-Levenshtein distance between two strings
+- `OSADamerauLevenshteinDistance(s1, s2)` - Calculates the Optimal String Alignment variant of Damerau-Levenshtein distance
 
 ### Version Utilities (`version`)
 
@@ -277,7 +310,10 @@ This project leverages several excellent open-source libraries:
 - [google/uuid](https://github.com/google/uuid) - A robust UUID implementation for Go.
 - [lorelai](https://github.com/UltiRequiem/lorelai) - A versatile lorem ipsum generator used for creating placeholder text, emails, URLs, and more.
 - [bluemonday](https://github.com/microcosm-cc/bluemonday) - A HTML sanitizer implementation used for the HTML sanitization functions.
-- [go-diacritics](github.com/Regis24GmbH/go-diacritics) - A lightweight function for normalizing diacritics
+- [go-diacritics](github.com/Regis24GmbH/go-diacritics) - A lightweight function for normalizing diacritics.
+- [strcase](https://github.com/iancoleman/strcase) - A comprehensive library for converting strings between different case formats.
+- [camelcase](https://github.com/fatih/camelcase) - A library for splitting camelCase or PascalCase words into components.
+- [go-edlib](https://github.com/hbollon/go-edlib) - A string comparison and edit distance library that provides various algorithms for measuring string similarity.
 
 ## License
 
