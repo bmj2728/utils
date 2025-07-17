@@ -305,6 +305,11 @@ func ToLower(s string) string {
 	return toLower(s)
 }
 
+// ToTitleCase converts the input string to title case, capitalizing the first letter of each word following English rules.
+func ToTitleCase(s string) string {
+	return toTitleCase(s)
+}
+
 // SplitCamelCase splits a CamelCase string into separate words with spaces between them.
 func SplitCamelCase(s string) string {
 	return splitCamelCase(s)
@@ -320,15 +325,13 @@ func ToSnakeCase(s string, norm bool, scream bool) string {
 	return toSnakeCase(s, norm, scream)
 }
 
+// ToKebabCase converts a string to a kebab-case format.
+// It supports optional Unicode normalization and case transformation.
+func ToKebabCase(s string, norm bool, scream bool) string {
+	return toKebabCase(s, norm, scream)
+}
+
 func ToCamelCase(s string) string {
-	panic("Implement me!")
-}
-
-func ToKebabCase(s string) string {
-	panic("Implement me!")
-}
-
-func ToTitleCase(s string) string {
 	panic("Implement me!")
 }
 

@@ -1715,3 +1715,71 @@ func TestSplitCamelCaseBuilder(t *testing.T) {
 		})
 	}
 }
+
+func TestToKebabCase(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		norm     bool
+		scream   bool
+		expected string
+	}{
+		{"ToKebabCase", "Hello World!!!", true, false, "hello-world"},
+		{"ToKebabCaseEmpty", "  ", true, false, ""},
+		{"ToKebabCaseNil", "", true, false, ""},
+		{"ToKebabCaseDiacritic", "Golang Café", true, false, "golang-cafe"},
+		{"ToKebabCaseKebab", "hello-world", true, false, "hello-world"},
+		{"ToKebabCaseCamel", "helloWorld", true, false, "hello-world"},
+		{"ToKebabCasePascal", "HelloWorld", true, false, "hello-world"},
+		{"ToKebabCaseSnake", "hello_world", true, false, "hello-world"},
+		{"ToKebabCase", "Hello World!!!", false, true, "HELLO-WORLD"},
+		{"ToKebabCaseEmpty", "  ", false, true, ""},
+		{"ToKebabCaseNil", "", false, true, ""},
+		{"ToKebabCaseDiacritic", "Golang Café", false, true, "GOLANG-CAFÉ"},
+		{"ToKebabCaseKebab", "hello-world", false, true, "HELLO-WORLD"},
+		{"ToKebabCaseCamel", "helloWorld", false, true, "HELLO-WORLD"},
+		{"ToKebabCasePascal", "HelloWorld", false, true, "HELLO-WORLD"},
+		{"ToKebabCaseSnake", "hello_world", false, true, "HELLO-WORLD"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := ToKebabCase(tt.input, tt.norm, tt.scream)
+			result := ToKebabCase(tt.input, tt.norm, tt.scream)
+			builderResult := New(tt.input).ToKebabCase(tt.norm, tt.scream).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ToKebabCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestToTitleCase(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"ToTitleCase", "Hello World!!!", "Hello World!!!"},
+		{"ToTitleCaseEmpty", "  ", ""},
+		{"ToTitleCaseNil", "", ""},
+		{"ToTitleLong",
+			"dr. strangelove or how I learned to stop worrying and love the bomb",
+			"Dr. Strangelove Or How I Learned To Stop Worrying And Love The Bomb"},
+		{"ToTitleCaseCamel", "helloWorld", "Hello World"},
+		{"ToTitleCasePascal", "HelloWorld", "Hello World"},
+		{"ToTitleCaseSnake", "hello_world", "Hello_world"},
+		{"ToTitleCaseKebab", "hello-world", "Hello-World"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := ToTitleCase(tt.input)
+			result := ToTitleCase(tt.input)
+			builderResult := New(tt.input).ToTitleCase().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ToTitleCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}

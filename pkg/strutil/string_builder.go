@@ -399,6 +399,15 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 	return sb
 }
 
+// ToTitleCase converts the string value of the StringBuilder to title case and returns the updated StringBuilder instance.
+func (sb *StringBuilder) ToTitleCase() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toTitleCase(sb.value)
+	return sb
+}
+
 // SplitCamelCase splits the string stored in the StringBuilder into separate words based on camel case boundaries.
 func (sb *StringBuilder) SplitCamelCase() *StringBuilder {
 	if sb.err != nil {
@@ -427,15 +436,16 @@ func (sb *StringBuilder) ToSnakeCase(norm bool, scream bool) *StringBuilder {
 	return sb
 }
 
+// ToKebabCase converts the string value to kebab-case format. Optionally normalizes and handles uppercase if specified.
+func (sb *StringBuilder) ToKebabCase(norm bool, scream bool) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = toKebabCase(sb.value, norm, scream)
+	return sb
+}
+
 func (sb *StringBuilder) ToCamelCase() *StringBuilder {
-	panic("Implement me!")
-}
-
-func (sb *StringBuilder) ToKebabCase() *StringBuilder {
-	panic("Implement me!")
-}
-
-func (sb *StringBuilder) ToTitleCase() *StringBuilder {
 	panic("Implement me!")
 }
 

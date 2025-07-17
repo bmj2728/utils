@@ -1,6 +1,8 @@
 package strutil
 
 import (
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"math/rand"
 	"net/mail"
 	"net/url"
@@ -503,4 +505,36 @@ func toSnakeCase(s string, norm bool, scream bool) string {
 	}
 	s = trimChars(s, "_")
 	return s
+}
+
+// toKebabCase converts a string to a kebab-case string, converting to lower case, or optionally, upper case
+// the norm parameter is used to indicate if Unicode normalization should occur
+func toKebabCase(s string, norm bool, scream bool) string {
+	if CamelCaseRegex.MatchString(s) {
+		s = splitCamelCase(s)
+	}
+	if norm {
+		s = normalizeDiacritics(s)
+	}
+	s = alphaNumericReplace(s, " ")
+	s = normalizeWhitespace(s)
+	s = replaceSpaces(s, "-")
+	if !scream {
+		s = toLower(s)
+	}
+	if scream {
+		s = toUpper(s)
+	}
+	s = trimChars(s, "-")
+	return s
+}
+
+// toTitleCase converts a string to title case, capitalizing the first
+// letter of each word based on English language rules.
+func toTitleCase(s string) string {
+	s = Trim(s)
+	if CamelCaseRegex.MatchString(s) {
+		s = splitCamelCase(s)
+	}
+	return cases.Title(language.English).String(s)
 }
