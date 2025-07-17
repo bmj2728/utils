@@ -199,3 +199,21 @@ func TestGetBuildInfo(t *testing.T) {
 		})
 	}
 }
+
+func TestIsValidSemVer(t *testing.T) {
+	tests := []struct {
+		name    string
+		version string
+		expect  bool
+	}{
+		{"Test Valid1", "v0.0.0-dev.abc123", true},
+		{"Test Valid2", "v0.0.0-dev.abc1234", true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsValidSemVer(tt.version); got != tt.expect {
+				t.Errorf("IsValidSemVer() = %v, want %v", got, tt.expect)
+			}
+		})
+	}
+}
