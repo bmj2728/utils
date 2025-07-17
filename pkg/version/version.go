@@ -46,7 +46,7 @@ func GetBuildInfo() *BuildInfo {
 	platform := fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH)
 
 	buildInfo := &BuildInfo{
-		Version:    "v0.0.0-dev.unknown",
+		Version:    Version,
 		CommitHash: CommitHash,
 		BuildDate:  BuildDate,
 		GoVersion:  GoVersion,
@@ -56,6 +56,9 @@ func GetBuildInfo() *BuildInfo {
 	// Try to get module info from runtime
 	if info, ok := debug.ReadBuildInfo(); ok {
 		buildInfo.ModuleInfo = info.Main.Version
+	}
+	if buildInfo.Version == "dev" {
+		buildInfo.ModuleInfo = "v0.0.0-dev.unknown"
 	}
 
 	return buildInfo
