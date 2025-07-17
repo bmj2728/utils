@@ -2016,7 +2016,44 @@ func TestDamerauLevenshteinDistance(t *testing.T) {
 			result := DamerauLevenshteinDistance(tt.input1, tt.input2)
 			builderResult := New(tt.input1).DamerauLevenshteinDistance(tt.input2)
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
-				t.Errorf("LevenshteinDistance - expected %d - got %d / %d / %d", tt.expected, helperResult, result, builderResult)
+				t.Errorf("Damarau-LevenshteinDistance - expected %d - got %d / %d / %d",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult)
+			}
+		})
+	}
+}
+
+func TestOSADamerauLevenshteinDistance(t *testing.T) {
+	test := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected int
+	}{
+		{"OSADamerauLevenshteinDistanceDistance1", "hello", "hello", 0},
+		{"OSADamerauLevenshteinDistanceDistance2", "hello", "helloo", 1},
+		{"OSADamerauLevenshteinDistance3", "ABCDEFG", "abcdefg", 7},
+		{"OSADamerauLevenshteinDistance4", "ABCDEFG", "ABCDEFGH", 1},
+		{"OSADamerauLevenshteinDistance5", "hello", "world", 4},
+		{"OSADamerauLevenshteinDistance6", "My name is John", "My name is Jane", 3},
+		{"OSADamerauLevenshteinDistance7", "tpyo", "typo", 1},
+		{"OSADamerauLevenshteinDistance8", "teal", "tale", 2},
+		{"OSADamerauLevenshteinDistance9", "For All Mankind", "For All of Maknidn", 5},
+		{"OSADamerauLevenshteinDistance10", "ABCDEFG", "badcfeg", 7},
+	}
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := osaDamerauLevenshteinDistance(tt.input1, tt.input2)
+			result := OSADamerauLevenshteinDistance(tt.input1, tt.input2)
+			builderResult := New(tt.input1).OSADamerauLevenshteinDistance(tt.input2)
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("OSALevenshteinDistance - expected %d - got %d / %d / %d",
+					tt.expected,
+					helperResult,
+					result, builderResult)
 			}
 		})
 	}

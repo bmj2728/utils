@@ -586,3 +586,12 @@ func levenshteinDistance(s1, s2 string) int {
 func damerauLevenshteinDistance(str1, str2 string) int {
 	return edlib.DamerauLevenshteinDistance(str1, str2)
 }
+
+// osaDamerauLevenshteinDistance calculates the Damerau-Levenshtein distance between str1 and str2,
+// considering adjacent transpositions.
+//
+// This optimal string alignment variant of damerauLevenshteinDistance
+// does not allow multiple transformations on the same substring
+func osaDamerauLevenshteinDistance(str1, str2 string) int {
+	return edlib.OSADamerauLevenshteinDistance(str1, str2)
+}

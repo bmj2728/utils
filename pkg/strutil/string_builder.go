@@ -532,6 +532,13 @@ func (sb *StringBuilder) DamerauLevenshteinDistance(other string) int {
 	return damerauLevenshteinDistance(sb.value, other)
 }
 
+func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) int {
+	if sb.err != nil {
+		return -1
+	}
+	return osaDamerauLevenshteinDistance(sb.value, other)
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,

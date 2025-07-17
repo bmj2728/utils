@@ -487,3 +487,12 @@ func LevenshteinDistance(s1, s2 string) int {
 func DamerauLevenshteinDistance(s1, s2 string) int {
 	return damerauLevenshteinDistance(s1, s2)
 }
+
+// OSADamerauLevenshteinDistance calculates the Damerau-Levenshtein
+// distance between two strings for similarity measurement.
+//
+// This optimal string alignment variant of DamerauLevenshteinDistance
+// does not allow multiple transformations on the same substring
+func OSADamerauLevenshteinDistance(s1, s2 string) int {
+	return osaDamerauLevenshteinDistance(s1, s2)
+}
