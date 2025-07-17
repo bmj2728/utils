@@ -1,3 +1,11 @@
+// Package version provides functionality for managing and retrieving version information of the application.
+// Data is populated during the build process or as outlined during dev
+//
+// Default Version: v0.0.0-dev.unknown
+// is returned in the event Version is invalid
+//
+// Default CommitHash, BuildDate, GoVersion: unknown
+// is the default value applied in the absence of a built binary
 package version
 
 import (
@@ -38,7 +46,7 @@ func GetBuildInfo() *BuildInfo {
 	platform := fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH)
 
 	buildInfo := &BuildInfo{
-		Version:    Version,
+		Version:    "v0.0.0-dev.unknown",
 		CommitHash: CommitHash,
 		BuildDate:  BuildDate,
 		GoVersion:  GoVersion,
