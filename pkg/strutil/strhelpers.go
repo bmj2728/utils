@@ -1,7 +1,6 @@
 package strutil
 
 import (
-	"github.com/hbollon/go-edlib"
 	"math/rand"
 	"net/mail"
 	"net/url"
@@ -13,6 +12,7 @@ import (
 	lorelai "github.com/UltiRequiem/lorelai/pkg"
 	"github.com/fatih/camelcase"
 	"github.com/google/uuid"
+	"github.com/hbollon/go-edlib"
 	"github.com/iancoleman/strcase"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/mrz1836/go-sanitize"
