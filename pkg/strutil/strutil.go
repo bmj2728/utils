@@ -466,3 +466,9 @@ func SanitizeShellArg(s string) string {
 func EscapeSQL(s string) string {
 	panic("Implement me!")
 }
+
+// Comparison Functions - edlib
+
+func LevenshteinDistance(s1, s2 string) int {
+	return levenshteinDistance(s1, s2)
+}

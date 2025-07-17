@@ -501,6 +501,17 @@ func (sb *StringBuilder) ToDelimited(delim uint8, ignore string, scream bool) *S
 	return sb
 }
 
+// Comparison Methods
+
+// LevehnsteinDistance calculates the Levenshtein distance between the StringBuilder's value and the provided string.
+// Returns -1 if an error is associated with the StringBuilder.
+func (sb *StringBuilder) LevehnsteinDistance(other string) int {
+	if sb.err != nil {
+		return -1
+	}
+	return levenshteinDistance(sb.value, other)
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,

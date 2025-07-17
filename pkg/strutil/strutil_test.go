@@ -1965,3 +1965,28 @@ func TestToDelimited(t *testing.T) {
 		})
 	}
 }
+
+func TestLevenshteinDistance(t *testing.T) {
+	test := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected int
+	}{
+		{"LevenshteinDistance1", "hello", "hello", 0},
+		{"LevenshteinDistance2", "hello", "helloo", 1},
+		{"LevenshteinDistance3", "ABCDEFG", "abcdefg", 7},
+		{"LevenshteinDistance4", "ABCDEFG", "ABCDEFGH", 1},
+		{"LevehnsteinDistance5", "hello", "world", 4},
+		{"LevehnsteinDistance6", "My name is John", "My name is Jane", 3},
+	}
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := levenshteinDistance(tt.input1, tt.input2)
+			result := levenshteinDistance(tt.input1, tt.input2)
+			if helperResult != tt.expected || result != tt.expected {
+				t.Errorf("LevenshteinDistance - expected %d - got %d / %d", tt.expected, helperResult, result)
+			}
+		})
+	}
+}

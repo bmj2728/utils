@@ -1,6 +1,7 @@
 package strutil
 
 import (
+	"github.com/hbollon/go-edlib"
 	"math/rand"
 	"net/mail"
 	"net/url"
@@ -572,4 +573,8 @@ func toPascalCase(s string) string {
 func toDelimited(s string, delim uint8, ignore string, scream bool) string {
 	s = normalizeDiacritics(s)
 	return strcase.ToScreamingDelimited(s, delim, ignore, scream)
+}
+
+func levenshteinDistance(s1, s2 string) int {
+	return edlib.LevenshteinDistance(s1, s2)
 }
