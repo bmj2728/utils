@@ -507,6 +507,22 @@ func toSnakeCase(s string, norm bool, scream bool) string {
 	return s
 }
 
+// capitalize returns the input string with the first character converted to uppercase while preserving the rest as is.
+func capitalize(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	return toUpper(s[:1]) + s[1:]
+}
+
+// uncapitalize converts the first character of the input string to lowercase and returns the modified string.
+func uncapitalize(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	return toLower(s[:1]) + s[1:]
+}
+
 // toKebabCase converts a string to a kebab-case string, converting to lower case, or optionally, upper case
 // the norm parameter is used to indicate if Unicode normalization should occur
 func toKebabCase(s string, norm bool, scream bool) string {
@@ -537,4 +553,12 @@ func toTitleCase(s string) string {
 		s = splitCamelCase(s)
 	}
 	return cases.Title(language.English).String(s)
+}
+
+func toCamelCase(s string) string {
+	panic("not implemented")
+}
+
+func toPascalCase(s string) string {
+	panic("not implemented")
 }

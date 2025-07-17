@@ -305,6 +305,16 @@ func ToLower(s string) string {
 	return toLower(s)
 }
 
+// Capitalize returns the input string with the first character converted to uppercase while preserving the rest as is.
+func Capitalize(s string) string {
+	return capitalize(s)
+}
+
+// Uncapitalize takes a string and returns a new string with the first character converted to lowercase.
+func Uncapitalize(s string) string {
+	return uncapitalize(s)
+}
+
 // ToTitleCase converts the input string to title case, capitalizing
 // the first letter of each word following English rules.
 func ToTitleCase(s string) string {

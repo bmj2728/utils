@@ -399,6 +399,24 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 	return sb
 }
 
+// Capitalize converts the first character of the StringBuilder's value to uppercase while preserving the rest as is.
+func (sb *StringBuilder) Capitalize() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = capitalize(sb.value)
+	return sb
+}
+
+// Uncapitalize converts the first character of the StringBuilder's value to lowercase if no error is present.
+func (sb *StringBuilder) Uncapitalize() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = uncapitalize(sb.value)
+	return sb
+}
+
 // ToTitleCase converts the string value of the StringBuilder to title case
 // and returns the updated StringBuilder instance.
 func (sb *StringBuilder) ToTitleCase() *StringBuilder {

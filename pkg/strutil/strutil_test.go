@@ -1783,3 +1783,57 @@ func TestToTitleCase(t *testing.T) {
 		})
 	}
 }
+
+func TestCapitalize(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"Capitalize", "hello world", "Hello world"},
+		{"CapitalizeEmpty", "  ", "  "},
+		{"CapitalizeNil", "", ""},
+		{"CapitalizeCamel", "helloWorld", "HelloWorld"},
+		{"CapitalizePascal", "HelloWorld", "HelloWorld"},
+		{"CapitalizeSnake", "hello_world", "Hello_world"},
+		{"CapitalizeKebab", "hello-world", "Hello-world"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := capitalize(tt.input)
+			result := capitalize(tt.input)
+			builderResult := New(tt.input).Capitalize().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("Capitalize - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestUncapitalize(t *testing.T) {
+	test := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"Uncapitalize", "Hello world", "hello world"},
+		{"UncapitalizeEmpty", "  ", "  "},
+		{"UncapitalizeNil", "", ""},
+		{"UncapitalizeCamel", "HelloWorld", "helloWorld"},
+		{"UncapitalizePascal", "HelloWorld", "helloWorld"},
+		{"UncapitalizeSnake", "Hello_world", "hello_world"},
+		{"UncapitalizeKebab", "Hello-world", "hello-world"},
+	}
+
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := Uncapitalize(tt.input)
+			result := Uncapitalize(tt.input)
+			builderResult := New(tt.input).Uncapitalize().String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("Uncapitalize - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
