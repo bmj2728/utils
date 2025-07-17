@@ -1800,7 +1800,7 @@ func TestCapitalize(t *testing.T) {
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := capitalize(tt.input)
-			result := capitalize(tt.input)
+			result := Capitalize(tt.input)
 			builderResult := New(tt.input).Capitalize().String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
 				t.Errorf("Capitalize - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
@@ -1826,7 +1826,7 @@ func TestUncapitalize(t *testing.T) {
 
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := Uncapitalize(tt.input)
+			helperResult := uncapitalize(tt.input)
 			result := Uncapitalize(tt.input)
 			builderResult := New(tt.input).Uncapitalize().String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
@@ -1865,7 +1865,7 @@ func TestToSnakeCaseWithIgnored(t *testing.T) {
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := toSnakeCaseWithIgnore(tt.input, tt.scream, tt.ignore)
-			result := toSnakeCaseWithIgnore(tt.input, tt.scream, tt.ignore)
+			result := ToSnakeCaseWithIgnore(tt.input, tt.scream, tt.ignore)
 			builderResult := New(tt.input).ToSnakeCaseWithIgnore(tt.scream, tt.ignore).String()
 			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
 				t.Errorf("ToSnakeCase - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)

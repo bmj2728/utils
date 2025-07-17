@@ -409,9 +409,9 @@ func SanitizePhone(s string) string {
 	panic("Implement me!")
 }
 
-func FormatPhone(s string, format PhoneFormat) string {
-	panic("Implement me!")
-}
+//func FormatPhone(s string, format PhoneFormat) string {
+//	panic("Implement me!")
+//}
 
 func SanitizeCardNumber(s string) string {
 	panic("Implement me!")
