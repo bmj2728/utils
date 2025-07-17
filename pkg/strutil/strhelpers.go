@@ -1,6 +1,7 @@
 package strutil
 
 import (
+	"errors"
 	"math/rand"
 	"net/mail"
 	"net/url"
@@ -599,4 +600,13 @@ func osaDamerauLevenshteinDistance(str1, str2 string) int {
 // lcs returns the length of the longest common subsequence between two input strings, str1 and str2.
 func lcs(str1 string, str2 string) int {
 	return edlib.LCS(str1, str2)
+}
+
+// lcsBacktrack computes the longest common subsequence (LCS) of two input strings and returns the result as a string.
+func lcsBacktrack(str1 string, str2 string) (string, error) {
+	result, err := edlib.LCSBacktrack(str1, str2)
+	if err != nil {
+		return "", errors.New(ErrLCSFailure)
+	}
+	return result, nil
 }

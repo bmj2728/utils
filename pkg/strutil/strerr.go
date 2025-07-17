@@ -32,4 +32,7 @@ var (
 
 	// ErrInvalidDomain indicates that the provided string is not a valid domain.
 	ErrInvalidDomain = "invalid domain"
+
+	// ErrLCSFailure represents an error encountered while identifying the longest common substring.
+	ErrLCSFailure = "error identifying longest common substring"
 )

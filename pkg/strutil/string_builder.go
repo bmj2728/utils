@@ -6,8 +6,9 @@ import "errors"
 
 // StringBuilder Type & Core Methods
 type StringBuilder struct {
-	value string
-	err   error
+	value      string
+	err        error
+	comparison *EdLibData
 }
 
 // Constructor
@@ -15,7 +16,8 @@ type StringBuilder struct {
 // New creates and returns a new StringBuilder instance initialized with the provided string.
 func New(s string) *StringBuilder {
 	return &StringBuilder{
-		value: s,
+		value:      s,
+		comparison: NewEdLibData(),
 	}
 }
 
@@ -504,49 +506,65 @@ func (sb *StringBuilder) ToDelimited(delim uint8, ignore string, scream bool) *S
 // Comparison Methods
 
 // LevenshteinDistance calculates the Levenshtein distance between the StringBuilder's value and the provided string.
-// Returns -1 if an error is associated with the StringBuilder.
 //
 // It represents the minimum number of edits needed to convert one string into the other.
 // An edit is an insertion, deletion, or substitution of a single character.
 //
 // Additional information: https://en.wikipedia.org/wiki/Levenshtein_distance
-func (sb *StringBuilder) LevenshteinDistance(other string) int {
+func (sb *StringBuilder) LevenshteinDistance(other string) *StringBuilder {
 	if sb.err != nil {
-		return -1
+		return sb
 	}
-	return levenshteinDistance(sb.value, other)
+	ld := levenshteinDistance(sb.value, other)
+	sb.comparison.SetLevenshteinDist(&ld)
+	return sb
 }
 
 // DamerauLevenshteinDistance computes the edit distance between two strings,
 // including transpositions of adjacent characters.
-// Returns -1 if the StringBuilder contains an error.
 //
 // It represents the minimum number of operations to change one string to another.
 // An operation is an insertion, deletion/substitution of a single character, or transposition of adjacent characters.
 //
 // Additional information: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
-func (sb *StringBuilder) DamerauLevenshteinDistance(other string) int {
+func (sb *StringBuilder) DamerauLevenshteinDistance(other string) *StringBuilder {
 	if sb.err != nil {
-		return -1
+		return sb
 	}
-	return damerauLevenshteinDistance(sb.value, other)
+	dld := damerauLevenshteinDistance(sb.value, other)
+	sb.comparison.SetDamerauLevDist(&dld)
+	return sb
 }
 
-func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) int {
+// OSADamerauLevenshteinDistance calculates the optimal string alignment Damerau-Levenshtein distance
+// with the given string.
+// Updates the comparison field with the computed distance value.
+func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) *StringBuilder {
 	if sb.err != nil {
-		return -1
+		return sb
 	}
-	return osaDamerauLevenshteinDistance(sb.value, other)
+	osadld := osaDamerauLevenshteinDistance(sb.value, other)
+	sb.comparison.SetOSADamerauLevDist(&osadld)
+	return sb
 }
 
 // LCS calculates and returns the length of the longest common subsequence (LCS) between
-// the StringBuilder value and another string.If an error exists in the StringBuilder instance, it returns -1.
-func (sb *StringBuilder) LCS(other string) int {
+// the StringBuilder value and another string.
+func (sb *StringBuilder) LCS(other string) *StringBuilder {
 	if sb.err != nil {
-		return -1
+		return sb
 	}
-	return lcs(sb.value, other)
+	lcs := lcs(sb.value, other)
+	sb.comparison.SetLCS(&lcs)
+	return sb
 }
+
+//func (sb *StringBuilder) LCSBacktrack(other string) string {
+//	if sb.err != nil {
+//		return ""
+//	}
+//
+//}
 
 // Validation Methods (can set error)
 
