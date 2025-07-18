@@ -622,8 +622,10 @@ func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
 	return result, nil
 }
 
-// compareStringSlices checks if two slices of strings are equal,
-// optionally treating nil slices as equal if nulls is true.
+// compareStringSlices checks if two slices of strings contain the same elements,
+// regardless of order, with optional nil equality.
+// If `nulls` is true, nil slices are treated as equal.
+// It returns true if slices match, otherwise false.
 func compareStringSlices(s1, s2 []string, nulls bool) bool {
 	if nulls && s1 == nil && s2 == nil {
 		return true
@@ -634,15 +636,17 @@ func compareStringSlices(s1, s2 []string, nulls bool) bool {
 	if len(s1) != len(s2) {
 		return false
 	}
+	remaining := slices.Clone(s2)
 	for _, s := range s1 {
-		if !slices.Contains(s2, s) {
+		if !slices.Contains(remaining, s) {
 			return false
-		}
-		continue
-	}
-	for _, w := range s2 {
-		if !slices.Contains(s1, w) {
-			return false
+		} else {
+			for i, w := range remaining {
+				if s == w {
+					remaining = slices.Delete(remaining, i, i+1)
+					break
+				}
+			}
 		}
 		continue
 	}
@@ -662,17 +666,18 @@ func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
 	if len(s1) != len(s2) {
 		return false
 	}
+	remaining := slices.Clone(s2)
 	for _, s := range s1 {
 		if !slices.Contains(s2, s) {
 			return false
+		} else {
+			for i, w := range remaining {
+				if s == w {
+					remaining = slices.Delete(remaining, i, i+1)
+					break
+				}
+			}
 		}
-		continue
-	}
-	for _, w := range s2 {
-		if !slices.Contains(s1, w) {
-			return false
-		}
-		continue
 	}
 	return true
 }

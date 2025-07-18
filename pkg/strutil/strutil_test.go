@@ -1034,8 +1034,11 @@ func TestIsDomain(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isValidDomain(tt.input)
 			result := IsDomain(tt.input)
-			if result != tt.expected {
+			builderErr := New(tt.input).RequireDomain().Error()
+			ok := builderErr == nil
+			if result != tt.expected || helperResult != tt.expected || ok != tt.expected {
 				t.Errorf("IsDomain - expected %t - got %t", tt.expected, result)
 			}
 		})
@@ -2222,6 +2225,22 @@ func TestCompareStringSlices(t *testing.T) {
 		{"CompareStringSlices10", nil, []string{"hello", "world"}, true, false},
 		{"CompareStringSlices11", nil, []string{"hello", "world"}, false, false},
 		{"CompareStringSlices12", []string{"hello", "world"}, nil, true, false},
+		{"CompareStringSlices13",
+			[]string{"hello", "world", "hello", "world"},
+			[]string{"hello", "world", "goodnight", "moon"},
+			false,
+			false},
+		{"CompareStringSlices14", []string{"hello", "world"}, []string{"hello", "hello"}, true, false},
+		{"CompareStringSlices15",
+			[]string{"to", "be", "or", "not", "to", "be"},
+			[]string{"be", "or", "to", "not", "be", "to"},
+			false,
+			true},
+		{"CompareStringSlices16",
+			[]string{"to", "be", "or", "not", "to", "be"},
+			[]string{"be", "or", "to", "not", "not", "not"},
+			false,
+			false},
 	}
 
 	for _, tt := range tests {
@@ -2296,6 +2315,11 @@ func TestCompareStringBuilderSlices(t *testing.T) {
 			[]StringBuilder{{value: "so am I"}, {value: "I'm a sentence"}},
 			true,
 			true},
+		{"CompareStringBuilderSlices11",
+			[]StringBuilder{{value: "some"}, {value: "super"}, {value: "good"}, {value: "strings"}},
+			[]StringBuilder{{value: "some"}, {value: "other"}, {value: "awesome"}, {value: "strings"}},
+			true,
+			false},
 	}
 
 	for _, tt := range tests {
