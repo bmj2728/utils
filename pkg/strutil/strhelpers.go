@@ -198,7 +198,7 @@ func replaceSpaces(s string, replacement string) string {
 }
 
 // randomFromCharset generates a random string of the specified length using characters from the provided charset.
-func randomFromCharset(length int, charset string) string {
+func randomFromCharset(length int, charset CharacterSet) string {
 	if length < 1 {
 		return ""
 	}
@@ -207,6 +207,33 @@ func randomFromCharset(length int, charset string) string {
 		s[i] = charset[rand.Intn(len(charset))]
 	}
 	return string(s)
+}
+
+// randomFromCustomCharset generates a random string of the specified length
+// using a custom character set provided as a string.
+func randomFromCustomCharset(length int, charset string) string {
+	custom := createCharacterSet(charset)
+	return randomFromCharset(length, custom)
+}
+
+// randomAlphaNumericString generates a random alphanumeric string of the specified length.
+func randomAlphaNumericString(length int) string {
+	return randomFromCharset(length, AlphaNumeric)
+}
+
+// randomAlphaString generates a random string of the specified length containing only alphabetic characters (A-Za-z).
+func randomAlphaString(length int) string {
+	return randomFromCharset(length, Alpha)
+}
+
+// randomHex generates a random hexadecimal string of the specified length.
+func randomHex(length int) string {
+	return randomFromCharset(length, HexChars)
+}
+
+// randomURLSafe generates a random URL-safe string of the specified length using alphanumeric characters and "-_".
+func randomURLSafe(length int) string {
+	return randomFromCharset(length, URLSafe)
 }
 
 // alpha removes all non-alphabetic characters from the given string, optionally retaining whitespace if ws is true.

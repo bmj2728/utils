@@ -74,9 +74,9 @@ func TestRandomStringFunctions(t *testing.T) {
 		function func(int) string
 		length   int
 	}{
-		{"RandomString", RandomString, 10},
-		{"RandomStringZeroLen", RandomString, 0},
-		{"RandomStringNegLen", RandomString, -1},
+		{"RandomAlphaString", RandomAlphaNumericString, 10},
+		{"RandomStringZeroLen", RandomAlphaNumericString, 0},
+		{"RandomStringNegLen", RandomAlphaNumericString, -1},
 		{"RandomHex", RandomHex, 16},
 		{"RandomHexZeroLen", RandomHex, 0},
 		{"RandomHexNegLen", RandomHex, -1},
@@ -127,9 +127,12 @@ func TestStringBuilderConstructors(t *testing.T) {
 		function func(int) *StringBuilder
 		length   int
 	}{
-		{"NewRandom", NewRandom, 10},
-		{"NewRandomZero", NewRandom, 0},
-		{"NewRandomNeg", NewRandom, -1},
+		{"NewRandomAlpha", NewRandomAlpha, 10},
+		{"NewRandomAlphaZero", NewRandomAlpha, 0},
+		{"NewRandomAlphaNeg", NewRandomAlpha, -1},
+		{"NewRandomAlphaNumeric", NewRandomAlphaNumeric, 10},
+		{"NewRandomAlphaNumericZero", NewRandomAlphaNumeric, 0},
+		{"NewRandomAlphaNumericNeg", NewRandomAlphaNumeric, -1},
 		{"NewRandomHex", NewRandomHex, 6},
 		{"NewRandomHexZero", NewRandomHex, 0},
 		{"NewRandomHexNeg", NewRandomHex, -1},
@@ -152,6 +155,83 @@ func TestStringBuilderConstructors(t *testing.T) {
 			}
 			if result.String() != "" && tt.length < 0 {
 				t.Errorf("Expected empty string for %s", tt.name)
+			}
+		})
+	}
+}
+
+func TestStringBuilderConstructorsWithCharSet(t *testing.T) {
+	tests := []struct {
+		name     string
+		function func(int, CharacterSet) *StringBuilder
+		length   int
+		charSet  CharacterSet
+	}{
+		{"TestAlpha", NewRandom, 10, Alpha},
+		{"TestAlphaZero", NewRandom, 0, Alpha},
+		{"TestAlphaNeg", NewRandom, -1, Alpha},
+		{"TestAlphaNumeric", NewRandom, 10, AlphaNumeric},
+		{"TestAlphaNumericZero", NewRandom, 0, AlphaNumeric},
+		{"TestAlphaNumericNeg", NewRandom, -1, AlphaNumeric},
+		{"TestHex", NewRandom, 10, HexChars},
+		{"TestHexZero", NewRandom, 0, HexChars},
+		{"TestHexNeg", NewRandom, -1, HexChars},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.function(tt.length, tt.charSet)
+			if result == nil {
+				t.Errorf("Expected non-nil result for %s", tt.name)
+			}
+			if result.String() == "" && tt.length > 0 {
+				t.Errorf("Expected non-empty string for %s", tt.name)
+			}
+			if result.String() != "" && tt.length == 0 {
+				t.Errorf("Expected empty string for %s", tt.name)
+			}
+			if result.String() != "" && tt.length < 0 {
+				t.Errorf("Expected empty string for %s", tt.name)
+			}
+			for _, c := range result.String() {
+				if !strings.Contains(string(tt.charSet), string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
+			}
+		})
+	}
+}
+
+func TestStringBuilderConstructorCustCharSet(t *testing.T) {
+	tests := []struct {
+		name    string
+		charset string
+		length  int
+	}{
+		{"TestCustomChars1", "abc", 10},
+		{"TestCustomChars2", "abc", 0},
+		{"TestCustomChars3", "abc", -1},
+		{"TestCustomChars4", "golang", 10},
+		{"TestCustomChars5", "a", 100},
+		{"TestCustomChars6", "abracadabra", 10},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := NewRandomFromCustomCharSet(tt.length, tt.charset)
+			if result == nil {
+				t.Errorf("Expected non-nil result for %s", tt.name)
+			}
+			if result.String() == "" && tt.length > 0 {
+				t.Errorf("Expected non-empty string for %s", tt.name)
+			}
+			if result.String() != "" && tt.length == 0 {
+				t.Errorf("Expected empty string for %s", tt.name)
+			}
+			for _, c := range result.String() {
+				if !strings.Contains(tt.charset, string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
 			}
 		})
 	}

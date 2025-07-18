@@ -6,19 +6,7 @@
 //   - String generation
 //   - Text processing manipulation
 //   - Text sanitizing functions
-//
-// # Usage
-//
-// Basic example to create a url-safe slug using the functional api:
-//
-//	 title := "The Fantasic Four: First Steps"
-//		slug := strutil.Slugify(title, 100)
-//		fmt.Print(slug) // Output: the-fantastic-four-first-steps
-//
-// Using the fluent api:
-//
-//		slug := strutil.New("The Fantasic Four: First Steps").Slugify(100).String()
-//	 fmt.Print(slug) // Output: the-fantastic-four-first-steps
+//   - Text comparison
 //
 // # Performance Considerations
 //
@@ -41,21 +29,37 @@ func GenerateUUIDV7() string {
 
 // String Generation
 
-// RandomString generates a random alphanumeric string of the specified length using the AlphaNumeric character set.
+// RandomString generates a random string of the specified length using the provided CharacterSet.
+func RandomString(length int, charSet CharacterSet) string {
+	return randomFromCharset(length, charSet)
+}
+
+// RandomStringFromCustomCharset generates a random string of a given length using a specified custom character set.
+func RandomStringFromCustomCharset(length int, customCharset string) string {
+	return randomFromCustomCharset(length, customCharset)
+}
+
+// RandomAlphaNumericString generates a random alphanumeric string of the
+// specified length using the AlphaNumeric character set.
 // This uses math/rand and is NOT cryptographically secure.
 // For security-sensitive applications, use crypto/rand directly.
-func RandomString(length int) string {
-	return randomFromCharset(length, AlphaNumeric)
+func RandomAlphaNumericString(length int) string {
+	return randomAlphaNumericString(length)
+}
+
+// RandomAlphaString generates a random string of the specified length containing only alphabetic characters (A-Za-z).
+func RandomAlphaString(length int) string {
+	return randomAlphaString(length)
 }
 
 // RandomHex generates a random hexadecimal string of the specified length.
 func RandomHex(length int) string {
-	return randomFromCharset(length, HexChars)
+	return randomHex(length)
 }
 
 // RandomUrlSafe generates a random URL-safe string of the specified length using characters suitable for URLs.
 func RandomUrlSafe(length int) string {
-	return randomFromCharset(length, URLSafe)
+	return randomURLSafe(length)
 }
 
 // LoremWord generates and returns a random lorem ipsum word as a string.

@@ -151,7 +151,7 @@ The following functions have been fully implemented and are ready for use:
 #### UUID and Random String Generation
 - `GenerateUUID()` - Generates a random UUID
 - `GenerateUUIDV7()` - Generates a UUID v7 (recommended for new applications)
-- `RandomString(length)` - Generates a random alphanumeric string
+- `RandomAlphaString(length)` - Generates a random alphanumeric string
 - `RandomHex(length)` - Generates a random hexadecimal string
 - `RandomUrlSafe(length)` - Generates a random URL-safe string
 

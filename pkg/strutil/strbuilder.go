@@ -21,24 +21,46 @@ func New(s string) *StringBuilder {
 	}
 }
 
-// NewRandom creates a new StringBuilder with a random alphanumeric string of the specified length.
-func NewRandom(length int) *StringBuilder {
+// NewRandom generates a new StringBuilder containing a random string of the specified length
+// using the given CharacterSet.
+func NewRandom(length int, charSet CharacterSet) *StringBuilder {
 	return &StringBuilder{
-		value: randomFromCharset(length, AlphaNumeric),
+		value: randomFromCharset(length, charSet),
+	}
+}
+
+// NewRandomFromCustomCharSet generates a random string of the specified length using a custom character set.
+func NewRandomFromCustomCharSet(length int, charSet string) *StringBuilder {
+	return &StringBuilder{
+		value: randomFromCustomCharset(length, charSet),
+	}
+}
+
+// NewRandomAlphaNumeric creates a new StringBuilder with a random alphanumeric string of the specified length.
+func NewRandomAlphaNumeric(length int) *StringBuilder {
+	return &StringBuilder{
+		value: randomAlphaNumericString(length),
+	}
+}
+
+// NewRandomAlpha creates a StringBuilder with a random alphabetic string (A-Za-z) of the specified length.
+func NewRandomAlpha(length int) *StringBuilder {
+	return &StringBuilder{
+		value: randomAlphaString(length),
 	}
 }
 
 // NewRandomHex generates a new StringBuilder containing a random hexadecimal string of the specified length.
 func NewRandomHex(length int) *StringBuilder {
 	return &StringBuilder{
-		value: randomFromCharset(length, HexChars),
+		value: randomHex(length),
 	}
 }
 
 // NewRandomURLSafe generates a StringBuilder initialized with a random URL-safe string of the given length.
 func NewRandomURLSafe(length int) *StringBuilder {
 	return &StringBuilder{
-		value: randomFromCharset(length, URLSafe),
+		value: randomURLSafe(length),
 	}
 }
 
