@@ -52,6 +52,7 @@ func (e *EdLibData) SetLCSBacktrack(lcsBacktrack *string) {
 	e.LCSBacktrack = lcsBacktrack
 }
 
+// GetLCSBacktrack retrieves the LCS backtrack string from the EdLibData structure.
 func (e *EdLibData) GetLCSBacktrack() *string {
 	return e.LCSBacktrack
 }

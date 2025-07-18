@@ -1,6 +1,7 @@
 package strutil
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -2142,6 +2143,8 @@ func TestLCSBacktrack(t *testing.T) {
 				t.Errorf("Error: %s", err)
 			}
 			builderResult := New(tt.input1).LCSBacktrack(tt.input2)
+			fmt.Printf("LCSBacktrack - expected %s - got %s / %s / %s",
+				tt.expected, helperResult, result, *builderResult.comparison.GetLCSBacktrack())
 			if helperResult != tt.expected ||
 				result != tt.expected ||
 				*builderResult.comparison.GetLCSBacktrack() != tt.expected {
@@ -2331,6 +2334,137 @@ func TestCompareStringBuilderSlices(t *testing.T) {
 					tt.expected,
 					helperResult,
 					result,
+				)
+			}
+		})
+	}
+}
+
+func TestLCSDiff(t *testing.T) {
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected []string
+	}{
+		{"LCSDiff1",
+			"hello",
+			"help",
+			[]string{" h e l p l o", "       + - -"}},
+		{"LCSDiff2",
+			"",
+			"",
+			nil},
+		{"LCSDiff3",
+			"It was the best of times",
+			"It was the worst of times",
+			[]string{" I t   w a s   t h e   w o r b e s t   o f   t i m e s",
+				"                       + + + - -                      "},
+		},
+		{"LCSDiff4",
+			"wEdNeSdAy",
+			"WeDnEsDaY",
+			[]string{" W e D n w E s D a Y d N e S d A y", " + + + + -   + + + + - - - - - - -"}},
+		{"LCSDiff5",
+			"Georgia",
+			"Jorja",
+			[]string{" J G e o r j g i a", " + - -     + - -  "}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult, err := lcsDiff(tt.input1, tt.input2)
+			if err != nil && err.Error() != ErrLCSDiffFailure {
+				t.Errorf("Error: %s", err)
+			}
+			result, err := LCSDiff(tt.input1, tt.input2)
+			if err != nil && err.Error() != ErrLCSDiffFailure {
+				t.Errorf("Error: %s", err)
+			}
+			builderResult := New(tt.input1).LCSDiff(tt.input2)
+			if builderResult.Error() != nil && builderResult.Error().Error() != ErrLCSDiffFailure {
+				t.Errorf("Error: %s", builderResult.Error())
+			}
+			if tt.expected != nil &&
+				(helperResult == nil ||
+					result == nil ||
+					*builderResult.comparison.GetLCSDiff() == nil) {
+				t.Errorf("LCSDiff - expected %s - got %s / %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+					*builderResult.comparison.GetLCSDiff())
+			}
+			if tt.expected == nil &&
+				(helperResult != nil ||
+					result != nil ||
+					*builderResult.comparison.GetLCSDiff() != nil) {
+				t.Errorf("LCSDiff - expected %s - got %s / %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+					*builderResult.comparison.GetLCSDiff())
+			}
+			if tt.expected != nil && (!CompareStringSlices(tt.expected, helperResult, false) ||
+				!CompareStringSlices(tt.expected, result, false) ||
+				!CompareStringSlices(tt.expected, *builderResult.comparison.GetLCSDiff(), false)) {
+				t.Errorf("LCSDiff - expected %s - got %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+				)
+			}
+		})
+	}
+}
+
+func TestLCSEditDistance(t *testing.T) {
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected int
+	}{
+		{"LCSEditDistance1",
+			"hello",
+			"help",
+			3,
+		},
+		{"LCSEditDistance2",
+			"",
+			"",
+			0,
+		},
+		{"LCSEditDistance3",
+			"It was the best of times",
+			"It was the worst of times",
+			5,
+		},
+		{"LCSEditDistance4",
+			"wEdNeSdAy",
+			"WeDnEsDaY",
+			16,
+		},
+		{"LCSEditDistance5",
+			"Georgia",
+			"Jorja",
+			6,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResul := lcsEditDistance(tt.input1, tt.input2)
+			result := LCSEditDistance(tt.input1, tt.input2)
+			builderResult := New(tt.input1).LCSEditDistance(tt.input2)
+			if helperResul != tt.expected ||
+				result != tt.expected ||
+				*builderResult.comparison.GetLCSEditDistance() != tt.expected {
+				t.Errorf("LCSEditDistance - expected %d - got %d / %d /%d",
+					tt.expected,
+					helperResul,
+					result,
+					*builderResult.comparison.GetLCSEditDistance(),
 				)
 			}
 		})

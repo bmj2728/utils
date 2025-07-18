@@ -147,6 +147,19 @@ func NewLoremEmail() *StringBuilder {
 
 // Manipulation Methods
 
+// Print outputs the current value of the StringBuilder instance and returns the instance itself for method chaining.
+func (sb *StringBuilder) Print() *StringBuilder {
+	println(sb.value)
+	return sb
+}
+
+// Append adds the given string `s` to the StringBuilder's value,
+// prefixed by the separator `sep`, and returns the updated StringBuilder.
+func (sb *StringBuilder) Append(s string, sep string) *StringBuilder {
+	sb.value += sep + s
+	return sb
+}
+
 // CleanWhitespace removes all whitespace characters from the StringBuilder's value
 // and returns the updated StringBuilder.
 func (sb *StringBuilder) CleanWhitespace() *StringBuilder {
@@ -597,6 +610,32 @@ func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
 	return sb
 }
 
+// LCSDiff calculates and sets the Longest Common Subsequence diff between
+// the StringBuilder's value and the given string.
+// It modifies the StringBuilder by updating its comparison state with the LCS diff.
+// If an error occurs during the calculation, the error is stored in the StringBuilder's error field.
+func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	diff, err := lcsDiff(sb.value, other)
+	if err != nil {
+		sb.err = err
+	}
+	sb.comparison.SetLCSDiff(&diff)
+	return sb
+}
+
+// LCSEditDistance calculates the edit distance between the StringBuilder's value and another string using LCS.
+func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	i := lcsEditDistance(sb.value, other)
+	sb.comparison.SetLCSEditDistance(&i)
+	return sb
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,
@@ -755,6 +794,10 @@ func (sb *StringBuilder) Error() error {
 	return sb.err
 }
 
+func (sb *StringBuilder) Comparison() *EdLibData {
+	return sb.comparison
+}
+
 // Must returns the final string value or nil string if an error is present in the StringBuilder instance.
 func (sb *StringBuilder) Must() string {
 	if sb.err != nil {
@@ -764,6 +807,6 @@ func (sb *StringBuilder) Must() string {
 }
 
 // Result returns the current value of the StringBuilder along with any associated error.
-func (sb *StringBuilder) Result() (string, error) {
-	return sb.value, sb.err
+func (sb *StringBuilder) Result() (string, error, *EdLibData) {
+	return sb.value, sb.err, sb.comparison
 }

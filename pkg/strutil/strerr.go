@@ -33,6 +33,14 @@ var (
 	// ErrInvalidDomain indicates that the provided string is not a valid domain.
 	ErrInvalidDomain = "invalid domain"
 
-	// ErrLCSFailure represents an error encountered while identifying the longest common substring.
-	ErrLCSFailure = "error identifying longest common substring"
+	// ErrLCSBacktrackFailure indicates a failure in the
+	// backtracking process to determine the longest common substring.
+	ErrLCSBacktrackFailure = "error backtracking longest common substring"
+
+	// ErrLCSBacktrackAllFailure indicates an error occurred while attempting to
+	// backtrack for a slice of common substrings.
+	ErrLCSBacktrackAllFailure = "error backtracking for slice of common substrings"
+
+	// ErrLCSDiffFailure represents an error occurring during the generation of Longest Common Subsequence (LCS) diff.
+	ErrLCSDiffFailure = "error generating lcs diff"
 )

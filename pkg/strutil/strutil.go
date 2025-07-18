@@ -519,3 +519,12 @@ func LCSBacktrack(s1, s2 string) (string, error) {
 func LCSBacktrackAll(s1, s2 string) ([]string, error) {
 	return lcsBacktrackAll(s1, s2)
 }
+
+func LCSDiff(str1, str2 string) ([]string, error) {
+	return lcsDiff(str1, str2)
+}
+
+// LCSEditDistance computes the edit distance between two strings using the Longest Common Subsequence (LCS) method.
+func LCSEditDistance(s1, s2 string) int {
+	return lcsEditDistance(s1, s2)
+}

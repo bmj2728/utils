@@ -607,7 +607,7 @@ func lcs(str1 string, str2 string) int {
 func lcsBacktrack(str1 string, str2 string) (string, error) {
 	result, err := edlib.LCSBacktrack(str1, str2)
 	if err != nil {
-		return "", errors.New(ErrLCSFailure)
+		return "", errors.New(ErrLCSBacktrackFailure)
 	}
 	return result, nil
 }
@@ -617,9 +617,24 @@ func lcsBacktrack(str1 string, str2 string) (string, error) {
 func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
 	result, err := edlib.LCSBacktrackAll(str1, str2)
 	if err != nil {
-		return nil, errors.New(ErrLCSFailure)
+		return nil, errors.New(ErrLCSBacktrackAllFailure)
 	}
 	return result, nil
+}
+
+// lcsDiff calculates the Longest Common Subsequence (LCS) diff between
+// two strings and returns the differences or an error.
+func lcsDiff(str1, str2 string) ([]string, error) {
+	result, err := edlib.LCSDiff(str1, str2)
+	if err != nil {
+		return nil, errors.New(ErrLCSDiffFailure)
+	}
+	return result, nil
+}
+
+// lcsEditDistance computes the edit distance between two strings based on their Longest Common Subsequence (LCS).
+func lcsEditDistance(s1, s2 string) int {
+	return edlib.LCSEditDistance(s1, s2)
 }
 
 // compareStringSlices checks if two slices of strings contain the same elements,
