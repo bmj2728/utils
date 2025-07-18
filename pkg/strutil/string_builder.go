@@ -807,6 +807,6 @@ func (sb *StringBuilder) Must() string {
 }
 
 // Result returns the current value of the StringBuilder along with any associated error.
-func (sb *StringBuilder) Result() (string, error, *EdLibData) {
-	return sb.value, sb.err, sb.comparison
+func (sb *StringBuilder) Result() (string, *EdLibData, error) {
+	return sb.value, sb.comparison, sb.err
 }
