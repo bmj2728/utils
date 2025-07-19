@@ -4,7 +4,7 @@ import "errors"
 
 // CompareStringBuilderSlices compares two slices of StringBuilder for equality,
 // optionally allowing nil slices to be considered equal.
-// The order of elements in the slices does not affect the comparison,
+// The order of elements in the slices does not affect the comparisonData,
 // and the 'nulls' flag determines nil-handling behavior.
 func CompareStringBuilderSlices(a, b []StringBuilder, nulls bool) bool {
 	return compareStringBuilderSlices(a, b, nulls)
@@ -21,7 +21,7 @@ func (sb *StringBuilder) LevenshteinDistance(other string) *StringBuilder {
 		return sb
 	}
 	ld := levenshteinDistance(sb.value, other)
-	sb.comparison.SetLevenshteinDist(&ld)
+	sb.comparisonData.SetLevenshteinDist(&ld)
 	return sb
 }
 
@@ -37,19 +37,19 @@ func (sb *StringBuilder) DamerauLevenshteinDistance(other string) *StringBuilder
 		return sb
 	}
 	dld := damerauLevenshteinDistance(sb.value, other)
-	sb.comparison.SetDamerauLevDist(&dld)
+	sb.comparisonData.SetDamerauLevDist(&dld)
 	return sb
 }
 
 // OSADamerauLevenshteinDistance calculates the optimal string alignment Damerau-Levenshtein distance
 // with the given string.
-// Updates the comparison field with the computed distance value.
+// Updates the comparisonData field with the computed distance value.
 func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
 	osadld := osaDamerauLevenshteinDistance(sb.value, other)
-	sb.comparison.SetOSADamerauLevDist(&osadld)
+	sb.comparisonData.SetOSADamerauLevDist(&osadld)
 	return sb
 }
 
@@ -60,7 +60,7 @@ func (sb *StringBuilder) LCS(other string) *StringBuilder {
 		return sb
 	}
 	lcs := lcs(sb.value, other)
-	sb.comparison.SetLCS(&lcs)
+	sb.comparisonData.SetLCS(&lcs)
 	return sb
 }
 
@@ -75,12 +75,12 @@ func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
 	if err != nil {
 		sb.err = errors.Join(ErrLCSBacktrackFailure, err)
 	}
-	sb.comparison.SetLCSBacktrack(&s)
+	sb.comparisonData.SetLCSBacktrack(&s)
 	return sb
 }
 
 // LCSBacktrackAll computes all longest common subsequences between the current StringBuilder value and another string.
-// Updates the comparison field with all subsequences if successful or records an error if the operation fails.
+// Updates the comparisonData field with all subsequences if successful or records an error if the operation fails.
 // Returns the StringBuilder instance.
 func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
 	if sb.err != nil {
@@ -90,13 +90,13 @@ func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
 	if err != nil {
 		sb.err = errors.Join(ErrLCSBacktrackAllFailure, err)
 	}
-	sb.comparison.SetLCSBacktrackAll(&seqs)
+	sb.comparisonData.SetLCSBacktrackAll(&seqs)
 	return sb
 }
 
 // LCSDiff calculates and sets the Longest Common Subsequence diff between
 // the StringBuilder's value and the given string.
-// It modifies the StringBuilder by updating its comparison state with the LCS diff.
+// It modifies the StringBuilder by updating its comparisonData state with the LCS diff.
 // If an error occurs during the calculation, the error is stored in the StringBuilder's error field.
 func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
 	if sb.err != nil {
@@ -106,7 +106,7 @@ func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
 	if err != nil {
 		sb.err = errors.Join(ErrLCSDiffFailure, err)
 	}
-	sb.comparison.SetLCSDiff(&diff)
+	sb.comparisonData.SetLCSDiff(&diff)
 	return sb
 }
 
@@ -116,7 +116,7 @@ func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
 		return sb
 	}
 	i := lcsEditDistance(sb.value, other)
-	sb.comparison.SetLCSEditDistance(&i)
+	sb.comparisonData.SetLCSEditDistance(&i)
 	return sb
 }
 
@@ -129,12 +129,12 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 		sb.err = errors.Join(ErrHammingDistanceFailure, err)
 		return sb
 	}
-	sb.comparison.SetHammingDist(dist)
+	sb.comparisonData.SetHammingDist(dist)
 	return sb
 }
 
 // JaroSimilarity computes the Jaro similarity between the StringBuilder's value and the provided string.
-// It updates the Jaro similarity value in the comparison field and returns the updated StringBuilder instance.
+// It updates the Jaro similarity value in the comparisonData field and returns the updated StringBuilder instance.
 //
 // The higher the value, the more similar the strings are.
 // The score is normalized such that 0 equates to no similarities and 1 is an exact match
@@ -145,12 +145,12 @@ func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
 		return sb
 	}
 	js := jaroSimilarity(sb.value, other)
-	sb.comparison.SetJaroSimilarity(&js)
+	sb.comparisonData.SetJaroSimilarity(&js)
 	return sb
 }
 
 // JaroWinklerSimilarity calculates the Jaro-Winkler similarity between the StringBuilder value and another string.
-// It updates the comparison field with the computed similarity value if no internal error is present.
+// It updates the comparisonData field with the computed similarity value if no internal error is present.
 // Returns the updated StringBuilder instance.
 //
 // Uses Jaro similarity with a more favorable weighting for similar common prefixes.
@@ -161,7 +161,7 @@ func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
 		return sb
 	}
 	jws := jaroWinklerSimilarity(sb.value, other)
-	sb.comparison.SetJaroWinklerSim(&jws)
+	sb.comparisonData.SetJaroWinklerSim(&jws)
 	return sb
 }
 
@@ -178,12 +178,12 @@ func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *Strin
 		return sb
 	}
 	js := jaccardSimilarity(sb.value, other, splitLength)
-	sb.comparison.SetJaccardSim(js)
+	sb.comparisonData.SetJaccardSim(js)
 	return sb
 }
 
 // CosineSimilarity computes the cosine similarity between the StringBuilder value and
-// another string with n-gram splitting. Updates the comparison state with
+// another string with n-gram splitting. Updates the comparisonData state with
 // the computed similarity and returns the modified StringBuilder. When an error exists in the StringBuilder,
 // it skips computation and returns itself.
 //
@@ -195,7 +195,7 @@ func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *String
 		return sb
 	}
 	cs := cosineSimilarity(sb.value, other, splitLength)
-	sb.comparison.SetCosineSimilarity(cs)
+	sb.comparisonData.SetCosineSimilarity(cs)
 	return sb
 }
 
@@ -211,6 +211,6 @@ func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) 
 		return sb
 	}
 	sdc := sorensenDiceCoefficient(sb.value, other, splitLength)
-	sb.comparison.SetSorensenDiceCo(sdc)
+	sb.comparisonData.SetSorensenDiceCo(sdc)
 	return sb
 }

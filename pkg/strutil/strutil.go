@@ -7,7 +7,7 @@
 //   - Lorem Ipsum Generation
 //   - Text manipulation
 //   - Text sanitizing functions
-//   - Text comparison
+//   - Text comparisonData
 //
 // # Performance Considerations
 //

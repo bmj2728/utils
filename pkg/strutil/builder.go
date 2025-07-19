@@ -4,15 +4,15 @@ import "fmt"
 
 // StringBuilder Type & Core Methods
 type StringBuilder struct {
-	value      string
-	err        error
-	comparison *EdLibData
+	value          string
+	err            error
+	comparisonData *ComparisonData
 }
 
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
 	if sb.err != nil {
-		fmt.Printf("%s", sb.err)
+		fmt.Printf("%s", sb.err.Error())
 		return sb
 	}
 	fmt.Printf("%s", sb.value)
@@ -29,12 +29,13 @@ func (sb *StringBuilder) Error() error {
 	return sb.err
 }
 
-func (sb *StringBuilder) Comparison() *EdLibData {
-	return sb.comparison
+// Comparison returns the comparisonData object stored in the StringBuilder.
+func (sb *StringBuilder) Comparison() *ComparisonData {
+	return sb.comparisonData
 }
 
-// Must returns the constructed string or an error if one occurred during the building process.
-func (sb *StringBuilder) Must() (string, error) {
+// Build constructs the final string from the StringBuilder and returns it along with any encountered error.
+func (sb *StringBuilder) Build() (string, error) {
 	if sb.err != nil {
 		return "", sb.err
 	}
@@ -42,6 +43,6 @@ func (sb *StringBuilder) Must() (string, error) {
 }
 
 // Result returns the current value of the StringBuilder along with any associated error.
-func (sb *StringBuilder) Result() (string, *EdLibData, error) {
-	return sb.value, sb.comparison, sb.err
+func (sb *StringBuilder) Result() (string, *ComparisonData, error) {
+	return sb.value, sb.comparisonData, sb.err
 }

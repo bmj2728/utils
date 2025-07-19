@@ -3,8 +3,8 @@ package strutil
 // New creates and returns a new StringBuilder instance initialized with the provided string.
 func New(s string) *StringBuilder {
 	return &StringBuilder{
-		value:      s,
-		comparison: NewEdLibData(),
+		value:          s,
+		comparisonData: NewEdLibData(),
 	}
 }
 

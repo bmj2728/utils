@@ -99,7 +99,7 @@ func compareStringSlices(s1, s2 []string, nulls bool) bool {
 }
 
 // compareStringBuilderSlices compares two slices of StringBuilder for equality,
-// optionally considering nil slices as equal. The comparison ignores the order of elements
+// optionally considering nil slices as equal. The comparisonData ignores the order of elements
 // and uses the 'nulls' flag to determine nil-handling behavior.
 func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
 	if nulls && s1 == nil && s2 == nil {

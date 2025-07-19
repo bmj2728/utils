@@ -35,7 +35,7 @@ func TestLevenshteinDistance(t *testing.T) {
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparison.LevenshteinDist)
+					*builderResult.comparisonData.LevenshteinDist)
 			}
 		})
 	}
@@ -64,12 +64,12 @@ func TestDamerauLevenshteinDistance(t *testing.T) {
 			builderResult := New(tt.input1).DamerauLevenshteinDistance(tt.input2)
 			if helperResult != tt.expected ||
 				result != tt.expected ||
-				*builderResult.comparison.GetDamerauLevDist() != tt.expected {
+				*builderResult.comparisonData.GetDamerauLevDist() != tt.expected {
 				t.Errorf("Damarau-LevenshteinDistance - expected %d - got %d / %d / %d",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparison.GetDamerauLevDist())
+					*builderResult.comparisonData.GetDamerauLevDist())
 			}
 		})
 	}
@@ -100,12 +100,12 @@ func TestOSADamerauLevenshteinDistance(t *testing.T) {
 			builderResult := New(tt.input1).OSADamerauLevenshteinDistance(tt.input2)
 			if helperResult != tt.expected ||
 				result != tt.expected ||
-				*builderResult.comparison.GetOSADamerauLevDist() != tt.expected {
+				*builderResult.comparisonData.GetOSADamerauLevDist() != tt.expected {
 				t.Errorf("OSALevenshteinDistance - expected %d - got %d / %d / %d",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparison.GetOSADamerauLevDist())
+					*builderResult.comparisonData.GetOSADamerauLevDist())
 			}
 		})
 	}
@@ -140,9 +140,9 @@ func TestLCS(t *testing.T) {
 			helperResult := lcs(tt.input1, tt.input2)
 			result := LCS(tt.input1, tt.input2)
 			builderResult := New(tt.input1).LCS(tt.input2)
-			if helperResult != tt.expected || result != tt.expected || *builderResult.comparison.GetLCS() != tt.expected {
+			if helperResult != tt.expected || result != tt.expected || *builderResult.comparisonData.GetLCS() != tt.expected {
 				t.Errorf("LCS - expected %d - got %d / %d / %d",
-					tt.expected, helperResult, result, *builderResult.comparison.GetLCS())
+					tt.expected, helperResult, result, *builderResult.comparisonData.GetLCS())
 			}
 		})
 	}
@@ -183,12 +183,12 @@ func TestLCSBacktrack(t *testing.T) {
 			}
 			builderResult := New(tt.input1).LCSBacktrack(tt.input2)
 			fmt.Printf("LCSBacktrack - expected %s - got %s / %s / %s",
-				tt.expected, helperResult, result, *builderResult.comparison.GetLCSBacktrack())
+				tt.expected, helperResult, result, *builderResult.comparisonData.GetLCSBacktrack())
 			if helperResult != tt.expected ||
 				result != tt.expected ||
-				*builderResult.comparison.GetLCSBacktrack() != tt.expected {
+				*builderResult.comparisonData.GetLCSBacktrack() != tt.expected {
 				t.Errorf("LCSBacktrack - expected %s - got %s / %s / %s",
-					tt.expected, helperResult, result, *builderResult.comparison.GetLCSBacktrack())
+					tt.expected, helperResult, result, *builderResult.comparisonData.GetLCSBacktrack())
 			}
 		})
 	}
@@ -233,15 +233,15 @@ func TestLCSBacktrackAll(t *testing.T) {
 			builderResult := New(tt.input1).LCSBacktrackAll(tt.input2)
 			if tt.expected != nil && (!CompareStringSlices(tt.expected, helperResult, false) ||
 				!CompareStringSlices(tt.expected, result, false) ||
-				!CompareStringSlices(tt.expected, *builderResult.comparison.GetLCSBacktrackAll(), false)) {
+				!CompareStringSlices(tt.expected, *builderResult.comparisonData.GetLCSBacktrackAll(), false)) {
 				t.Errorf("LCSBacktrackAllA - expected %s - got %s / %s / %s",
-					tt.expected, helperResult, result, *builderResult.comparison.GetLCSBacktrackAll())
+					tt.expected, helperResult, result, *builderResult.comparisonData.GetLCSBacktrackAll())
 			}
 			if tt.expected == nil && (helperResult != nil ||
 				result != nil ||
-				*builderResult.comparison.GetLCSBacktrackAll() != nil) {
+				*builderResult.comparisonData.GetLCSBacktrackAll() != nil) {
 				t.Errorf("LCSBacktrackAllB - expected %d - got %d / %d / %d",
-					len(tt.expected), len(helperResult), len(result), len(*builderResult.comparison.GetLCSBacktrackAll()))
+					len(tt.expected), len(helperResult), len(result), len(*builderResult.comparisonData.GetLCSBacktrackAll()))
 			}
 		})
 	}
@@ -427,26 +427,26 @@ func TestLCSDiff(t *testing.T) {
 			if tt.expected != nil &&
 				(helperResult == nil ||
 					result == nil ||
-					*builderResult.comparison.GetLCSDiff() == nil) {
+					*builderResult.comparisonData.GetLCSDiff() == nil) {
 				t.Errorf("LCSDiff - expected %s - got %s / %s / %s",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparison.GetLCSDiff())
+					*builderResult.comparisonData.GetLCSDiff())
 			}
 			if tt.expected == nil &&
 				(helperResult != nil ||
 					result != nil ||
-					*builderResult.comparison.GetLCSDiff() != nil) {
+					*builderResult.comparisonData.GetLCSDiff() != nil) {
 				t.Errorf("LCSDiff - expected %s - got %s / %s / %s",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparison.GetLCSDiff())
+					*builderResult.comparisonData.GetLCSDiff())
 			}
 			if tt.expected != nil && (!CompareStringSlices(tt.expected, helperResult, false) ||
 				!CompareStringSlices(tt.expected, result, false) ||
-				!CompareStringSlices(tt.expected, *builderResult.comparison.GetLCSDiff(), false)) {
+				!CompareStringSlices(tt.expected, *builderResult.comparisonData.GetLCSDiff(), false)) {
 				t.Errorf("LCSDiff - expected %s - got %s / %s",
 					tt.expected,
 					helperResult,
@@ -498,12 +498,12 @@ func TestLCSEditDistance(t *testing.T) {
 			builderResult := New(tt.input1).LCSEditDistance(tt.input2)
 			if helperResul != tt.expected ||
 				result != tt.expected ||
-				*builderResult.comparison.GetLCSEditDistance() != tt.expected {
+				*builderResult.comparisonData.GetLCSEditDistance() != tt.expected {
 				t.Errorf("LCSEditDistance - expected %d - got %d / %d /%d",
 					tt.expected,
 					helperResul,
 					result,
-					*builderResult.comparison.GetLCSEditDistance(),
+					*builderResult.comparisonData.GetLCSEditDistance(),
 				)
 			}
 		})
