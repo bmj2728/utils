@@ -586,3 +586,14 @@ func JaroWinklerSimilarity(s1, s2 string) float32 {
 func JaccardSimilarity(s1, s2 string, splitLength int) *float32 {
 	return jaccardSimilarity(s1, s2, splitLength)
 }
+
+// CosineSimilarity computes the cosine similarity between two strings using the specified n-gram split length.
+// Returns a pointer to the similarity score or nil if the split length is negative.
+// If the split length is zero, it splits the strings on whitespaces.
+//
+// Cosine similarity is the cosine of the angle between the vectors.
+//
+// Additional Info: https://en.wikipedia.org/wiki/Cosine_similarity/
+func CosineSimilarity(s1, s2 string, splitLength int) *float32 {
+	return cosineSimilarity(s1, s2, splitLength)
+}

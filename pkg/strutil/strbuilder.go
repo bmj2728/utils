@@ -736,6 +736,23 @@ func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *Strin
 	return sb
 }
 
+// CosineSimilarity computes the cosine similarity between the StringBuilder value and
+// another string with n-gram splitting. Updates the comparison state with
+// the computed similarity and returns the modified StringBuilder. When an error exists in the StringBuilder,
+// it skips computation and returns itself.
+//
+// Cosine similarity is the cosine of the angle between the vectors.
+//
+// Additional Info: https://en.wikipedia.org/wiki/Cosine_similarity/
+func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	cs := cosineSimilarity(sb.value, other, splitLength)
+	sb.comparison.SetCosineSimilarity(cs)
+	return sb
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,

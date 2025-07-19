@@ -772,3 +772,14 @@ func jaccardSimilarity(s1, s2 string, splitLength int) *float32 {
 	js := edlib.JaccardSimilarity(s1, s2, splitLength)
 	return &js
 }
+
+// cosineSimilarity computes the cosine similarity between two strings using a specified n-gram split length.
+// Returns a pointer to the similarity score or nil if the split length is negative.
+// Split lengths of zero, split on whitespaces.
+func cosineSimilarity(s1, s2 string, splitLength int) *float32 {
+	if splitLength < 0 {
+		return nil
+	}
+	cs := edlib.CosineSimilarity(s1, s2, splitLength)
+	return &cs
+}

@@ -2894,6 +2894,8 @@ func TestJaccardSimilarity(t *testing.T) {
 		{"JaccardSimilarity1", "abcd", "abcd", 4, &val8},
 		{"JaccardSimilarity1", "abcd", "abc", -1, nil},
 		{"JaccardSimilarity1", "abc", "xyz", 1, &val10},
+		{"JaccardSimilarity1", "abc", "", 1, &val10},
+		{"JaccardSimilarity1", "", "xyz", 1, &val10},
 	}
 
 	for _, tt := range tests {
@@ -2920,6 +2922,70 @@ func TestJaccardSimilarity(t *testing.T) {
 					*helperResult,
 					*result,
 					*builderResult.Comparison().GetJaccardSim(),
+				)
+			}
+		})
+	}
+}
+
+func TestCosineSimilarity(t *testing.T) {
+
+	var val1 float32 = 1.0
+	var val2 float32 = 0.408248
+	var val3 float32 = 0.707107
+	var val4 float32 = 0.129641
+	var val5 float32 = 0.223607
+	var val6 float32 = 0.816497
+	var val7 float32 = 0.866025
+	var val8 float32 = 1.0
+	var val10 float32 = 0.0
+
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		splitLen int
+		expected *float32
+	}{
+		{"CosineSimilarity1", "hello", "hello", 0, &val1},
+		{"CosineSimilarity2", "hello", "help", 3, &val2},
+		{"CosineSimilarity3", "abcd", "abc", 3, &val3},
+		{"CosineSimilarity4", "this is a sentence", "this guy sent me home", 5, &val4},
+		{"CosineSimilarity5", "this is a sentence", "this guy sent me home", 0, &val5},
+		{"CosineSimilarity6", "abcd", "abc", 2, &val6},
+		{"CosineSimilarity7", "abcd", "abc", 1, &val7},
+		{"CosineSimilarity8", "abcd", "abcd", 4, &val8},
+		{"CosineSimilarity9", "abcd", "abc", -1, nil},
+		{"CosineSimilarity10", "abc", "xyz", 1, &val10},
+		{"CosineSimilarity11", "abc", "", 1, &val10},
+		{"CosineSimilarity12", "", "xyz", 1, &val10},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := cosineSimilarity(tt.input1, tt.input2, tt.splitLen)
+			result := CosineSimilarity(tt.input1, tt.input2, tt.splitLen)
+			builderResult := New(tt.input1).CosineSimilarity(tt.input2, tt.splitLen)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*builderResult.Comparison().GetCosineSimilarity())) >
+					float64EqualityThreshold) {
+				t.Errorf("CosineSimilarity - expected %f - got %f / %f / %f",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult.Comparison().GetCosineSimilarity(),
+				)
+			}
+			if tt.expected == nil &&
+				helperResult != nil &&
+				result != nil &&
+				builderResult.Comparison().GetCosineSimilarity() != nil {
+				t.Errorf("CosineSimilarity - expected %f - got %f / %f / %f",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult.Comparison().GetCosineSimilarity(),
 				)
 			}
 		})
