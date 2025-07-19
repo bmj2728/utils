@@ -1,6 +1,9 @@
 package strutil
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // Fluent StringBuilder API
 
@@ -172,10 +175,10 @@ func NewLoremEmail() *StringBuilder {
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
 	if sb.err != nil {
-		println(sb.err)
+		fmt.Printf("%q", sb.err)
 		return sb
 	}
-	println(sb.value)
+	fmt.Printf("%q", sb.value)
 	return sb
 }
 
