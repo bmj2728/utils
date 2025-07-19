@@ -73,16 +73,32 @@ func TestRandomStringFunctions(t *testing.T) {
 		name     string
 		function func(int) string
 		length   int
+		charSet  CharacterSet
 	}{
-		{"RandomAlphaString", RandomAlphaNumericString, 10},
-		{"RandomStringZeroLen", RandomAlphaNumericString, 0},
-		{"RandomStringNegLen", RandomAlphaNumericString, -1},
-		{"RandomHex", RandomHex, 16},
-		{"RandomHexZeroLen", RandomHex, 0},
-		{"RandomHexNegLen", RandomHex, -1},
-		{"RandomUrlSafe", RandomUrlSafe, 8},
-		{"RandomUrlSafeZeroLen", RandomUrlSafe, 0},
-		{"RandomUrlSafeNegLen", RandomUrlSafe, -1},
+		{"RandomAlphaString", RandomAlphaNumericString, 10, AlphaNumeric},
+		{"RandomStringZeroLen", RandomAlphaNumericString, 0, AlphaNumeric},
+		{"RandomStringNegLen", RandomAlphaNumericString, -1, AlphaNumeric},
+		{"RandomAlphaString", RandomAlphaString, 10, Alpha},
+		{"RandomStringZeroLen", RandomAlphaString, 0, Alpha},
+		{"RandomStringNegLen", RandomAlphaString, -1, Alpha},
+		{"RandomHex", RandomHex, 16, HexChars},
+		{"RandomHexZeroLen", RandomHex, 0, HexChars},
+		{"RandomHexNegLen", RandomHex, -1, HexChars},
+		{"RandomUrlSafe", RandomUrlSafe, 8, URLSafe},
+		{"RandomUrlSafeZeroLen", RandomUrlSafe, 0, URLSafe},
+		{"RandomUrlSafeNegLen", RandomUrlSafe, -1, URLSafe},
+		{"RandomAlphaString", randomAlphaNumericString, 10, AlphaNumeric},
+		{"RandomStringZeroLen", randomAlphaNumericString, 0, AlphaNumeric},
+		{"RandomStringNegLen", randomAlphaNumericString, -1, AlphaNumeric},
+		{"RandomAlphaString", randomAlphaString, 10, Alpha},
+		{"RandomStringZeroLen", randomAlphaString, 0, Alpha},
+		{"RandomStringNegLen", randomAlphaString, -1, Alpha},
+		{"RandomHex", randomHex, 16, HexChars},
+		{"RandomHexZeroLen", randomHex, 0, HexChars},
+		{"RandomHexNegLen", randomHex, -1, HexChars},
+		{"RandomUrlSafe", randomURLSafe, 8, URLSafe},
+		{"RandomUrlSafeZeroLen", randomURLSafe, 0, URLSafe},
+		{"RandomUrlSafeNegLen", randomURLSafe, -1, URLSafe},
 	}
 
 	for _, tt := range tests {
@@ -96,6 +112,99 @@ func TestRandomStringFunctions(t *testing.T) {
 			}
 			if tt.length < 0 && result != "" {
 				t.Errorf("Expected empty string for negative length, but got %s", result)
+			}
+			for _, c := range result {
+				if !strings.Contains(string(tt.charSet), string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
+			}
+		})
+	}
+}
+
+func TestRandomStringWithCharSet(t *testing.T) {
+	tests := []struct {
+		name    string
+		length  int
+		charSet CharacterSet
+	}{
+		{"RandomAlpha", 10, Alpha},
+		{"RandomAlphaZeroLen", 0, Alpha},
+		{"RandomAlphaNegLen", -1, Alpha},
+		{"RandomAlphaNumeric", 10, AlphaNumeric},
+		{"RandomAlphaNumericZeroLen", 0, AlphaNumeric},
+		{"RandomAlphaNumericNegLen", -1, AlphaNumeric},
+		{"RandomHex", 10, HexChars},
+		{"RandomHexZeroLen", 0, HexChars},
+		{"RandomHexNegLen", -1, HexChars},
+		{"RandomUrlSafe", 8, URLSafe},
+		{"RandomUrlSafeZeroLen", 0, URLSafe},
+		{"RandomUrlSafeNegLen", -1, URLSafe},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := randomFromCharset(tt.length, tt.charSet)
+			result2 := RandomString(tt.length, tt.charSet)
+			if tt.length > 0 && (len(result) != tt.length || len(result2) != tt.length) {
+				t.Errorf("Expected length %d, got %d for %s", tt.length, len(result), tt.name)
+			}
+			if tt.length == 0 && (result != "" || result2 != "") {
+				t.Errorf("Expected empty string for length 0, but got %s", result)
+			}
+			if tt.length < 0 && (result != "" || result2 != "") {
+				t.Errorf("Expected empty string for negative length, but got %s", result)
+			}
+			for _, c := range result {
+				if !strings.Contains(string(tt.charSet), string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
+			}
+			for _, c := range result2 {
+				if !strings.Contains(string(tt.charSet), string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
+			}
+		})
+	}
+}
+
+func TestRandomStringFromCustomCharset(t *testing.T) {
+	tests := []struct {
+		name    string
+		length  int
+		charSet string
+	}{
+		{"RandomFromCust1", 10, "abc"},
+		{"RandomFromCust2", 10, "pn;YUOIVBOIYU.H5NVAE48657wtsjgf4725723@!##!%$@^WUFNGKXLM3UIOR"},
+		{"RandomFromCust3", 0, "abc"},
+		{"RandomFromCust4", -1, "abc"},
+		{"RandomFromCust5",
+			10,
+			"zxcvbnm,./asdfghjkl;'qwertyuiop[]1234567890-=!@#$%^&*()_+{}:><|~"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := randomFromCustomCharset(tt.length, tt.charSet)
+			result2 := RandomStringFromCustomCharset(tt.length, tt.charSet)
+			if tt.length > 0 && (len(result) != tt.length || len(result2) != tt.length) {
+				t.Errorf("Expected length %d, got %d for %s", tt.length, len(result), tt.name)
+			}
+			if tt.length == 0 && (result != "" || result2 != "") {
+				t.Errorf("Expected empty string for length 0, but got %s", result)
+			}
+			if tt.length < 0 && (result != "" || result2 != "") {
+				t.Errorf("Expected empty string for negative length, but got %s", result)
+			}
+			for _, c := range result {
+				if !strings.Contains(tt.charSet, string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
+			}
+			for _, c := range result2 {
+				if !strings.Contains(tt.charSet, string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
 			}
 		})
 	}
@@ -126,19 +235,20 @@ func TestStringBuilderConstructors(t *testing.T) {
 		name     string
 		function func(int) *StringBuilder
 		length   int
+		charSet  CharacterSet
 	}{
-		{"NewRandomAlpha", NewRandomAlpha, 10},
-		{"NewRandomAlphaZero", NewRandomAlpha, 0},
-		{"NewRandomAlphaNeg", NewRandomAlpha, -1},
-		{"NewRandomAlphaNumeric", NewRandomAlphaNumeric, 10},
-		{"NewRandomAlphaNumericZero", NewRandomAlphaNumeric, 0},
-		{"NewRandomAlphaNumericNeg", NewRandomAlphaNumeric, -1},
-		{"NewRandomHex", NewRandomHex, 6},
-		{"NewRandomHexZero", NewRandomHex, 0},
-		{"NewRandomHexNeg", NewRandomHex, -1},
-		{"NewRandomURLSafe", NewRandomURLSafe, 8},
-		{"NewRandomURLSafeZero", NewRandomURLSafe, 0},
-		{"NewRandomURLSafeNeg", NewRandomURLSafe, -1},
+		{"NewRandomAlpha", NewRandomAlpha, 10, Alpha},
+		{"NewRandomAlphaZero", NewRandomAlpha, 0, Alpha},
+		{"NewRandomAlphaNeg", NewRandomAlpha, -1, Alpha},
+		{"NewRandomAlphaNumeric", NewRandomAlphaNumeric, 10, AlphaNumeric},
+		{"NewRandomAlphaNumericZero", NewRandomAlphaNumeric, 0, AlphaNumeric},
+		{"NewRandomAlphaNumericNeg", NewRandomAlphaNumeric, -1, AlphaNumeric},
+		{"NewRandomHex", NewRandomHex, 6, HexChars},
+		{"NewRandomHexZero", NewRandomHex, 0, HexChars},
+		{"NewRandomHexNeg", NewRandomHex, -1, HexChars},
+		{"NewRandomURLSafe", NewRandomURLSafe, 8, URLSafe},
+		{"NewRandomURLSafeZero", NewRandomURLSafe, 0, URLSafe},
+		{"NewRandomURLSafeNeg", NewRandomURLSafe, -1, URLSafe},
 	}
 
 	for _, tt := range tests {
@@ -155,6 +265,11 @@ func TestStringBuilderConstructors(t *testing.T) {
 			}
 			if result.String() != "" && tt.length < 0 {
 				t.Errorf("Expected empty string for %s", tt.name)
+			}
+			for _, c := range result.String() {
+				if !strings.Contains(string(tt.charSet), string(c)) {
+					t.Errorf("Expected %s to be in custom char set for %s", string(c), tt.name)
+				}
 			}
 		})
 	}
