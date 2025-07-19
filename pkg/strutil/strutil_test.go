@@ -2665,3 +2665,77 @@ func TestLCSEditDistance(t *testing.T) {
 		})
 	}
 }
+
+func TestAppend(t *testing.T) {
+	tests := []struct {
+		name      string
+		s         string
+		suffix    string
+		separator string
+		expected  string
+	}{
+		{"Append1", "hello", "world", "", "helloworld"},
+		{"Append2", "hello", "world", " ", "hello world"},
+		{"Append3", "hello", "world", "-", "hello-world"},
+		{"Append4", "hello", "world", "_", "hello_world"},
+		{"Append5", "hello", "world", ".", "hello.world"},
+		{"Append6", "hello world", "alpha", "-", "hello world-alpha"},
+		{"Append7", "hello", "", "!", "hello"},
+		{"Append8", "hello", "Mr. Bond", ", ", "hello, Mr. Bond"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := appendString(tt.s, tt.suffix, tt.separator)
+			result := AppendString(tt.s, tt.suffix, tt.separator)
+			builderResult := New(tt.s).Append(tt.suffix, tt.separator).String()
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				builderResult != tt.expected {
+				t.Errorf("AppendString - expected %s - got %s / %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult,
+				)
+			}
+		})
+	}
+}
+
+func TestPrepend(t *testing.T) {
+	tests := []struct {
+		name      string
+		s         string
+		prefix    string
+		separator string
+		expected  string
+	}{
+		{"Prepend1", "hello", "world", "", "worldhello"},
+		{"Prepend2", "hello", "world", " ", "world hello"},
+		{"Prepend3", "hello", "world", "-", "world-hello"},
+		{"Prepend4", "hello", "world", "_", "world_hello"},
+		{"Prepend5", "hello", "world", ".", "world.hello"},
+		{"Prepend6", "hello world", "alpha", "-", "alpha-hello world"},
+		{"Prepend7", "hello", "", "!", "hello"},
+		{"Prepend8", "hello", "Mr. Bond", ", ", "Mr. Bond, hello"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := prependString(tt.s, tt.prefix, tt.separator)
+			result := PrependString(tt.s, tt.prefix, tt.separator)
+			builderResult := New(tt.s).Prepend(tt.prefix, tt.separator).String()
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				builderResult != tt.expected {
+				t.Errorf("PrependString - expected %s - got %s / %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult,
+				)
+			}
+		})
+	}
+}

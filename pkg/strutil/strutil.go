@@ -178,6 +178,17 @@ func IsAlphaString(s string) bool {
 
 // Basic Manipulation
 
+// AppendString concatenates the input string `s` with `suffix`, using `sep`
+// as the separator, and returns the resulting string.
+func AppendString(s string, suffix string, sep string) string {
+	return appendString(s, suffix, sep)
+}
+
+// PrependString adds a prefix and separator to the beginning of the given string and returns the resulting string.
+func PrependString(s string, prefix string, sep string) string {
+	return prependString(s, prefix, sep)
+}
+
 // ReplaceWhitespace replaces all whitespace characters in the input string with the given replacement string.
 func ReplaceWhitespace(s string, replacement string) string {
 	return replaceWhitespace(s, replacement)

@@ -433,6 +433,23 @@ func truncate(s string, length int, suffix string) string {
 	return s[:length] + suffix
 }
 
+// appendString concatenates the given string `s` with `suffix`,
+// separated by the specified `sep`, and returns the result.
+func appendString(s string, suffix string, sep string) string {
+	if len(suffix) < 1 {
+		return s
+	}
+	return s + sep + suffix
+}
+
+// prependString concatenates a prefix and a separator to the beginning of a string and returns the resulting string.
+func prependString(s string, prefix string, sep string) string {
+	if len(prefix) < 1 {
+		return s
+	}
+	return prefix + sep + s
+}
+
 // trim removes all leading and trailing white spaces from the input string and returns the trimmed result.
 func trim(s string) string {
 	return strings.TrimSpace(s)

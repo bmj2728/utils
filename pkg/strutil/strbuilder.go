@@ -169,16 +169,32 @@ func NewLoremEmail() *StringBuilder {
 
 // Manipulation Methods
 
-// Print outputs the current value of the StringBuilder instance and returns the instance itself for method chaining.
+// Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
+	if sb.err != nil {
+		println(sb.err)
+		return sb
+	}
 	println(sb.value)
 	return sb
 }
 
-// Append adds the given string `s` to the StringBuilder's value,
-// prefixed by the separator `sep`, and returns the updated StringBuilder.
+// Append adds the given string `s` to the current value with the specified
+// separator `sep` and returns the updated StringBuilder.
 func (sb *StringBuilder) Append(s string, sep string) *StringBuilder {
-	sb.value += sep + s
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = appendString(sb.value, s, sep)
+	return sb
+}
+
+// Prepend adds the specified string and separator to the beginning of the StringBuilder's value.
+func (sb *StringBuilder) Prepend(s string, ser string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = prependString(sb.value, s, ser)
 	return sb
 }
 
