@@ -756,3 +756,19 @@ func hammingDistance(s1, s2 string) (*int, error) {
 func jaroSimilarity(s1, s2 string) float32 {
 	return edlib.JaroSimilarity(s1, s2)
 }
+
+// jaroWinklerSimilarity computes the Jaro-Winkler similarity between two strings s1 and s2.
+// It returns a float32 value between 0 and 1, where 1 indicates exact similarity.
+func jaroWinklerSimilarity(s1, s2 string) float32 {
+	return edlib.JaroWinklerSimilarity(s1, s2)
+}
+
+// jaccardSimilarity computes the Jaccard similarity coefficient between two strings based on a given split length.
+// If split length of zero, the string is split on whitespaces and returns an index
+func jaccardSimilarity(s1, s2 string, splitLength int) *float32 {
+	if splitLength < 0 {
+		return nil
+	}
+	js := edlib.JaccardSimilarity(s1, s2, splitLength)
+	return &js
+}

@@ -703,6 +703,39 @@ func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
 	return sb
 }
 
+// JaroWinklerSimilarity calculates the Jaro-Winkler similarity between the StringBuilder value and another string.
+// It updates the comparison field with the computed similarity value if no internal error is present.
+// Returns the updated StringBuilder instance.
+//
+// Uses Jaro similarity with a more favorable weighting for similar common prefixes.
+//
+// Additional Info: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance#Jaro%E2%80%93Winkler_similarity
+func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	jws := jaroWinklerSimilarity(sb.value, other)
+	sb.comparison.SetJaroWinklerSim(&jws)
+	return sb
+}
+
+// JaccardSimilarity computes the Jaccard similarity coefficient between two strings, using k-grams
+// of the given split length.
+// For splitLength = 0, the strings are split on whitespaces. Negative split lengths return nil
+//
+// The Jaccard index is defined as the size of the intersection divided by the size of the union
+// for two given finite, non-empty sets
+//
+// Additional Info: https://en.wikipedia.org/wiki/Jaccard_index
+func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	js := jaccardSimilarity(sb.value, other, splitLength)
+	sb.comparison.SetJaccardSim(js)
+	return sb
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,

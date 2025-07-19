@@ -2830,3 +2830,98 @@ func TestJaroSimilarity(t *testing.T) {
 		})
 	}
 }
+
+const float64EqualityThreshold = 1e-6
+
+func TestJaroWinklerSimilarity(t *testing.T) {
+
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected float32
+	}{
+		{"JaroWinklerSimilarity1", "hello", "help", 0.848333},
+		{"JaroWinklerSimilarity5", "00000", "11111", 0.0},
+		{"JaroWinklerSimilarity6", "11111", "11111", 1.0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := jaroWinklerSimilarity(tt.input1, tt.input2)
+			result := JaroWinklerSimilarity(tt.input1, tt.input2)
+			builderResult := New(tt.input1).JaroWinklerSimilarity(tt.input2)
+			if math.Abs(float64(tt.expected)-float64(helperResult)) > float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(result)) > float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(*builderResult.Comparison().GetJaroWinklerSim())) > float64EqualityThreshold {
+				t.Errorf("JaroWinklerSimilarity - expected %f - got %f / %f / %f",
+					tt.expected,
+					helperResult,
+					result,
+					*builderResult.Comparison().GetJaroWinklerSim(),
+				)
+			}
+		})
+	}
+}
+
+func TestJaccardSimilarity(t *testing.T) {
+
+	var val1 float32 = 1.0
+	var val2 float32 = 0.25
+	var val3 float32 = 0.5
+	var val4 float32 = 0.068966
+	var val5 float32 = 0.125
+	var val6 float32 = 0.666667
+	var val7 float32 = 0.75
+	var val8 float32 = 1.0
+	var val10 float32 = 0.0
+
+	tests := []struct {
+		name        string
+		input1      string
+		input2      string
+		splitLength int
+		expected    *float32
+	}{
+		{"JaccardSimilarity1", "hello", "hello", 0, &val1},
+		{"JaccardSimilarity1", "hello", "help", 3, &val2},
+		{"JaccardSimilarity1", "abcd", "abc", 3, &val3},
+		{"JaccardSimilarity1", "this is a sentence", "this guy sent me home", 5, &val4},
+		{"JaccardSimilarity1", "this is a sentence", "this guy sent me home", 0, &val5},
+		{"JaccardSimilarity1", "abcd", "abc", 2, &val6},
+		{"JaccardSimilarity1", "abcd", "abc", 1, &val7},
+		{"JaccardSimilarity1", "abcd", "abcd", 4, &val8},
+		{"JaccardSimilarity1", "abcd", "abc", -1, nil},
+		{"JaccardSimilarity1", "abc", "xyz", 1, &val10},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := jaccardSimilarity(tt.input1, tt.input2, tt.splitLength)
+			result := JaccardSimilarity(tt.input1, tt.input2, tt.splitLength)
+			builderResult := New(tt.input1).JaccardSimilarity(tt.input2, tt.splitLength)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*builderResult.Comparison().GetJaccardSim())) > float64EqualityThreshold) {
+				t.Errorf("JaccardSimilarity - expected %f - got %f / %f / %f",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult.Comparison().GetJaccardSim(),
+				)
+			}
+			if tt.expected == nil &&
+				helperResult != nil &&
+				result != nil &&
+				builderResult.Comparison().GetJaccardSim() != nil {
+				t.Errorf("JaccardSimilarity - expected %f - got %f / %f / %f",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult.Comparison().GetJaccardSim(),
+				)
+			}
+		})
+	}
+}
