@@ -554,3 +554,13 @@ func LCSEditDistance(s1, s2 string) int {
 func HammingDistance(s1, s2 string) (*int, error) {
 	return hammingDistance(s1, s2)
 }
+
+// JaroSimilarity calculates the Jaro similarity between two strings, returning a float32 value in the range [0, 1].
+//
+// The higher the value, the more similar the strings are.
+// The score is normalized such that 0 equates to no similarities and 1 is an exact match
+//
+// Additional Info: https://rosettacode.org/wiki/Jaro_similarity
+func JaroSimilarity(s1, s2 string) float32 {
+	return jaroSimilarity(s1, s2)
+}

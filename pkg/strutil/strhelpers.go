@@ -750,3 +750,9 @@ func hammingDistance(s1, s2 string) (*int, error) {
 	}
 	return &dist, nil
 }
+
+// jaroSimilarity computes the Jaro similarity between
+// two strings s1 and s2, returning a float32 value in the range [0, 1].
+func jaroSimilarity(s1, s2 string) float32 {
+	return edlib.JaroSimilarity(s1, s2)
+}

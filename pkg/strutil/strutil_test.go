@@ -3,6 +3,7 @@ package strutil
 import (
 	"errors"
 	"fmt"
+	"math"
 	"strings"
 	"testing"
 
@@ -2187,7 +2188,9 @@ func TestLevenshteinDistance(t *testing.T) {
 			helperResult := levenshteinDistance(tt.input1, tt.input2)
 			result := LevenshteinDistance(tt.input1, tt.input2)
 			builderResult := New(tt.input1).LevenshteinDistance(tt.input2)
-			if helperResult != tt.expected || result != tt.expected || *builderResult.comparison.LevenshteinDist != tt.expected {
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				*builderResult.Comparison().GetLevenshteinDist() != tt.expected {
 				t.Errorf("LevenshteinDistance - expected %d - got %d / %d / %d",
 					tt.expected,
 					helperResult,
@@ -2788,6 +2791,40 @@ func TestHammingDistance(t *testing.T) {
 					*helperResult,
 					*result,
 					*builderHD,
+				)
+			}
+		})
+	}
+}
+
+func TestJaroSimilarity(t *testing.T) {
+
+	const float64EqualityThreshold = 1e-6
+
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected float32
+	}{
+		{"JaroSimilarity1", "hello", "help", 0.783333},
+		{"JaroSimilarity5", "00000", "11111", 0.0},
+		{"JaroSimilarity6", "11111", "11111", 1.0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := jaroSimilarity(tt.input1, tt.input2)
+			result := JaroSimilarity(tt.input1, tt.input2)
+			builderResult := New(tt.input1).JaroSimilarity(tt.input2)
+			if math.Abs(float64(tt.expected)-float64(helperResult)) > float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(result)) > float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(*builderResult.Comparison().GetJaroSimilarity())) > float64EqualityThreshold {
+				t.Errorf("JaroSimilarity - expected %f - got %f / %f / %f",
+					tt.expected,
+					helperResult,
+					result,
+					*builderResult.Comparison().GetJaroSimilarity(),
 				)
 			}
 		})

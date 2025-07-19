@@ -16,11 +16,11 @@ type EdLibData struct {
 
 	// Other algorithms
 	HammingDist      *int     `json:"hamming_dist,omitempty"`
-	JaroSimilarity   *float64 `json:"jaro_similarity,omitempty"`
-	JaroWinklerSim   *float64 `json:"jaro_winkler_similarity,omitempty"`
-	JaccardSim       *float64 `json:"jaccard_similarity,omitempty"`
-	CosineSimilarity *float64 `json:"cosine_similarity,omitempty"`
-	SorensenDiceCo   *float64 `json:"sorensen_dice_similarity,omitempty"`
+	JaroSimilarity   *float32 `json:"jaro_similarity,omitempty"`
+	JaroWinklerSim   *float32 `json:"jaro_winkler_similarity,omitempty"`
+	JaccardSim       *float32 `json:"jaccard_similarity,omitempty"`
+	CosineSimilarity *float32 `json:"cosine_similarity,omitempty"`
+	SorensenDiceCo   *float32 `json:"sorensen_dice_similarity,omitempty"`
 
 	// QGram
 	QGramDist       *int `json:"qgram_dist,omitempty"`
@@ -130,54 +130,54 @@ func (e *EdLibData) GetHammingDist() *int {
 }
 
 // SetJaroSimilarity sets the Jaro similarity value for the EdLibData instance. It accepts a pointer to a float64 value.
-func (e *EdLibData) SetJaroSimilarity(jaroSimilarity *float64) {
+func (e *EdLibData) SetJaroSimilarity(jaroSimilarity *float32) {
 	e.JaroSimilarity = jaroSimilarity
 }
 
 // GetJaroSimilarity retrieves the Jaro similarity value, a measure of similarity between two strings, if available.
-func (e *EdLibData) GetJaroSimilarity() *float64 {
+func (e *EdLibData) GetJaroSimilarity() *float32 {
 	return e.JaroSimilarity
 }
 
 // SetJaroWinklerSim sets the Jaro-Winkler similarity score for the EdLibData instance.
-func (e *EdLibData) SetJaroWinklerSim(jaroWinklerSim *float64) {
+func (e *EdLibData) SetJaroWinklerSim(jaroWinklerSim *float32) {
 	e.JaroWinklerSim = jaroWinklerSim
 }
 
 // GetJaroWinklerSim retrieves the Jaro-Winkler similarity value as a pointer to float64 from the EdLibData structure.
-func (e *EdLibData) GetJaroWinklerSim() *float64 {
+func (e *EdLibData) GetJaroWinklerSim() *float32 {
 	return e.JaroWinklerSim
 }
 
 // SetJaccardSim sets the Jaccard similarity value in the EdLibData structure.
-func (e *EdLibData) SetJaccardSim(jaccardSim *float64) {
+func (e *EdLibData) SetJaccardSim(jaccardSim *float32) {
 	e.JaccardSim = jaccardSim
 }
 
 // GetJaccardSim retrieves a pointer to the Jaccard similarity value from the EdLibData structure.
-func (e *EdLibData) GetJaccardSim() *float64 {
+func (e *EdLibData) GetJaccardSim() *float32 {
 	return e.JaccardSim
 }
 
 // SetCosineSimilarity sets the CosineSimilarity field to the provided float64 pointer value.
-func (e *EdLibData) SetCosineSimilarity(cosineSimilarity *float64) {
+func (e *EdLibData) SetCosineSimilarity(cosineSimilarity *float32) {
 	e.CosineSimilarity = cosineSimilarity
 }
 
 // GetCosineSimilarity retrieves the cosine similarity value from the EdLibData structure.
 // Returns a pointer to a float64 representing the similarity or nil if not set.
-func (e *EdLibData) GetCosineSimilarity() *float64 {
+func (e *EdLibData) GetCosineSimilarity() *float32 {
 	return e.CosineSimilarity
 }
 
 // SetSorensenDiceCo sets the Sorensen-Dice similarity coefficient in the EdLibData structure.
-func (e *EdLibData) SetSorensenDiceCo(sorensenDiceCo *float64) {
+func (e *EdLibData) SetSorensenDiceCo(sorensenDiceCo *float32) {
 	e.SorensenDiceCo = sorensenDiceCo
 }
 
 // GetSorensenDiceCo retrieves the Sorensen-Dice coefficient as a pointer to a float64.
 // This value indicates similarity between two sets.
-func (e *EdLibData) GetSorensenDiceCo() *float64 {
+func (e *EdLibData) GetSorensenDiceCo() *float32 {
 	return e.SorensenDiceCo
 }
 

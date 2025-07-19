@@ -687,6 +687,22 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 	return sb
 }
 
+// JaroSimilarity computes the Jaro similarity between the StringBuilder's value and the provided string.
+// It updates the Jaro similarity value in the comparison field and returns the updated StringBuilder instance.
+//
+// The higher the value, the more similar the strings are.
+// The score is normalized such that 0 equates to no similarities and 1 is an exact match
+//
+// Additional Info: https://rosettacode.org/wiki/Jaro_similarity
+func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	js := jaroSimilarity(sb.value, other)
+	sb.comparison.SetJaroSimilarity(&js)
+	return sb
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,
