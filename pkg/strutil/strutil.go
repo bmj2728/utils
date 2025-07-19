@@ -189,6 +189,31 @@ func PrependString(s string, prefix string, sep string) string {
 	return prependString(s, prefix, sep)
 }
 
+// CleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.)
+// from the input string and returns the result.
+func CleanWhitespace(s string) string {
+	return cleanWhitespace(s)
+}
+
+// CleanWhitespaceWithIgnore removes whitespace from the input string while
+// ignoring whitespace characters specified in the charset string.
+// Whitespace Chars: '\t', '\n', '\v', '\f', '\r', ' ', U+0085 (NEL), U+00A0 (NBSP)
+func CleanWhitespaceWithIgnore(s string, charset string) string {
+	return cleanWhitespaceWithIgnore(s, charset)
+}
+
+// NormalizeWhitespace removes excess whitespace by trimming and collapsing
+// multiple whitespace characters into single spaces.
+func NormalizeWhitespace(s string) string {
+	return normalizeWhitespace(s)
+}
+
+// CollapseWhitespace reduces all consecutive whitespace characters in a string to a single space,
+// preserving leading and trailing whitespace.
+func CollapseWhitespace(s string) string {
+	return collapseWhitespace(s)
+}
+
 // ReplaceWhitespace replaces all whitespace characters in the input string with the given replacement string.
 func ReplaceWhitespace(s string, replacement string) string {
 	return replaceWhitespace(s, replacement)
@@ -265,24 +290,6 @@ func KeepAlpha(s string, ws bool) string {
 // optionally preserving whitespace if ws is true.
 func KeepAlphaNumeric(s string, ws bool) string {
 	return alphaNumeric(s, ws)
-}
-
-// CleanWhitespace removes all whitespace characters (spaces, tabs, newlines, etc.)
-// from the input string and returns the result.
-func CleanWhitespace(s string) string {
-	return cleanWhitespace(s)
-}
-
-// NormalizeWhitespace removes excess whitespace by trimming and collapsing
-// multiple whitespace characters into single spaces.
-func NormalizeWhitespace(s string) string {
-	return normalizeWhitespace(s)
-}
-
-// CollapseWhitespace reduces all consecutive whitespace characters in a string to a single space,
-// preserving leading and trailing whitespace.
-func CollapseWhitespace(s string) string {
-	return collapseWhitespace(s)
 }
 
 // HTML Sanitization

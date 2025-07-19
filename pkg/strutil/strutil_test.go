@@ -418,6 +418,41 @@ func TestCleanWhitespace(t *testing.T) {
 	}
 }
 
+func TestCleanWhitespaceWithIgnore(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		ignore   string
+		expected string
+	}{
+		{"NoWhitespace", "hello world", "", "helloworld"},
+		{"WhitespacePreserved", "hello world ", " ", "hello world "},
+		{"Tabs", "hello	world", "\n\r", "helloworld"},
+		{"TabsPreserved", "hello	world", "\t", "hello	world"},
+		{"Newlines", "hello\nworld", "\t ", "helloworld"},
+		{"NewlinesPreserved", "hello\nworld", "\n ", `hello
+world`},
+		{"CarriageReturns", "hello\rworld", " ", "helloworld"},
+		{"CarriageReturnsPreserved", "hello\rworld", "\r", "hello\rworld"},
+		{"MixedWhitespace", "\rhello   world\f", "\t\n", "helloworld"},
+		{"MixedWhitespacePreserved", "hello	 world\n", " \n", "hello world\n"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := cleanWhitespaceWithIgnore(tt.input, tt.ignore)
+			result := CleanWhitespaceWithIgnore(tt.input, tt.ignore)
+			builderResult := New(tt.input).CleanWhitespaceWithIgnore(tt.ignore)
+			builderString := builderResult.String()
+			builderError := builderResult.Error()
+			if result != tt.expected || helperResult != tt.expected || builderString != tt.expected || builderError != nil {
+				t.Errorf("cleanWhitespaceWithIgnore(%q) = %q / %q / %q; want %q",
+					tt.input, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
 func TestNormalizeWhitespace(t *testing.T) {
 	tests := []struct {
 		name     string

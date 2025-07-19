@@ -211,6 +211,16 @@ func (sb *StringBuilder) CleanWhitespace() *StringBuilder {
 	return sb
 }
 
+// CleanWhitespaceWithIgnore removes whitespace from the StringBuilder's value
+// except those whitespace chars specified in the provided charset.
+func (sb *StringBuilder) CleanWhitespaceWithIgnore(charset string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = cleanWhitespaceWithIgnore(sb.value, charset)
+	return sb
+}
+
 // NormalizeWhitespace collapses consecutive whitespace characters into a single space
 // and trims leading and trailing spaces.
 func (sb *StringBuilder) NormalizeWhitespace() *StringBuilder {

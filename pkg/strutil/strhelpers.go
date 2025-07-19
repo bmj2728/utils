@@ -48,6 +48,19 @@ func cleanWhitespace(s string) string {
 	return b.String()
 }
 
+// cleanWhitespaceWithIgnore removes all whitespace characters from the input string
+// while ignoring whitespace characters in the given charset.
+func cleanWhitespaceWithIgnore(s string, charset string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+	for _, c := range s {
+		if !unicode.IsSpace(c) || (unicode.IsSpace(c) && strings.ContainsRune(charset, c)) {
+			b.WriteRune(c)
+		}
+	}
+	return b.String()
+}
+
 // normalizeWhitespace collapses whitespace runs to single spaces and trims
 func normalizeWhitespace(s string) string {
 	return strings.Join(strings.Fields(s), " ")

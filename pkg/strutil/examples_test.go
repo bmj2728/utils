@@ -14,8 +14,7 @@ func ExampleStringBuilder_Print() {
 }
 
 func ExampleSlugify() {
-	original := "The Life and Strange Surprising Adventures of Robinson Crusoe, Of York, Mariner"
-	slug := Slugify(original, 50)
+	slug := Slugify("The Life and Strange Surprising Adventures of Robinson Crusoe, Of York, Mariner", 50)
 	fmt.Printf("%s", slug)
 	// Output: the-life-and-strange-surprising-adventures-of-robi
 }
@@ -28,10 +27,7 @@ func ExampleStringBuilder_Slugify() {
 }
 
 func ExampleAppendString() {
-	s := "v0.1.0"
-	suffix := "alpha"
-	separator := "-"
-	s = AppendString(s, suffix, separator)
+	s := AppendString("v0.1.0", "alpha", "-")
 	fmt.Printf("%s", s)
 	// Output: v0.1.0-alpha
 }
@@ -39,4 +35,32 @@ func ExampleAppendString() {
 func ExampleStringBuilder_Append() {
 	New("v0.1.0").Append("alpha", "-").Print()
 	// Output: v0.1.0-alpha
+}
+
+func ExamplePrependString() {
+	s := PrependString("ENV_VAR", "APP", "_")
+	fmt.Printf("%s", s)
+	// Output: APP_ENV_VAR
+}
+
+func ExampleStringBuilder_Prepend() {
+	New("ENV_VAR").Prepend("APP", "_").Print()
+	// Output: APP_ENV_VAR
+}
+
+func ExampleCleanWhitespace() {
+	s := `Hello 
+		  World
+		  !`
+	clean := CleanWhitespace(s)
+	fmt.Printf("%s", clean)
+	// Output: HelloWorld!
+}
+
+func ExampleStringBuilder_CleanWhitespace() {
+	s := `Hello 
+		  World
+		  !`
+	New(s).CleanWhitespace().Print()
+	// Output: HelloWorld!
 }
