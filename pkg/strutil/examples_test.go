@@ -27,14 +27,14 @@ func ExampleStringBuilder_Slugify() {
 }
 
 func ExampleAppendString() {
-	s := AppendString("v0.1.0", "alpha", "-")
+	s := AppendString("v0.1.0", "alphaRemove", "-")
 	fmt.Printf("%s", s)
-	// Output: v0.1.0-alpha
+	// Output: v0.1.0-alphaRemove
 }
 
 func ExampleStringBuilder_Append() {
-	New("v0.1.0").Append("alpha", "-").Print()
-	// Output: v0.1.0-alpha
+	New("v0.1.0").Append("alphaRemove", "-").Print()
+	// Output: v0.1.0-alphaRemove
 }
 
 func ExamplePrependString() {

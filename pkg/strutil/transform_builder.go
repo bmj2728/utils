@@ -133,3 +133,65 @@ func (sb *StringBuilder) Transform(fn func(string) string) *StringBuilder {
 	sb.value = fn(sb.value)
 	return sb
 }
+
+// NormalizeWhitespace collapses consecutive whitespace characters into a single space
+// and trims leading and trailing spaces.
+func (sb *StringBuilder) NormalizeWhitespace() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = normalizeWhitespace(sb.value)
+	return sb
+}
+
+// CollapseWhitespace collapses consecutive whitespace characters in the StringBuilder's value into a single space
+// and preserves leading and trailing spaces.
+func (sb *StringBuilder) CollapseWhitespace() *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = collapseWhitespace(sb.value)
+	return sb
+}
+
+// ReplaceWhitespace replaces all whitespace characters in the StringBuilder's value
+// with the specified replacement string.
+func (sb *StringBuilder) ReplaceWhitespace(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = replaceWhitespace(sb.value, replacement)
+	return sb
+}
+
+// ReplaceSpaces replaces all spaces in the StringBuilder's value with the specified replacement string.
+func (sb *StringBuilder) ReplaceSpaces(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = replaceSpaces(sb.value, replacement)
+	return sb
+}
+
+// AlphaReplace replaces all alphabetical characters in the StringBuilder's value with the specified replacement string.
+func (sb *StringBuilder) AlphaReplace(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = alphaReplace(sb.value, replacement)
+	return sb
+}
+
+// AlphaNumericReplace replaces all alphanumeric characters in the StringBuilder value
+// with the specified replacement string.
+func (sb *StringBuilder) AlphaNumericReplace(replacement string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = alphaNumericReplace(sb.value, replacement)
+	return sb
+}
+
+func (sb *StringBuilder) NormalizeUnicode() *StringBuilder {
+	panic("Implement me!")
+}

@@ -2,6 +2,7 @@ package strutil
 
 import (
 	"strings"
+	"unicode"
 
 	godiacritics "github.com/Regis24GmbH/go-diacritics"
 )
@@ -104,4 +105,71 @@ func slugify(s string, length int) string {
 // normalizeDiacritics removes diacritical marks (accents) from the input string, returning the normalized version.
 func normalizeDiacritics(s string) string {
 	return godiacritics.Normalize(s)
+}
+
+// normalizeWhitespace collapses whitespace runs to single spaces and trims
+func normalizeWhitespace(s string) string {
+	return strings.Join(strings.Fields(s), " ")
+}
+
+// collapseWhitespace reduces all consecutive whitespace characters in the input string to a single space preserving
+// leading and trailing whitespace.
+func collapseWhitespace(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+
+	prevWasSpace := false
+
+	for _, r := range s {
+		if unicode.IsSpace(r) {
+			if !prevWasSpace {
+				b.WriteRune(' ')
+			}
+			prevWasSpace = true
+		} else {
+			b.WriteRune(r)
+			prevWasSpace = false
+		}
+	}
+	return b.String()
+}
+
+// replaceWhitespace replaces all whitespace characters in the input string with the specified replacement string.
+func replaceWhitespace(s string, replacement string) string {
+	if isEmpty(s) {
+		return s
+	}
+
+	for _, c := range s {
+		if isWhiteSpaceRune(c) {
+			s = strings.Replace(s, string(c), replacement, 1)
+		}
+	}
+	return s
+}
+
+// replaceSpaces replaces all spaces in the input string with the specified replacement string.
+func replaceSpaces(s string, replacement string) string {
+	return strings.ReplaceAll(s, " ", replacement)
+}
+
+// alphaReplace replaces all non-alphabetic characters in the input string with the specified replacement string.
+func alphaReplace(s string, replacement string) string {
+	for _, c := range s {
+		if !unicode.IsLetter(c) {
+			s = strings.Replace(s, string(c), replacement, 1)
+		}
+	}
+	return s
+}
+
+// alphaNumericReplace replaces all non-alphanumeric characters
+// in the input string with the specified replacement string.
+func alphaNumericReplace(s string, replacement string) string {
+	for _, c := range s {
+		if !isAlphaNumericRune(c) {
+			s = strings.Replace(s, string(c), replacement, 1)
+		}
+	}
+	return s
 }

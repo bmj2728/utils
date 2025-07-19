@@ -47,3 +47,17 @@ func IsAlphaNumericString(s string) bool {
 func IsAlphaString(s string) bool {
 	return isAlphaString(s)
 }
+
+// input validation
+
+//func FormatCardNumber(s string) string {
+//	panic("Implement me!")
+//}
+
+//func FormatSSN(s string) string {
+//	panic("Implement me!")
+//}
+
+//func FormatPhone(s string, format PhoneFormat) string {
+//	panic("Implement me!")
+//}

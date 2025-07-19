@@ -184,7 +184,7 @@ func TestTrimChars(t *testing.T) {
 		{"TrimCharsLeading", "Hello World!!!", "H", "ello World!!!"},
 		{"TrimCharsTrailing", "Hello World!!!", "!", "Hello World"},
 		{"TrimCharsPrefix", "x-Hello World!!!", "x-", "Hello World!!!"},
-		{"TrimCharsSuffix", "Hello World-alpha", "-alpha", "Hello World"},
+		{"TrimCharsSuffix", "Hello World-alphaRemove", "-alphaRemove", "Hello World"},
 	}
 
 	for _, tt := range test {
@@ -212,7 +212,7 @@ func TestTrimCharsLeft(t *testing.T) {
 		{"TrimCharsLLeading", "Hello World!!!", "H", "ello World!!!"},
 		{"TrimCharsLTrailing", "Hello World!!!", "!", "Hello World!!!"},
 		{"TrimCharsLPrefix", "x-Hello World!!!", "x-", "Hello World!!!"},
-		{"TrimCharsLSuffix", "Hello World-alpha", "-alpha", "Hello World-alpha"},
+		{"TrimCharsLSuffix", "Hello World-alphaRemove", "-alphaRemove", "Hello World-alphaRemove"},
 	}
 
 	for _, tt := range test {
@@ -240,7 +240,7 @@ func TestTrimCharsRight(t *testing.T) {
 		{"TrimCharsRLeading", "Hello World!!!", "H", "Hello World!!!"},
 		{"TrimCharsRTrailing", "Hello World!!!", "!", "Hello World"},
 		{"TrimCharsRPrefix", "x-Hello World!!!", "x-", "x-Hello World!!!"},
-		{"TrimCharsRSuffix", "Hello World-alpha", "-alpha", "Hello World"},
+		{"TrimCharsRSuffix", "Hello World-alphaRemove", "-alphaRemove", "Hello World"},
 	}
 	for _, tt := range test {
 		t.Run(tt.name, func(t *testing.T) {
@@ -267,7 +267,7 @@ func TestAppend(t *testing.T) {
 		{"Append3", "hello", "world", "-", "hello-world"},
 		{"Append4", "hello", "world", "_", "hello_world"},
 		{"Append5", "hello", "world", ".", "hello.world"},
-		{"Append6", "hello world", "alpha", "-", "hello world-alpha"},
+		{"Append6", "hello world", "alphaRemove", "-", "hello world-alphaRemove"},
 		{"Append7", "hello", "", "!", "hello"},
 		{"Append8", "hello", "Mr. Bond", ", ", "hello, Mr. Bond"},
 	}
@@ -304,7 +304,7 @@ func TestPrepend(t *testing.T) {
 		{"Prepend3", "hello", "world", "-", "world-hello"},
 		{"Prepend4", "hello", "world", "_", "world_hello"},
 		{"Prepend5", "hello", "world", ".", "world.hello"},
-		{"Prepend6", "hello world", "alpha", "-", "alpha-hello world"},
+		{"Prepend6", "hello world", "alphaRemove", "-", "alphaRemove-hello world"},
 		{"Prepend7", "hello", "", "!", "hello"},
 		{"Prepend8", "hello", "Mr. Bond", ", ", "Mr. Bond, hello"},
 	}
@@ -323,6 +323,173 @@ func TestPrepend(t *testing.T) {
 					result,
 					builderResult,
 				)
+			}
+		})
+	}
+}
+
+func TestNormalizeWhitespace(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"NoWhitespace", "hello world", "hello world"},
+		{"ExtraWhitespace", "hello     world", "hello world"},
+		{"Tabs", "hello\t\tworld", "hello world"},
+		{"Newlines", "hello\n\nworld", "hello world"},
+		{"CarriageReturns", "hello\r\rworld", "hello world"},
+		{"MixedWhitespace", "hello  \t\tworld\n\n\r\r", "hello world"},
+		{"Empty", "", ""},
+		{"LeadingWhitespace", "   hello world", "hello world"},
+		{"TrailingWhitespace", "hello world   ", "hello world"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := normalizeWhitespace(tt.input)
+			result := NormalizeWhitespace(tt.input)
+			builderResult := New(tt.input).NormalizeWhitespace().String()
+			builderError := New(tt.input).NormalizeWhitespace().Error()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected || builderError != nil {
+				t.Errorf("normalizeWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestCollapseWhitespace(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"NoWhitespace", "hello world", "hello world"},
+		{"ExtraWhitespace", "hello     world", "hello world"},
+		{"Tabs", "hello\t\tworld", "hello world"},
+		{"Newlines", "hello\n\nworld", "hello world"},
+		{"CarriageReturns", "hello\r\rworld", "hello world"},
+		{"MixedWhitespace", "hello  \t\tworld\n\n\r\r", "hello world "},
+		{"Empty", "", ""},
+		{"LeadingWhitespace", "   hello world", " hello world"},
+		{"LeadingAndTrailingWhitespace", "   hello world   ", " hello world "},
+		{"TrailingWhitespace", "hello world   ", "hello world "},
+		{"LeadingTrailingWhitespaceMixed", " hello   world\n\r\t   ", " hello world "},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := collapseWhitespace(tt.input)
+			result := CollapseWhitespace(tt.input)
+			builderResult := New(tt.input).CollapseWhitespace().String()
+			builderError := New(tt.input).CollapseWhitespace().Error()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected || builderError != nil {
+				t.Errorf("collapseWhitespace(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestReplaceWhitespace(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"ReplaceWhiteSpaceDash", "a b\nc\rd\fe\vf\tg", "-", "a-b-c-d-e-f-g"},
+		{"ReplaceWhiteSpaceSpace", "a b\nc\rd\fe\vf\tg", " ", "a b c d e f g"},
+		{"ReplaceWhiteSpaceSlash", "a b\nc\rd\fe\vf\tg", "/", "a/b/c/d/e/f/g"},
+		{"ReplaceWhiteSpaceText", "a b\nc\rd\fe\vf\tg", ", and ", "a, and b, and c, and d, and e, and f, and g"},
+		{"ReplaceWhiteSpaceEmpty", "", " ", ""},
+		{"ReplaceWhiteSpaceEmptyReplacement", "", " ", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := replaceWhitespace(tt.input, tt.replacement)
+			result := ReplaceWhitespace(tt.input, tt.replacement)
+			builderResult := New(tt.input).ReplaceWhitespace(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ReplaceWhitespace - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestReplaceSpaces(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"ReplaceSpacesDash", "a b\nc\rd\fe\vf\tg", "-", "a-b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesSpace", "a b\nc\rd\fe\vf\tg", " ", "a b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesSlash", "a b\nc\rd\fe\vf\tg", "/", "a/b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesText", "a b\nc\rd\fe\vf\tg", ", and ", "a, and b\nc\rd\fe\vf\tg"},
+		{"ReplaceSpacesEmpty", "", " ", ""},
+		{"ReplaceSpacesEmptyReplacement", "", " ", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := replaceSpaces(tt.input, tt.replacement)
+			result := ReplaceSpaces(tt.input, tt.replacement)
+			builderResult := New(tt.input).ReplaceSpaces(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("ReplaceSpaces - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestAlphaReplace(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"AlphaReplace", "1234567890", "x", "xxxxxxxxxx"},
+		{"AlphaReplaceEmpty", "Hello World!!!", "-", "Hello-World---"},
+		{"AlphaReplaceEmpty", "", "x", ""},
+		{"AlphaReplaceEmptyReplacement", "   ", "x", "xxx"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := alphaReplace(tt.input, tt.replacement)
+			result := AlphaReplace(tt.input, tt.replacement)
+			builderResult := New(tt.input).AlphaReplace(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("AlphaReplace - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
+			}
+		})
+	}
+}
+
+func TestAlphaNumericReplace(t *testing.T) {
+	tests := []struct {
+		name        string
+		input       string
+		replacement string
+		expected    string
+	}{
+		{"AlphaNumericReplace1", "abcd1234", "x", "abcd1234"},
+		{"AlphaNumericReplace2", "a b c d e f", "-", "a-b-c-d-e-f"},
+		{"AlphaNumericReplace3", "a b c d e f", "", "abcdef"},
+		{"AlphaNumericBlank", "", "x", ""},
+		{"AlphaNumericBlankReplacement", "a b c d e f", "", "abcdef"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := alphaNumericReplace(tt.input, tt.replacement)
+			result := AlphaNumericReplace(tt.input, tt.replacement)
+			builderResult := New(tt.input).AlphaNumericReplace(tt.replacement).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("AlphaNumericReplace - expected %q - got %q / %q / %q", tt.expected, helperResult, result, builderResult)
 			}
 		})
 	}
