@@ -753,6 +753,22 @@ func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *String
 	return sb
 }
 
+// SorensenDiceCoefficient computes the Sørensen–Dice coefficient for two strings using a given n-gram split length.
+// Returns a pointer to the coefficient value or nil if the splitLength is negative.
+//
+// The Sørensen index equals twice the number of elements common to both sets
+// divided by the sum of the number of elements in each set.
+//
+// Additional Info: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
+func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sdc := sorensenDiceCoefficient(sb.value, other, splitLength)
+	sb.comparison.SetSorensenDiceCo(sdc)
+	return sb
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,

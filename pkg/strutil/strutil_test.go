@@ -2991,3 +2991,67 @@ func TestCosineSimilarity(t *testing.T) {
 		})
 	}
 }
+
+func TestSorensenDiceCoefficient(t *testing.T) {
+
+	var val1 float32 = 1.0
+	var val2 float32 = 0.40
+	var val3 float32 = 0.666667
+	var val4 float32 = 0.129032
+	var val5 float32 = 0.223607
+	var val6 float32 = 0.80
+	var val7 float32 = 0.857142
+	var val8 float32 = 1.0
+	var val10 float32 = 0.0
+
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		splitLen int
+		expected *float32
+	}{
+		{"SorensenDiceCoefficient1", "hello", "hello", 0, &val1},
+		{"SorensenDiceCoefficient2", "hello", "help", 3, &val2},
+		{"SorensenDiceCoefficient3", "abcd", "abc", 3, &val3},
+		{"SorensenDiceCoefficient4", "this is a sentence", "this guy sent me home", 5, &val4},
+		{"SorensenDiceCoefficient5", "this is a sentence", "this guy sent me home", 0, &val5},
+		{"SorensenDiceCoefficient6", "abcd", "abc", 2, &val6},
+		{"SorensenDiceCoefficient7", "abcd", "abc", 1, &val7},
+		{"SorensenDiceCoefficient8", "abcd", "abcd", 4, &val8},
+		{"SorensenDiceCoefficient9", "abcd", "abc", -1, nil},
+		{"SorensenDiceCoefficient10", "abc", "xyz", 1, &val10},
+		{"SorensenDiceCoefficient11", "abc", "", 1, &val10},
+		{"SorensenDiceCoefficient12", "", "xyz", 1, &val10},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := SorensenDiceCoefficient(tt.input1, tt.input2, tt.splitLen)
+			result := SorensenDiceCoefficient(tt.input1, tt.input2, tt.splitLen)
+			builderResult := New(tt.input1).SorensenDiceCoefficient(tt.input2, tt.splitLen)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*builderResult.Comparison().GetSorensenDiceCo())) >
+					float64EqualityThreshold) {
+				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f / %f",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult.Comparison().GetSorensenDiceCo(),
+				)
+			}
+			if tt.expected == nil &&
+				helperResult != nil &&
+				result != nil &&
+				builderResult.Comparison().GetSorensenDiceCo() != nil {
+				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f / %f",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult.Comparison().GetSorensenDiceCo(),
+				)
+			}
+		})
+	}
+}

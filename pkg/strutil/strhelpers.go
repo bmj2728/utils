@@ -783,3 +783,13 @@ func cosineSimilarity(s1, s2 string, splitLength int) *float32 {
 	cs := edlib.CosineSimilarity(s1, s2, splitLength)
 	return &cs
 }
+
+// sorensenDiceCoefficient calculates the Sørensen–Dice coefficient between two strings with a specified n-gram length.
+// Returns a pointer to the coefficient value or nil if the splitLength is negative.
+func sorensenDiceCoefficient(s1, s2 string, splitLength int) *float32 {
+	if splitLength < 0 {
+		return nil
+	}
+	sdc := edlib.SorensenDiceCoefficient(s1, s2, splitLength)
+	return &sdc
+}

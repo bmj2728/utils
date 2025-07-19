@@ -597,3 +597,14 @@ func JaccardSimilarity(s1, s2 string, splitLength int) *float32 {
 func CosineSimilarity(s1, s2 string, splitLength int) *float32 {
 	return cosineSimilarity(s1, s2, splitLength)
 }
+
+// SorensenDiceCoefficient computes the Sørensen–Dice coefficient for two strings using a given n-gram split length.
+// Returns a pointer to the coefficient value or nil if the splitLength is negative.
+//
+// The Sørensen index equals twice the number of elements common to both sets
+// divided by the sum of the number of elements in each set.
+//
+// Additional Info: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
+func SorensenDiceCoefficient(s1, s2 string, splitLength int) *float32 {
+	return sorensenDiceCoefficient(s1, s2, splitLength)
+}
