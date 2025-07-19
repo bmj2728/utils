@@ -651,7 +651,7 @@ func lcs(str1 string, str2 string) int {
 func lcsBacktrack(str1 string, str2 string) (string, error) {
 	result, err := edlib.LCSBacktrack(str1, str2)
 	if err != nil {
-		return "", errors.New(ErrLCSBacktrackFailure)
+		return "", errors.Join(ErrLCSBacktrackFailure, err)
 	}
 	return result, nil
 }
@@ -661,7 +661,7 @@ func lcsBacktrack(str1 string, str2 string) (string, error) {
 func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
 	result, err := edlib.LCSBacktrackAll(str1, str2)
 	if err != nil {
-		return nil, errors.New(ErrLCSBacktrackAllFailure)
+		return nil, errors.Join(ErrLCSBacktrackAllFailure, err)
 	}
 	return result, nil
 }
@@ -671,7 +671,7 @@ func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
 func lcsDiff(str1, str2 string) ([]string, error) {
 	result, err := edlib.LCSDiff(str1, str2)
 	if err != nil {
-		return nil, errors.New(ErrLCSDiffFailure)
+		return nil, errors.Join(ErrLCSDiffFailure, err)
 	}
 	return result, nil
 }

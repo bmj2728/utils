@@ -1,6 +1,7 @@
 package strutil
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -382,7 +383,7 @@ func TestIsUUID(t *testing.T) {
 			if isValidUUID(tt.input) && builderErr != nil {
 				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderErr != nil && builderErr.Error() != ErrInvalidUUID {
+			if builderErr != nil && !errors.Is(builderErr, ErrInvalidUUID) {
 				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, builderErr.Error(), ErrInvalidUUID)
 			}
 		})
@@ -508,7 +509,7 @@ func TestIsEmail(t *testing.T) {
 			if isValidEmail(tt.input) && builderErr != nil {
 				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderErr != nil && builderErr.Error() != ErrInvalidEmail {
+			if builderErr != nil && !errors.Is(builderErr, ErrInvalidEmail) {
 				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, builderErr.Error(), ErrInvalidEmail)
 			}
 		})
@@ -555,7 +556,7 @@ func TestIsUrl(t *testing.T) {
 			if isValidURL(tt.input) && builderErr != nil {
 				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderErr != nil && builderErr.Error() != ErrInvalidURL {
+			if builderErr != nil && !errors.Is(builderErr, ErrInvalidURL) {
 				t.Errorf("IsURL(%q) = %v; want %v", tt.input, builderErr.Error(), ErrInvalidURL)
 			}
 		})
@@ -594,12 +595,12 @@ func TestIsValidLength(t *testing.T) {
 			if isLengthInRange(tt.input, tt.min, tt.max) && builderErr != nil {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
 			}
-			if (tt.min < 0 || tt.max < 0) && builderErr.Error() != ErrInvalidLengthRange {
+			if (tt.min < 0 || tt.max < 0) && !errors.Is(builderErr, ErrInvalidLengthRange) {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
 					tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLengthRange)
 			}
 
-			if tt.min > tt.max && builderErr.Error() != ErrInvalidLengthRange {
+			if tt.min > tt.max && !errors.Is(builderErr, ErrInvalidLengthRange) {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
 					tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLengthRange)
 			}
@@ -608,7 +609,7 @@ func TestIsValidLength(t *testing.T) {
 				tt.max > 0 &&
 				tt.min <= tt.max &&
 				!isLengthInRange(tt.input, tt.min, tt.max) &&
-				builderErr.Error() != ErrInvalidLength {
+				!errors.Is(builderErr, ErrInvalidLength) {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), ErrInvalidLength)
 			}
 		})
@@ -637,7 +638,7 @@ func TestIsEmpty(t *testing.T) {
 			if !isEmpty(tt.input) && builderErr != nil {
 				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if isEmpty(tt.input) && builderErr.Error() != ErrInvalidEmpty {
+			if isEmpty(tt.input) && !errors.Is(builderErr, ErrInvalidEmpty) {
 				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, builderErr.Error(), ErrInvalidEmpty)
 			}
 		})
@@ -679,7 +680,7 @@ func TestIsEmptyNormalized(t *testing.T) {
 			if !isEmptyNormalized(tt.input) && builderErr != nil {
 				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if isEmptyNormalized(tt.input) && builderErr.Error() != ErrInvalidEmptyAfterNormalization {
+			if isEmptyNormalized(tt.input) && !errors.Is(builderErr, ErrInvalidEmptyAfterNormalization) {
 				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, builderErr.Error(), ErrInvalidEmptyAfterNormalization)
 			}
 		})
@@ -763,8 +764,8 @@ func TestIsAlphaNumericString(t *testing.T) {
 			if isAlphaNumericString(tt.input) && builderResult != nil {
 				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderResult != nil && builderResult.Error() != ErrInvalidNotAlphaNumeric {
-				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, builderResult.Error(), ErrInvalidNotAlphaNumeric)
+			if builderResult != nil && !errors.Is(builderResult, ErrInvalidNotAlphaNumeric) {
+				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, builderResult, ErrInvalidNotAlphaNumeric)
 			}
 		})
 	}
@@ -794,7 +795,7 @@ func TestIsAlphaString(t *testing.T) {
 			if isAlphaString(tt.input) && builderResult != nil {
 				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderResult != nil && builderResult.Error() != ErrInvalidNotAlpha {
+			if builderResult != nil && !errors.Is(builderResult, ErrInvalidNotAlpha) {
 				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, builderResult.Error(), ErrInvalidNotAlpha)
 			}
 		})
@@ -2569,15 +2570,15 @@ func TestLCSDiff(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult, err := lcsDiff(tt.input1, tt.input2)
-			if err != nil && err.Error() != ErrLCSDiffFailure {
+			if err != nil && !errors.Is(err, ErrLCSDiffFailure) {
 				t.Errorf("Error: %s", err)
 			}
 			result, err := LCSDiff(tt.input1, tt.input2)
-			if err != nil && err.Error() != ErrLCSDiffFailure {
+			if err != nil && !errors.Is(err, ErrLCSDiffFailure) {
 				t.Errorf("Error: %s", err)
 			}
 			builderResult := New(tt.input1).LCSDiff(tt.input2)
-			if builderResult.Error() != nil && builderResult.Error().Error() != ErrLCSDiffFailure {
+			if builderResult.Error() != nil && !errors.Is(builderResult.Error(), ErrLCSDiffFailure) {
 				t.Errorf("Error: %s", builderResult.Error())
 			}
 			if tt.expected != nil &&

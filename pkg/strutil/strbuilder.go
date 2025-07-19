@@ -627,7 +627,7 @@ func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
 	}
 	s, err := lcsBacktrack(sb.value, other)
 	if err != nil {
-		sb.err = err
+		sb.err = errors.Join(ErrLCSBacktrackFailure, err)
 	}
 	sb.comparison.SetLCSBacktrack(&s)
 	return sb
@@ -642,7 +642,7 @@ func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
 	}
 	seqs, err := lcsBacktrackAll(sb.value, other)
 	if err != nil {
-		sb.err = err
+		sb.err = errors.Join(ErrLCSBacktrackAllFailure, err)
 	}
 	sb.comparison.SetLCSBacktrackAll(&seqs)
 	return sb
@@ -658,7 +658,7 @@ func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
 	}
 	diff, err := lcsDiff(sb.value, other)
 	if err != nil {
-		sb.err = err
+		sb.err = errors.Join(ErrLCSDiffFailure, err)
 	}
 	sb.comparison.SetLCSDiff(&diff)
 	return sb
@@ -680,7 +680,7 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 	}
 	dist, err := hammingDistance(sb.value, other)
 	if err != nil {
-		sb.err = err
+		sb.err = errors.Join(ErrHammingDistanceFailure, err)
 		return sb
 	}
 	sb.comparison.SetHammingDist(dist)
@@ -696,7 +696,7 @@ func (sb *StringBuilder) RequireEmail() *StringBuilder {
 		return sb
 	}
 	if !isValidEmail(sb.value) {
-		sb.err = errors.New(ErrInvalidEmail)
+		sb.err = ErrInvalidEmail
 	}
 	return sb
 }
@@ -707,7 +707,7 @@ func (sb *StringBuilder) RequireDomain() *StringBuilder {
 		return sb
 	}
 	if !isValidDomain(sb.value) {
-		sb.err = errors.New(ErrInvalidDomain)
+		sb.err = ErrInvalidDomain
 	}
 	return sb
 }
@@ -719,7 +719,7 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 		return sb
 	}
 	if !isValidURL(sb.value) {
-		sb.err = errors.New(ErrInvalidURL)
+		sb.err = ErrInvalidURL
 	}
 	return sb
 }
@@ -731,7 +731,7 @@ func (sb *StringBuilder) RequireUUID() *StringBuilder {
 		return sb
 	}
 	if !isValidUUID(sb.value) {
-		sb.err = errors.New(ErrInvalidUUID)
+		sb.err = ErrInvalidUUID
 	}
 	return sb
 }
@@ -743,12 +743,12 @@ func (sb *StringBuilder) RequireLength(min, max int) *StringBuilder {
 		return sb
 	}
 	if min < 0 || max < 0 {
-		sb.err = errors.New(ErrInvalidLengthRange)
+		sb.err = ErrInvalidLengthRange
 		return sb
 	} else if min > max {
-		sb.err = errors.New(ErrInvalidLengthRange)
+		sb.err = ErrInvalidLengthRange
 	} else if !isLengthInRange(sb.value, min, max) {
-		sb.err = errors.New(ErrInvalidLength)
+		sb.err = ErrInvalidLength
 	}
 	return sb
 }
@@ -759,7 +759,7 @@ func (sb *StringBuilder) RequireNotEmpty() *StringBuilder {
 		return sb
 	}
 	if isEmpty(sb.value) {
-		sb.err = errors.New(ErrInvalidEmpty)
+		sb.err = ErrInvalidEmpty
 	}
 	return sb
 }
@@ -771,7 +771,7 @@ func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
 		return sb
 	}
 	if isEmptyNormalized(sb.value) {
-		sb.err = errors.New(ErrInvalidEmptyAfterNormalization)
+		sb.err = ErrInvalidEmptyAfterNormalization
 	}
 	return sb
 }
@@ -783,7 +783,7 @@ func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
 		return sb
 	}
 	if !isAlphaNumericString(sb.value) {
-		sb.err = errors.New(ErrInvalidNotAlphaNumeric)
+		sb.err = ErrInvalidNotAlphaNumeric
 	}
 	return sb
 }
@@ -794,7 +794,7 @@ func (sb *StringBuilder) RequireAlpha() *StringBuilder {
 		return sb
 	}
 	if !isAlphaString(sb.value) {
-		sb.err = errors.New(ErrInvalidNotAlpha)
+		sb.err = ErrInvalidNotAlpha
 	}
 	return sb
 }
