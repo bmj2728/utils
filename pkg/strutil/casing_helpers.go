@@ -107,3 +107,13 @@ func toDelimited(s string, delim uint8, ignore string, scream bool) string {
 	s = normalizeDiacritics(s)
 	return strcase.ToScreamingDelimited(s, delim, ignore, scream)
 }
+
+// toUpper converts the input string to uppercase and returns the result.
+func toUpper(s string) string {
+	return strings.ToUpper(s)
+}
+
+// toLower converts all characters in the input string to their lowercase equivalents and returns the resulting string.
+func toLower(s string) string {
+	return strings.ToLower(s)
+}
