@@ -674,6 +674,19 @@ func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
 	return sb
 }
 
+func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	dist, err := hammingDistance(sb.value, other)
+	if err != nil {
+		sb.err = err
+		return sb
+	}
+	sb.comparison.SetHammingDist(dist)
+	return sb
+}
+
 // Validation Methods (can set error)
 
 // RequireEmail validates if the StringBuilder's value is a valid email format,

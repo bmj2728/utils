@@ -740,3 +740,13 @@ func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
 	}
 	return true
 }
+
+// hammingDistance computes the Hamming distance between two strings s1 and s2.
+// Returns a pointer to the integer distance and an error if the strings have unequal lengths or a failure occurs.
+func hammingDistance(s1, s2 string) (*int, error) {
+	dist, err := edlib.HammingDistance(s1, s2)
+	if err != nil {
+		return nil, errors.Join(ErrHammingDistanceFailure, err)
+	}
+	return &dist, nil
+}

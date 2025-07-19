@@ -2739,3 +2739,56 @@ func TestPrepend(t *testing.T) {
 		})
 	}
 }
+
+func TestHammingDistance(t *testing.T) {
+
+	testVal2 := 3
+	testVal3 := 3
+	testVal4 := 2
+	testVal5 := 5
+	testVal6 := 0
+
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		expected *int
+	}{
+		{"HammingDistance1", "hello", "help", nil},
+		{"HammingDistance2", "karolin", "kathrin", &testVal2},
+		{"HammingDistance3", "karolin", "kerstin", &testVal3},
+		{"HammingDistance4", "10111", "10010", &testVal4},
+		{"HammingDistance5", "00000", "11111", &testVal5},
+		{"HammingDistance6", "11111", "11111", &testVal6},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult, err := hammingDistance(tt.input1, tt.input2)
+			if err != nil && helperResult != nil {
+				t.Errorf("Error: %s", err)
+			}
+			result, err := HammingDistance(tt.input1, tt.input2)
+			if err != nil && result != nil {
+				t.Errorf("Error: %s", err)
+			}
+			builderResult := New(tt.input1).HammingDistance(tt.input2)
+			builderErr := builderResult.Error()
+			builderHD := builderResult.Comparison().GetHammingDist()
+			if builderErr != nil && builderHD != nil {
+				t.Errorf("Error: %s", builderErr)
+			}
+			if tt.expected != nil &&
+				(*helperResult != *tt.expected ||
+					*result != *tt.expected ||
+					*builderHD != *tt.expected) {
+				t.Errorf("HammingDistance - expected %d - got %d / %d / %d",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderHD,
+				)
+			}
+		})
+	}
+}

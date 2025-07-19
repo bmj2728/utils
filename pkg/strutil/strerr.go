@@ -1,5 +1,10 @@
 package strutil
 
+import "errors"
+
+// TODO ensure consistent use of error vars
+// TODO refactor to define these as errors not strings
+// TODO calls should foll pattern with these errors joined to call errors
 var (
 
 	// ErrInvalidEmail indicates that the input string is not in a valid email address format.
@@ -43,4 +48,8 @@ var (
 
 	// ErrLCSDiffFailure represents an error occurring during the generation of Longest Common Subsequence (LCS) diff.
 	ErrLCSDiffFailure = "error generating lcs diff"
+
+	// ErrHammingDistanceFailure is returned when there is an error while
+	// calculating the Hamming distance between two strings.
+	ErrHammingDistanceFailure = errors.New("error calculating hamming distance")
 )
