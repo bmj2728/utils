@@ -179,3 +179,12 @@ func sorensenDiceCoefficient(s1, s2 string, splitLength int) *float32 {
 	sdc := edlib.SorensenDiceCoefficient(s1, s2, splitLength)
 	return &sdc
 }
+
+// qgramDistance computes the q-gram distance between two strings s1 and s2 using a specified q-gram size q.
+func qgramDistance(s1, s2 string, q int) *int {
+	if q < 1 {
+		return nil
+	}
+	qd := edlib.QgramDistance(s1, s2, q)
+	return &qd
+}

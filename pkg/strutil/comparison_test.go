@@ -30,7 +30,7 @@ func TestLevenshteinDistance(t *testing.T) {
 			builderResult := New(tt.input1).LevenshteinDistance(tt.input2)
 			if helperResult != tt.expected ||
 				result != tt.expected ||
-				*builderResult.Comparison().GetLevenshteinDist() != tt.expected {
+				*builderResult.ComparisonData().GetLevenshteinDist() != tt.expected {
 				t.Errorf("LevenshteinDistance - expected %d - got %d / %d / %d",
 					tt.expected,
 					helperResult,
@@ -544,7 +544,7 @@ func TestHammingDistance(t *testing.T) {
 			}
 			builderResult := New(tt.input1).HammingDistance(tt.input2)
 			builderErr := builderResult.Error()
-			builderHD := builderResult.Comparison().GetHammingDist()
+			builderHD := builderResult.ComparisonData().GetHammingDist()
 			if builderErr != nil && builderHD != nil {
 				t.Errorf("Error: %s", builderErr)
 			}
@@ -585,12 +585,13 @@ func TestJaroSimilarity(t *testing.T) {
 			builderResult := New(tt.input1).JaroSimilarity(tt.input2)
 			if math.Abs(float64(tt.expected)-float64(helperResult)) > float64EqualityThreshold ||
 				math.Abs(float64(tt.expected)-float64(result)) > float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(*builderResult.Comparison().GetJaroSimilarity())) > float64EqualityThreshold {
+				math.Abs(float64(tt.expected)-float64(*builderResult.ComparisonData().GetJaroSimilarity())) >
+					float64EqualityThreshold {
 				t.Errorf("JaroSimilarity - expected %f - got %f / %f / %f",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.Comparison().GetJaroSimilarity(),
+					*builderResult.ComparisonData().GetJaroSimilarity(),
 				)
 			}
 		})
@@ -619,12 +620,13 @@ func TestJaroWinklerSimilarity(t *testing.T) {
 			builderResult := New(tt.input1).JaroWinklerSimilarity(tt.input2)
 			if math.Abs(float64(tt.expected)-float64(helperResult)) > float64EqualityThreshold ||
 				math.Abs(float64(tt.expected)-float64(result)) > float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(*builderResult.Comparison().GetJaroWinklerSim())) > float64EqualityThreshold {
+				math.Abs(float64(tt.expected)-float64(*builderResult.ComparisonData().GetJaroWinklerSim())) >
+					float64EqualityThreshold {
 				t.Errorf("JaroWinklerSimilarity - expected %f - got %f / %f / %f",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.Comparison().GetJaroWinklerSim(),
+					*builderResult.ComparisonData().GetJaroWinklerSim(),
 				)
 			}
 		})
@@ -671,23 +673,24 @@ func TestJaccardSimilarity(t *testing.T) {
 			builderResult := New(tt.input1).JaccardSimilarity(tt.input2, tt.splitLength)
 			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
 				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*builderResult.Comparison().GetJaccardSim())) > float64EqualityThreshold) {
+				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetJaccardSim())) >
+					float64EqualityThreshold) {
 				t.Errorf("JaccardSimilarity - expected %f - got %f / %f / %f",
 					*tt.expected,
 					*helperResult,
 					*result,
-					*builderResult.Comparison().GetJaccardSim(),
+					*builderResult.ComparisonData().GetJaccardSim(),
 				)
 			}
 			if tt.expected == nil &&
 				helperResult != nil &&
 				result != nil &&
-				builderResult.Comparison().GetJaccardSim() != nil {
+				builderResult.ComparisonData().GetJaccardSim() != nil {
 				t.Errorf("JaccardSimilarity - expected %f - got %f / %f / %f",
 					*tt.expected,
 					*helperResult,
 					*result,
-					*builderResult.Comparison().GetJaccardSim(),
+					*builderResult.ComparisonData().GetJaccardSim(),
 				)
 			}
 		})
@@ -734,24 +737,24 @@ func TestCosineSimilarity(t *testing.T) {
 			builderResult := New(tt.input1).CosineSimilarity(tt.input2, tt.splitLen)
 			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
 				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*builderResult.Comparison().GetCosineSimilarity())) >
+				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetCosineSimilarity())) >
 					float64EqualityThreshold) {
 				t.Errorf("CosineSimilarity - expected %f - got %f / %f / %f",
 					*tt.expected,
 					*helperResult,
 					*result,
-					*builderResult.Comparison().GetCosineSimilarity(),
+					*builderResult.ComparisonData().GetCosineSimilarity(),
 				)
 			}
 			if tt.expected == nil &&
 				helperResult != nil &&
 				result != nil &&
-				builderResult.Comparison().GetCosineSimilarity() != nil {
+				builderResult.ComparisonData().GetCosineSimilarity() != nil {
 				t.Errorf("CosineSimilarity - expected %f - got %f / %f / %f",
 					*tt.expected,
 					*helperResult,
 					*result,
-					*builderResult.Comparison().GetCosineSimilarity(),
+					*builderResult.ComparisonData().GetCosineSimilarity(),
 				)
 			}
 		})
@@ -798,24 +801,75 @@ func TestSorensenDiceCoefficient(t *testing.T) {
 			builderResult := New(tt.input1).SorensenDiceCoefficient(tt.input2, tt.splitLen)
 			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
 				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*builderResult.Comparison().GetSorensenDiceCo())) >
+				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetSorensenDiceCo())) >
 					float64EqualityThreshold) {
 				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f / %f",
 					*tt.expected,
 					*helperResult,
 					*result,
-					*builderResult.Comparison().GetSorensenDiceCo(),
+					*builderResult.ComparisonData().GetSorensenDiceCo(),
 				)
 			}
 			if tt.expected == nil &&
 				helperResult != nil &&
 				result != nil &&
-				builderResult.Comparison().GetSorensenDiceCo() != nil {
+				builderResult.ComparisonData().GetSorensenDiceCo() != nil {
 				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f / %f",
 					*tt.expected,
 					*helperResult,
 					*result,
-					*builderResult.Comparison().GetSorensenDiceCo(),
+					*builderResult.ComparisonData().GetSorensenDiceCo(),
+				)
+			}
+		})
+	}
+}
+
+func TestQGramDistance(t *testing.T) {
+
+	var val1 = 0
+	var val2 = 3
+	var val3 = 6
+	var val4 = 1
+	var val5 = 21
+	var val6 = 23
+	var val7 = 6
+	var val8 = 2
+	var val9 = 1
+	var val10 = 6
+
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		q        int
+		expected *int
+	}{
+		{"QGramDist1", "Hello", "Hello", 1, &val1},
+		{"QGramDist2", "Hello", "Help", 3, &val2},
+		{"QGramDist3", "Hello", "Helping", 2, &val3},
+		{"QGramDist4", "abcd", "abc", 4, &val4},
+		{"QGramDist5", "this is a sentence", "this guy sent me home", 10, &val5},
+		{"QGramDist6", "this is a sentence", "this guy sent me home", 3, &val6},
+		{"QGramDist7", "abc", "xyz", 1, &val7},
+		{"QGramDist8", "abc", "", 2, &val8},
+		{"QGramDist9", "", "xyz", 3, &val9},
+		{"QGramDist10", "HELLO", "hello", 3, &val10},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := qgramDistance(tt.input1, tt.input2, tt.q)
+			result := QgramDistance(tt.input1, tt.input2, tt.q)
+			builderResult := New(tt.input1).QgramDistance(tt.input2, tt.q).comparisonData.GetQGramDist()
+			if tt.expected != nil && (*helperResult != *tt.expected ||
+				*result != *tt.expected ||
+				*builderResult != *tt.expected) {
+				t.Errorf("QgramDistance - expected %d - got %d / %d / %d",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult,
 				)
 			}
 		})

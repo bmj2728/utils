@@ -124,3 +124,8 @@ func CosineSimilarity(s1, s2 string, splitLength int) *float32 {
 func SorensenDiceCoefficient(s1, s2 string, splitLength int) *float32 {
 	return sorensenDiceCoefficient(s1, s2, splitLength)
 }
+
+// QgramDistance calculates the q-gram distance between two strings s1 and s2 using the specified q-gram size q.
+func QgramDistance(s1, s2 string, q int) *int {
+	return qgramDistance(s1, s2, q)
+}

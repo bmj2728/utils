@@ -29,8 +29,8 @@ func (sb *StringBuilder) Error() error {
 	return sb.err
 }
 
-// Comparison returns the comparisonData object stored in the StringBuilder.
-func (sb *StringBuilder) Comparison() *ComparisonData {
+// ComparisonData returns the comparisonData object stored in the StringBuilder.
+func (sb *StringBuilder) ComparisonData() *ComparisonData {
 	return sb.comparisonData
 }
 

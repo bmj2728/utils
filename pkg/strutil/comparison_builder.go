@@ -214,3 +214,16 @@ func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) 
 	sb.comparisonData.SetSorensenDiceCo(sdc)
 	return sb
 }
+
+// QgramDistance computes the q-gram distance between the StringBuilder's value
+// and another string with the specified q value.
+// It updates the comparisonData's QGramDist field with the computed distance.
+// Returns the StringBuilder instance for method chaining.
+func (sb *StringBuilder) QgramDistance(other string, q int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	qd := qgramDistance(sb.value, other, q)
+	sb.comparisonData.SetQGramDist(qd)
+	return sb
+}
