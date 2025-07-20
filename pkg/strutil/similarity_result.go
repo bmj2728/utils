@@ -27,7 +27,7 @@ func (sr *SimilarityResult) String() string {
 	if sr.Similarity == nil {
 		return fmt.Sprintf("%s / %s \n(%s - No Score): %s", sr.Str1, sr.Str2, sr.Algorithm, sr.Err.Error())
 	} else {
-		return fmt.Sprintf("%s / %s \n(%s - %.2f)", sr.Str1, sr.Str2, sr.Algorithm, *sr.Similarity)
+		return fmt.Sprintf("%s / %s \n(%s - %f)", sr.Str1, sr.Str2, sr.Algorithm, *sr.Similarity)
 	}
 }
 

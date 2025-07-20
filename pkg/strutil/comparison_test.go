@@ -1119,3 +1119,319 @@ func TestShingleSlice(t *testing.T) {
 		})
 	}
 }
+
+func TestSimilarity(t *testing.T) {
+
+	var val1 float32 = 1.0
+	var val2 float32 = 0.2
+	var val3 float32 = 1.0
+	var val4 float32 = 0.2
+	var val5 float32 = 1.0
+	var val6 float32 = 0.2
+	var val7 float32 = 1.0
+	var val8 float32 = -.60
+	var val9 float32 = 1.0
+	var val10 float32 = 0.2
+	var val11 float32 = 1.0
+	var val12 float32 = 0.466667
+	var val13 float32 = 1.0
+	var val14 float32 = 0.466667
+	var val15 float32 = 1.0
+	var val16 float32 = 0.0
+	var val17 float32 = 1.0
+	var val18 float32 = 0.0
+	var val19 float32 = 1.0
+	var val20 float32 = 0.0
+	var val21 float32 = 1.0
+	var val22 float32 = 0.0
+
+	tests := []struct {
+		name      string
+		input1    string
+		input2    string
+		algorithm string
+		expected  *SimilarityResult
+	}{
+		{"Similarity1",
+			"Hello World",
+			"Hello World",
+			"Levenshtein",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "Levenshtein",
+				Similarity: &val1,
+				Err:        nil,
+			}},
+		{"Similarity2",
+			"Hello",
+			"World",
+			"Levenshtein",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "Levenshtein",
+				Similarity: &val2,
+				Err:        nil,
+			}},
+		{"Similarity3",
+			"Hello World",
+			"Hello World",
+			"DamerauLevenshtein",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "DamerauLevenshtein",
+				Similarity: &val3,
+				Err:        nil,
+			}},
+		{"Similarity4",
+			"Hello",
+			"World",
+			"DamerauLevenshtein",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "DamerauLevenshtein",
+				Similarity: &val4,
+				Err:        nil,
+			}},
+		{"Similarity5",
+			"Hello World",
+			"Hello World",
+			"OSADamerauLevenshtein",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "OSADamerauLevenshtein",
+				Similarity: &val5,
+				Err:        nil,
+			}},
+		{"Similarity6",
+			"Hello",
+			"World",
+			"OSADamerauLevenshtein",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "OSADamerauLevenshtein",
+				Similarity: &val6,
+				Err:        nil,
+			}},
+		{"Similarity7",
+			"Hello World",
+			"Hello World",
+			"Lcs",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "Lcs",
+				Similarity: &val7,
+				Err:        nil,
+			}},
+		{"Similarity8",
+			"Hello",
+			"World",
+			"Lcs",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "Lcs",
+				Similarity: &val8,
+				Err:        nil,
+			}},
+		{"Similarity9",
+			"Hello World",
+			"Hello World",
+			"Hamming",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "Hamming",
+				Similarity: &val9,
+				Err:        nil,
+			}},
+		{"Similarity10",
+			"Hello",
+			"World",
+			"Hamming",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "Hamming",
+				Similarity: &val10,
+				Err:        nil,
+			}},
+		{"Similarity11",
+			"Hello World",
+			"Hello World",
+			"Jaro",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "Jaro",
+				Similarity: &val11,
+				Err:        nil,
+			}},
+		{"Similarity12",
+			"Hello",
+			"World",
+			"Jaro",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "Jaro",
+				Similarity: &val12,
+				Err:        nil,
+			}},
+		{"Similarity13",
+			"Hello World",
+			"Hello World",
+			"JaroWinkler",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "JaroWinkler",
+				Similarity: &val13,
+				Err:        nil,
+			}},
+		{"Similarity14",
+			"Hello",
+			"World",
+			"JaroWinkler",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "JaroWinkler",
+				Similarity: &val14,
+				Err:        nil,
+			}},
+		{"Similarity15",
+			"Hello World",
+			"Hello World",
+			"Cosine",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "Cosine",
+				Similarity: &val15,
+				Err:        nil,
+			}},
+		{"Similarity16",
+			"Hello",
+			"World",
+			"Cosine",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "Cosine",
+				Similarity: &val16,
+				Err:        nil,
+			}},
+		{"Similarity17",
+			"Hello World",
+			"Hello World",
+			"Jaccard",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "Jaccard",
+				Similarity: &val17,
+				Err:        nil,
+			}},
+		{"Similarity18",
+			"Hello",
+			"World",
+			"Jaccard",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "Jaccard",
+				Similarity: &val18,
+				Err:        nil,
+			}},
+		{"Similarity19",
+			"Hello World",
+			"Hello World",
+			"SorensenDice",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "SorensenDice",
+				Similarity: &val19,
+				Err:        nil,
+			}},
+		{"Similarity20",
+			"Hello",
+			"World",
+			"SorensenDice",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "SorensenDice",
+				Similarity: &val20,
+				Err:        nil,
+			}},
+		{"Similarity21",
+			"Hello World",
+			"Hello World",
+			"QGrams",
+			&SimilarityResult{
+				Str1:       "Hello World",
+				Str2:       "Hello World",
+				Algorithm:  "QGrams",
+				Similarity: &val21,
+				Err:        nil,
+			}},
+		{"Similarity22",
+			"Hello",
+			"World",
+			"QGrams",
+			&SimilarityResult{
+				Str1:       "Hello",
+				Str2:       "World",
+				Algorithm:  "QGrams",
+				Similarity: &val22,
+				Err:        nil,
+			}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := similarity(tt.input1, tt.input2, tt.algorithm)
+			result := Similarity(tt.input1, tt.input2, tt.algorithm)
+			builderResult := *New(tt.input1).Similarity(tt.input2, tt.algorithm).similarities
+			brSim := builderResult[0]
+			if helperResult.Algorithm != tt.expected.Algorithm ||
+				helperResult.Str1 != tt.expected.Str1 ||
+				helperResult.Str2 != tt.expected.Str2 ||
+				math.Abs(float64(*tt.expected.Similarity)-float64(*helperResult.Similarity)) > 1e-6 ||
+				!errors.Is(helperResult.Err, tt.expected.Err) {
+				t.Errorf("SimilarityA - expected %s - got %s",
+					tt.expected.String(),
+					helperResult.String(),
+				)
+			}
+			if result.Algorithm != tt.expected.Algorithm ||
+				result.Str1 != tt.expected.Str1 ||
+				result.Str2 != tt.expected.Str2 ||
+				math.Abs(float64(*tt.expected.Similarity)-float64(*result.Similarity)) > 1e-6 ||
+				!errors.Is(result.Err, tt.expected.Err) {
+				t.Errorf("SimilarityB - expected %s - got %s",
+					tt.expected.String(),
+					result.String(),
+				)
+			}
+			if brSim.Algorithm != tt.expected.Algorithm ||
+				brSim.Str1 != tt.expected.Str1 ||
+				brSim.Str2 != tt.expected.Str2 ||
+				math.Abs(float64(*tt.expected.Similarity)-float64(*brSim.Similarity)) > 1e-6 ||
+				!errors.Is(brSim.Err, tt.expected.Err) {
+				t.Errorf("SimilarityC - expected %s - got %s",
+					tt.expected.String(),
+					brSim.String(),
+				)
+			}
+		})
+	}
+}
