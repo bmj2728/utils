@@ -1,4 +1,8 @@
-# Utils - The Missing Go Utilities Package
+
+<div style="text-align: center;">
+  <h1>Utils - The Missing Go Utilities Package</h1>
+  <img src="assets/utils-gopher_transparent.png" alt="utils Gopher Logo" width="500"/>
+</div>
 
 
 <!-- Badges -->
