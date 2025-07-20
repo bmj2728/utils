@@ -30,41 +30,74 @@ This project aims to provide a set of utility packages that follow these princip
 
 ```
 utils/
-├── strutil/         # String manipulation & validation (currently in development)
-├── httputil/        # HTTP client patterns
-├── fileutl/         # File operations
-├── jsonutil/        # JSON utilities
-├── cryptoutil/      # Common crypto patterns
-├── configutil/      # Configuration management
-├── sliceutil/       # Generic slice operations
-├── validationutil/  # Input validation
-├── errorutil/       # Error handling
-└── testutil/        # Test helpers
+├── pkg/
+│   ├── strutil/                # String manipulation & validation
+│   │   ├── builder.go          # Core StringBuilder implementation
+│   │   ├── casing.go           # Main case conversion functions
+│   │   ├── casing_builder.go   # Fluent API for case operations
+│   │   ├── casing_helpers.go   # Internal case conversion implementations
+│   │   ├── comparison.go       # Main comparison functions
+│   │   ├── comparison_builder.go # Fluent API for comparison operations
+│   │   ├── comparison_data.go  # ComparisonData struct definition
+│   │   ├── comparison_helpers.go # Internal comparison implementations
+│   │   ├── similarity_result.go # SimilarityResult struct definition
+│   │   ├── generation.go       # Main string generation functions
+│   │   ├── generation_builder.go # Fluent API for generation operations
+│   │   ├── lorem.go            # Main lorem ipsum functions
+│   │   ├── lorem_builder.go    # Fluent API for lorem ipsum operations
+│   │   ├── sanitization.go     # Main sanitization functions
+│   │   ├── sanitization_builder.go # Fluent API for sanitization operations
+│   │   ├── transform.go        # Main string transformation functions
+│   │   ├── transform_builder.go # Fluent API for transformation operations
+│   │   ├── validation.go       # Main validation functions
+│   │   ├── validation_builder.go # Fluent API for validation operations
+│   │   └── *_test.go           # Test files for each functionality area
+│   └── version/                # Version information utilities
+├── httputil/        # HTTP client patterns (planned)
+├── fileutl/         # File operations (planned)
+├── jsonutil/        # JSON utilities (planned)
+├── cryptoutil/      # Common crypto patterns (planned)
+├── configutil/      # Configuration management (planned)
+├── sliceutil/       # Generic slice operations (planned)
+├── validationutil/  # Input validation (planned)
+├── errorutil/       # Error handling (planned)
+└── testutil/        # Test helpers (planned)
 ```
+
+This structure maintains a clear separation between:
+- Main public API functions (e.g., `comparison.go`)
+- Internal implementation functions (e.g., `comparison_helpers.go`)
+- Fluent builder pattern methods (e.g., `comparison_builder.go`)
+- Type definitions (e.g., `similarity_result.go`, `comparison_data.go`)
 
 ## Recent Updates
 
-The project has recently added several new features:
+The project has recently added several significant features and improvements:
 
-- **Case Functionality**: Added comprehensive case conversion functions (camelCase, PascalCase, snake_case, kebab-case, Title Case)
-- **String Comparison**: Added string comparison functions for measuring text similarity (Levenshtein, Damerau-Levenshtein)
-- **HTML Sanitization**: Added functions for sanitizing HTML content with various security levels
-- **Lorem Ipsum Generation**: Added comprehensive lorem ipsum generation for text, emails, URLs, and more
+- **Full Comparison Suite**: Implemented a comprehensive suite of string comparison functions including:
+  - Longest Common Subsequence (LCS) with backtracking and diff capabilities
+  - Hamming Distance
+  - Jaro and Jaro-Winkler Distance
+  - Jaccard Similarity
+  - Cosine Similarity
+  - Q-gram Distance and Similarity
+  - Sorensen-Dice Coefficient
+  - Shingle generation for text fingerprinting
+- **Similarity Result Handling**: Added a `SimilarityResult` struct to standardize and enhance comparison results
+- **StringBuilder History**: Enhanced the string builder to maintain a history of similarity results
+- **Project Reorganization**: Restructured the codebase into more manageable files with clear separation between:
+  - Internal implementation functions
+  - Main public API functions
+  - Fluent builder pattern methods
+- **Test Organization**: Separated tests into multiple files by functionality area for better maintainability
 
 ## Roadmap
 
 Upcoming features planned for future releases:
 
-1. **Sanitization Functions**: Enhanced sanitization for various data types and contexts
-2. **Additional Comparison Functions**: 
-   - Longest Common Subsequence (LCS)
-   - Hamming Distance
-   - Jaro and Jaro-Winkler Distance
-   - Jaccard Similarity
-   - Q-gram Distance
-   - Sorensen-Dice Coefficient
-   - Normalization function for edit distance
-3. **Documentation Generation**: GitHub Actions for automatic documentation and pages generation
+1. **Enhanced Sanitization Functions**: Additional sanitization for various data types and contexts
+2. **Documentation Generation**: GitHub Actions for automatic documentation and pages generation
+3. **Performance Optimizations**: Further optimizations for string operations on large datasets
 
 
 ## Current Implementation
@@ -140,6 +173,90 @@ strutil.New(input).
     RequireNotEmpty().
     RequireEmail().
     Result()
+
+// String comparison with similarity tracking
+result, comparisonData, err := strutil.New(input).
+    LevenshteinDistance(otherString).
+    JaroSimilarity(otherString).
+    Result()
+```
+
+#### Comparison Data Structures
+
+> **Note**: The comparison functionality is evolving and likely to change before v0.1.0.
+
+The string builder maintains two separate structures for tracking comparison results:
+
+##### ComparisonData Struct
+
+The `ComparisonData` struct stores various metrics from different string comparison algorithms:
+
+```
+type ComparisonData struct {
+    // LCS family
+    LCS             *int      `json:"lcs,omitempty"`
+    LCSBacktrack    *string   `json:"lcs_backtrack,omitempty"`
+    // Levenshtein family
+    LevenshteinDist   *int `json:"levenshtein_dist,omitempty"`
+    DamerauLevDist    *int `json:"damerau_lev_dist,omitempty"`
+    // Other algorithms
+    HammingDist      *int     `json:"hamming_dist,omitempty"`
+    JaroSimilarity   *float32 `json:"jaro_similarity,omitempty"`
+    // ... and many more metrics
+}
+```
+
+**Purpose**: Stores raw metrics from comparison operations.
+
+**Limitations**:
+- Doesn't store information about the comparison text itself
+- Can only hold comparison to a single text at a time
+- Only updated by specific comparison methods (LevenshteinDistance, JaroSimilarity, etc.)
+
+**Usage**:
+```
+// Access comparison data after operations
+sb := strutil.New("hello").
+    LevenshteinDistance("hallo").
+    JaroSimilarity("hallo")
+
+data := sb.ComparisonData()
+levDist := data.GetLevenshteinDist()  // Get Levenshtein distance
+jaroSim := data.GetJaroSimilarity()   // Get Jaro similarity score
+```
+
+##### SimilarityResult Struct
+
+The `SimilarityResult` struct provides a standardized way to handle normalized string comparison results:
+
+```
+type SimilarityResult struct {
+    Algorithm  string    // The algorithm used for comparison
+    Str1       string    // The first string being compared
+    Str2       string    // The second string being compared
+    Similarity *float32  // The similarity score (nil if error occurred)
+    Err        error     // Any error that occurred during comparison
+}
+```
+
+**Purpose**: Provides normalized results using one of 11 algorithms.
+
+**Benefits**:
+- Self-contained with both the comparison result and the strings being compared
+- Maintains context about which algorithm was used
+- Multiple SimilarityResults can be stored in the `similarities` slice
+- Standardized format regardless of the algorithm used
+
+**Usage**:
+```
+// Using the Similarity function directly
+result := strutil.Similarity("hello", "hallo", "levenshtein")
+fmt.Println(result.String())  // Prints formatted comparison result
+
+// Using the StringBuilder API to add to similarities slice
+sb := strutil.New("hello").Similarity("hallo", "levenshtein")
+// Additional comparisons can be added
+sb.Similarity("hallo", "jaro")
 ```
 
 ## Implemented Functions (as of 7/16/2025)
@@ -220,6 +337,24 @@ The following functions have been fully implemented and are ready for use:
 - `LevenshteinDistance(s1, s2)` - Calculates the Levenshtein distance between two strings
 - `DamerauLevenshteinDistance(s1, s2)` - Calculates the Damerau-Levenshtein distance between two strings
 - `OSADamerauLevenshteinDistance(s1, s2)` - Calculates the Optimal String Alignment variant of Damerau-Levenshtein distance
+- `LCS(s1, s2)` - Calculates the length of the longest common subsequence
+- `LCSBacktrack(s1, s2)` - Calculates the longest common subsequence and returns the result
+- `LCSBacktrackAll(s1, s2)` - Computes all longest common subsequences
+- `LCSDiff(s1, s2)` - Computes the differences between strings using LCS
+- `LCSEditDistance(s1, s2)` - Computes the edit distance using LCS
+- `HammingDistance(s1, s2)` - Computes the Hamming distance between two strings
+- `JaroSimilarity(s1, s2)` - Calculates the Jaro similarity between two strings
+- `JaroWinklerSimilarity(s1, s2)` - Computes the Jaro-Winkler similarity between two strings
+- `JaccardSimilarity(s1, s2, splitLength)` - Computes the Jaccard similarity coefficient
+- `CosineSimilarity(s1, s2, splitLength)` - Computes the cosine similarity between two strings
+- `SorensenDiceCoefficient(s1, s2, splitLength)` - Computes the Sørensen–Dice coefficient
+- `QgramDistance(s1, s2, q)` - Calculates the q-gram distance between two strings
+- `QgramDistanceCustomNgram(nmap1, nmap2)` - Computes the q-gram distance between n-gram frequency maps
+- `QgramSimilarity(s1, s2, q)` - Calculates the q-gram similarity between two strings
+- `Shingle(s, k)` - Generates k-shingles from the input string
+- `ShingleSlice(s, k)` - Generates k-length shingles as a string slice
+- `Similarity(s1, s2, algorithm)` - Computes the similarity score using a specified algorithm
+- `CompareStringSlices(a, b, nulls)` - Compares two slices of strings for equality
 
 ### Version Utilities (`version`)
 
@@ -263,6 +398,21 @@ strutil.New(userInput).
 
 This project follows Go's standard testing practices. Each package includes comprehensive tests to ensure functionality, edge cases, and regression prevention.
 
+### Test Organization
+
+Tests have been organized into multiple files by functionality area for better maintainability:
+
+- `casing_test.go` - Tests for case conversion functions
+- `comparison_test.go` - Tests for string comparison functions
+- `generation_test.go` - Tests for string generation functions
+- `lorem_test.go` - Tests for lorem ipsum generation
+- `sanitization_test.go` - Tests for HTML and text sanitization
+- `transform_test.go` - Tests for string transformation functions
+- `validation_test.go` - Tests for string validation functions
+- `examples_test.go` - Example usage patterns for documentation
+
+This organization makes it easier to locate and maintain tests for specific functionality areas.
+
 ### Running Tests Locally
 
 To run all tests in the project:
@@ -280,7 +430,27 @@ go test -v ./...
 To run tests for a specific package:
 
 ```
-go test ./strutil
+go test ./pkg/strutil
+```
+
+To run tests for a specific functionality area (using test filtering):
+
+```
+go test ./pkg/strutil -run "TestComparison.*"
+```
+
+To run tests with benchmarks:
+
+```
+go test -bench=. ./pkg/strutil
+```
+
+To run tests with coverage reporting:
+
+```
+go test -cover ./pkg/strutil
+go test -coverprofile=coverage.out ./pkg/strutil
+go tool cover -html=coverage.out  # Opens coverage report in browser
 ```
 
 ### Continuous Integration
@@ -294,7 +464,7 @@ This project uses GitHub Actions for continuous integration. The workflow automa
 
 The CI/CD workflows run on all pull requests and pushes to the main branch, ensuring code quality, security, and functionality are maintained. Weekly security scans are also scheduled to catch newly discovered vulnerabilities.
 
-#### CI/CD Workflow Details (as of 7/16/2025)
+#### CI/CD Workflow Details (as of 7/20/2025)
 
 - **CI Workflow**: Handles linting, formatting, quick tests, and import verification
 - **Test Workflow**: Runs comprehensive tests with race detection across multiple Go versions
