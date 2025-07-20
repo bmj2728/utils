@@ -148,6 +148,15 @@ func Shingle(s string, k int) *map[string]int {
 	return shingle(s, k)
 }
 
+// ShingleSlice generates k-length shingles (substrings) from the input string and
+// returns them as a pointer to a string slice.
+// Returns nil if k is less than 1.
 func ShingleSlice(s string, k int) *[]string {
 	return shingleSlice(s, k)
+}
+
+// Similarity computes the similarity score between two strings using a specified algorithm from AlgorithmMap.
+// Returns a SimilarityResult containing the score and any error encountered during the computation.
+func Similarity(s1, s2 string, algorithm string) *SimilarityResult {
+	return similarity(s1, s2, algorithm)
 }

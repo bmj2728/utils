@@ -1,6 +1,10 @@
 package strutil
 
-import "regexp"
+import (
+	"regexp"
+
+	"github.com/hbollon/go-edlib"
+)
 
 //// PhoneFormat represents the enumerated type for different phone number formatting styles.
 //type PhoneFormat int
@@ -52,3 +56,17 @@ var (
 	// and uppercase characters or consecutive capitals in camelCase or PascalCase strings.
 	CamelCaseRegex = regexp.MustCompile(`([a-z0-9])([A-Z])|([A-Z])([A-Z][a-z])`)
 )
+
+var AlgorithmMap = map[string]edlib.Algorithm{
+	"Levenshtein":           edlib.Levenshtein,
+	"DamerauLevenshtein":    edlib.DamerauLevenshtein,
+	"OSADamerauLevenshtein": edlib.OSADamerauLevenshtein,
+	"Lcs":                   edlib.Lcs,
+	"Hamming":               edlib.Hamming,
+	"Jaro":                  edlib.Jaro,
+	"JaroWinkler":           edlib.JaroWinkler,
+	"Cosine":                edlib.Cosine,
+	"Jaccard":               edlib.Jaccard,
+	"SorensenDice":          edlib.SorensenDice,
+	"QGrams":                edlib.Qgram,
+}

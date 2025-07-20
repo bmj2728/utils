@@ -7,6 +7,7 @@ type StringBuilder struct {
 	value          string
 	err            error
 	comparisonData *ComparisonData
+	similarities   *[]SimilarityResult
 }
 
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.

@@ -283,3 +283,17 @@ func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 	sb.comparisonData.SetShingleSlice(shingle)
 	return sb
 }
+
+// Similarity calculates the similarity score between the current string and
+// another string using a specified algorithm from the AlgorithmMap.
+// It appends the result to the similarities list and returns the
+// updated StringBuilder, or itself if an error occurred.
+func (sb *StringBuilder) Similarity(other string, algorithm string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sr := similarity(sb.value, other, algorithm)
+	newSims := append(*sb.similarities, *sr)
+	sb.similarities = &newSims
+	return sb
+}

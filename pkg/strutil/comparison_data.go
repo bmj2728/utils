@@ -32,8 +32,8 @@ type ComparisonData struct {
 	ShingleSlice *[]string       `json:"shingle_slice,omitempty"`
 }
 
-// NewEdLibData initializes and returns a pointer to a new instance of ComparisonData with default values.
-func NewEdLibData() *ComparisonData {
+// NewComparisonData initializes and returns a pointer to a new instance of ComparisonData with default values.
+func NewComparisonData() *ComparisonData {
 	return &ComparisonData{}
 }
 
