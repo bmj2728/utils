@@ -23,9 +23,9 @@ type ComparisonData struct {
 	SorensenDiceCo   *float32 `json:"sorensen_dice_similarity,omitempty"`
 
 	// QGram
-	QGramDist       *int `json:"qgram_dist,omitempty"`
-	QGramDistCustom *int `json:"qgram_dist_custom,omitempty"`
-	QGramSim        *int `json:"qgram_sim,omitempty"`
+	QGramDist       *int     `json:"qgram_dist,omitempty"`
+	QGramDistCustom *int     `json:"qgram_dist_custom,omitempty"`
+	QGramSim        *float32 `json:"qgram_sim,omitempty"`
 
 	// Shingle
 	Shingle      *map[string]int `json:"shingle,omitempty"`
@@ -204,12 +204,12 @@ func (cd *ComparisonData) GetQGramDistCustom() *int {
 }
 
 // SetQGramSim sets the Q-gram similarity value for the ComparisonData instance.
-func (cd *ComparisonData) SetQGramSim(qGramSim *int) {
+func (cd *ComparisonData) SetQGramSim(qGramSim *float32) {
 	cd.QGramSim = qGramSim
 }
 
 // GetQGramSim retrieves the QGram similarity score from the ComparisonData structure.
-func (cd *ComparisonData) GetQGramSim() *int {
+func (cd *ComparisonData) GetQGramSim() *float32 {
 	return cd.QGramSim
 }
 

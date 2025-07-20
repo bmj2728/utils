@@ -129,3 +129,25 @@ func SorensenDiceCoefficient(s1, s2 string, splitLength int) *float32 {
 func QgramDistance(s1, s2 string, q int) *int {
 	return qgramDistance(s1, s2, q)
 }
+
+// QgramDistanceCustomNgram computes the q-gram distance between two n-gram
+// frequency maps represented as string-int maps.
+// It compares the input frequency maps and returns an integer representing the calculated distance.
+func QgramDistanceCustomNgram(nmap1, nmap2 map[string]int) int {
+	return qgramDistanceCustomNgram(nmap1, nmap2)
+}
+
+// QgramSimilarity calculates the q-gram similarity between two strings using the specified q-gram size.
+// Returns a pointer to the similarity score or nil if the q-gram size is less than 1.
+func QgramSimilarity(s1, s2 string, q int) *float32 {
+	return qgramSimilarity(s1, s2, q)
+}
+
+// Shingle generates k-shingles from the input string and returns a pointer to a map with shingles and their counts.
+func Shingle(s string, k int) *map[string]int {
+	return shingle(s, k)
+}
+
+func ShingleSlice(s string, k int) *[]string {
+	return shingleSlice(s, k)
+}

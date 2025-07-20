@@ -790,7 +790,7 @@ func TestSorensenDiceCoefficient(t *testing.T) {
 		{"SorensenDiceCoefficient8", "abcd", "abcd", 4, &val8},
 		{"SorensenDiceCoefficient9", "abcd", "abc", -1, nil},
 		{"SorensenDiceCoefficient10", "abc", "xyz", 1, &val10},
-		{"SorensenDiceCoefficient11", "abc", "", 1, &val10},
+		{"SorensenDiceCoefficient11", "abc", "", 4, &val10},
 		{"SorensenDiceCoefficient12", "", "xyz", 1, &val10},
 	}
 
@@ -837,6 +837,8 @@ func TestQGramDistance(t *testing.T) {
 	var val8 = 2
 	var val9 = 1
 	var val10 = 6
+	var val11 = 6
+	var val12 = 0
 
 	tests := []struct {
 		name     string
@@ -855,6 +857,9 @@ func TestQGramDistance(t *testing.T) {
 		{"QGramDist8", "abc", "", 2, &val8},
 		{"QGramDist9", "", "xyz", 3, &val9},
 		{"QGramDist10", "HELLO", "hello", 3, &val10},
+		{"QGramDist11", "HELLO", "hello", -5, nil},
+		{"QGramDist11", "HELLO", "hellohellohello", 10, &val11},
+		{"QGramDist11", "HELLOHELLOHELLO", "hello", 20, &val12},
 	}
 
 	for _, tt := range tests {
@@ -870,6 +875,245 @@ func TestQGramDistance(t *testing.T) {
 					*helperResult,
 					*result,
 					*builderResult,
+				)
+			}
+			if tt.expected == nil && (helperResult != nil ||
+				result != nil ||
+				builderResult != nil) {
+				t.Errorf("QgramDistance - expected %d - got %d / %d / %d",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult,
+				)
+			}
+		})
+	}
+}
+
+func TestQgramDistanceCustomNgram(t *testing.T) {
+
+	testMap1 := map[string]int{
+		"he": 1,
+		"el": 1,
+		"ll": 1,
+		"lo": 1,
+	}
+	testMap2 := map[string]int{
+		"he": 1,
+		"el": 1,
+		"lp": 1,
+	}
+	testMap3 := map[string]int{
+		"this": 5,
+		"help": 2,
+		"gets": 1,
+	}
+	testMap4 := map[string]int{
+		"this": 1,
+		"gets": 1,
+		"home": 8,
+	}
+
+	tests := []struct {
+		name     string
+		input1   map[string]int
+		input2   map[string]int
+		expected int
+	}{
+		{"QgramDist1", testMap1, testMap1, 0},
+		{"QgramDist2", testMap1, testMap2, 3},
+		{"QgramDist3", testMap1, testMap3, 12},
+		{"QgramDist4", testMap1, testMap4, 14},
+		{"QgramDist5", testMap2, testMap3, 11},
+		{"QgramDist6", testMap4, testMap2, 13},
+		{"QgramDist7", testMap3, testMap4, 14},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := qgramDistanceCustomNgram(tt.input1, tt.input2)
+			result := QgramDistanceCustomNgram(tt.input1, tt.input2)
+			if helperResult != tt.expected || result != tt.expected {
+				t.Errorf("QgramDistanceCustomNgram - expected %d - got %d / %d",
+					tt.expected,
+					helperResult,
+					result,
+				)
+			}
+		})
+	}
+}
+
+func TestQgramDistanceCustomNgramBuilder(t *testing.T) {
+	tests := []struct {
+		name     string
+		input1   *StringBuilder
+		input2   map[string]int
+		expected int
+	}{
+		{"QgramDist1", New("hello"), map[string]int{"he": 1, "el": 1, "ll": 1, "lo": 1}, 0},
+		{"QgramDist2", New("hello"), map[string]int{"he": 1, "el": 1, "lp": 1}, 3},
+		{"QgramDist3", New("this is a sentence"), map[string]int{"this": 5, "help": 2, "gets": 1}, 21},
+		{"QgramDist4", New("this is a sentence"), map[string]int{"this": 1, "gets": 1, "home": 8}, 23},
+		{"QgramDist1", nil, map[string]int{"he": 1, "el": 1, "ll": 1, "lo": 1}, 0},
+		{"QgramDist2", nil, map[string]int{"he": 1, "el": 1, "lp": 1}, 3},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.input1 == nil {
+				tt.input1 = New("hello").Shingle(2)
+			}
+			builderResult := tt.input1.QgramDistanceCustomNgram(tt.input2)
+			if *builderResult.ComparisonData().GetQGramDistCustom() != tt.expected {
+				t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
+					tt.expected,
+					*builderResult.ComparisonData().GetQGramDistCustom(),
+				)
+			}
+		})
+	}
+}
+
+func TestQgramSimilarity(t *testing.T) {
+
+	var val1 float32 = 0.588235
+	var val2 float32 = 0.00
+	var val3 float32 = 0.00
+	var val4 float32 = 0.782609
+	var val5 float32 = 0.0
+	var val6 float32 = 0.0
+	var val7 float32 = 0.631579
+	var val8 float32 = 0.0
+	var val9 float32 = 0.0
+	var val10 float32 = 0.0
+
+	tests := []struct {
+		name     string
+		input1   string
+		input2   string
+		q        int
+		expected *float32
+	}{
+		{"QgramSim1", "Hello World", "ello world", 3, &val1},
+		{"QgramSim2", "Hello", "help", 3, &val2},
+		{"QgramSim3", "Hello", "World", 3, &val3},
+		{"QgramSim4", "It was the best of times.",
+			"It was the worst of times", 3, &val4},
+		{"QgramSim5", "rock", "paper", 3, &val5},
+		{"QgramSim6", "orea", "books", 3, &val6},
+		{"QgramSim7", "Hello World", "Hello world!", 3, &val7},
+		{"QgramSim8", "HELLO WORLD", "hello world", 3, &val8},
+		{"QgramSim9", "Hello World", "", 3, &val9},
+		{"QgramSim10", "", "Hello world", 3, &val10},
+		{"QgramSim11", "Hello World", "ello world", -99, nil},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := qgramSimilarity(tt.input1, tt.input2, tt.q)
+			result := QgramSimilarity(tt.input1, tt.input2, tt.q)
+			builderResult := New(tt.input1).QgramSimilarity(tt.input2, tt.q)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetQGramSim())) >
+					float64EqualityThreshold) {
+				t.Errorf("QgramSimilarity - expected %f - got %f / %f / %f",
+					*tt.expected,
+					*helperResult,
+					*result,
+					*builderResult.ComparisonData().GetQGramSim(),
+				)
+			}
+		})
+	}
+}
+
+func TestShingle(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		k        int
+		expected map[string]int
+	}{
+		{"Shingle1", "Hello World", 1, map[string]int{" ": 1, "H": 1, "e": 1, "l": 3, "o": 2, "W": 1, "r": 1, "d": 1}},
+		{"Shingle2",
+			"Hello World",
+			2,
+			map[string]int{"He": 1, "el": 1, "ll": 1, "lo": 1, "o ": 1, " W": 1, "Wo": 1, "or": 1, "rl": 1, "ld": 1}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := shingle(tt.input, tt.k)
+			result := Shingle(tt.input, tt.k)
+			builderResult := New(tt.input).Shingle(tt.k).comparisonData.GetShingle()
+			for k, v := range tt.expected {
+				if (*helperResult)[k] == 0 || (*result)[k] == 0 || (*builderResult)[k] == 0 {
+					t.Errorf("Shingle - expected %d - got %d / %d / %d",
+						v,
+						(*helperResult)[k],
+						(*result)[k],
+						(*builderResult)[k],
+					)
+				}
+				if (*helperResult)[k] != v ||
+					(*result)[k] != v ||
+					(*builderResult)[k] != v {
+					t.Errorf("Shingle - expected %d - got %d / %d / %d",
+						v,
+						(*helperResult)[k],
+						(*result)[k],
+						(*builderResult)[k],
+					)
+				}
+			}
+		})
+	}
+}
+
+func TestShingleSlice(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		k        int
+		expected []string
+	}{
+		{"ShingleSlice1", "Hello World", 1, []string{" ", "H", "e", "l", "o", "W", "r", "d"}},
+		{"ShingleSlice2",
+			"Hello World",
+			2,
+			[]string{"He", "el", "ll", "lo", "o ", " W", "Wo", "or", "rl", "ld"},
+		},
+		{"ShingleSlice3",
+			"Hello World",
+			3,
+			[]string{"Hel", "ell", "llo", "lo ", "o W", " Wo", "Wor", "orl", "rld"}},
+		{"ShingleSlice4",
+			"Hello World", 4,
+			[]string{"Hell", "ello", "llo ", "lo W", "o Wo", " Wor", "Worl", "orld"}},
+		{"ShingleSlice5",
+			"Hello World",
+			5,
+			[]string{"Hello", "ello ", "llo W", "lo Wo", "o Wor", " Worl", "World"}},
+		{"ShingleSlice6", "Hello World", 6, []string{"Hello ", "ello W", "llo Wo", "lo Wor", "o Worl", " World"}},
+		{"ShingleSlice7", "Hello World", 7, []string{"Hello W", "ello Wo", "llo Wor", "lo Worl", "o World"}},
+		{"ShingleSlice8", "Hello World", 8, []string{"Hello Wo", "ello Wor", "llo Worl", "lo World"}},
+		{"ShingleSlice9", "Hello World", 9, []string{"Hello Wor", "ello Worl", "llo World"}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := shingleSlice(tt.input, tt.k)
+			result := ShingleSlice(tt.input, tt.k)
+			builderResult := New(tt.input).ShingleSlice(tt.k).comparisonData.GetShingleSlice()
+			if !CompareStringSlices(*helperResult, tt.expected, false) ||
+				!CompareStringSlices(*result, tt.expected, false) ||
+				!CompareStringSlices(*builderResult, tt.expected, false) {
+				t.Errorf("ShingleSlice - expected %v - got %v",
+					tt.expected,
+					*helperResult,
 				)
 			}
 		})

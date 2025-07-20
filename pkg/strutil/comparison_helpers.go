@@ -188,3 +188,42 @@ func qgramDistance(s1, s2 string, q int) *int {
 	qd := edlib.QgramDistance(s1, s2, q)
 	return &qd
 }
+
+// qgramDistanceCustomNgram calculates the q-gram distance using two custom n-gram frequency maps.
+// It returns the distance as an integer based on the differences between the input n-gram maps.
+func qgramDistanceCustomNgram(nmap1, nmap2 map[string]int) int {
+	return edlib.QgramDistanceCustomNgram(nmap1, nmap2)
+}
+
+// qgramSimilarity calculates the q-gram similarity between two strings using the specified q-gram size.
+// Returns a pointer to the similarity score or nil if the q-gram size is less than 1.
+func qgramSimilarity(s1, s2 string, q int) *float32 {
+	if q < 1 {
+		return nil
+	}
+	qs := edlib.QgramSimilarity(s1, s2, q)
+	return &qs
+}
+
+// shingle generates k-shingles for the given string and returns them
+// as a pointer to a map of shingles and their counts.
+// Takes `s` as the input string and `k` as the size of each shingle.
+// Returns nil if `k` is less than 1.
+func shingle(s string, k int) *map[string]int {
+	if k < 1 {
+		return nil
+	}
+	shingle := edlib.Shingle(s, k)
+	return &shingle
+}
+
+// shingleSlice generates k-length shingles (substrings) from the input string and
+// returns them as a pointer to a string slice.
+// Returns nil if k is less than 1.
+func shingleSlice(s string, k int) *[]string {
+	if k < 1 {
+		return nil
+	}
+	shingle := edlib.ShingleSlice(s, k)
+	return &shingle
+}

@@ -1,6 +1,8 @@
 package strutil
 
-import "errors"
+import (
+	"errors"
+)
 
 // CompareStringBuilderSlices compares two slices of StringBuilder for equality,
 // optionally allowing nil slices to be considered equal.
@@ -225,5 +227,59 @@ func (sb *StringBuilder) QgramDistance(other string, q int) *StringBuilder {
 	}
 	qd := qgramDistance(sb.value, other, q)
 	sb.comparisonData.SetQGramDist(qd)
+	return sb
+}
+
+// QgramDistanceCustomNgram calculates the q-gram distance between the current string value and another n-gram map.
+// If the StringBuilder doesn't have an existing ComparisonData.Shingle map, one is generated using the n-gram size
+// of the comparison map.
+func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	if sb.comparisonData.GetShingle() == nil {
+		var k int
+		for n := range nmapOther {
+			k = len(n)
+			break
+		}
+		return sb.Shingle(k).QgramDistanceCustomNgram(nmapOther)
+	} else {
+		qdc := qgramDistanceCustomNgram(*sb.comparisonData.GetShingle(), nmapOther)
+		sb.comparisonData.SetQGramDistCustom(&qdc)
+	}
+	return sb
+}
+
+// QgramSimilarity calculates the q-gram similarity between the builder's string
+// and the given string using a specified q size.
+// It updates the comparison data with the calculated similarity and returns the StringBuilder instance.
+func (sb *StringBuilder) QgramSimilarity(other string, q int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	qs := qgramSimilarity(sb.value, other, q)
+	sb.comparisonData.SetQGramSim(qs)
+	return sb
+}
+
+// Shingle generates k-shingles from the StringBuilder's value and sets them as comparison data for further operations.
+func (sb *StringBuilder) Shingle(k int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	shingle := shingle(sb.value, k)
+	sb.comparisonData.SetShingle(shingle)
+	return sb
+}
+
+// ShingleSlice generates k-length shingles from the StringBuilder's value and updates the comparison data.
+// Returns the StringBuilder instance for method chaining.
+func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	shingle := shingleSlice(sb.value, k)
+	sb.comparisonData.SetShingleSlice(shingle)
 	return sb
 }
