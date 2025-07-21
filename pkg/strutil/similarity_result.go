@@ -67,8 +67,10 @@ func (sr *SimilarityResult) Print(v bool) {
 		if sr.err != nil {
 			fmt.Printf("%s Error: %s\n",
 				SimilarityTypeMap[sr.algorithm], sr.err.Error())
+			return
 		} else {
 			fmt.Printf("%s: %f\n", SimilarityTypeMap[sr.algorithm], *sr.similarity)
+			return
 		}
 	}
 }

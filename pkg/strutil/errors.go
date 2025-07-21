@@ -49,4 +49,7 @@ var (
 	// ErrHammingDistanceFailure is returned when there is an error while
 	// calculating the Hamming distance between two strings.
 	ErrHammingDistanceFailure = errors.New("error calculating hamming distance")
+
+	// ErrShingleLengthOutOfRange indicates that the shingle length provided is outside the acceptable range.
+	ErrShingleLengthOutOfRange = errors.New("shingle length out of range")
 )
