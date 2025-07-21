@@ -284,11 +284,11 @@ func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 	return sb
 }
 
-// Similarity calculates the similarity score between the current string and
-// another string using a specified algorithm from the AlgorithmMap.
-// It appends the result to the similarities list and returns the
-// updated StringBuilder, or itself if an error occurred.
-func (sb *StringBuilder) Similarity(other string, algorithm string) *StringBuilder {
+// Similarity computes the similarity between the current string and another
+// provided string using the specified algorithm.
+// It appends the result to the similarities list and returns the updated StringBuilder.
+// If an error is already set in the StringBuilder, it skips computation and returns itself.
+func (sb *StringBuilder) Similarity(other string, algorithm Algorithm) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}

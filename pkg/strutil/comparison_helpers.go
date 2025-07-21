@@ -228,18 +228,14 @@ func shingleSlice(s string, k int) *[]string {
 	return &shingle
 }
 
-// getAlorithm returns the corresponding edlib.Algorithm for a given
-// algorithm name from the AlgorithmMap.
-func getAlorithm(algorithm string) edlib.Algorithm {
-	return AlgorithmMap[algorithm]
+// similarity calculates the similarity between two strings using
+// the specified algorithm and returns a SimilarityResult.
+func similarity(s1, s2 string, algorithm Algorithm) *SimilarityResult {
+	sim, err := edlib.StringsSimilarity(s1, s2, edlib.Algorithm(algorithm))
+	if err != nil {
+		return NewSimilarityResult(algorithm.String(), s1, s2, nil, err)
+	}
+	return NewSimilarityResult(algorithm.String(), s1, s2, &sim, err)
 }
 
-// similarity computes the similarity score between two strings using a specified algorithm from AlgorithmMap.
-// Returns a SimilarityResult containing the score and any error encountered during the computation.
-func similarity(s1, s2 string, algorithm string) *SimilarityResult {
-	sim, err := edlib.StringsSimilarity(s1, s2, getAlorithm(algorithm))
-	if err != nil {
-		return NewSimilarityResult(algorithm, s1, s2, nil, err)
-	}
-	return NewSimilarityResult(algorithm, s1, s2, &sim, err)
-}
+// TODO update functions to return result objects

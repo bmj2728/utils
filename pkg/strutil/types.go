@@ -59,9 +59,13 @@ var (
 
 type Algorithm edlib.Algorithm
 
+func (a Algorithm) String() string {
+	return SimilarityTypeMap[a]
+}
+
 const (
 	Levenshtein           Algorithm = Algorithm(edlib.Levenshtein)
-	DamerauLEvenshtein              = Algorithm(edlib.DamerauLevenshtein)
+	DamerauLevenshtein              = Algorithm(edlib.DamerauLevenshtein)
 	OSADamerauLevenshtein           = Algorithm(edlib.OSADamerauLevenshtein)
 	Lcs                             = Algorithm(edlib.Lcs)
 	Hamming                         = Algorithm(edlib.Hamming)
@@ -70,21 +74,5 @@ const (
 	Cosine                          = Algorithm(edlib.Cosine)
 	Jaccard                         = Algorithm(edlib.Jaccard)
 	SorensenDice                    = Algorithm(edlib.SorensenDice)
-	QGrams                          = Algorithm(edlib.Qgram)
+	QGram                           = Algorithm(edlib.Qgram)
 )
-
-// AlgorithmMap is a mapping of algorithm names as keys to their
-// corresponding edlib.Algorithm implementations as values.
-var AlgorithmMap = map[string]edlib.Algorithm{
-	"Levenshtein":           edlib.Levenshtein,
-	"DamerauLevenshtein":    edlib.DamerauLevenshtein,
-	"OSADamerauLevenshtein": edlib.OSADamerauLevenshtein,
-	"Lcs":                   edlib.Lcs,
-	"Hamming":               edlib.Hamming,
-	"Jaro":                  edlib.Jaro,
-	"JaroWinkler":           edlib.JaroWinkler,
-	"Cosine":                edlib.Cosine,
-	"Jaccard":               edlib.Jaccard,
-	"SorensenDice":          edlib.SorensenDice,
-	"QGrams":                edlib.Qgram,
-}

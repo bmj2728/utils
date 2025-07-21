@@ -3,18 +3,18 @@ package strutil
 import "fmt"
 
 // SimilarityTypeMap maps edlib.Algorithm constants to their corresponding string representations for display purposes.
-var SimilarityTypeMap = map[string]string{
-	"Levenshtein":           "Levenshtein",
-	"DamerauLevenshtein":    "Damerau-Levenshtein",
-	"OSADamerauLevenshtein": "OSA Damerau-Levenshtein",
-	"Lcs":                   "LCS",
-	"Hamming":               "Hamming",
-	"Jaro":                  "Jaro",
-	"JaroWinkler":           "Jaro-Winkler",
-	"Cosine":                "Cosine",
-	"Jaccard":               "Jaccard",
-	"SorensenDice":          "Sorensen-Dice",
-	"QGrams":                "Q-Gram",
+var SimilarityTypeMap = map[Algorithm]string{
+	Levenshtein:           "Levenshtein",
+	DamerauLevenshtein:    "Damerau-Levenshtein",
+	OSADamerauLevenshtein: "OSA Damerau-Levenshtein",
+	Lcs:                   "LCS",
+	Hamming:               "Hamming",
+	Jaro:                  "Jaro",
+	JaroWinkler:           "Jaro-Winkler",
+	Cosine:                "Cosine",
+	Jaccard:               "Jaccard",
+	SorensenDice:          "Sorensen-Dice",
+	QGram:                 "Q-Gram",
 }
 
 // SimilarityResult represents the result of a similarity computation between two strings.
@@ -71,20 +71,20 @@ func (sr *SimilarityResult) Print(v bool) {
 	if v {
 		if sr.err != nil {
 			fmt.Printf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
-				SimilarityTypeMap[sr.algorithm], sr.string1, sr.string2, sr.err.Error())
+				sr.algorithm, sr.string1, sr.string2, sr.err.Error())
 			return
 		} else {
 			fmt.Printf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
-				SimilarityTypeMap[sr.algorithm], sr.string1, sr.string2, *sr.similarity)
+				sr.algorithm, sr.string1, sr.string2, *sr.similarity)
 			return
 		}
 	} else {
 		if sr.err != nil {
 			fmt.Printf("%s Error: %s\n",
-				SimilarityTypeMap[sr.algorithm], sr.err.Error())
+				sr.algorithm, sr.err.Error())
 			return
 		} else {
-			fmt.Printf("%s: %f\n", SimilarityTypeMap[sr.algorithm], *sr.similarity)
+			fmt.Printf("%s: %f\n", sr.algorithm, *sr.similarity)
 			return
 		}
 	}

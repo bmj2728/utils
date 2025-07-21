@@ -10,6 +10,8 @@ type StringBuilder struct {
 	similarities   *[]SimilarityResult
 }
 
+// TODO update to utilize ComparisonManager
+
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
 	if sb.err != nil {

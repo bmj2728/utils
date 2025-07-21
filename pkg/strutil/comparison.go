@@ -155,8 +155,8 @@ func ShingleSlice(s string, k int) *[]string {
 	return shingleSlice(s, k)
 }
 
-// Similarity computes the similarity score between two strings using a specified algorithm from AlgorithmMap.
-// Returns a SimilarityResult containing the score and any error encountered during the computation.
-func Similarity(s1, s2 string, algorithm string) *SimilarityResult {
+// Similarity computes the similarity between two input strings using the specified algorithm.
+// Returns a SimilarityResult containing the similarity score or any error encountered during computation.
+func Similarity(s1, s2 string, algorithm Algorithm) *SimilarityResult {
 	return similarity(s1, s2, algorithm)
 }
