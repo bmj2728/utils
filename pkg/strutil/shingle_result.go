@@ -2,6 +2,22 @@ package strutil
 
 import "fmt"
 
+// ShingleResultType is an enumerated type used to represent the type of shingle result, such as map or slice.
+type ShingleResultType int
+
+// ShinglesMap represents a result type where shingles are stored in a map.
+// ShinglesSlice represents a result type where shingles are stored in a slice.
+const (
+	ShinglesMap ShingleResultType = iota
+	ShinglesSlice
+)
+
+// ShingleResultTypeMap maps ShingleResultType constants to their corresponding descriptive string representations.
+var ShingleResultTypeMap = map[ShingleResultType]string{
+	ShinglesMap:   "Shingle Map",
+	ShinglesSlice: "Shingle Slice",
+}
+
 // ShingleResult defines an interface for managing and retrieving shingle-related results and their metadata.
 // GetType retrieves the shingle result type, indicating the structure of the result such as map or slice.
 // GetInput retrieves the input string used to generate the shingle result.

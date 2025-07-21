@@ -2,6 +2,21 @@ package strutil
 
 import "fmt"
 
+// SimilarityTypeMap maps edlib.Algorithm constants to their corresponding string representations for display purposes.
+var SimilarityTypeMap = map[string]string{
+	"Levenshtein":           "Levenshtein",
+	"DamerauLevenshtein":    "Damerau-Levenshtein",
+	"OSADamerauLevenshtein": "OSA Damerau-Levenshtein",
+	"Lcs":                   "LCS",
+	"Hamming":               "Hamming",
+	"Jaro":                  "Jaro",
+	"JaroWinkler":           "Jaro-Winkler",
+	"Cosine":                "Cosine",
+	"Jaccard":               "Jaccard",
+	"SorensenDice":          "Sorensen-Dice",
+	"QGrams":                "Q-Gram",
+}
+
 // SimilarityResult represents the result of a similarity computation between two strings.
 type SimilarityResult struct {
 	algorithm  string   // the algorithm used

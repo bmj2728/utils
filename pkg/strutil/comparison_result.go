@@ -41,8 +41,6 @@ const (
 	QGramSim
 )
 
-// ComparisonResultTypeMap maps ComparisonResultType constants to their
-// corresponding descriptive string representations.
 var ComparisonResultTypeMap = map[ComparisonResultType]string{
 	LCSLength:      "LCS Length",
 	LCSDist:        "LCS Distance",
