@@ -76,7 +76,21 @@ type ComparisonResultInt struct {
 	string1        string
 	string2        string
 	score          *int
-	error          error
+	err            error
+}
+
+func NewComparisonResultInt(comparisonType ComparisonResultType,
+	string1 string,
+	string2 string,
+	score *int,
+	error error) *ComparisonResultInt {
+	return &ComparisonResultInt{
+		comparisonType: comparisonType,
+		string1:        string1,
+		string2:        string2,
+		score:          score,
+		err:            error,
+	}
 }
 
 // GetType returns the ComparisonResultType associated with the ComparisonResultInt instance.
@@ -101,7 +115,7 @@ func (c ComparisonResultInt) GetStrings() (string, string) {
 
 // GetError returns the error associated with the ComparisonResultInt, if any.
 func (c ComparisonResultInt) GetError() error {
-	return c.error
+	return c.err
 }
 
 // Print outputs the comparison result in a detailed or concise format depending on the boolean parameter provided.
@@ -127,6 +141,20 @@ type ComparisonResultFloat struct {
 	string2        string
 	score          *float32
 	err            error
+}
+
+func NewComparisonResultFloat(comparisonType ComparisonResultType,
+	string1 string,
+	string2 string,
+	score *float32,
+	error error) *ComparisonResultFloat {
+	return &ComparisonResultFloat{
+		comparisonType: comparisonType,
+		string1:        string1,
+		string2:        string2,
+		score:          score,
+		err:            error,
+	}
 }
 
 // GetType returns the type of comparison as a value of ComparisonResultType.
