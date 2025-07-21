@@ -19,7 +19,7 @@ func damerauLevenshteinDistance(str1, str2 string) int {
 	return edlib.DamerauLevenshteinDistance(str1, str2)
 }
 
-// osaDamerauLevenshteinDistance calculates the Damerau-Levenshtein distance between str1 and str2,
+// osaDamerauLevenshteinDistance calculates the Damerau-Levenshtein distance between string1 and string2,
 // considering adjacent transpositions.
 //
 // This optimal string alignment variant of damerauLevenshteinDistance
@@ -28,7 +28,7 @@ func osaDamerauLevenshteinDistance(str1, str2 string) int {
 	return edlib.OSADamerauLevenshteinDistance(str1, str2)
 }
 
-// lcs returns the length of the longest common subsequence between two input strings, str1 and str2.
+// lcs returns the length of the longest common subsequence between two input strings, string1 and string2.
 func lcs(str1 string, str2 string) int {
 	return edlib.LCS(str1, str2)
 }

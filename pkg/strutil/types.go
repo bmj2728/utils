@@ -57,6 +57,8 @@ var (
 	CamelCaseRegex = regexp.MustCompile(`([a-z0-9])([A-Z])|([A-Z])([A-Z][a-z])`)
 )
 
+// AlgorithmMap is a mapping of algorithm names as keys to their
+// corresponding edlib.Algorithm implementations as values.
 var AlgorithmMap = map[string]edlib.Algorithm{
 	"Levenshtein":           edlib.Levenshtein,
 	"DamerauLevenshtein":    edlib.DamerauLevenshtein,
@@ -69,4 +71,55 @@ var AlgorithmMap = map[string]edlib.Algorithm{
 	"Jaccard":               edlib.Jaccard,
 	"SorensenDice":          edlib.SorensenDice,
 	"QGrams":                edlib.Qgram,
+}
+
+// SimilarityTypeMap maps edlib.Algorithm constants to their corresponding string representations for display purposes.
+var SimilarityTypeMap = map[string]string{
+	"Levenshtein":           "Levenshtein",
+	"DamerauLevenshtein":    "Damerau-Levenshtein",
+	"OSADamerauLevenshtein": "OSA Damerau-Levenshtein",
+	"Lcs":                   "LCS",
+	"Hamming":               "Hamming",
+	"Jaro":                  "Jaro",
+	"JaroWinkler":           "Jaro-Winkler",
+	"Cosine":                "Cosine",
+	"Jaccard":               "Jaccard",
+	"SorensenDice":          "Sorensen-Dice",
+	"QGrams":                "Q-Gram",
+}
+
+// ShingleResultType is an enumerated type used to represent the type of shingle result, such as map or slice.
+type ShingleResultType int
+
+// ShinglesMap represents a result type where shingles are stored in a map.
+// ShinglesSlice represents a result type where shingles are stored in a slice.
+const (
+	ShinglesMap ShingleResultType = iota
+	ShinglesSlice
+)
+
+// ShingleResultTypeMap maps ShingleResultType constants to their corresponding descriptive string representations.
+var ShingleResultTypeMap = map[ShingleResultType]string{
+	ShinglesMap:   "Shingle Map",
+	ShinglesSlice: "Shingle Slice",
+}
+
+// LCSResultType represents an enumerated type used to define different
+// result types for Longest Common Subsequence calculations.
+type LCSResultType int
+
+// LCSBacktrackWord indicates backtracking for a single LCS word result.
+// LCSBacktrackWordAll indicates backtracking for all LCS word results.
+// LCSDiffSlice represents an LCS result in the form of a diff slice.
+const (
+	LCSBacktrackWord LCSResultType = iota
+	LCSBacktrackWordAll
+	LCSDiffSlice
+)
+
+// LCSResultTypeMap maps LCSResultType constants to their corresponding string representations.
+var LCSResultTypeMap = map[LCSResultType]string{
+	LCSBacktrackWord:    "LCS Backtrack",
+	LCSBacktrackWordAll: "LCS Backtrack All",
+	LCSDiffSlice:        "LCS Diff",
 }
