@@ -233,9 +233,9 @@ func shingleSlice(s string, k int) *[]string {
 func similarity(s1, s2 string, algorithm Algorithm) *SimilarityResult {
 	sim, err := edlib.StringsSimilarity(s1, s2, edlib.Algorithm(algorithm))
 	if err != nil {
-		return NewSimilarityResult(algorithm.String(), s1, s2, nil, err)
+		return NewSimilarityResult(algorithm, s1, s2, nil, err)
 	}
-	return NewSimilarityResult(algorithm.String(), s1, s2, &sim, err)
+	return NewSimilarityResult(algorithm, s1, s2, &sim, err)
 }
 
 // TODO update functions to return result objects

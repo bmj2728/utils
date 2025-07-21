@@ -2,8 +2,6 @@ package strutil
 
 import (
 	"regexp"
-
-	"github.com/hbollon/go-edlib"
 )
 
 //// PhoneFormat represents the enumerated type for different phone number formatting styles.
@@ -55,24 +53,4 @@ var (
 	// CamelCaseRegex is a regular expression used to identify transitions between lowercase
 	// and uppercase characters or consecutive capitals in camelCase or PascalCase strings.
 	CamelCaseRegex = regexp.MustCompile(`([a-z0-9])([A-Z])|([A-Z])([A-Z][a-z])`)
-)
-
-type Algorithm edlib.Algorithm
-
-func (a Algorithm) String() string {
-	return SimilarityTypeMap[a]
-}
-
-const (
-	Levenshtein           Algorithm = Algorithm(edlib.Levenshtein)
-	DamerauLevenshtein              = Algorithm(edlib.DamerauLevenshtein)
-	OSADamerauLevenshtein           = Algorithm(edlib.OSADamerauLevenshtein)
-	Lcs                             = Algorithm(edlib.Lcs)
-	Hamming                         = Algorithm(edlib.Hamming)
-	Jaro                            = Algorithm(edlib.Jaro)
-	JaroWinkler                     = Algorithm(edlib.JaroWinkler)
-	Cosine                          = Algorithm(edlib.Cosine)
-	Jaccard                         = Algorithm(edlib.Jaccard)
-	SorensenDice                    = Algorithm(edlib.SorensenDice)
-	QGram                           = Algorithm(edlib.Qgram)
 )

@@ -10,6 +10,10 @@ type ComparisonResultScore interface {
 // ComparisonResultType represents various types of comparison results for string similarity and distance measurements.
 type ComparisonResultType int
 
+func (c ComparisonResultType) String() string {
+	return ComparisonResultTypeMap[c]
+}
+
 // LCSLength represents the comparison result type using Longest Common Subsequence length.
 // LCSDist represents the comparison result type using Longest Common Subsequence distance.
 // LevDist represents the comparison result type using Levenshtein distance.

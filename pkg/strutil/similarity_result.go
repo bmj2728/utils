@@ -1,9 +1,46 @@
 package strutil
 
-import "fmt"
+import (
+	"fmt"
 
-// SimilarityTypeMap maps edlib.Algorithm constants to their corresponding string representations for display purposes.
-var SimilarityTypeMap = map[Algorithm]string{
+	"github.com/hbollon/go-edlib"
+)
+
+// Algorithm represents a type of string similarity or distance algorithm used for comparison.
+type Algorithm edlib.Algorithm
+
+// String returns the string representation of the Algorithm type based on the corresponding value in AlgorithmTypeMap.
+func (a Algorithm) String() string {
+	return AlgorithmTypeMap[a]
+}
+
+// Levenshtein represents the Levenshtein distance algorithm for string similarity measurement.
+// DamerauLevenshtein represents the Damerau-Levenshtein algorithm for string similarity measurement.
+// OSADamerauLevenshtein represents the Optimal String Alignment (OSA) Damerau-Levenshtein algorithm.
+// Lcs represents the Longest Common Subsequence algorithm for string similarity measurement.
+// Hamming represents the Hamming distance algorithm for string similarity measurement.
+// Jaro represents the Jaro distance algorithm for string similarity measurement.
+// JaroWinkler represents the Jaro-Winkler distance algorithm for string similarity measurement.
+// Cosine represents the Cosine similarity algorithm used for vector-based string comparison.
+// Jaccard represents the Jaccard similarity algorithm for set-based string comparison.
+// SorensenDice represents the Sørensen-Dice coefficient for string similarity measurement.
+// QGram represents the Q-Gram algorithm for string similarity measurement.
+const (
+	Levenshtein           = Algorithm(edlib.Levenshtein)
+	DamerauLevenshtein    = Algorithm(edlib.DamerauLevenshtein)
+	OSADamerauLevenshtein = Algorithm(edlib.OSADamerauLevenshtein)
+	Lcs                   = Algorithm(edlib.Lcs)
+	Hamming               = Algorithm(edlib.Hamming)
+	Jaro                  = Algorithm(edlib.Jaro)
+	JaroWinkler           = Algorithm(edlib.JaroWinkler)
+	Cosine                = Algorithm(edlib.Cosine)
+	Jaccard               = Algorithm(edlib.Jaccard)
+	SorensenDice          = Algorithm(edlib.SorensenDice)
+	QGram                 = Algorithm(edlib.Qgram)
+)
+
+// AlgorithmTypeMap maps edlib.Algorithm constants to their corresponding string representations for display purposes.
+var AlgorithmTypeMap = map[Algorithm]string{
 	Levenshtein:           "Levenshtein",
 	DamerauLevenshtein:    "Damerau-Levenshtein",
 	OSADamerauLevenshtein: "OSA Damerau-Levenshtein",
@@ -19,15 +56,19 @@ var SimilarityTypeMap = map[Algorithm]string{
 
 // SimilarityResult represents the result of a similarity computation between two strings.
 type SimilarityResult struct {
-	algorithm  string   // the algorithm used
-	string1    string   // input string/string builder value
-	string2    string   // comparison value
-	similarity *float32 // similarity result
-	err        error    // error if it occurred
+	algorithm  Algorithm // the algorithm used
+	string1    string    // input string/string builder value
+	string2    string    // comparison value
+	similarity *float32  // similarity result
+	err        error     // error if it occurred
 }
 
 // NewSimilarityResult initializes and returns a new SimilarityResult instance with the provided parameters.
-func NewSimilarityResult(algorithm string, str1 string, str2 string, similarity *float32, err error) *SimilarityResult {
+func NewSimilarityResult(algorithm Algorithm,
+	str1 string,
+	str2 string,
+	similarity *float32,
+	err error) *SimilarityResult {
 	return &SimilarityResult{
 		algorithm:  algorithm,
 		string1:    str1,
@@ -37,9 +78,14 @@ func NewSimilarityResult(algorithm string, str1 string, str2 string, similarity 
 	}
 }
 
-// GetAlgorithm retrieves the algorithm name used in the similarity computation.
-func (sr *SimilarityResult) GetAlgorithm() string {
+// GetAlgorithm returns the algorithm used for the similarity computation.
+func (sr *SimilarityResult) GetAlgorithm() Algorithm {
 	return sr.algorithm
+}
+
+// GetAlgorithmName returns the string representation of the algorithm used in the similarity computation.
+func (sr *SimilarityResult) GetAlgorithmName() string {
+	return sr.algorithm.String()
 }
 
 // GetString1 retrieves the first string used in the similarity comparison.
@@ -71,20 +117,20 @@ func (sr *SimilarityResult) Print(v bool) {
 	if v {
 		if sr.err != nil {
 			fmt.Printf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
-				sr.algorithm, sr.string1, sr.string2, sr.err.Error())
+				sr.algorithm.String(), sr.string1, sr.string2, sr.err.Error())
 			return
 		} else {
 			fmt.Printf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
-				sr.algorithm, sr.string1, sr.string2, *sr.similarity)
+				sr.algorithm.String(), sr.string1, sr.string2, *sr.similarity)
 			return
 		}
 	} else {
 		if sr.err != nil {
 			fmt.Printf("%s Error: %s\n",
-				sr.algorithm, sr.err.Error())
+				sr.algorithm.String(), sr.err.Error())
 			return
 		} else {
-			fmt.Printf("%s: %f\n", sr.algorithm, *sr.similarity)
+			fmt.Printf("%s: %f\n", sr.algorithm.String(), *sr.similarity)
 			return
 		}
 	}
