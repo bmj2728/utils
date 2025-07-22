@@ -163,11 +163,11 @@ func (smr SimilarityResultsMap) Print(v bool) {
 }
 
 // Add inserts or updates a SimilarityResult in the SimilarityResultsMap based on its algorithm and comparison word.
-func (smr SimilarityResultsMap) Add(result *SimilarityResult) {
+func (smr SimilarityResultsMap) Add(result SimilarityResult) {
 	// if there's not a map for this algorithm, add one
 	if smr[result.GetAlgorithm()] == nil {
 		smr[result.GetAlgorithm()] = make(map[string]*SimilarityResult)
 	}
 	// add or update similarity for this comparison word
-	smr[result.GetAlgorithm()][result.GetString2()] = result
+	smr[result.GetAlgorithm()][result.GetString2()] = &result
 }

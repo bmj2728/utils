@@ -1161,7 +1161,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Levenshtein",
+				algorithm:  Levenshtein,
 				similarity: &val1,
 				err:        nil,
 			}},
@@ -1172,7 +1172,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Levenshtein",
+				algorithm:  Levenshtein,
 				similarity: &val2,
 				err:        nil,
 			}},
@@ -1183,7 +1183,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Damerau-Levenshtein",
+				algorithm:  DamerauLevenshtein,
 				similarity: &val3,
 				err:        nil,
 			}},
@@ -1194,7 +1194,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Damerau-Levenshtein",
+				algorithm:  DamerauLevenshtein,
 				similarity: &val4,
 				err:        nil,
 			}},
@@ -1205,7 +1205,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "OSA Damerau-Levenshtein",
+				algorithm:  OSADamerauLevenshtein,
 				similarity: &val5,
 				err:        nil,
 			}},
@@ -1216,7 +1216,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "OSA Damerau-Levenshtein",
+				algorithm:  OSADamerauLevenshtein,
 				similarity: &val6,
 				err:        nil,
 			}},
@@ -1227,7 +1227,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "LCS",
+				algorithm:  Lcs,
 				similarity: &val7,
 				err:        nil,
 			}},
@@ -1238,7 +1238,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "LCS",
+				algorithm:  Lcs,
 				similarity: &val8,
 				err:        nil,
 			}},
@@ -1249,7 +1249,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Hamming",
+				algorithm:  Hamming,
 				similarity: &val9,
 				err:        nil,
 			}},
@@ -1260,7 +1260,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Hamming",
+				algorithm:  Hamming,
 				similarity: &val10,
 				err:        nil,
 			}},
@@ -1271,7 +1271,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Jaro",
+				algorithm:  Jaro,
 				similarity: &val11,
 				err:        nil,
 			}},
@@ -1282,7 +1282,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Jaro",
+				algorithm:  Jaro,
 				similarity: &val12,
 				err:        nil,
 			}},
@@ -1293,7 +1293,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Jaro-Winkler",
+				algorithm:  JaroWinkler,
 				similarity: &val13,
 				err:        nil,
 			}},
@@ -1304,7 +1304,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Jaro-Winkler",
+				algorithm:  JaroWinkler,
 				similarity: &val14,
 				err:        nil,
 			}},
@@ -1315,7 +1315,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Cosine",
+				algorithm:  Cosine,
 				similarity: &val15,
 				err:        nil,
 			}},
@@ -1326,7 +1326,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Cosine",
+				algorithm:  Cosine,
 				similarity: &val16,
 				err:        nil,
 			}},
@@ -1337,7 +1337,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Jaccard",
+				algorithm:  Jaccard,
 				similarity: &val17,
 				err:        nil,
 			}},
@@ -1348,7 +1348,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Jaccard",
+				algorithm:  Jaccard,
 				similarity: &val18,
 				err:        nil,
 			}},
@@ -1359,7 +1359,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Sorensen-Dice",
+				algorithm:  SorensenDice,
 				similarity: &val19,
 				err:        nil,
 			}},
@@ -1370,7 +1370,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Sorensen-Dice",
+				algorithm:  SorensenDice,
 				similarity: &val20,
 				err:        nil,
 			}},
@@ -1381,7 +1381,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello World",
 				string2:    "Hello World",
-				algorithm:  "Q-Gram",
+				algorithm:  QGram,
 				similarity: &val21,
 				err:        nil,
 			}},
@@ -1392,7 +1392,7 @@ func TestSimilarity(t *testing.T) {
 			&SimilarityResult{
 				string1:    "Hello",
 				string2:    "World",
-				algorithm:  "Q-Gram",
+				algorithm:  QGram,
 				similarity: &val22,
 				err:        nil,
 			}},
@@ -1402,8 +1402,11 @@ func TestSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := similarity(tt.input1, tt.input2, tt.algorithm)
 			result := Similarity(tt.input1, tt.input2, tt.algorithm)
-			builderResult := *New(tt.input1).Similarity(tt.input2, tt.algorithm).similarities
-			brSim := builderResult[0]
+			brSim := New(tt.input1).
+				WithComparisonManager().
+				Similarity(tt.input2, tt.algorithm).
+				comparisonManager.
+				SimilarityResults[tt.algorithm][tt.input2]
 			if helperResult.algorithm != tt.expected.algorithm ||
 				helperResult.string1 != tt.expected.string1 ||
 				helperResult.string2 != tt.expected.string2 ||

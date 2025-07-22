@@ -4,10 +4,11 @@ import "fmt"
 
 // StringBuilder Type & Core Methods
 type StringBuilder struct {
-	value          string
-	err            error
-	comparisonData *ComparisonData
-	similarities   *[]SimilarityResult
+	value             string
+	err               error
+	comparisonManager *ComparisonManager
+	comparisonData    *ComparisonData
+	similarities      *[]SimilarityResult
 }
 
 // TODO update to utilize ComparisonManager
@@ -32,9 +33,20 @@ func (sb *StringBuilder) Error() error {
 	return sb.err
 }
 
+// WithComparisonManager initializes and sets a comparison manager to the StringBuilder
+// and returns the updated instance.
+func (sb *StringBuilder) WithComparisonManager() *StringBuilder {
+	sb.comparisonManager = NewComparisonManager()
+	return sb
+}
+
 // ComparisonData returns the comparisonData object stored in the StringBuilder.
 func (sb *StringBuilder) ComparisonData() *ComparisonData {
 	return sb.comparisonData
+}
+
+func (sb *StringBuilder) ComparisonManager() *ComparisonManager {
+	return sb.comparisonManager
 }
 
 // Build constructs the final string from the StringBuilder and returns it along with any encountered error.

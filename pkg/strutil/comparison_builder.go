@@ -293,7 +293,6 @@ func (sb *StringBuilder) Similarity(other string, algorithm Algorithm) *StringBu
 		return sb
 	}
 	sr := similarity(sb.value, other, algorithm)
-	newSims := append(*sb.similarities, *sr)
-	sb.similarities = &newSims
+	sb.ComparisonManager().AddSimilarityResult(*sr)
 	return sb
 }
