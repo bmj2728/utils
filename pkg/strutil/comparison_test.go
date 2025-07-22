@@ -965,7 +965,7 @@ func TestQgramDistanceCustomNgramBuilder(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.input1 == nil {
-				tt.input1 = New("hello").Shingle(2)
+				tt.input1 = New("hello").WithComparisonManager().Shingle(2)
 			}
 			builderResult := tt.input1.QgramDistanceCustomNgram(tt.input2)
 			if *builderResult.ComparisonData().GetQGramDistCustom() != tt.expected {

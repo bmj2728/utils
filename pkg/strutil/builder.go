@@ -35,7 +35,7 @@ func (sb *StringBuilder) Error() error {
 
 // WithComparisonManager initializes a new ComparisonManager if it doesn't already exist and assigns it to the builder.
 func (sb *StringBuilder) WithComparisonManager() *StringBuilder {
-	if sb.comparisonManager != nil {
+	if sb.comparisonManager == nil {
 		sb.comparisonManager = NewComparisonManager()
 	}
 	return sb

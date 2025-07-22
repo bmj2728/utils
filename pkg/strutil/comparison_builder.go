@@ -237,16 +237,19 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int) *Str
 	if sb.err != nil {
 		return sb
 	}
-	if sb.comparisonData.GetShingle() == nil {
-		var k int
-		for n := range nmapOther {
-			k = len(n)
-			break
-		}
+	var k int
+	for n := range nmapOther {
+		k = len(n)
+		break
+	}
+	if sb.comparisonManager == nil || sb.comparisonManager.ShingleData[ShinglesMap][k] == nil {
 		return sb.WithComparisonManager().Shingle(k).QgramDistanceCustomNgram(nmapOther)
 	} else {
-		qdc := qgramDistanceCustomNgram(*sb.comparisonData.GetShingle(), nmapOther)
-		sb.comparisonData.SetQGramDistCustom(&qdc)
+		sr := sb.comparisonManager.ShingleData[ShinglesMap][k]
+		if shingleMap, ok := (*sr).(*ShingleMapResult); ok {
+			qdc := qgramDistanceCustomNgram(*shingleMap.shingles, nmapOther)
+			sb.comparisonData.SetQGramDistCustom(&qdc)
+		}
 	}
 	return sb
 }
