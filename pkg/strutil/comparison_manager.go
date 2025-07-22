@@ -18,6 +18,27 @@ func NewComparisonManager() *ComparisonManager {
 	}
 }
 
+// GetComparisonResults retrieves the map of comparison results stored in the ComparisonManager instance.
+func (cm *ComparisonManager) GetComparisonResults() ComparisonResultsMap {
+	return cm.ComparisonResults
+}
+
+// GetSimilarityResults retrieves the SimilarityResultsMap, containing similarity
+// results organized by algorithm and comparison string.
+func (cm *ComparisonManager) GetSimilarityResults() SimilarityResultsMap {
+	return cm.SimilarityResults
+}
+
+// GetShingleData retrieves the ShingleResultsMap from the ComparisonManager instance.
+func (cm *ComparisonManager) GetShingleData() ShingleResultsMap {
+	return cm.ShingleData
+}
+
+// GetLCSData retrieves the LCSResultsMap containing LCS results organized by type and input string.
+func (cm *ComparisonManager) GetLCSData() LCSResultsMap {
+	return cm.LCSData
+}
+
 // AddComparisonResult inserts a ComparisonResult into the ComparisonResultsMap, organizing it by type and first string.
 func (cm *ComparisonManager) AddComparisonResult(result ComparisonResult) {
 	cm.ComparisonResults.Add(result)

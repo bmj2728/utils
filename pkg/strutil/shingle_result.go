@@ -47,8 +47,8 @@ type ShingleSliceResult struct {
 	err        error
 }
 
-// NewShingleResultSlice initializes and returns a pointer to a ShingleSliceResult with provided parameters.
-func NewShingleResultSlice(resultType ShingleResultType,
+// NewShingleSliceResult initializes and returns a pointer to a ShingleSliceResult with provided parameters.
+func NewShingleSliceResult(resultType ShingleResultType,
 	input string,
 	ngram int,
 	shingles *[]string,
@@ -136,8 +136,8 @@ type ShingleMapResult struct {
 	err        error
 }
 
-// NewShingleResultMap creates and returns a new instance of ShingleMapResult with the provided parameters.
-func NewShingleResultMap(resultType ShingleResultType,
+// NewShingleMapResult creates and returns a new instance of ShingleMapResult with the provided parameters.
+func NewShingleMapResult(resultType ShingleResultType,
 	input string,
 	ngram int,
 	shingles *map[string]int,

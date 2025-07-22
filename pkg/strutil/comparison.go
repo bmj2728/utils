@@ -144,14 +144,14 @@ func QgramSimilarity(s1, s2 string, q int) *float32 {
 }
 
 // Shingle generates k-shingles from the input string and returns a pointer to a map with shingles and their counts.
-func Shingle(s string, k int) *map[string]int {
+func Shingle(s string, k int) *ShingleMapResult {
 	return shingle(s, k)
 }
 
 // ShingleSlice generates k-length shingles (substrings) from the input string and
 // returns them as a pointer to a string slice.
 // Returns nil if k is less than 1.
-func ShingleSlice(s string, k int) *[]string {
+func ShingleSlice(s string, k int) *ShingleSliceResult {
 	return shingleSlice(s, k)
 }
 

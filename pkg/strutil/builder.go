@@ -58,6 +58,6 @@ func (sb *StringBuilder) Build() (string, error) {
 }
 
 // Result returns the current value of the StringBuilder along with any associated error.
-func (sb *StringBuilder) Result() (string, *ComparisonData, error) {
-	return sb.value, sb.comparisonData, sb.err
+func (sb *StringBuilder) Result() (string, *ComparisonManager, error) {
+	return sb.value, sb.comparisonManager, sb.err
 }

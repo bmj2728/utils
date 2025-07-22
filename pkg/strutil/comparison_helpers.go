@@ -209,23 +209,25 @@ func qgramSimilarity(s1, s2 string, q int) *float32 {
 // as a pointer to a map of shingles and their counts.
 // Takes `s` as the input string and `k` as the size of each shingle.
 // Returns nil if `k` is less than 1.
-func shingle(s string, k int) *map[string]int {
+func shingle(s string, k int) *ShingleMapResult {
 	if k < 1 {
-		return nil
+		return NewShingleMapResult(ShinglesMap, s, k, nil, ErrShingleLengthOutOfRange)
 	}
 	shingle := edlib.Shingle(s, k)
-	return &shingle
+	smr := NewShingleMapResult(ShinglesMap, s, k, &shingle, nil)
+	return smr
 }
 
 // shingleSlice generates k-length shingles (substrings) from the input string and
 // returns them as a pointer to a string slice.
 // Returns nil if k is less than 1.
-func shingleSlice(s string, k int) *[]string {
+func shingleSlice(s string, k int) *ShingleSliceResult {
 	if k < 1 {
-		return nil
+		return NewShingleSliceResult(ShinglesSlice, s, k, nil, ErrShingleLengthOutOfRange)
 	}
 	shingle := edlib.ShingleSlice(s, k)
-	return &shingle
+	slr := NewShingleSliceResult(ShinglesSlice, s, k, &shingle, nil)
+	return slr
 }
 
 // similarity calculates the similarity between two strings using

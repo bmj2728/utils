@@ -1050,25 +1050,40 @@ func TestShingle(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := shingle(tt.input, tt.k)
 			result := Shingle(tt.input, tt.k)
-			builderResult := New(tt.input).Shingle(tt.k).comparisonData.GetShingle()
 			for k, v := range tt.expected {
-				if (*helperResult)[k] == 0 || (*result)[k] == 0 || (*builderResult)[k] == 0 {
-					t.Errorf("Shingle - expected %d - got %d / %d / %d",
+				if (*helperResult.shingles)[k] == 0 || (*result.shingles)[k] == 0 {
+					t.Errorf("Shingle 0 - expected %d - got %d / %d",
 						v,
-						(*helperResult)[k],
-						(*result)[k],
-						(*builderResult)[k],
+						(*helperResult.shingles)[k],
+						(*result.shingles)[k],
 					)
 				}
-				if (*helperResult)[k] != v ||
-					(*result)[k] != v ||
-					(*builderResult)[k] != v {
-					t.Errorf("Shingle - expected %d - got %d / %d / %d",
+				if (*helperResult.shingles)[k] != v ||
+					(*result.shingles)[k] != v {
+					t.Errorf("Shingle val - expected %d - got %d / %d",
 						v,
-						(*helperResult)[k],
-						(*result)[k],
-						(*builderResult)[k],
+						(*helperResult.shingles)[k],
+						(*result.shingles)[k],
 					)
+				}
+				builderResult := New(tt.input).
+					WithComparisonManager().
+					Shingle(tt.k).
+					ComparisonManager().
+					ShingleData[ShinglesMap][tt.k]
+				if brMap, ok := (*builderResult).(*ShingleMapResult); ok {
+					if (*brMap.shingles)[k] == 0 || (*brMap.shingles)[k] != v {
+						t.Errorf("Shingle b0 - expected %d - got %d",
+							v,
+							(*brMap.shingles)[k],
+						)
+					}
+					if (*brMap.shingles)[k] != v {
+						t.Errorf("Shingle bval - expected %d - got %d",
+							v,
+							(*brMap.shingles)[k],
+						)
+					}
 				}
 			}
 		})
@@ -1109,14 +1124,21 @@ func TestShingleSlice(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := shingleSlice(tt.input, tt.k)
 			result := ShingleSlice(tt.input, tt.k)
-			builderResult := New(tt.input).ShingleSlice(tt.k).comparisonData.GetShingleSlice()
-			if !CompareStringSlices(*helperResult, tt.expected, false) ||
-				!CompareStringSlices(*result, tt.expected, false) ||
-				!CompareStringSlices(*builderResult, tt.expected, false) {
+			if !CompareStringSlices(*helperResult.shingles, tt.expected, false) ||
+				!CompareStringSlices(*result.shingles, tt.expected, false) {
 				t.Errorf("ShingleSlice - expected %v - got %v",
 					tt.expected,
 					*helperResult,
 				)
+			}
+			builderResult := New(tt.input).ShingleSlice(tt.k).ComparisonManager().ShingleData[ShinglesSlice][tt.k]
+			if brSlice, ok := (*builderResult).(*ShingleSliceResult); ok {
+				if !CompareStringSlices(*brSlice.shingles, tt.expected, false) {
+					t.Errorf("ShingleSlice - expected %v - got %v",
+						tt.expected,
+						*brSlice,
+					)
+				}
 			}
 		})
 	}

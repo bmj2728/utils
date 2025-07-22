@@ -269,7 +269,7 @@ func (sb *StringBuilder) Shingle(k int) *StringBuilder {
 		return sb
 	}
 	shingle := shingle(sb.value, k)
-	sb.comparisonData.SetShingle(shingle)
+	sb.comparisonManager.AddShingleResult(shingle)
 	return sb
 }
 
@@ -280,7 +280,7 @@ func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 		return sb
 	}
 	shingle := shingleSlice(sb.value, k)
-	sb.comparisonData.SetShingleSlice(shingle)
+	sb.comparisonManager.AddShingleResult(shingle)
 	return sb
 }
 
