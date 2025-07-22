@@ -33,10 +33,11 @@ func (sb *StringBuilder) Error() error {
 	return sb.err
 }
 
-// WithComparisonManager initializes and sets a comparison manager to the StringBuilder
-// and returns the updated instance.
+// WithComparisonManager initializes a new ComparisonManager if it doesn't already exist and assigns it to the builder.
 func (sb *StringBuilder) WithComparisonManager() *StringBuilder {
-	sb.comparisonManager = NewComparisonManager()
+	if sb.comparisonManager != nil {
+		sb.comparisonManager = NewComparisonManager()
+	}
 	return sb
 }
 

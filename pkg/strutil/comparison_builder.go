@@ -243,7 +243,7 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int) *Str
 			k = len(n)
 			break
 		}
-		return sb.Shingle(k).QgramDistanceCustomNgram(nmapOther)
+		return sb.WithComparisonManager().Shingle(k).QgramDistanceCustomNgram(nmapOther)
 	} else {
 		qdc := qgramDistanceCustomNgram(*sb.comparisonData.GetShingle(), nmapOther)
 		sb.comparisonData.SetQGramDistCustom(&qdc)
