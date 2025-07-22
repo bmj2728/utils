@@ -10,6 +10,7 @@ type ComparisonResultScore interface {
 // ComparisonResultType represents various types of comparison results for string similarity and distance measurements.
 type ComparisonResultType int
 
+// String returns the string representation of the ComparisonResultType value using the ComparisonResultTypeMap.
 func (c ComparisonResultType) String() string {
 	return ComparisonResultTypeMap[c]
 }
@@ -65,6 +66,7 @@ var ComparisonResultTypeMap = map[ComparisonResultType]string{
 // ComparisonResult defines an interface for comparing two strings and retrieving results, types, and errors.
 type ComparisonResult interface {
 	GetType() ComparisonResultType
+	GetTypeName() string
 	GetString1() string
 	GetString2() string
 	GetError() error
@@ -100,6 +102,11 @@ func (c ComparisonResultInt) GetType() ComparisonResultType {
 	return c.comparisonType
 }
 
+// GetTypeName retrieves the string representation of the comparison type for the ComparisonResultInt instance.
+func (c ComparisonResultInt) GetTypeName() string {
+	return c.comparisonType.String()
+}
+
 // GetString1 retrieves the first string (string1) associated with the ComparisonResultInt instance.
 func (c ComparisonResultInt) GetString1() string {
 	return c.string1
@@ -120,6 +127,11 @@ func (c ComparisonResultInt) GetError() error {
 	return c.err
 }
 
+// GetScoreInt retrieves the score of the comparison result as a pointer to an integer.
+func (c ComparisonResultInt) GetScoreInt() *int {
+	return c.score
+}
+
 // Print outputs the comparison result in a detailed or concise format depending on the boolean parameter provided.
 func (c ComparisonResultInt) Print(v bool) {
 	if v {
@@ -128,11 +140,6 @@ func (c ComparisonResultInt) Print(v bool) {
 	} else {
 		fmt.Printf("%s: %d\n", ComparisonResultTypeMap[c.comparisonType], *c.score)
 	}
-}
-
-// GetScoreInt retrieves the score of the comparison result as a pointer to an integer.
-func (c ComparisonResultInt) GetScoreInt() *int {
-	return c.score
 }
 
 // ComparisonResultFloat represents the result of a comparison operation,
@@ -164,6 +171,11 @@ func (c ComparisonResultFloat) GetType() ComparisonResultType {
 	return c.comparisonType
 }
 
+// GetTypeName returns the string representation of the comparison type from the comparisonType field.
+func (c ComparisonResultFloat) GetTypeName() string {
+	return c.comparisonType.String()
+}
+
 // GetString1 returns the first string (string1) stored in the ComparisonResultFloat instance.
 func (c ComparisonResultFloat) GetString1() string {
 	return c.string1
@@ -182,6 +194,11 @@ func (c ComparisonResultFloat) GetStrings() (string, string) {
 // Error returns the error encountered during the comparison, or nil if no error occurred.
 func (c ComparisonResultFloat) Error() error {
 	return c.err
+}
+
+// GetScoreFloat retrieves the score as a pointer to a float32 from the ComparisonResultFloat object.
+func (c ComparisonResultFloat) GetScoreFloat() *float32 {
+	return c.score
 }
 
 // Print outputs the comparison result or error based on verbosity. If v is true, detailed output is shown.
@@ -207,7 +224,15 @@ func (c ComparisonResultFloat) Print(v bool) {
 	}
 }
 
-// GetScoreFloat retrieves the score as a pointer to a float32 from the ComparisonResultFloat object.
-func (c ComparisonResultFloat) GetScoreFloat() *float32 {
-	return c.score
+type ComparisonResultsMap map[ComparisonResultType]map[string]*ComparisonResult
+
+func NewComparisonResultsMap() ComparisonResultsMap {
+	return make(map[ComparisonResultType]map[string]*ComparisonResult)
+}
+
+func (crm ComparisonResultsMap) Add(result ComparisonResult) {
+	if crm[result.GetType()] == nil {
+		crm[result.GetType()] = make(map[string]*ComparisonResult)
+	}
+	crm[result.GetType()][result.GetString1()] = &result
 }

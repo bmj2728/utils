@@ -6,6 +6,11 @@ import "fmt"
 // result types for Longest Common Subsequence calculations.
 type LCSResultType int
 
+// String returns the string representation for the corresponding LCSResultType using LCSResultTypeMap.
+func (l LCSResultType) String() string {
+	return LCSResultTypeMap[l]
+}
+
 // LCSBacktrackWord indicates backtracking for a single LCS word result.
 // LCSBacktrackWordAll indicates backtracking for all LCS word results.
 // LCSDiffSlice represents an LCS result in the form of a diff slice.
@@ -136,4 +141,20 @@ func (lcs *LCSResult) Print(v bool) {
 			}
 		}
 	}
+}
+
+// LCSResultsMap is a map that organizes LCSResult instances by their LCSResultType and a string identifier.
+type LCSResultsMap map[LCSResultType]map[string]*LCSResult
+
+// NewLCSResultsMap initializes and returns a new LCSResultsMap as an empty nested map.
+func NewLCSResultsMap() LCSResultsMap {
+	return make(map[LCSResultType]map[string]*LCSResult)
+}
+
+// Add inserts an LCSResult into the LCSResultsMap organized by result type and the first input string.
+func (lrm LCSResultsMap) Add(result LCSResult) {
+	if lrm[result.GetType()] == nil {
+		lrm[result.GetType()] = make(map[string]*LCSResult)
+	}
+	lrm[result.GetType()][result.GetString1()] = &result
 }

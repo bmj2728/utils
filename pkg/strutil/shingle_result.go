@@ -5,6 +5,11 @@ import "fmt"
 // ShingleResultType is an enumerated type used to represent the type of shingle result, such as map or slice.
 type ShingleResultType int
 
+// String returns the string representation of a ShingleResultType by looking it up in the ShingleResultTypeMap.
+func (s ShingleResultType) String() string {
+	return ShingleResultTypeMap[s]
+}
+
 // ShinglesMap represents a result type where shingles are stored in a map.
 // ShinglesSlice represents a result type where shingles are stored in a slice.
 const (
@@ -26,14 +31,15 @@ var ShingleResultTypeMap = map[ShingleResultType]string{
 // Print outputs the details of the shingle result or error based on the verbosity flag 'v'.
 type ShingleResult interface {
 	GetType() ShingleResultType
+	GetTypeName() string
 	GetInput() string
 	GetNgramLength() int
 	Error() error
 	Print(v bool)
 }
 
-// ShingleResultSlice represents the result of a shingle operation stored as a slice, encapsulating related metadata.
-type ShingleResultSlice struct {
+// ShingleSliceResult represents the result of a shingle operation stored as a slice, encapsulating related metadata.
+type ShingleSliceResult struct {
 	resultType ShingleResultType
 	input      string
 	ngram      int
@@ -41,13 +47,13 @@ type ShingleResultSlice struct {
 	err        error
 }
 
-// NewShingleResultSlice initializes and returns a pointer to a ShingleResultSlice with provided parameters.
+// NewShingleResultSlice initializes and returns a pointer to a ShingleSliceResult with provided parameters.
 func NewShingleResultSlice(resultType ShingleResultType,
 	input string,
 	ngram int,
 	shingles *[]string,
-	err error) *ShingleResultSlice {
-	return &ShingleResultSlice{
+	err error) *ShingleSliceResult {
+	return &ShingleSliceResult{
 		resultType: resultType,
 		input:      input,
 		ngram:      ngram,
@@ -56,33 +62,38 @@ func NewShingleResultSlice(resultType ShingleResultType,
 	}
 }
 
-// GetType returns the ShingleResultType associated with a ShingleResultSlice instance.
-func (s ShingleResultSlice) GetType() ShingleResultType {
+// GetType returns the ShingleResultType associated with a ShingleSliceResult instance.
+func (s ShingleSliceResult) GetType() ShingleResultType {
 	return s.resultType
 }
 
-// GetInput returns the input string associated with the ShingleResultSlice.
-func (s ShingleResultSlice) GetInput() string {
+// GetTypeName returns the string representation of the result type associated with the ShingleSliceResult instance.
+func (s ShingleSliceResult) GetTypeName() string {
+	return s.resultType.String()
+}
+
+// GetInput returns the input string associated with the ShingleSliceResult.
+func (s ShingleSliceResult) GetInput() string {
 	return s.input
 }
 
-// GetNgramLength returns the n-gram length associated with the ShingleResultSlice instance.
-func (s ShingleResultSlice) GetNgramLength() int {
+// GetNgramLength returns the n-gram length associated with the ShingleSliceResult instance.
+func (s ShingleSliceResult) GetNgramLength() int {
 	return s.ngram
 }
 
-// GetShinglesSlice returns a pointer to the slice of shingles contained in the ShingleResultSlice.
-func (s ShingleResultSlice) GetShinglesSlice() *[]string {
+// GetShinglesSlice returns a pointer to the slice of shingles contained in the ShingleSliceResult.
+func (s ShingleSliceResult) GetShinglesSlice() *[]string {
 	return s.shingles
 }
 
-// Error returns the error associated with the ShingleResultSlice, if any.
-func (s ShingleResultSlice) Error() error {
+// Error returns the error associated with the ShingleSliceResult, if any.
+func (s ShingleSliceResult) Error() error {
 	return s.err
 }
 
 // Print outputs shingle data or error information based on the verbose flag.
-func (s ShingleResultSlice) Print(v bool) {
+func (s ShingleSliceResult) Print(v bool) {
 	if v {
 		if s.err != nil {
 			fmt.Printf("Error processing %s\nInput: %s\nN-Gram Length: %d\nError: %s\n",
@@ -111,13 +122,13 @@ func (s ShingleResultSlice) Print(v bool) {
 	}
 }
 
-// ShingleResultMap is a struct that holds the results of generating shingles, including metadata and possible errors.
+// ShingleMapResult is a struct that holds the results of generating shingles, including metadata and possible errors.
 // resultType defines the type of shingle result, e.g., map or slice.
 // input holds the original string input used for generating shingles.
 // ngram specifies the length of n-grams used in shingle generation.
 // shingles is a pointer to a map containing shingles as keys and their frequencies as values.
 // err represents a potential error encountered during shingle generation.
-type ShingleResultMap struct {
+type ShingleMapResult struct {
 	resultType ShingleResultType
 	input      string
 	ngram      int
@@ -125,13 +136,13 @@ type ShingleResultMap struct {
 	err        error
 }
 
-// NewShingleResultMap creates and returns a new instance of ShingleResultMap with the provided parameters.
+// NewShingleResultMap creates and returns a new instance of ShingleMapResult with the provided parameters.
 func NewShingleResultMap(resultType ShingleResultType,
 	input string,
 	ngram int,
 	shingles *map[string]int,
-	err error) *ShingleResultMap {
-	return &ShingleResultMap{
+	err error) *ShingleMapResult {
+	return &ShingleMapResult{
 		resultType: resultType,
 		input:      input,
 		ngram:      ngram,
@@ -141,33 +152,38 @@ func NewShingleResultMap(resultType ShingleResultType,
 }
 
 // GetType returns the type of the shingle result as a ShingleResultType.
-func (s ShingleResultMap) GetType() ShingleResultType {
+func (s ShingleMapResult) GetType() ShingleResultType {
 	return s.resultType
 }
 
-// GetInput returns the input string associated with the ShingleResultMap.
-func (s ShingleResultMap) GetInput() string {
+// GetTypeName returns the string representation of the result type stored in the ShingleMapResult instance.
+func (s ShingleMapResult) GetTypeName() string {
+	return s.resultType.String()
+}
+
+// GetInput returns the input string associated with the ShingleMapResult.
+func (s ShingleMapResult) GetInput() string {
 	return s.input
 }
 
-// GetNgramLength returns the n-gram length associated with the ShingleResultMap instance.
-func (s ShingleResultMap) GetNgramLength() int {
+// GetNgramLength returns the n-gram length associated with the ShingleMapResult instance.
+func (s ShingleMapResult) GetNgramLength() int {
 	return s.ngram
 }
 
 // GetShinglesMap returns a pointer to the map of shingles and their corresponding counts for the given input.
-func (s ShingleResultMap) GetShinglesMap() *map[string]int {
+func (s ShingleMapResult) GetShinglesMap() *map[string]int {
 	return s.shingles
 }
 
-// Error returns the error associated with the ShingleResultMap, if any.
-func (s ShingleResultMap) Error() error {
+// Error returns the error associated with the ShingleMapResult, if any.
+func (s ShingleMapResult) Error() error {
 	return s.err
 }
 
 // Print outputs the shingle result information based on the verbose flag.
 // Handles errors and displays shingles if present.
-func (s ShingleResultMap) Print(v bool) {
+func (s ShingleMapResult) Print(v bool) {
 	if v {
 		if s.err != nil {
 			fmt.Printf("Error processing %s\nInput: %s\nN-Gram Length: %d\nError: %s\n",
@@ -194,4 +210,20 @@ func (s ShingleResultMap) Print(v bool) {
 			return
 		}
 	}
+}
+
+// ShingleResultsMap is a nested map structure that organizes shingle results by their type and n-gram length.
+type ShingleResultsMap map[ShingleResultType]map[int]*ShingleResult
+
+// NewShingleResultsMap initializes and returns a new ShingleResultsMap as an empty nested map.
+func NewShingleResultsMap() ShingleResultsMap {
+	return make(map[ShingleResultType]map[int]*ShingleResult)
+}
+
+// Add inserts a ShingleResult into the ShingleResultsMap, organizing it by type and n-gram length.
+func (srm ShingleResultsMap) Add(result ShingleResult) {
+	if srm[result.GetType()] == nil {
+		srm[result.GetType()] = make(map[int]*ShingleResult)
+	}
+	srm[result.GetType()][result.GetNgramLength()] = &result
 }
