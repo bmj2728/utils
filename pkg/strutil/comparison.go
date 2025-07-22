@@ -6,31 +6,21 @@ func CompareStringSlices(a, b []string, nulls bool) bool {
 	return compareStringSlices(a, b, nulls)
 }
 
-// LevenshteinDistance calculates the Levenshtein distance between two strings s1 and s2.
-// It represents the minimum number of edits needed to convert one string into the other.
-// An edit is an insertion, deletion, or substitution of a single character.
-//
-// Additional information: https://en.wikipedia.org/wiki/Levenshtein_distance
-func LevenshteinDistance(s1, s2 string) int {
+// LevenshteinDistance calculates the Levenshtein distance between two strings and returns a ComparisonResultInt.
+// It determines the minimum number of single-character edits (insertions, deletions, or substitutions) required.
+func LevenshteinDistance(s1, s2 string) *ComparisonResultInt {
 	return levenshteinDistance(s1, s2)
 }
 
-// DamerauLevenshteinDistance computes the edit distance between two strings,
-// including transpositions of adjacent characters.
-//
-// It represents the minimum number of operations to change one string to another.
-// An operation is an insertion, deletion/substitution of a single character, or transposition of adjacent characters.
-// Additional information: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
-func DamerauLevenshteinDistance(s1, s2 string) int {
+// DamerauLevenshteinDistance calculates the Damerau-Levenshtein distance between
+// two strings to measure their similarity.
+func DamerauLevenshteinDistance(s1, s2 string) *ComparisonResultInt {
 	return damerauLevenshteinDistance(s1, s2)
 }
 
-// OSADamerauLevenshteinDistance calculates the Damerau-Levenshtein
-// distance between two strings for similarity measurement.
-//
-// This optimal string alignment variant of DamerauLevenshteinDistance
-// does not allow multiple transformations on the same substring
-func OSADamerauLevenshteinDistance(s1, s2 string) int {
+// OSADamerauLevenshteinDistance calculates the optimal string alignment variant of Damerau-Levenshtein distance.
+// It returns a ComparisonResultInt containing the computed distance and details for the input strings.
+func OSADamerauLevenshteinDistance(s1, s2 string) *ComparisonResultInt {
 	return osaDamerauLevenshteinDistance(s1, s2)
 }
 

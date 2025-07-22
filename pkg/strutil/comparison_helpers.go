@@ -7,25 +7,30 @@ import (
 	"github.com/hbollon/go-edlib"
 )
 
-// levenshteinDistance calculates the Levenshtein distance between two strings s1 and s2.
-// It determines the minimum number of single-character edits (insertions, deletions, or substitutions) required.
-func levenshteinDistance(s1, s2 string) int {
-	return edlib.LevenshteinDistance(s1, s2)
+// levenshteinDistance computes the Levenshtein distance between two strings and returns a ComparisonResultInt.
+// It calculates the minimum number of edits (insertions, deletions, substitutions)
+// required to transform one string into another.
+func levenshteinDistance(s1, s2 string) *ComparisonResultInt {
+	ld := edlib.LevenshteinDistance(s1, s2)
+	return NewComparisonResultInt(LevDist, s1, s2, &ld, nil)
 }
 
-// damerauLevenshteinDistance calculates the Damerau-Levenshtein distance
-// between two strings to measure edit similarity.
-func damerauLevenshteinDistance(str1, str2 string) int {
-	return edlib.DamerauLevenshteinDistance(str1, str2)
+// damerauLevenshteinDistance computes the Damerau-Levenshtein distance between
+// two strings and returns a comparison result.
+// This distance measures the minimum number of operations required to transform one string into the other.
+// Supported operations include insertion, deletion, substitution, and transposition of adjacent characters.
+func damerauLevenshteinDistance(str1, str2 string) *ComparisonResultInt {
+	dld := edlib.DamerauLevenshteinDistance(str1, str2)
+	return NewComparisonResultInt(DamLevDist, str1, str2, &dld, nil)
 }
 
-// osaDamerauLevenshteinDistance calculates the Damerau-Levenshtein distance between string1 and string2,
-// considering adjacent transpositions.
-//
-// This optimal string alignment variant of damerauLevenshteinDistance
-// does not allow multiple transformations on the same substring
-func osaDamerauLevenshteinDistance(str1, str2 string) int {
-	return edlib.OSADamerauLevenshteinDistance(str1, str2)
+// osaDamerauLevenshteinDistance computes the optimal string alignment Damerau-Levenshtein distance between two strings.
+// It returns a pointer to a ComparisonResultInt containing the result of the comparison between `str1` and `str2`.
+// The returned structure includes the calculated distance, input strings, and any
+// potential error encountered during computation.
+func osaDamerauLevenshteinDistance(str1, str2 string) *ComparisonResultInt {
+	osaDLD := edlib.OSADamerauLevenshteinDistance(str1, str2)
+	return NewComparisonResultInt(OSADamLevDist, str1, str2, &osaDLD, nil)
 }
 
 // lcs returns the length of the longest common subsequence between two input strings, string1 and string2.
@@ -39,7 +44,7 @@ func lcsEditDistance(s1, s2 string) int {
 }
 
 // lcsBacktrack computes the longest common subsequence (LCS) between two input strings using backtracking.
-// It returns an LCSResult instance containing the LCS operation type, input strings, result slice, and error status.
+// It returns an LCSResult containing the LCS result or an error if the computation fails.
 func lcsBacktrack(str1 string, str2 string) *LCSResult {
 	var resultSlice []string
 	result, err := edlib.LCSBacktrack(str1, str2)
@@ -50,7 +55,9 @@ func lcsBacktrack(str1 string, str2 string) *LCSResult {
 	return NewLCSResult(LCSBacktrackWord, str1, str2, &resultSlice, nil)
 }
 
-// lcsBacktrackAll computes all longest common subsequences for two input strings and returns an LCSResult instance.
+// lcsBacktrackAll computes all possible longest common subsequences between two strings and returns an LCSResult.
+// It utilizes the edlib.LCSBacktrackAll function for computation and wraps the result into an LCSResult instance.
+// If an error occurs during computation, it is captured and included in the returned LCSResult.
 func lcsBacktrackAll(str1 string, str2 string) *LCSResult {
 	result, err := edlib.LCSBacktrackAll(str1, str2)
 	if err != nil {
@@ -59,7 +66,9 @@ func lcsBacktrackAll(str1 string, str2 string) *LCSResult {
 	return NewLCSResult(LCSBacktrackWordAll, str1, str2, &result, nil)
 }
 
-// lcsDiff computes the Longest Common Subsequence (LCS) diff between two strings and returns an LCSResult instance.
+// lcsDiff calculates the LCS difference between two strings and returns a
+// pointer to an LCSResult containing the result.
+// Returns nil for the result if an error occurs during the calculation.
 func lcsDiff(str1, str2 string) *LCSResult {
 	result, err := edlib.LCSDiff(str1, str2)
 	if err != nil {

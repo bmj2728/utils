@@ -234,5 +234,5 @@ func (crm ComparisonResultsMap) Add(result ComparisonResult) {
 	if crm[result.GetType()] == nil {
 		crm[result.GetType()] = make(map[string]*ComparisonResult)
 	}
-	crm[result.GetType()][result.GetString1()] = &result
+	crm[result.GetType()][result.GetString2()] = &result
 }

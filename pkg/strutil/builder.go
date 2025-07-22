@@ -46,6 +46,7 @@ func (sb *StringBuilder) ComparisonData() *ComparisonData {
 	return sb.comparisonData
 }
 
+// ComparisonManager returns the associated ComparisonManager instance of the StringBuilder.
 func (sb *StringBuilder) ComparisonManager() *ComparisonManager {
 	return sb.comparisonManager
 }

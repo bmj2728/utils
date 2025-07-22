@@ -28,15 +28,17 @@ func TestLevenshteinDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := levenshteinDistance(tt.input1, tt.input2)
 			result := LevenshteinDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).LevenshteinDistance(tt.input2)
-			if helperResult != tt.expected ||
-				result != tt.expected ||
-				*builderResult.ComparisonData().GetLevenshteinDist() != tt.expected {
-				t.Errorf("LevenshteinDistance - expected %d - got %d / %d / %d",
-					tt.expected,
-					helperResult,
-					result,
-					*builderResult.comparisonData.LevenshteinDist)
+			builderResult := New(tt.input1).WithComparisonManager().LevenshteinDistance(tt.input2).comparisonManager
+			if *helperResult.score != tt.expected ||
+				*result.score != tt.expected {
+				t.Errorf("LevenshteinDistance - expected %d - got %d / %d",
+					tt.expected, *helperResult.score, *result.score)
+			}
+			if brInt, ok := (*builderResult.ComparisonResults[LevDist][tt.input2]).(ComparisonResultInt); ok {
+				if *brInt.score != tt.expected {
+					t.Errorf("LevenshteinDistance - expected %d - got %d / %d",
+						tt.expected, *brInt.score, *result.score)
+				}
 			}
 		})
 	}
@@ -62,15 +64,21 @@ func TestDamerauLevenshteinDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := damerauLevenshteinDistance(tt.input1, tt.input2)
 			result := DamerauLevenshteinDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).DamerauLevenshteinDistance(tt.input2)
-			if helperResult != tt.expected ||
-				result != tt.expected ||
-				*builderResult.comparisonData.GetDamerauLevDist() != tt.expected {
-				t.Errorf("Damarau-LevenshteinDistance - expected %d - got %d / %d / %d",
+			builderResult := New(tt.input1).WithComparisonManager().DamerauLevenshteinDistance(tt.input2).comparisonManager
+			if *helperResult.score != tt.expected ||
+				*result.score != tt.expected {
+				t.Errorf("Damarau-LevenshteinDistance - expected %d - got %d / %d",
 					tt.expected,
-					helperResult,
-					result,
-					*builderResult.comparisonData.GetDamerauLevDist())
+					*helperResult.score,
+					*result.score)
+			}
+			if brInt, ok := (*builderResult.ComparisonResults[DamLevDist][tt.input2]).(ComparisonResultInt); ok {
+				if *brInt.score != tt.expected {
+					t.Errorf("Damarau-LevenshteinDistance - expected %d - got %d",
+						tt.expected,
+						*brInt.score,
+					)
+				}
 			}
 		})
 	}
@@ -98,15 +106,23 @@ func TestOSADamerauLevenshteinDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := osaDamerauLevenshteinDistance(tt.input1, tt.input2)
 			result := OSADamerauLevenshteinDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).OSADamerauLevenshteinDistance(tt.input2)
-			if helperResult != tt.expected ||
-				result != tt.expected ||
-				*builderResult.comparisonData.GetOSADamerauLevDist() != tt.expected {
-				t.Errorf("OSALevenshteinDistance - expected %d - got %d / %d / %d",
+			builderResult := New(tt.input1).
+				WithComparisonManager().
+				OSADamerauLevenshteinDistance(tt.input2).
+				comparisonManager
+			if *helperResult.score != tt.expected ||
+				*result.score != tt.expected {
+				t.Errorf("OSALevenshteinDistance - expected %d - got %d / %d",
 					tt.expected,
-					helperResult,
-					result,
-					*builderResult.comparisonData.GetOSADamerauLevDist())
+					*helperResult.score,
+					*result.score)
+			}
+			if brInt, ok := (*builderResult.ComparisonResults[OSADamLevDist][tt.input2]).(ComparisonResultInt); ok {
+				if *brInt.score != tt.expected {
+					t.Errorf("OSALevenshteinDistance - expected %d - got %d",
+						tt.expected,
+						*brInt.score)
+				}
 			}
 		})
 	}
