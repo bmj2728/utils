@@ -2,7 +2,6 @@ package strutil
 
 import (
 	"errors"
-	"fmt"
 	"math"
 	"testing"
 )
@@ -175,22 +174,15 @@ func TestLCSBacktrack(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult, err := lcsBacktrack(tt.input1, tt.input2)
-			if err != nil {
-				t.Errorf("Error: %s", err)
-			}
-			result, err := LCSBacktrack(tt.input1, tt.input2)
-			if err != nil {
-				t.Errorf("Error: %s", err)
-			}
-			builderResult := New(tt.input1).LCSBacktrack(tt.input2)
-			fmt.Printf("LCSBacktrack - expected %s - got %s / %s / %s",
-				tt.expected, helperResult, result, *builderResult.comparisonData.GetLCSBacktrack())
-			if helperResult != tt.expected ||
-				result != tt.expected ||
-				*builderResult.comparisonData.GetLCSBacktrack() != tt.expected {
+			helperResult := lcsBacktrack(tt.input1, tt.input2)
+			hrWord := (*helperResult.result)[0]
+			result := LCSBacktrack(tt.input1, tt.input2)
+			rWord := (*result.result)[0]
+			builderResult := New(tt.input1).WithComparisonManager().LCSBacktrack(tt.input2).comparisonManager
+			brWord := (*builderResult.LCSData[LCSBacktrackWord][tt.input2].result)[0]
+			if hrWord != tt.expected || rWord != tt.expected || brWord != tt.expected {
 				t.Errorf("LCSBacktrack - expected %s - got %s / %s / %s",
-					tt.expected, helperResult, result, *builderResult.comparisonData.GetLCSBacktrack())
+					tt.expected, hrWord, rWord, brWord)
 			}
 		})
 	}
@@ -224,26 +216,23 @@ func TestLCSBacktrackAll(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult, err := lcsBacktrackAll(tt.input1, tt.input2)
-			if err != nil {
-				t.Errorf("Error: %s", err)
-			}
-			result, err := LCSBacktrackAll(tt.input1, tt.input2)
-			if err != nil {
-				t.Errorf("Error: %s", err)
-			}
-			builderResult := New(tt.input1).LCSBacktrackAll(tt.input2)
-			if tt.expected != nil && (!CompareStringSlices(tt.expected, helperResult, false) ||
-				!CompareStringSlices(tt.expected, result, false) ||
-				!CompareStringSlices(tt.expected, *builderResult.comparisonData.GetLCSBacktrackAll(), false)) {
-				t.Errorf("LCSBacktrackAllA - expected %s - got %s / %s / %s",
-					tt.expected, helperResult, result, *builderResult.comparisonData.GetLCSBacktrackAll())
+			helperResult := lcsBacktrackAll(tt.input1, tt.input2)
+			result := LCSBacktrackAll(tt.input1, tt.input2)
+			builderResult := New(tt.input1).WithComparisonManager().LCSBacktrackAll(tt.input2).comparisonManager
+			if tt.expected != nil && (!CompareStringSlices(tt.expected, *helperResult.result, false) ||
+				!CompareStringSlices(tt.expected, *result.result, false) ||
+				!CompareStringSlices(tt.expected, *builderResult.LCSData[LCSBacktrackWordAll][tt.input2].result, false)) {
+				t.Errorf("LCSBacktrackAllA - expected %s - got %v / %v / %v",
+					tt.expected, helperResult.result, result.result, *builderResult.LCSData[LCSBacktrackWordAll][tt.input2].result)
 			}
 			if tt.expected == nil && (helperResult != nil ||
 				result != nil ||
-				*builderResult.comparisonData.GetLCSBacktrackAll() != nil) {
+				*builderResult.LCSData[LCSBacktrackWordAll][tt.input2].result != nil) {
 				t.Errorf("LCSBacktrackAllB - expected %d - got %d / %d / %d",
-					len(tt.expected), len(helperResult), len(result), len(*builderResult.comparisonData.GetLCSBacktrackAll()))
+					len(tt.expected),
+					len(*helperResult.result),
+					len(*result.result),
+					len(*builderResult.LCSData[LCSBacktrackWordAll][tt.input2].result))
 			}
 		})
 	}
@@ -414,45 +403,42 @@ func TestLCSDiff(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult, err := lcsDiff(tt.input1, tt.input2)
-			if err != nil && !errors.Is(err, ErrLCSDiffFailure) {
-				t.Errorf("Error: %s", err)
-			}
-			result, err := LCSDiff(tt.input1, tt.input2)
-			if err != nil && !errors.Is(err, ErrLCSDiffFailure) {
-				t.Errorf("Error: %s", err)
-			}
-			builderResult := New(tt.input1).LCSDiff(tt.input2)
+			helperResult := lcsDiff(tt.input1, tt.input2)
+			result := LCSDiff(tt.input1, tt.input2)
+			builderResult := New(tt.input1).WithComparisonManager().LCSDiff(tt.input2)
 			if builderResult.Error() != nil && !errors.Is(builderResult.Error(), ErrLCSDiffFailure) {
 				t.Errorf("Error: %s", builderResult.Error())
 			}
 			if tt.expected != nil &&
-				(helperResult == nil ||
-					result == nil ||
-					*builderResult.comparisonData.GetLCSDiff() == nil) {
-				t.Errorf("LCSDiff - expected %s - got %s / %s / %s",
+				(helperResult.result == nil ||
+					result.result == nil ||
+					builderResult.comparisonManager.LCSData[LCSDiffSlice][tt.input2].result == nil) {
+				t.Errorf("LCSDiff - expected %s - got %v / %v / %v",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparisonData.GetLCSDiff())
+					*builderResult.comparisonManager.LCSData[LCSDiffSlice][tt.input2].result)
 			}
 			if tt.expected == nil &&
-				(helperResult != nil ||
-					result != nil ||
-					*builderResult.comparisonData.GetLCSDiff() != nil) {
-				t.Errorf("LCSDiff - expected %s - got %s / %s / %s",
+				(helperResult.result != nil ||
+					result.result != nil ||
+					builderResult.comparisonManager.LCSData[LCSDiffSlice][tt.input2].result != nil) {
+				t.Errorf("LCSDiff - expected %s - got %v / %v / %v",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparisonData.GetLCSDiff())
+					*builderResult.comparisonManager.LCSData[LCSDiffSlice][tt.input2])
 			}
-			if tt.expected != nil && (!CompareStringSlices(tt.expected, helperResult, false) ||
-				!CompareStringSlices(tt.expected, result, false) ||
-				!CompareStringSlices(tt.expected, *builderResult.comparisonData.GetLCSDiff(), false)) {
-				t.Errorf("LCSDiff - expected %s - got %s / %s",
+			if tt.expected != nil && (!CompareStringSlices(tt.expected, *helperResult.result, false) ||
+				!CompareStringSlices(tt.expected, *result.result, false) ||
+				!CompareStringSlices(tt.expected,
+					*builderResult.comparisonManager.LCSData[LCSDiffSlice][tt.input2].result,
+					false)) {
+				t.Errorf("LCSDiff - expected %s - got %v / %v / %v",
 					tt.expected,
 					helperResult,
 					result,
+					*builderResult.comparisonManager.LCSData[LCSDiffSlice][tt.input2],
 				)
 			}
 		})
