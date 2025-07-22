@@ -283,7 +283,7 @@ func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 		return sb
 	}
 	shingle := shingleSlice(sb.value, k)
-	sb.comparisonManager.AddShingleResult(shingle)
+	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	return sb
 }
 
@@ -296,6 +296,6 @@ func (sb *StringBuilder) Similarity(other string, algorithm Algorithm) *StringBu
 		return sb
 	}
 	sr := similarity(sb.value, other, algorithm)
-	sb.ComparisonManager().AddSimilarityResult(*sr)
+	sb.WithComparisonManager().comparisonManager.AddSimilarityResult(*sr)
 	return sb
 }
