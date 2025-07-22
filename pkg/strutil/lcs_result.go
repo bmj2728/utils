@@ -37,12 +37,13 @@ type LCSResult struct {
 }
 
 // NewLCSResult creates and returns a pointer to an LCSResult with the specified type, strings, and result slice.
-func NewLCSResult(resultType LCSResultType, string1 string, string2 string, result *[]string) *LCSResult {
+func NewLCSResult(resultType LCSResultType, string1 string, string2 string, result *[]string, err error) *LCSResult {
 	return &LCSResult{
 		resultType: resultType,
 		string1:    string1,
 		string2:    string2,
 		result:     result,
+		err:        err,
 	}
 }
 

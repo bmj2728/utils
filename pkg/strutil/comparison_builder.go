@@ -66,52 +66,6 @@ func (sb *StringBuilder) LCS(other string) *StringBuilder {
 	return sb
 }
 
-// LCSBacktrack computes the longest common subsequence (LCS) between the StringBuilder's value and another string.
-// Updates the internal state with the computed LCS or sets an error if the operation fails.
-// Returns the StringBuilder instance for method chaining.
-func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
-	if sb.err != nil {
-		return sb
-	}
-	s, err := lcsBacktrack(sb.value, other)
-	if err != nil {
-		sb.err = errors.Join(ErrLCSBacktrackFailure, err)
-	}
-	sb.comparisonData.SetLCSBacktrack(&s)
-	return sb
-}
-
-// LCSBacktrackAll computes all longest common subsequences between the current StringBuilder value and another string.
-// Updates the comparisonData field with all subsequences if successful or records an error if the operation fails.
-// Returns the StringBuilder instance.
-func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
-	if sb.err != nil {
-		return sb
-	}
-	seqs, err := lcsBacktrackAll(sb.value, other)
-	if err != nil {
-		sb.err = errors.Join(ErrLCSBacktrackAllFailure, err)
-	}
-	sb.comparisonData.SetLCSBacktrackAll(&seqs)
-	return sb
-}
-
-// LCSDiff calculates and sets the Longest Common Subsequence diff between
-// the StringBuilder's value and the given string.
-// It modifies the StringBuilder by updating its comparisonData state with the LCS diff.
-// If an error occurs during the calculation, the error is stored in the StringBuilder's error field.
-func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
-	if sb.err != nil {
-		return sb
-	}
-	diff, err := lcsDiff(sb.value, other)
-	if err != nil {
-		sb.err = errors.Join(ErrLCSDiffFailure, err)
-	}
-	sb.comparisonData.SetLCSDiff(&diff)
-	return sb
-}
-
 // LCSEditDistance calculates the edit distance between the StringBuilder's value and another string using LCS.
 func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
 	if sb.err != nil {
@@ -122,6 +76,55 @@ func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
 	return sb
 }
 
+// LCSBacktrack computes the longest common subsequence (LCS) between the StringBuilder's value and another string.
+// It updates the StringBuilder's ComparisonManager with the LCS result and handles potential errors during computation.
+// Returns the updated StringBuilder instance.
+func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	lb := lcsBacktrack(sb.value, other)
+	if lb.err != nil {
+		sb.err = lb.err
+	}
+	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lb)
+	return sb
+}
+
+// LCSBacktrackAll computes all longest common subsequences between the StringBuilder's value and another string.
+// It updates the ComparisonManager with the computed LCS result.
+// If an error occurs during computation, it propagates the error state to the StringBuilder.
+func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	lba := lcsBacktrackAll(sb.value, other)
+	if lba.err != nil {
+		sb.err = lba.err
+	}
+	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lba)
+	return sb
+}
+
+// LCSDiff computes the Longest Common Subsequence (LCS) difference between the
+// current StringBuilder value and another string.
+// It updates the comparison manager with the LCS result and returns the updated StringBuilder instance.
+// If an error occurs during the computation, it sets the error on the StringBuilder instance.
+func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	ld := lcsDiff(sb.value, other)
+	if ld.err != nil {
+		sb.err = ld.err
+	}
+	sb.WithComparisonManager().comparisonManager.AddLCSResult(*ld)
+	return sb
+}
+
+// HammingDistance computes the Hamming distance between the StringBuilder value and another
+// string, updating comparison data.
+// Returns the StringBuilder instance. If an error occurs, it sets the internal error and preserves the original state.
 func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -266,36 +269,44 @@ func (sb *StringBuilder) QgramSimilarity(other string, q int) *StringBuilder {
 	return sb
 }
 
-// Shingle generates k-shingles from the StringBuilder's value and sets them as comparison data for further operations.
+// Shingle generates k-shingles for the current string value and stores the result using the ComparisonManager.
+// Updates the error state if shingle generation fails. Returns the updated StringBuilder instance.
 func (sb *StringBuilder) Shingle(k int) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
 	shingle := shingle(sb.value, k)
-	sb.comparisonManager.AddShingleResult(shingle)
+	if shingle.err != nil {
+		sb.err = shingle.err
+	}
+	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	return sb
 }
 
-// ShingleSlice generates k-length shingles from the StringBuilder's value and updates the comparison data.
-// Returns the StringBuilder instance for method chaining.
+// ShingleSlice processes the string to generate k-length shingles, manages errors, and updates the ComparisonManager.
 func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
 	shingle := shingleSlice(sb.value, k)
+	if shingle.err != nil {
+		sb.err = shingle.err
+	}
 	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	return sb
 }
 
-// Similarity computes the similarity between the current string and another
-// provided string using the specified algorithm.
-// It appends the result to the similarities list and returns the updated StringBuilder.
-// If an error is already set in the StringBuilder, it skips computation and returns itself.
+// Similarity computes the similarity between the current string and another string using the specified algorithm.
+// Updates the ComparisonManager with the resulting similarity data and maintains the chainable state of StringBuilder.
+// If an error occurs during computation, it sets the error state in the StringBuilder and returns itself.
 func (sb *StringBuilder) Similarity(other string, algorithm Algorithm) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
 	sr := similarity(sb.value, other, algorithm)
+	if sr.err != nil {
+		sb.err = sr.err
+	}
 	sb.WithComparisonManager().comparisonManager.AddSimilarityResult(*sr)
 	return sb
 }

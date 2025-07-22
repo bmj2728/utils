@@ -33,38 +33,39 @@ func lcs(str1 string, str2 string) int {
 	return edlib.LCS(str1, str2)
 }
 
-// lcsBacktrack computes the longest common subsequence (LCS) of two input strings and returns the result as a string.
-func lcsBacktrack(str1 string, str2 string) (string, error) {
-	result, err := edlib.LCSBacktrack(str1, str2)
-	if err != nil {
-		return "", errors.Join(ErrLCSBacktrackFailure, err)
-	}
-	return result, nil
-}
-
-// lcsBacktrackAll computes all longest common subsequences of two input strings.
-// Returns a slice of strings representing the subsequences and an error if the computation fails.
-func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
-	result, err := edlib.LCSBacktrackAll(str1, str2)
-	if err != nil {
-		return nil, errors.Join(ErrLCSBacktrackAllFailure, err)
-	}
-	return result, nil
-}
-
-// lcsDiff calculates the Longest Common Subsequence (LCS) diff between
-// two strings and returns the differences or an error.
-func lcsDiff(str1, str2 string) ([]string, error) {
-	result, err := edlib.LCSDiff(str1, str2)
-	if err != nil {
-		return nil, errors.Join(ErrLCSDiffFailure, err)
-	}
-	return result, nil
-}
-
 // lcsEditDistance computes the edit distance between two strings based on their Longest Common Subsequence (LCS).
 func lcsEditDistance(s1, s2 string) int {
 	return edlib.LCSEditDistance(s1, s2)
+}
+
+// lcsBacktrack computes the longest common subsequence (LCS) between two input strings using backtracking.
+// It returns an LCSResult instance containing the LCS operation type, input strings, result slice, and error status.
+func lcsBacktrack(str1 string, str2 string) *LCSResult {
+	var resultSlice []string
+	result, err := edlib.LCSBacktrack(str1, str2)
+	if err != nil {
+		return NewLCSResult(LCSBacktrackWord, str1, str2, nil, errors.Join(ErrLCSBacktrackFailure, err))
+	}
+	resultSlice = append(resultSlice, result)
+	return NewLCSResult(LCSBacktrackWord, str1, str2, &resultSlice, nil)
+}
+
+// lcsBacktrackAll computes all longest common subsequences for two input strings and returns an LCSResult instance.
+func lcsBacktrackAll(str1 string, str2 string) *LCSResult {
+	result, err := edlib.LCSBacktrackAll(str1, str2)
+	if err != nil {
+		return NewLCSResult(LCSBacktrackWordAll, str1, str2, nil, errors.Join(ErrLCSBacktrackAllFailure, err))
+	}
+	return NewLCSResult(LCSBacktrackWordAll, str1, str2, &result, nil)
+}
+
+// lcsDiff computes the Longest Common Subsequence (LCS) diff between two strings and returns an LCSResult instance.
+func lcsDiff(str1, str2 string) *LCSResult {
+	result, err := edlib.LCSDiff(str1, str2)
+	if err != nil {
+		return NewLCSResult(LCSDiffSlice, str1, str2, nil, errors.Join(ErrLCSDiffFailure, err))
+	}
+	return NewLCSResult(LCSDiffSlice, str1, str2, &result, nil)
 }
 
 // compareStringSlices checks if two slices of strings contain the same elements,

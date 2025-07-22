@@ -39,25 +39,25 @@ func LCS(s1, s2 string) int {
 	return lcs(s1, s2)
 }
 
-// LCSBacktrack calculates the longest common subsequence (LCS) of
-// two input strings and returns the result or an error.
-func LCSBacktrack(s1, s2 string) (string, error) {
-	return lcsBacktrack(s1, s2)
-}
-
-// LCSBacktrackAll computes all longest common subsequences between two input strings s1 and s2.
-// Returns a slice of subsequences and an error if the computation fails.
-func LCSBacktrackAll(s1, s2 string) ([]string, error) {
-	return lcsBacktrackAll(s1, s2)
-}
-
-func LCSDiff(str1, str2 string) ([]string, error) {
-	return lcsDiff(str1, str2)
-}
-
 // LCSEditDistance computes the edit distance between two strings using the Longest Common Subsequence (LCS) method.
 func LCSEditDistance(s1, s2 string) int {
 	return lcsEditDistance(s1, s2)
+}
+
+// LCSBacktrack computes the longest common subsequence (LCS) between two input strings and returns an LCSResult.
+func LCSBacktrack(s1, s2 string) *LCSResult {
+	return lcsBacktrack(s1, s2)
+}
+
+// LCSBacktrackAll computes all longest common subsequences of two input strings and returns them as an LCSResult.
+func LCSBacktrackAll(s1, s2 string) *LCSResult {
+	return lcsBacktrackAll(s1, s2)
+}
+
+// LCSDiff computes the Longest Common Subsequence (LCS) difference
+// between two strings and returns an LCSResult instance.
+func LCSDiff(str1, str2 string) *LCSResult {
+	return lcsDiff(str1, str2)
 }
 
 // HammingDistance computes the Hamming distance between two strings s1 and s2, returning an integer
