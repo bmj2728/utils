@@ -116,7 +116,7 @@ func (sr *SimilarityResult) GetSimilarity() *float32 {
 func (sr *SimilarityResult) Print(v bool) {
 	if v {
 		if sr.err != nil {
-			fmt.Printf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+			fmt.Printf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 				sr.algorithm.String(), sr.string1, sr.string2, sr.err.Error())
 			return
 		} else {
@@ -126,7 +126,7 @@ func (sr *SimilarityResult) Print(v bool) {
 		}
 	} else {
 		if sr.err != nil {
-			fmt.Printf("%s Error: %s\n",
+			fmt.Printf("%s GetError: %s\n",
 				sr.algorithm.String(), sr.err.Error())
 			return
 		} else {

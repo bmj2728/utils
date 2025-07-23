@@ -96,7 +96,7 @@ func (s ShingleSliceResult) Error() error {
 func (s ShingleSliceResult) Print(v bool) {
 	if v {
 		if s.err != nil {
-			fmt.Printf("Error processing %s\nInput: %s\nN-Gram Length: %d\nError: %s\n",
+			fmt.Printf("GetError processing %s\nInput: %s\nN-Gram Length: %d\nGetError: %s\n",
 				ShingleResultTypeMap[s.resultType], s.input, s.ngram, s.err.Error())
 			return
 		} else {
@@ -109,7 +109,7 @@ func (s ShingleSliceResult) Print(v bool) {
 		}
 	} else {
 		if s.err != nil {
-			fmt.Printf("%s Error: %s\n",
+			fmt.Printf("%s GetError: %s\n",
 				ShingleResultTypeMap[s.resultType], s.err.Error())
 			return
 		} else {
@@ -186,7 +186,7 @@ func (s ShingleMapResult) Error() error {
 func (s ShingleMapResult) Print(v bool) {
 	if v {
 		if s.err != nil {
-			fmt.Printf("Error processing %s\nInput: %s\nN-Gram Length: %d\nError: %s\n",
+			fmt.Printf("GetError processing %s\nInput: %s\nN-Gram Length: %d\nGetError: %s\n",
 				ShingleResultTypeMap[s.resultType], s.input, s.ngram, s.err.Error())
 			return
 		} else {
@@ -199,7 +199,7 @@ func (s ShingleMapResult) Print(v bool) {
 		}
 	} else {
 		if s.err != nil {
-			fmt.Printf("%s Error: %s\n",
+			fmt.Printf("%s GetError: %s\n",
 				ShingleResultTypeMap[s.resultType], s.err.Error())
 			return
 		} else {

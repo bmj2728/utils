@@ -191,8 +191,8 @@ func (c ComparisonResultFloat) GetStrings() (string, string) {
 	return c.string1, c.string2
 }
 
-// Error returns the error encountered during the comparison, or nil if no error occurred.
-func (c ComparisonResultFloat) Error() error {
+// GetError returns the error encountered during the comparison, or nil if no error occurred.
+func (c ComparisonResultFloat) GetError() error {
 	return c.err
 }
 
@@ -205,7 +205,7 @@ func (c ComparisonResultFloat) GetScoreFloat() *float32 {
 func (c ComparisonResultFloat) Print(v bool) {
 	if v {
 		if c.err != nil {
-			fmt.Printf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+			fmt.Printf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
 			return
 		} else {
@@ -215,7 +215,7 @@ func (c ComparisonResultFloat) Print(v bool) {
 		}
 	} else {
 		if c.err != nil {
-			fmt.Printf("%s Error: %s\n",
+			fmt.Printf("%s GetError: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.err.Error())
 			return
 		} else {

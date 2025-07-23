@@ -61,23 +61,23 @@ func HammingDistance(s1, s2 string) *ComparisonResultInt {
 	return hammingDistance(s1, s2)
 }
 
-// JaroSimilarity calculates the Jaro similarity between two strings, returning a float32 value in the range [0, 1].
+// JaroSimilarity calculates the Jaro similarity between two strings, returns a ComparisonResultFloat pointer
 //
 // The higher the value, the more similar the strings are.
 // The score is normalized such that 0 equates to no similarities and 1 is an exact match
 //
 // Additional Info: https://rosettacode.org/wiki/Jaro_similarity
-func JaroSimilarity(s1, s2 string) float32 {
+func JaroSimilarity(s1, s2 string) *ComparisonResultFloat {
 	return jaroSimilarity(s1, s2)
 }
 
 // JaroWinklerSimilarity computes the Jaro-Winkler similarity between two strings
-// and returns a float32 between 0 and 1.
+// and returns a ComparisonResultFloat pointer.
 //
 // Uses Jaro similarity with a more favorable weighting for similar common prefixes.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance#Jaro%E2%80%93Winkler_similarity
-func JaroWinklerSimilarity(s1, s2 string) float32 {
+func JaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
 	return jaroWinklerSimilarity(s1, s2)
 }
 

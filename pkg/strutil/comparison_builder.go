@@ -132,7 +132,7 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 }
 
 // JaroSimilarity computes the Jaro similarity between the StringBuilder's value and the provided string.
-// It updates the Jaro similarity value in the comparisonData field and returns the updated StringBuilder instance.
+// It adds the result to the ComparisonManager and returns the updated StringBuilder instance.
 //
 // The higher the value, the more similar the strings are.
 // The score is normalized such that 0 equates to no similarities and 1 is an exact match
@@ -143,12 +143,12 @@ func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
 		return sb
 	}
 	js := jaroSimilarity(sb.value, other)
-	sb.comparisonData.SetJaroSimilarity(&js)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(js)
 	return sb
 }
 
 // JaroWinklerSimilarity calculates the Jaro-Winkler similarity between the StringBuilder value and another string.
-// It updates the comparisonData field with the computed similarity value if no internal error is present.
+// It adds the result to the ComparisonManager if no internal error is present.
 // Returns the updated StringBuilder instance.
 //
 // Uses Jaro similarity with a more favorable weighting for similar common prefixes.
@@ -159,7 +159,7 @@ func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
 		return sb
 	}
 	jws := jaroWinklerSimilarity(sb.value, other)
-	sb.comparisonData.SetJaroWinklerSim(&jws)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(jws)
 	return sb
 }
 

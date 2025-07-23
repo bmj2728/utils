@@ -429,7 +429,7 @@ func TestLCSDiff(t *testing.T) {
 			result := LCSDiff(tt.input1, tt.input2)
 			builderResult := New(tt.input1).WithComparisonManager().LCSDiff(tt.input2)
 			if builderResult.Error() != nil && !errors.Is(builderResult.Error(), ErrLCSDiffFailure) {
-				t.Errorf("Error: %s", builderResult.Error())
+				t.Errorf("GetError: %s", builderResult.Error())
 			}
 			if tt.expected != nil &&
 				(helperResult.result == nil ||
@@ -589,17 +589,22 @@ func TestJaroSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := jaroSimilarity(tt.input1, tt.input2)
 			result := JaroSimilarity(tt.input1, tt.input2)
-			builderResult := New(tt.input1).JaroSimilarity(tt.input2)
-			if math.Abs(float64(tt.expected)-float64(helperResult)) > float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(result)) > float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(*builderResult.ComparisonData().GetJaroSimilarity())) >
-					float64EqualityThreshold {
-				t.Errorf("JaroSimilarity - expected %f - got %f / %f / %f",
+			builderResult := New(tt.input1).WithComparisonManager().JaroSimilarity(tt.input2).comparisonManager
+			if math.Abs(float64(tt.expected)-float64(*helperResult.score)) > float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(*result.score)) > float64EqualityThreshold {
+				t.Errorf("JaroSimilarity - expected %f - got %f / %f",
 					tt.expected,
-					helperResult,
-					result,
-					*builderResult.ComparisonData().GetJaroSimilarity(),
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brFloat, ok := (*builderResult.ComparisonResults[JaroSim][tt.input2]).(ComparisonResultFloat); ok {
+				if math.Abs(float64(tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+					t.Errorf("JaroSimilarity - expected %f - got %f",
+						tt.expected,
+						*brFloat.score,
+					)
+				}
 			}
 		})
 	}
@@ -624,17 +629,22 @@ func TestJaroWinklerSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := jaroWinklerSimilarity(tt.input1, tt.input2)
 			result := JaroWinklerSimilarity(tt.input1, tt.input2)
-			builderResult := New(tt.input1).JaroWinklerSimilarity(tt.input2)
-			if math.Abs(float64(tt.expected)-float64(helperResult)) > float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(result)) > float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(*builderResult.ComparisonData().GetJaroWinklerSim())) >
-					float64EqualityThreshold {
-				t.Errorf("JaroWinklerSimilarity - expected %f - got %f / %f / %f",
+			builderResult := New(tt.input1).WithComparisonManager().JaroWinklerSimilarity(tt.input2).comparisonManager
+			if math.Abs(float64(tt.expected)-float64(*helperResult.score)) > float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(*result.score)) > float64EqualityThreshold {
+				t.Errorf("JaroWinklerSimilarity - expected %f - got %f / %f",
 					tt.expected,
-					helperResult,
-					result,
-					*builderResult.ComparisonData().GetJaroWinklerSim(),
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brFloat, ok := (*builderResult.ComparisonResults[JaroWinklerSim][tt.input2]).(ComparisonResultFloat); ok {
+				if math.Abs(float64(tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+					t.Errorf("JaroWinklerSimilarity - expected %f - got %f",
+						tt.expected,
+						*brFloat.score,
+					)
+				}
 			}
 		})
 	}

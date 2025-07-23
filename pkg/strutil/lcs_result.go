@@ -81,7 +81,7 @@ func (lcs *LCSResult) GetResult() *[]string {
 func (lcs *LCSResult) Print(v bool) {
 	if v {
 		if lcs.err != nil {
-			fmt.Printf("Error processing %s\nString 1: %s\nString 2: %s\nError: %s\n",
+			fmt.Printf("GetError processing %s\nString 1: %s\nString 2: %s\nGetError: %s\n",
 				LCSResultTypeMap[lcs.resultType], lcs.string1, lcs.string2, lcs.err.Error())
 			return
 		} else {
@@ -105,14 +105,14 @@ func (lcs *LCSResult) Print(v bool) {
 				}
 				return
 			default:
-				fmt.Printf("Error processing %s\nString 1: %s\nString 2: %s\nError: %s\n",
+				fmt.Printf("GetError processing %s\nString 1: %s\nString 2: %s\nGetError: %s\n",
 					LCSResultTypeMap[lcs.resultType], lcs.string1, lcs.string2, lcs.err.Error())
 				return
 			}
 		}
 	} else {
 		if lcs.err != nil {
-			fmt.Printf("%s\nError: %s\n",
+			fmt.Printf("%s\nGetError: %s\n",
 				LCSResultTypeMap[lcs.resultType], lcs.err.Error())
 			return
 		} else {
@@ -136,7 +136,7 @@ func (lcs *LCSResult) Print(v bool) {
 				}
 				return
 			default:
-				fmt.Printf("%s\nError: %s\n",
+				fmt.Printf("%s\nGetError: %s\n",
 					LCSResultTypeMap[lcs.resultType], lcs.err.Error())
 				return
 			}

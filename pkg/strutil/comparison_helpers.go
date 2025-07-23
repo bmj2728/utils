@@ -139,8 +139,8 @@ func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
 	return true
 }
 
-// hammingDistance computes the Hamming distance between two strings s1 and s2.
-// Returns a pointer to the integer distance and an error if the strings have unequal lengths or a failure occurs.
+// hammingDistance computes the Hamming distance between two strings and returns a ComparisonResultInt instance.
+// Returns an error if the strings are not of equal length or if the distance calculation fails.
 func hammingDistance(s1, s2 string) *ComparisonResultInt {
 	dist, err := edlib.HammingDistance(s1, s2)
 	if err != nil {
@@ -149,16 +149,18 @@ func hammingDistance(s1, s2 string) *ComparisonResultInt {
 	return NewComparisonResultInt(HammingDist, s1, s2, &dist, nil)
 }
 
-// jaroSimilarity computes the Jaro similarity between
-// two strings s1 and s2, returning a float32 value in the range [0, 1].
-func jaroSimilarity(s1, s2 string) float32 {
-	return edlib.JaroSimilarity(s1, s2)
+// jaroSimilarity computes the Jaro similarity between two strings
+// and returns the result as a ComparisonResultFloat object.
+func jaroSimilarity(s1, s2 string) *ComparisonResultFloat {
+	js := edlib.JaroSimilarity(s1, s2)
+	return NewComparisonResultFloat(JaroSim, s1, s2, &js, nil)
 }
 
-// jaroWinklerSimilarity computes the Jaro-Winkler similarity between two strings s1 and s2.
-// It returns a float32 value between 0 and 1, where 1 indicates exact similarity.
-func jaroWinklerSimilarity(s1, s2 string) float32 {
-	return edlib.JaroWinklerSimilarity(s1, s2)
+// jaroWinklerSimilarity computes the Jaro-Winkler similarity between two input strings.
+// Returns a ComparisonResultFloat containing the similarity score and input data.
+func jaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
+	js := edlib.JaroWinklerSimilarity(s1, s2)
+	return NewComparisonResultFloat(JaroWinklerSim, s1, s2, &js, nil)
 }
 
 // jaccardSimilarity computes the Jaccard similarity coefficient between two strings based on a given split length.
