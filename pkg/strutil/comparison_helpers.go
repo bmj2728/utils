@@ -12,7 +12,7 @@ import (
 // required to transform one string into another.
 func levenshteinDistance(s1, s2 string) *ComparisonResultInt {
 	ld := edlib.LevenshteinDistance(s1, s2)
-	return NewComparisonResultInt(LevDist, s1, s2, &ld, nil)
+	return NewComparisonResultInt(LevDist, s1, s2, nil, &ld, nil)
 }
 
 // damerauLevenshteinDistance computes the Damerau-Levenshtein distance between
@@ -21,7 +21,7 @@ func levenshteinDistance(s1, s2 string) *ComparisonResultInt {
 // Supported operations include insertion, deletion, substitution, and transposition of adjacent characters.
 func damerauLevenshteinDistance(str1, str2 string) *ComparisonResultInt {
 	dld := edlib.DamerauLevenshteinDistance(str1, str2)
-	return NewComparisonResultInt(DamLevDist, str1, str2, &dld, nil)
+	return NewComparisonResultInt(DamLevDist, str1, str2, nil, &dld, nil)
 }
 
 // osaDamerauLevenshteinDistance computes the optimal string alignment Damerau-Levenshtein distance between two strings.
@@ -30,19 +30,19 @@ func damerauLevenshteinDistance(str1, str2 string) *ComparisonResultInt {
 // potential error encountered during computation.
 func osaDamerauLevenshteinDistance(str1, str2 string) *ComparisonResultInt {
 	osaDLD := edlib.OSADamerauLevenshteinDistance(str1, str2)
-	return NewComparisonResultInt(OSADamLevDist, str1, str2, &osaDLD, nil)
+	return NewComparisonResultInt(OSADamLevDist, str1, str2, nil, &osaDLD, nil)
 }
 
 // lcs returns the length of the longest common subsequence between two input strings, string1 and string2.
 func lcs(str1 string, str2 string) *ComparisonResultInt {
 	l := edlib.LCS(str1, str2)
-	return NewComparisonResultInt(LCSLength, str1, str2, &l, nil)
+	return NewComparisonResultInt(LCSLength, str1, str2, nil, &l, nil)
 }
 
 // lcsEditDistance computes the edit distance between two strings based on their Longest Common Subsequence (LCS).
 func lcsEditDistance(s1, s2 string) *ComparisonResultInt {
 	l := edlib.LCSEditDistance(s1, s2)
-	return NewComparisonResultInt(LCSDist, s1, s2, &l, nil)
+	return NewComparisonResultInt(LCSDist, s1, s2, nil, &l, nil)
 }
 
 // lcsBacktrack computes the longest common subsequence (LCS) between two input strings using backtracking.
@@ -144,54 +144,56 @@ func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
 func hammingDistance(s1, s2 string) *ComparisonResultInt {
 	dist, err := edlib.HammingDistance(s1, s2)
 	if err != nil {
-		return NewComparisonResultInt(HammingDist, s1, s2, nil, errors.Join(ErrHammingDistanceFailure, err))
+		return NewComparisonResultInt(HammingDist, s1, s2, nil, nil, errors.Join(ErrHammingDistanceFailure, err))
 	}
-	return NewComparisonResultInt(HammingDist, s1, s2, &dist, nil)
+	return NewComparisonResultInt(HammingDist, s1, s2, nil, &dist, nil)
 }
 
 // jaroSimilarity computes the Jaro similarity between two strings
 // and returns the result as a ComparisonResultFloat object.
 func jaroSimilarity(s1, s2 string) *ComparisonResultFloat {
 	js := edlib.JaroSimilarity(s1, s2)
-	return NewComparisonResultFloat(JaroSim, s1, s2, &js, nil)
+	return NewComparisonResultFloat(JaroSim, s1, s2, nil, &js, nil)
 }
 
 // jaroWinklerSimilarity computes the Jaro-Winkler similarity between two input strings.
 // Returns a ComparisonResultFloat containing the similarity score and input data.
 func jaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
 	js := edlib.JaroWinklerSimilarity(s1, s2)
-	return NewComparisonResultFloat(JaroWinklerSim, s1, s2, &js, nil)
+	return NewComparisonResultFloat(JaroWinklerSim, s1, s2, nil, &js, nil)
 }
 
-// jaccardSimilarity computes the Jaccard similarity coefficient between two strings based on a given split length.
-// If split length of zero, the string is split on whitespaces and returns an index
-func jaccardSimilarity(s1, s2 string, splitLength int) *float32 {
+// jaccardSimilarity calculates the Jaccard similarity coefficient between two strings
+// using k-grams of a specified length.
+// Returns a ComparisonResultFloat object containing the result or an error if the splitLength is invalid (< 0).
+func jaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	if splitLength < 0 {
-		return nil
+		return NewComparisonResultFloat(JaccardSim, s1, s2, &splitLength, nil, ErrInvalidLengthRange)
 	}
 	js := edlib.JaccardSimilarity(s1, s2, splitLength)
-	return &js
+	return NewComparisonResultFloat(JaccardSim, s1, s2, &splitLength, &js, nil)
 }
 
-// cosineSimilarity computes the cosine similarity between two strings using a specified n-gram split length.
-// Returns a pointer to the similarity score or nil if the split length is negative.
-// Split lengths of zero, split on whitespaces.
-func cosineSimilarity(s1, s2 string, splitLength int) *float32 {
+// cosineSimilarity calculates the cosine similarity between two strings using n-gram splitting with the given length.
+// Returns a pointer to a ComparisonResultFloat containing the similarity score or an error
+// if the split length is invalid.
+func cosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	if splitLength < 0 {
-		return nil
+		return NewComparisonResultFloat(CosineSim, s1, s2, &splitLength, nil, ErrInvalidLengthRange)
 	}
 	cs := edlib.CosineSimilarity(s1, s2, splitLength)
-	return &cs
+	return NewComparisonResultFloat(CosineSim, s1, s2, &splitLength, &cs, nil)
 }
 
-// sorensenDiceCoefficient calculates the Sørensen–Dice coefficient between two strings with a specified n-gram length.
-// Returns a pointer to the coefficient value or nil if the splitLength is negative.
-func sorensenDiceCoefficient(s1, s2 string, splitLength int) *float32 {
+// sorensenDiceCoefficient calculates the Sørensen–Dice coefficient of two strings based on a specified n-gram length.
+// Returns a pointer to a ComparisonResultFloat, containing the coefficient
+// value or an error if the splitLength is invalid.
+func sorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	if splitLength < 0 {
-		return nil
+		return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, nil, ErrInvalidLengthRange)
 	}
 	sdc := edlib.SorensenDiceCoefficient(s1, s2, splitLength)
-	return &sdc
+	return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, &sdc, nil)
 }
 
 // qgramDistance computes the q-gram distance between two strings s1 and s2 using a specified q-gram size q.

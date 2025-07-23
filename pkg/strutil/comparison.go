@@ -89,7 +89,7 @@ func JaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
 // for two given finite, non-empty sets
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaccard_index
-func JaccardSimilarity(s1, s2 string, splitLength int) *float32 {
+func JaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	return jaccardSimilarity(s1, s2, splitLength)
 }
 
@@ -100,7 +100,7 @@ func JaccardSimilarity(s1, s2 string, splitLength int) *float32 {
 // Cosine similarity is the cosine of the angle between the vectors.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Cosine_similarity/
-func CosineSimilarity(s1, s2 string, splitLength int) *float32 {
+func CosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	return cosineSimilarity(s1, s2, splitLength)
 }
 
@@ -111,7 +111,7 @@ func CosineSimilarity(s1, s2 string, splitLength int) *float32 {
 // divided by the sum of the number of elements in each set.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
-func SorensenDiceCoefficient(s1, s2 string, splitLength int) *float32 {
+func SorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	return sorensenDiceCoefficient(s1, s2, splitLength)
 }
 

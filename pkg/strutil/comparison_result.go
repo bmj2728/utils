@@ -69,6 +69,8 @@ type ComparisonResult interface {
 	GetTypeName() string
 	GetString1() string
 	GetString2() string
+	GetStrings() (string, string)
+	GetSplitLength() *int
 	GetError() error
 	Print(v bool)
 }
@@ -79,6 +81,7 @@ type ComparisonResultInt struct {
 	comparisonType ComparisonResultType
 	string1        string
 	string2        string
+	splitLength    *int
 	score          *int
 	err            error
 }
@@ -86,12 +89,14 @@ type ComparisonResultInt struct {
 func NewComparisonResultInt(comparisonType ComparisonResultType,
 	string1 string,
 	string2 string,
+	splitLength *int,
 	score *int,
 	error error) *ComparisonResultInt {
 	return &ComparisonResultInt{
 		comparisonType: comparisonType,
 		string1:        string1,
 		string2:        string2,
+		splitLength:    splitLength,
 		score:          score,
 		err:            error,
 	}
@@ -122,6 +127,11 @@ func (c ComparisonResultInt) GetStrings() (string, string) {
 	return c.string1, c.string2
 }
 
+// GetSplitLength returns the split length of the comparison result as a pointer to an integer.
+func (c ComparisonResultInt) GetSplitLength() *int {
+	return c.splitLength
+}
+
 // GetError returns the error associated with the ComparisonResultInt, if any.
 func (c ComparisonResultInt) GetError() error {
 	return c.err
@@ -148,6 +158,7 @@ type ComparisonResultFloat struct {
 	comparisonType ComparisonResultType
 	string1        string
 	string2        string
+	splitLength    *int
 	score          *float32
 	err            error
 }
@@ -155,12 +166,14 @@ type ComparisonResultFloat struct {
 func NewComparisonResultFloat(comparisonType ComparisonResultType,
 	string1 string,
 	string2 string,
+	splitLength *int,
 	score *float32,
 	error error) *ComparisonResultFloat {
 	return &ComparisonResultFloat{
 		comparisonType: comparisonType,
 		string1:        string1,
 		string2:        string2,
+		splitLength:    splitLength,
 		score:          score,
 		err:            error,
 	}
@@ -189,6 +202,11 @@ func (c ComparisonResultFloat) GetString2() string {
 // GetStrings returns the two strings stored in the ComparisonResultFloat instance.
 func (c ComparisonResultFloat) GetStrings() (string, string) {
 	return c.string1, c.string2
+}
+
+// GetSplitLength retrieves the value of the splitLength field as a pointer to an integer.
+func (c ComparisonResultFloat) GetSplitLength() *int {
+	return c.splitLength
 }
 
 // GetError returns the error encountered during the comparison, or nil if no error occurred.

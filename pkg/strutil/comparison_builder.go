@@ -176,12 +176,12 @@ func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *Strin
 		return sb
 	}
 	js := jaccardSimilarity(sb.value, other, splitLength)
-	sb.comparisonData.SetJaccardSim(js)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(js)
 	return sb
 }
 
 // CosineSimilarity computes the cosine similarity between the StringBuilder value and
-// another string with n-gram splitting. Updates the comparisonData state with
+// another string with n-gram splitting. Updates the ComparisonManager with
 // the computed similarity and returns the modified StringBuilder. When an error exists in the StringBuilder,
 // it skips computation and returns itself.
 //
@@ -193,7 +193,7 @@ func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *String
 		return sb
 	}
 	cs := cosineSimilarity(sb.value, other, splitLength)
-	sb.comparisonData.SetCosineSimilarity(cs)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(cs)
 	return sb
 }
 
@@ -209,7 +209,7 @@ func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) 
 		return sb
 	}
 	sdc := sorensenDiceCoefficient(sb.value, other, splitLength)
-	sb.comparisonData.SetSorensenDiceCo(sdc)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(sdc)
 	return sb
 }
 

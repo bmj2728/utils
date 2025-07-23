@@ -687,28 +687,38 @@ func TestJaccardSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := jaccardSimilarity(tt.input1, tt.input2, tt.splitLength)
 			result := JaccardSimilarity(tt.input1, tt.input2, tt.splitLength)
-			builderResult := New(tt.input1).JaccardSimilarity(tt.input2, tt.splitLength)
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetJaccardSim())) >
-					float64EqualityThreshold) {
-				t.Errorf("JaccardSimilarity - expected %f - got %f / %f / %f",
+			builderResult := New(tt.input1).
+				WithComparisonManager().
+				JaccardSimilarity(tt.input2, tt.splitLength).
+				comparisonManager
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result.score)) > float64EqualityThreshold) {
+				t.Errorf("JaccardSimilarity - expected %f - got %f / %f",
 					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult.ComparisonData().GetJaccardSim(),
+					*helperResult.score,
+					*result.score,
 				)
 			}
-			if tt.expected == nil &&
-				helperResult != nil &&
-				result != nil &&
-				builderResult.ComparisonData().GetJaccardSim() != nil {
-				t.Errorf("JaccardSimilarity - expected %f - got %f / %f / %f",
-					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult.ComparisonData().GetJaccardSim(),
+			if tt.expected == nil && (helperResult.score != nil ||
+				result.score != nil) {
+				t.Errorf("JaccardSimilarity - expected nil - got %f / %f",
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brFloat, ok := (*builderResult.ComparisonResults[JaccardSim][tt.input2]).(ComparisonResultFloat); ok {
+				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+					t.Errorf("JaccardSimilarity - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
+				if tt.expected == nil && brFloat.score != nil {
+					t.Errorf("JaccardSimilarity - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
 			}
 		})
 	}
@@ -751,28 +761,35 @@ func TestCosineSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := cosineSimilarity(tt.input1, tt.input2, tt.splitLen)
 			result := CosineSimilarity(tt.input1, tt.input2, tt.splitLen)
-			builderResult := New(tt.input1).CosineSimilarity(tt.input2, tt.splitLen)
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetCosineSimilarity())) >
-					float64EqualityThreshold) {
-				t.Errorf("CosineSimilarity - expected %f - got %f / %f / %f",
+			builderResult := New(tt.input1).WithComparisonManager().CosineSimilarity(tt.input2, tt.splitLen).comparisonManager
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result.score)) > float64EqualityThreshold) {
+				t.Errorf("CosineSimilarity - expected %f - got %f / %f",
 					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult.ComparisonData().GetCosineSimilarity(),
+					*helperResult.score,
+					*result.score,
 				)
 			}
-			if tt.expected == nil &&
-				helperResult != nil &&
-				result != nil &&
-				builderResult.ComparisonData().GetCosineSimilarity() != nil {
-				t.Errorf("CosineSimilarity - expected %f - got %f / %f / %f",
-					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult.ComparisonData().GetCosineSimilarity(),
+			if tt.expected == nil && (helperResult.score != nil ||
+				result.score != nil) {
+				t.Errorf("CosineSimilarity - expected nil - got %f / %f",
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brFloat, ok := (*builderResult.ComparisonResults[CosineSim][tt.input2]).(ComparisonResultFloat); ok {
+				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+					t.Errorf("CosineSimilarity - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
+				if tt.expected == nil && brFloat.score != nil {
+					t.Errorf("CosineSimilarity - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
 			}
 		})
 	}
@@ -815,28 +832,39 @@ func TestSorensenDiceCoefficient(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := SorensenDiceCoefficient(tt.input1, tt.input2, tt.splitLen)
 			result := SorensenDiceCoefficient(tt.input1, tt.input2, tt.splitLen)
-			builderResult := New(tt.input1).SorensenDiceCoefficient(tt.input2, tt.splitLen)
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetSorensenDiceCo())) >
-					float64EqualityThreshold) {
-				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f / %f",
+			builderResult := New(tt.input1).
+				WithComparisonManager().
+				SorensenDiceCoefficient(tt.input2, tt.splitLen).
+				comparisonManager
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result.score)) > float64EqualityThreshold) {
+				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f",
 					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult.ComparisonData().GetSorensenDiceCo(),
+					*helperResult.score,
+					*result.score,
 				)
 			}
 			if tt.expected == nil &&
-				helperResult != nil &&
-				result != nil &&
-				builderResult.ComparisonData().GetSorensenDiceCo() != nil {
-				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f / %f",
-					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult.ComparisonData().GetSorensenDiceCo(),
+				(helperResult.score != nil ||
+					result.score != nil) {
+				t.Errorf("SorensenDiceCoefficient - expected nil - got %f / %f",
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brFloat, ok := (*builderResult.ComparisonResults[SorensenDiceCo][tt.input2]).(ComparisonResultFloat); ok {
+				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+					t.Errorf("SorensenDiceCoefficient - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
+				if tt.expected == nil && brFloat.score != nil {
+					t.Errorf("SorensenDiceCoefficient - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
 			}
 		})
 	}
