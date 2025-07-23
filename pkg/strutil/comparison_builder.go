@@ -17,6 +17,9 @@ func (sb *StringBuilder) LevenshteinDistance(other string) *StringBuilder {
 	}
 	ld := levenshteinDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(ld)
+	if ld.err != nil {
+		sb.err = ld.err
+	}
 	return sb
 }
 
@@ -30,6 +33,9 @@ func (sb *StringBuilder) DamerauLevenshteinDistance(other string) *StringBuilder
 	}
 	dld := damerauLevenshteinDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(dld)
+	if dld.err != nil {
+		sb.err = dld.err
+	}
 	return sb
 }
 
@@ -44,6 +50,9 @@ func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) *StringBuil
 	}
 	osadld := osaDamerauLevenshteinDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(osadld)
+	if osadld.err != nil {
+		sb.err = osadld.err
+	}
 	return sb
 }
 
@@ -56,6 +65,9 @@ func (sb *StringBuilder) LCS(other string) *StringBuilder {
 	}
 	lcs := lcs(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(lcs)
+	if lcs.err != nil {
+		sb.err = lcs.err
+	}
 	return sb
 }
 
@@ -67,6 +79,9 @@ func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
 	}
 	l := lcsEditDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(l)
+	if l.err != nil {
+		sb.err = l.err
+	}
 	return sb
 }
 
@@ -78,10 +93,10 @@ func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
 		return sb
 	}
 	lb := lcsBacktrack(sb.value, other)
+	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lb)
 	if lb.err != nil {
 		sb.err = lb.err
 	}
-	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lb)
 	return sb
 }
 
@@ -93,10 +108,10 @@ func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
 		return sb
 	}
 	lba := lcsBacktrackAll(sb.value, other)
+	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lba)
 	if lba.err != nil {
 		sb.err = lba.err
 	}
-	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lba)
 	return sb
 }
 
@@ -109,10 +124,10 @@ func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
 		return sb
 	}
 	ld := lcsDiff(sb.value, other)
+	sb.WithComparisonManager().comparisonManager.AddLCSResult(*ld)
 	if ld.err != nil {
 		sb.err = ld.err
 	}
-	sb.WithComparisonManager().comparisonManager.AddLCSResult(*ld)
 	return sb
 }
 
@@ -128,6 +143,9 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 		sb.err = dist.err
 	}
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(dist)
+	if dist.err != nil {
+		sb.err = dist.err
+	}
 	return sb
 }
 
@@ -144,6 +162,9 @@ func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
 	}
 	js := jaroSimilarity(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(js)
+	if js.err != nil {
+		sb.err = js.err
+	}
 	return sb
 }
 
@@ -160,6 +181,9 @@ func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
 	}
 	jws := jaroWinklerSimilarity(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(jws)
+	if jws.err != nil {
+		sb.err = jws.err
+	}
 	return sb
 }
 
@@ -177,6 +201,9 @@ func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *Strin
 	}
 	js := jaccardSimilarity(sb.value, other, splitLength)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(js)
+	if js.err != nil {
+		sb.err = js.err
+	}
 	return sb
 }
 
@@ -194,6 +221,9 @@ func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *String
 	}
 	cs := cosineSimilarity(sb.value, other, splitLength)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(cs)
+	if cs.err != nil {
+		sb.err = cs.err
+	}
 	return sb
 }
 
@@ -210,6 +240,9 @@ func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) 
 	}
 	sdc := sorensenDiceCoefficient(sb.value, other, splitLength)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(sdc)
+	if sdc.err != nil {
+		sb.err = sdc.err
+	}
 	return sb
 }
 
@@ -222,6 +255,9 @@ func (sb *StringBuilder) QgramDistance(other string, q int) *StringBuilder {
 	}
 	qd := qgramDistance(sb.value, other, q)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(qd)
+	if qd.err != nil {
+		sb.err = qd.err
+	}
 	return sb
 }
 
@@ -245,6 +281,9 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, cust
 		if shingleMap, ok := (*sr).(*ShingleMapResult); ok {
 			qdc := qgramDistanceCustomNgram(*shingleMap.shingles, nmapOther, customName)
 			sb.WithComparisonManager().comparisonManager.AddComparisonResult(qdc)
+			if qdc.err != nil {
+				sb.err = qdc.err
+			}
 		}
 	}
 	return sb
@@ -259,6 +298,9 @@ func (sb *StringBuilder) QgramSimilarity(other string, q int) *StringBuilder {
 	}
 	qs := qgramSimilarity(sb.value, other, q)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(qs)
+	if qs.err != nil {
+		sb.err = qs.err
+	}
 	return sb
 }
 
@@ -269,10 +311,10 @@ func (sb *StringBuilder) Shingle(k int) *StringBuilder {
 		return sb
 	}
 	shingle := shingle(sb.value, k)
+	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	if shingle.err != nil {
 		sb.err = shingle.err
 	}
-	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	return sb
 }
 
@@ -282,10 +324,10 @@ func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 		return sb
 	}
 	shingle := shingleSlice(sb.value, k)
+	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	if shingle.err != nil {
 		sb.err = shingle.err
 	}
-	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	return sb
 }
 
@@ -297,9 +339,9 @@ func (sb *StringBuilder) Similarity(other string, algorithm Algorithm) *StringBu
 		return sb
 	}
 	sr := similarity(sb.value, other, algorithm)
+	sb.WithComparisonManager().comparisonManager.AddSimilarityResult(*sr)
 	if sr.err != nil {
 		sb.err = sr.err
 	}
-	sb.WithComparisonManager().comparisonManager.AddSimilarityResult(*sr)
 	return sb
 }
