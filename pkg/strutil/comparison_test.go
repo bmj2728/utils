@@ -6,8 +6,6 @@ import (
 	"testing"
 )
 
-// TODO update test cases to address result objects
-
 func TestLevenshteinDistance(t *testing.T) {
 	test := []struct {
 		name     string
