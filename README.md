@@ -34,45 +34,26 @@ This project aims to provide a set of utility packages that follow these princip
 
 ```
 utils/
-├── pkg/
-│   ├── strutil/                # String manipulation & validation
-│   │   ├── builder.go          # Core StringBuilder implementation
-│   │   ├── casing.go           # Main case conversion functions
-│   │   ├── casing_builder.go   # Fluent API for case operations
-│   │   ├── casing_helpers.go   # Internal case conversion implementations
-│   │   ├── comparison.go       # Main comparison functions
-│   │   ├── comparison_builder.go # Fluent API for comparison operations
-│   │   ├── comparison_data.go  # ComparisonData struct definition
-│   │   ├── comparison_helpers.go # Internal comparison implementations
-│   │   ├── similarity_result.go # SimilarityResult struct definition
-│   │   ├── generation.go       # Main string generation functions
-│   │   ├── generation_builder.go # Fluent API for generation operations
-│   │   ├── lorem.go            # Main lorem ipsum functions
-│   │   ├── lorem_builder.go    # Fluent API for lorem ipsum operations
-│   │   ├── sanitization.go     # Main sanitization functions
-│   │   ├── sanitization_builder.go # Fluent API for sanitization operations
-│   │   ├── transform.go        # Main string transformation functions
-│   │   ├── transform_builder.go # Fluent API for transformation operations
-│   │   ├── validation.go       # Main validation functions
-│   │   ├── validation_builder.go # Fluent API for validation operations
-│   │   └── *_test.go           # Test files for each functionality area
-│   └── version/                # Version information utilities
-├── httputil/        # HTTP client patterns (planned)
-├── fileutl/         # File operations (planned)
-├── jsonutil/        # JSON utilities (planned)
-├── cryptoutil/      # Common crypto patterns (planned)
-├── configutil/      # Configuration management (planned)
-├── sliceutil/       # Generic slice operations (planned)
-├── validationutil/  # Input validation (planned)
-├── errorutil/       # Error handling (planned)
-└── testutil/        # Test helpers (planned)
+└── pkg/
+    ├── strutil/                # String manipulation & validation
+    │ 
+    ├── version/                # Version information utilities
+    ├── httputil/        # HTTP client patterns (planned)
+    ├── fileutl/         # File operations (planned)
+    ├── jsonutil/        # JSON utilities (planned)
+    ├── cryptoutil/      # Common crypto patterns (planned)
+    ├── configutil/      # Configuration management (planned)
+    ├── sliceutil/       # Generic slice operations (planned)
+    ├── validationutil/  # Input validation (planned)
+    ├── floatutil/       # Float operations (planned)
+    └── maputil/         # Map operations (planned)
 ```
 
 This structure maintains a clear separation between:
 - Main public API functions (e.g., `comparison.go`)
 - Internal implementation functions (e.g., `comparison_helpers.go`)
 - Fluent builder pattern methods (e.g., `comparison_builder.go`)
-- Type definitions (e.g., `similarity_result.go`, `comparison_data.go`)
+- Type definitions (e.g., `similarity_result.go`, `comparison_manager.go`)
 
 ## Recent Updates
 
@@ -87,8 +68,15 @@ The project has recently added several significant features and improvements:
   - Q-gram Distance and Similarity
   - Sorensen-Dice Coefficient
   - Shingle generation for text fingerprinting
-- **Similarity Result Handling**: Added a `SimilarityResult` struct to standardize and enhance comparison results
-- **StringBuilder History**: Enhanced the string builder to maintain a history of similarity results
+- **Structured Results**: Added standardized result structures for various types of calculations:
+  - `SimilarityResult` for normalized similarity scores across different algorithms
+  - `LCSResult` for Longest Common Subsequence calculations
+  - `ShingleResult` for shingle generation (both as slices and frequency maps)
+  - `ComparisonResult` for general comparison operations (with int and float variants)
+- **Comparison Manager**: Implemented a central repository for managing and storing histories of various calculations:
+  - Maintains maps for different types of results (similarity, LCS, shingles, comparisons)
+  - Provides methods to add and retrieve results
+  - Enables tracking of multiple comparisons across different algorithms
 - **Project Reorganization**: Restructured the codebase into more manageable files with clear separation between:
   - Internal implementation functions
   - Main public API functions
@@ -99,9 +87,10 @@ The project has recently added several significant features and improvements:
 
 Upcoming features planned for future releases:
 
-1. **Enhanced Sanitization Functions**: Additional sanitization for various data types and contexts
-2. **Documentation Generation**: GitHub Actions for automatic documentation and pages generation
-3. **Performance Optimizations**: Further optimizations for string operations on large datasets
+1. **Enhanced Access Methods**: Improvements to the comparison manager to simplify result retrieval
+2. **Enhanced Sanitization Functions**: Additional sanitization for various data types and contexts
+3. **Documentation Generation**: GitHub Actions for automatic documentation and pages generation
+4. **Performance Optimizations**: Further optimizations for string operations on large datasets
 
 
 ## Current Implementation
@@ -113,19 +102,6 @@ The `strutil` package provides comprehensive string manipulation, validation, an
 #### Error Constants
 
 The package provides standardized error constants for validation failures:
-
-```
-// Error constants for validation
-ErrInvalidEmail                   = "invalid email address"
-ErrInvalidURL                     = "invalid URL"
-ErrInvalidUUID                    = "invalid UUID"
-ErrInvalidLengthRange             = "invalid length range"
-ErrInvalidLength                  = "invalid length"
-ErrInvalidEmpty                   = "empty string"
-ErrInvalidEmptyAfterNormalization = "empty string after whitespace normalization"
-ErrInvalidNotAlphaNumeric         = "string contains non-alphanumeric characters"
-```
-
 These constants are used throughout the package for consistent error messaging and can be checked when using the builder API's validation methods.
 
 #### Functional API
@@ -179,88 +155,11 @@ strutil.New(input).
     Result()
 
 // String comparison with similarity tracking
-result, comparisonData, err := strutil.New(input).
+value, comparisonManager, err := strutil.New(input).
+    WithComparisonManager().
     LevenshteinDistance(otherString).
     JaroSimilarity(otherString).
     Result()
-```
-
-#### Comparison Data Structures
-
-> **Note**: The comparison functionality is evolving and likely to change before v0.1.0.
-
-The string builder maintains two separate structures for tracking comparison results:
-
-##### ComparisonData Struct
-
-The `ComparisonData` struct stores various metrics from different string comparison algorithms:
-
-```
-type ComparisonData struct {
-    // LCS family
-    LCS             *int      `json:"lcs,omitempty"`
-    LCSBacktrack    *string   `json:"lcs_backtrack,omitempty"`
-    // Levenshtein family
-    LevenshteinDist   *int `json:"levenshtein_dist,omitempty"`
-    DamerauLevDist    *int `json:"damerau_lev_dist,omitempty"`
-    // Other algorithms
-    HammingDist      *int     `json:"hamming_dist,omitempty"`
-    JaroSimilarity   *float32 `json:"jaro_similarity,omitempty"`
-    // ... and many more metrics
-}
-```
-
-**Purpose**: Stores raw metrics from comparison operations.
-
-**Limitations**:
-- Doesn't store information about the comparison text itself
-- Can only hold comparison to a single text at a time
-- Only updated by specific comparison methods (LevenshteinDistance, JaroSimilarity, etc.)
-
-**Usage**:
-```
-// Access comparison data after operations
-sb := strutil.New("hello").
-    LevenshteinDistance("hallo").
-    JaroSimilarity("hallo")
-
-data := sb.ComparisonData()
-levDist := data.GetLevenshteinDist()  // Get Levenshtein distance
-jaroSim := data.GetJaroSimilarity()   // Get Jaro similarity score
-```
-
-##### SimilarityResult Struct
-
-The `SimilarityResult` struct provides a standardized way to handle normalized string comparison results:
-
-```
-type SimilarityResult struct {
-    Algorithm  string    // The algorithm used for comparison
-    Str1       string    // The first string being compared
-    Str2       string    // The second string being compared
-    Similarity *float32  // The similarity score (nil if error occurred)
-    Err        error     // Any error that occurred during comparison
-}
-```
-
-**Purpose**: Provides normalized results using one of 11 algorithms.
-
-**Benefits**:
-- Self-contained with both the comparison result and the strings being compared
-- Maintains context about which algorithm was used
-- Multiple SimilarityResults can be stored in the `similarities` slice
-- Standardized format regardless of the algorithm used
-
-**Usage**:
-```
-// Using the Similarity function directly
-result := strutil.Similarity("hello", "hallo", "levenshtein")
-fmt.Println(result.String())  // Prints formatted comparison result
-
-// Using the StringBuilder API to add to similarities slice
-sb := strutil.New("hello").Similarity("hallo", "levenshtein")
-// Additional comparisons can be added
-sb.Similarity("hallo", "jaro")
 ```
 
 ## Implemented Functions (as of 7/16/2025)
