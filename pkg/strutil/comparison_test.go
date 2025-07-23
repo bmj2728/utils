@@ -548,30 +548,23 @@ func TestHammingDistance(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult, err := hammingDistance(tt.input1, tt.input2)
-			if err != nil && helperResult != nil {
-				t.Errorf("Error: %s", err)
-			}
-			result, err := HammingDistance(tt.input1, tt.input2)
-			if err != nil && result != nil {
-				t.Errorf("Error: %s", err)
-			}
-			builderResult := New(tt.input1).HammingDistance(tt.input2)
-			builderErr := builderResult.Error()
-			builderHD := builderResult.ComparisonData().GetHammingDist()
-			if builderErr != nil && builderHD != nil {
-				t.Errorf("Error: %s", builderErr)
-			}
+			helperResult := hammingDistance(tt.input1, tt.input2)
+			result := HammingDistance(tt.input1, tt.input2)
+			builderResult := New(tt.input1).WithComparisonManager().HammingDistance(tt.input2).comparisonManager
 			if tt.expected != nil &&
-				(*helperResult != *tt.expected ||
-					*result != *tt.expected ||
-					*builderHD != *tt.expected) {
-				t.Errorf("HammingDistance - expected %d - got %d / %d / %d",
+				(*helperResult.score != *tt.expected ||
+					*result.score != *tt.expected) {
+				t.Errorf("HammingDistance - expected %d - got %d / %d",
 					*tt.expected,
-					*helperResult,
-					*result,
-					*builderHD,
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brInt, ok := (*builderResult.ComparisonResults[HammingDist][tt.input2]).(ComparisonResultInt); ok {
+				if *brInt.score != *tt.expected {
+					t.Errorf("LCS - expected %d - got %d",
+						*tt.expected, *brInt.score)
+				}
 			}
 		})
 	}

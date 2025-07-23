@@ -1,9 +1,5 @@
 package strutil
 
-import (
-	"errors"
-)
-
 // CompareStringBuilderSlices compares two slices of StringBuilder for equality,
 // optionally allowing nil slices to be considered equal.
 // The order of elements in the slices does not affect the comparisonData,
@@ -127,12 +123,11 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
-	dist, err := hammingDistance(sb.value, other)
-	if err != nil {
-		sb.err = errors.Join(ErrHammingDistanceFailure, err)
-		return sb
+	dist := hammingDistance(sb.value, other)
+	if dist.err != nil {
+		sb.err = dist.err
 	}
-	sb.comparisonData.SetHammingDist(dist)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(dist)
 	return sb
 }
 

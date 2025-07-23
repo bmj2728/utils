@@ -50,14 +50,14 @@ func LCSDiff(str1, str2 string) *LCSResult {
 	return lcsDiff(str1, str2)
 }
 
-// HammingDistance computes the Hamming distance between two strings s1 and s2, returning an integer
-// result and an error if the strings are of unequal length.
+// HammingDistance computes the Hamming distance between two strings s1 and s2, returning a ComparisonResultInt
+// and an error if the strings are of unequal length.
 //
 // The Hamming distance between two equal-length strings of symbols is the number of
 // positions at which the corresponding symbols are different.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Hamming_distance
-func HammingDistance(s1, s2 string) (*int, error) {
+func HammingDistance(s1, s2 string) *ComparisonResultInt {
 	return hammingDistance(s1, s2)
 }
 
