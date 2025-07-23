@@ -7,11 +7,7 @@ type StringBuilder struct {
 	value             string
 	err               error
 	comparisonManager *ComparisonManager
-	comparisonData    *ComparisonData
-	similarities      *[]SimilarityResult
 }
-
-// TODO update to utilize ComparisonManager
 
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
@@ -39,11 +35,6 @@ func (sb *StringBuilder) WithComparisonManager() *StringBuilder {
 		sb.comparisonManager = NewComparisonManager()
 	}
 	return sb
-}
-
-// ComparisonData returns the comparisonData object stored in the StringBuilder.
-func (sb *StringBuilder) ComparisonData() *ComparisonData {
-	return sb.comparisonData
 }
 
 // ComparisonManager returns the associated ComparisonManager instance of the StringBuilder.

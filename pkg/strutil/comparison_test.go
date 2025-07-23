@@ -911,26 +911,36 @@ func TestQGramDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := qgramDistance(tt.input1, tt.input2, tt.q)
 			result := QgramDistance(tt.input1, tt.input2, tt.q)
-			builderResult := New(tt.input1).QgramDistance(tt.input2, tt.q).comparisonData.GetQGramDist()
-			if tt.expected != nil && (*helperResult != *tt.expected ||
-				*result != *tt.expected ||
-				*builderResult != *tt.expected) {
-				t.Errorf("QgramDistance - expected %d - got %d / %d / %d",
+			builderResult := New(tt.input1).WithComparisonManager().QgramDistance(tt.input2, tt.q).comparisonManager
+			if tt.expected != nil && (*helperResult.score != *tt.expected ||
+				*result.score != *tt.expected) {
+				t.Errorf("QgramDistance - expected %d - got %d / %d",
 					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult,
+					*helperResult.score,
+					*result.score,
 				)
 			}
-			if tt.expected == nil && (helperResult != nil ||
-				result != nil ||
-				builderResult != nil) {
-				t.Errorf("QgramDistance - expected %d - got %d / %d / %d",
-					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult,
+			if tt.expected == nil && (helperResult.score != nil ||
+				result.score != nil) {
+				t.Errorf("QgramDistance - expected %d - got %d / %d",
+					tt.expected,
+					helperResult.score,
+					result.score,
 				)
+			}
+			if brInt, ok := (*builderResult.ComparisonResults[QGramDist][tt.input2]).(ComparisonResultInt); ok {
+				if *brInt.score != *tt.expected {
+					t.Errorf("QgramDistance - expected %d - got %d",
+						*tt.expected,
+						*brInt.score,
+					)
+				}
+				if tt.expected == nil && brInt.score != nil {
+					t.Errorf("QgramDistance - expected %d - got %d",
+						*tt.expected,
+						*brInt.score,
+					)
+				}
 			}
 		})
 	}
@@ -977,13 +987,13 @@ func TestQgramDistanceCustomNgram(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := qgramDistanceCustomNgram(tt.input1, tt.input2)
-			result := QgramDistanceCustomNgram(tt.input1, tt.input2)
-			if helperResult != tt.expected || result != tt.expected {
+			helperResult := qgramDistanceCustomNgram(tt.input1, tt.input2, "CustomNgram")
+			result := QgramDistanceCustomNgram(tt.input1, tt.input2, "CustomNgram")
+			if *helperResult.score != tt.expected || *result.score != tt.expected {
 				t.Errorf("QgramDistanceCustomNgram - expected %d - got %d / %d",
 					tt.expected,
-					helperResult,
-					result,
+					*helperResult.score,
+					*result.score,
 				)
 			}
 		})
@@ -1010,12 +1020,20 @@ func TestQgramDistanceCustomNgramBuilder(t *testing.T) {
 			if tt.input1 == nil {
 				tt.input1 = New("hello").WithComparisonManager().Shingle(2)
 			}
-			builderResult := tt.input1.QgramDistanceCustomNgram(tt.input2)
-			if *builderResult.ComparisonData().GetQGramDistCustom() != tt.expected {
-				t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
-					tt.expected,
-					*builderResult.ComparisonData().GetQGramDistCustom(),
-				)
+			builderResult := tt.input1.WithComparisonManager().QgramDistanceCustomNgram(tt.input2, "Test").comparisonManager
+			if brInt, ok := (*builderResult.ComparisonResults[QGramDistCust]["Test"]).(ComparisonResultInt); ok {
+				if brInt.score != nil && *brInt.score != tt.expected {
+					t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
+						tt.expected,
+						*brInt.score,
+					)
+				}
+				if brInt.score == nil && tt.expected != 0 {
+					t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
+						tt.expected,
+						*brInt.score,
+					)
+				}
 			}
 		})
 	}
@@ -1059,17 +1077,28 @@ func TestQgramSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := qgramSimilarity(tt.input1, tt.input2, tt.q)
 			result := QgramSimilarity(tt.input1, tt.input2, tt.q)
-			builderResult := New(tt.input1).QgramSimilarity(tt.input2, tt.q)
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result)) > float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*builderResult.ComparisonData().GetQGramSim())) >
-					float64EqualityThreshold) {
-				t.Errorf("QgramSimilarity - expected %f - got %f / %f / %f",
+			builderResult := New(tt.input1).WithComparisonManager().QgramSimilarity(tt.input2, tt.q).comparisonManager
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > float64EqualityThreshold ||
+				math.Abs(float64(*tt.expected)-float64(*result.score)) > float64EqualityThreshold) {
+				t.Errorf("QgramSimilarity - expected %f - got %f / %f",
 					*tt.expected,
-					*helperResult,
-					*result,
-					*builderResult.ComparisonData().GetQGramSim(),
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brFloat, ok := (*builderResult.ComparisonResults[QGramSim][tt.input2]).(ComparisonResultFloat); ok {
+				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+					t.Errorf("QgramSimilarity - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
+				if tt.expected == nil && brFloat.score != nil {
+					t.Errorf("QgramSimilarity - expected %f - got %f",
+						*tt.expected,
+						*brFloat.score,
+					)
+				}
 			}
 		})
 	}

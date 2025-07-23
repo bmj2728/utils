@@ -3,9 +3,7 @@ package strutil
 // NewLoremWord creates a new StringBuilder instance with a randomly generated word as its initial value.
 func NewLoremWord() *StringBuilder {
 	return &StringBuilder{
-		value:          loremWord(),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremWord(),
 	}
 }
 
@@ -13,18 +11,14 @@ func NewLoremWord() *StringBuilder {
 // containing the specified number of lorem ipsum words.
 func NewLoremWords(count int) *StringBuilder {
 	return &StringBuilder{
-		value:          loremWords(count),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremWords(count),
 	}
 }
 
 // NewLoremSentence creates and returns a new StringBuilder initialized with a randomly generated lorem ipsum sentence.
 func NewLoremSentence() *StringBuilder {
 	return &StringBuilder{
-		value:          loremSentence(),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremSentence(),
 	}
 }
 
@@ -32,18 +26,14 @@ func NewLoremSentence() *StringBuilder {
 // a lorem ipsum sentence with the specified word count.
 func NewLoremSentenceCustom(length int) *StringBuilder {
 	return &StringBuilder{
-		value:          loremSentenceCustom(length),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremSentenceCustom(length),
 	}
 }
 
 // NewLoremSentences creates a new StringBuilder containing the given number of lorem ipsum sentences.
 func NewLoremSentences(count int) *StringBuilder {
 	return &StringBuilder{
-		value:          loremSentences(count),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremSentences(count),
 	}
 }
 
@@ -51,9 +41,7 @@ func NewLoremSentences(count int) *StringBuilder {
 // containing lorem ipsum sentences based on the given count and length.
 func NewLoremSentencesCustom(count int, length int) *StringBuilder {
 	return &StringBuilder{
-		value:          loremSentencesCustom(count, length),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremSentencesCustom(count, length),
 	}
 }
 
@@ -61,27 +49,21 @@ func NewLoremSentencesCustom(count int, length int) *StringBuilder {
 // with count, min, and max controlling quantity and length.
 func NewLoremSentencesVariable(count int, min int, max int) *StringBuilder {
 	return &StringBuilder{
-		value:          loremSentencesVariable(count, min, max),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremSentencesVariable(count, min, max),
 	}
 }
 
 // NewLoremParagraph creates a new StringBuilder initialized with a random Lorem Ipsum paragraph.
 func NewLoremParagraph() *StringBuilder {
 	return &StringBuilder{
-		value:          loremParagraph(),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremParagraph(),
 	}
 }
 
 // NewLoremParagraphs generates a StringBuilder containing the specified number of lorem ipsum paragraphs.
 func NewLoremParagraphs(count int) *StringBuilder {
 	return &StringBuilder{
-		value:          loremParagraphs(count),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremParagraphs(count),
 	}
 }
 
@@ -89,26 +71,20 @@ func NewLoremParagraphs(count int) *StringBuilder {
 // with a domain string from the loremDomain function.
 func NewLoremDomain() *StringBuilder {
 	return &StringBuilder{
-		value:          loremDomain(),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremDomain(),
 	}
 }
 
 // NewLoremURL creates and returns a new StringBuilder initialized with a lorem ipsum URL string.
 func NewLoremURL() *StringBuilder {
 	return &StringBuilder{
-		value:          loremURL(),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremURL(),
 	}
 }
 
 // NewLoremEmail initializes a StringBuilder with a generated mock email value and returns the instance.
 func NewLoremEmail() *StringBuilder {
 	return &StringBuilder{
-		value:          loremEmail(),
-		comparisonData: NewComparisonData(),
-		similarities:   &[]SimilarityResult{},
+		value: loremEmail(),
 	}
 }

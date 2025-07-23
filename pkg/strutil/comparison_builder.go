@@ -213,23 +213,23 @@ func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) 
 	return sb
 }
 
-// QgramDistance computes the q-gram distance between the StringBuilder's value
-// and another string with the specified q value.
-// It updates the comparisonData's QGramDist field with the computed distance.
-// Returns the StringBuilder instance for method chaining.
+// QgramDistance calculates the Q-Gram distance between the current string and another string using a specified q value.
+// Stores the result in the ComparisonManager for further access or management.
+// Returns the updated StringBuilder instance.
 func (sb *StringBuilder) QgramDistance(other string, q int) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
 	qd := qgramDistance(sb.value, other, q)
-	sb.comparisonData.SetQGramDist(qd)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(qd)
 	return sb
 }
 
-// QgramDistanceCustomNgram calculates the q-gram distance between the current string value and another n-gram map.
-// If the StringBuilder doesn't have an existing ComparisonData.Shingle map, one is generated using the n-gram size
-// of the comparison map.
-func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int) *StringBuilder {
+// QgramDistanceCustomNgram computes the Q-gram distance between the current StringBuilder's n-grams
+// and a given n-gram map.
+// It uses a custom comparison name, storing the result in the ComparisonManager if applicable,
+// and returns the StringBuilder.
+func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, customName string) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
@@ -239,12 +239,12 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int) *Str
 		break
 	}
 	if sb.comparisonManager == nil || sb.comparisonManager.ShingleData[ShinglesMap][k] == nil {
-		return sb.WithComparisonManager().Shingle(k).QgramDistanceCustomNgram(nmapOther)
+		return sb.WithComparisonManager().Shingle(k).QgramDistanceCustomNgram(nmapOther, customName)
 	} else {
 		sr := sb.comparisonManager.ShingleData[ShinglesMap][k]
 		if shingleMap, ok := (*sr).(*ShingleMapResult); ok {
-			qdc := qgramDistanceCustomNgram(*shingleMap.shingles, nmapOther)
-			sb.comparisonData.SetQGramDistCustom(&qdc)
+			qdc := qgramDistanceCustomNgram(*shingleMap.shingles, nmapOther, customName)
+			sb.WithComparisonManager().comparisonManager.AddComparisonResult(qdc)
 		}
 	}
 	return sb
@@ -258,7 +258,7 @@ func (sb *StringBuilder) QgramSimilarity(other string, q int) *StringBuilder {
 		return sb
 	}
 	qs := qgramSimilarity(sb.value, other, q)
-	sb.comparisonData.SetQGramSim(qs)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(qs)
 	return sb
 }
 

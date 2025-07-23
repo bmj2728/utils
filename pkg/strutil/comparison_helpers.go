@@ -196,29 +196,30 @@ func sorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFl
 	return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, &sdc, nil)
 }
 
-// qgramDistance computes the q-gram distance between two strings s1 and s2 using a specified q-gram size q.
-func qgramDistance(s1, s2 string, q int) *int {
+// qgramDistance computes the Q-Gram distance between two strings s1 and s2 using the specified q-gram size q.
+// Returns a ComparisonResultInt containing the computed distance or an error if q is invalid.
+func qgramDistance(s1, s2 string, q int) *ComparisonResultInt {
 	if q < 1 {
-		return nil
+		return NewComparisonResultInt(QGramDist, s1, s2, &q, nil, ErrInvalidLengthRange)
 	}
 	qd := edlib.QgramDistance(s1, s2, q)
-	return &qd
+	return NewComparisonResultInt(QGramDist, s1, s2, &q, &qd, nil)
 }
 
-// qgramDistanceCustomNgram calculates the q-gram distance using two custom n-gram frequency maps.
-// It returns the distance as an integer based on the differences between the input n-gram maps.
-func qgramDistanceCustomNgram(nmap1, nmap2 map[string]int) int {
-	return edlib.QgramDistanceCustomNgram(nmap1, nmap2)
+// qgramDistanceCustomNgram calculates the Q-Gram distance between two n-gram maps and returns a comparison result.
+func qgramDistanceCustomNgram(nmap1, nmap2 map[string]int, customName string) *ComparisonResultInt {
+	qdc := edlib.QgramDistanceCustomNgram(nmap1, nmap2)
+	return NewComparisonResultInt(QGramDistCust, "", customName, nil, &qdc, nil)
 }
 
-// qgramSimilarity calculates the q-gram similarity between two strings using the specified q-gram size.
-// Returns a pointer to the similarity score or nil if the q-gram size is less than 1.
-func qgramSimilarity(s1, s2 string, q int) *float32 {
+// qgramSimilarity calculates the q-gram similarity between two strings with a specified q size.
+// Returns a ComparisonResultFloat containing the similarity score or an error if q is invalid.
+func qgramSimilarity(s1, s2 string, q int) *ComparisonResultFloat {
 	if q < 1 {
-		return nil
+		return NewComparisonResultFloat(QGramSim, s1, s2, &q, nil, ErrInvalidLengthRange)
 	}
 	qs := edlib.QgramSimilarity(s1, s2, q)
-	return &qs
+	return NewComparisonResultFloat(QGramSim, s1, s2, &q, &qs, nil)
 }
 
 // shingle generates k-shingles for the given string and returns them
@@ -255,5 +256,3 @@ func similarity(s1, s2 string, algorithm Algorithm) *SimilarityResult {
 	}
 	return NewSimilarityResult(algorithm, s1, s2, &sim, err)
 }
-
-// TODO update functions to return result objects
