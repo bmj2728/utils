@@ -25,12 +25,12 @@ func OSADamerauLevenshteinDistance(s1, s2 string) *ComparisonResultInt {
 }
 
 // LCS calculates the length of the longest common subsequence between two input strings s1 and s2.
-func LCS(s1, s2 string) int {
+func LCS(s1, s2 string) *ComparisonResultInt {
 	return lcs(s1, s2)
 }
 
 // LCSEditDistance computes the edit distance between two strings using the Longest Common Subsequence (LCS) method.
-func LCSEditDistance(s1, s2 string) int {
+func LCSEditDistance(s1, s2 string) *ComparisonResultInt {
 	return lcsEditDistance(s1, s2)
 }
 

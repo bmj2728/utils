@@ -51,24 +51,26 @@ func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) *StringBuil
 	return sb
 }
 
-// LCS calculates and returns the length of the longest common subsequence (LCS) between
-// the StringBuilder value and another string.
+// LCS computes the longest common subsequence (LCS) between the current string and the provided string.
+// It updates the comparison manager with the result of the LCS computation and returns the updated StringBuilder.
+// If an error exists in the StringBuilder, it returns itself without performing computations.
 func (sb *StringBuilder) LCS(other string) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
 	lcs := lcs(sb.value, other)
-	sb.comparisonData.SetLCS(&lcs)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(lcs)
 	return sb
 }
 
-// LCSEditDistance calculates the edit distance between the StringBuilder's value and another string using LCS.
+// LCSEditDistance calculates the edit distance based on the Longest Common Subsequence (LCS) between two strings.
+// It updates the ComparisonManager of the StringBuilder instance with the result and returns the StringBuilder.
 func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
 	if sb.err != nil {
 		return sb
 	}
-	i := lcsEditDistance(sb.value, other)
-	sb.comparisonData.SetLCSEditDistance(&i)
+	l := lcsEditDistance(sb.value, other)
+	sb.WithComparisonManager().comparisonManager.AddComparisonResult(l)
 	return sb
 }
 

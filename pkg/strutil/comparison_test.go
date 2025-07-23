@@ -156,10 +156,16 @@ func TestLCS(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := lcs(tt.input1, tt.input2)
 			result := LCS(tt.input1, tt.input2)
-			builderResult := New(tt.input1).LCS(tt.input2)
-			if helperResult != tt.expected || result != tt.expected || *builderResult.comparisonData.GetLCS() != tt.expected {
-				t.Errorf("LCS - expected %d - got %d / %d / %d",
-					tt.expected, helperResult, result, *builderResult.comparisonData.GetLCS())
+			builderResult := New(tt.input1).WithComparisonManager().LCS(tt.input2).comparisonManager
+			if *helperResult.score != tt.expected || *result.score != tt.expected {
+				t.Errorf("LCS - expected %d - got %d / %d",
+					tt.expected, *helperResult.score, *result.score)
+			}
+			if brInt, ok := (*builderResult.ComparisonResults[LCSLength][tt.input2]).(ComparisonResultInt); ok {
+				if *brInt.score != tt.expected {
+					t.Errorf("LCS - expected %d - got %d",
+						tt.expected, *brInt.score)
+				}
 			}
 		})
 	}
@@ -497,18 +503,22 @@ func TestLCSEditDistance(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResul := lcsEditDistance(tt.input1, tt.input2)
+			helperResult := lcsEditDistance(tt.input1, tt.input2)
 			result := LCSEditDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).LCSEditDistance(tt.input2)
-			if helperResul != tt.expected ||
-				result != tt.expected ||
-				*builderResult.comparisonData.GetLCSEditDistance() != tt.expected {
-				t.Errorf("LCSEditDistance - expected %d - got %d / %d /%d",
+			builderResult := New(tt.input1).WithComparisonManager().LCSEditDistance(tt.input2).comparisonManager
+			if *helperResult.score != tt.expected ||
+				*result.score != tt.expected {
+				t.Errorf("LCSEditDistance - expected %d - got %d / %d",
 					tt.expected,
-					helperResul,
-					result,
-					*builderResult.comparisonData.GetLCSEditDistance(),
+					*helperResult.score,
+					*result.score,
 				)
+			}
+			if brInt, ok := (*builderResult.ComparisonResults[LCSDist][tt.input2]).(ComparisonResultInt); ok {
+				if *brInt.score != tt.expected {
+					t.Errorf("LCS - expected %d - got %d",
+						tt.expected, *brInt.score)
+				}
 			}
 		})
 	}
