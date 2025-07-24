@@ -144,11 +144,21 @@ func (c ComparisonResultInt) GetScoreInt() *int {
 
 // Print outputs the comparison result in a detailed or concise format depending on the boolean parameter provided.
 func (c ComparisonResultInt) Print(v bool) {
+	if c.err != nil && v {
+		fmt.Printf("Error during processing: %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+			ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
+		return
+	} else if c.err != nil && !v {
+		fmt.Printf("%s Error: %s\n", ComparisonResultTypeMap[c.comparisonType], c.err.Error())
+		return
+	}
 	if v {
 		fmt.Printf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %d\n",
 			ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
+		return
 	} else {
 		fmt.Printf("%s: %d\n", ComparisonResultTypeMap[c.comparisonType], *c.score)
+		return
 	}
 }
 
@@ -240,17 +250,4 @@ func (c ComparisonResultFloat) Print(v bool) {
 			fmt.Printf("%s: %f\n", ComparisonResultTypeMap[c.comparisonType], *c.score)
 		}
 	}
-}
-
-type ComparisonResultsMap map[ComparisonResultType]map[string]*ComparisonResult
-
-func NewComparisonResultsMap() ComparisonResultsMap {
-	return make(map[ComparisonResultType]map[string]*ComparisonResult)
-}
-
-func (crm ComparisonResultsMap) Add(result ComparisonResult) {
-	if crm[result.GetType()] == nil {
-		crm[result.GetType()] = make(map[string]*ComparisonResult)
-	}
-	crm[result.GetType()][result.GetString2()] = &result
 }

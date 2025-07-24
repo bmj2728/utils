@@ -18,9 +18,41 @@ func NewComparisonManager() *ComparisonManager {
 	}
 }
 
-// GetComparisonResults retrieves the map of comparison results stored in the ComparisonManager instance.
-func (cm *ComparisonManager) GetComparisonResults() ComparisonResultsMap {
+// ComparisonResultsMap returns the ComparisonResultsMap from the ComparisonManager instance.
+func (cm *ComparisonManager) ComparisonResultsMap() ComparisonResultsMap {
 	return cm.ComparisonResults
+}
+
+// AddComparisonResult inserts a ComparisonResult into the ComparisonResultsMap, organizing it by type and first string.
+func (cm *ComparisonManager) AddComparisonResult(result ComparisonResult) {
+	cm.ComparisonResults.Add(result)
+}
+
+// GetComparisonResult retrieves a ComparisonResult from the ComparisonResults map based on the
+// provided type and string key.
+func (cm *ComparisonManager) GetComparisonResult(compResType ComparisonResultType, compStr string) ComparisonResult {
+	if cm.ComparisonResults == nil {
+		return nil
+	}
+	return cm.ComparisonResults.Get(compResType, compStr)
+}
+
+// GetComparisonResultsByType retrieves all ComparisonResults of the
+// specified ComparisonResultType from the ComparisonResults map.
+func (cm *ComparisonManager) GetComparisonResultsByType(compResType ComparisonResultType) []ComparisonResult {
+	if cm.ComparisonResults == nil {
+		return nil
+	}
+	return cm.ComparisonResults.GetByType(compResType)
+}
+
+// GetComparisonResultsByString retrieves all ComparisonResult objects
+// associated with the given string key from ComparisonResults.
+func (cm *ComparisonManager) GetComparisonResultsByString(compStr string) []ComparisonResult {
+	if cm.ComparisonResults == nil {
+		return nil
+	}
+	return cm.ComparisonResults.GetByComparisonString(compStr)
 }
 
 // GetSimilarityResults retrieves the SimilarityResultsMap, containing similarity
@@ -37,11 +69,6 @@ func (cm *ComparisonManager) GetShingleData() ShingleResultsMap {
 // GetLCSData retrieves the LCSResultsMap containing LCS results organized by type and input string.
 func (cm *ComparisonManager) GetLCSData() LCSResultsMap {
 	return cm.LCSData
-}
-
-// AddComparisonResult inserts a ComparisonResult into the ComparisonResultsMap, organizing it by type and first string.
-func (cm *ComparisonManager) AddComparisonResult(result ComparisonResult) {
-	cm.ComparisonResults.Add(result)
 }
 
 // AddSimilarityResult adds a given SimilarityResult to the SimilarityResultsMap of the ComparisonManager instance.
