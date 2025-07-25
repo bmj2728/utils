@@ -73,6 +73,7 @@ type ComparisonResult interface {
 	GetSplitLength() *int
 	GetError() error
 	Print(v bool)
+	formatOutput(v bool) string
 }
 
 // ComparisonResultInt represents the result of a comparison between two strings,
@@ -142,23 +143,26 @@ func (c ComparisonResultInt) GetScoreInt() *int {
 	return c.score
 }
 
-// Print outputs the comparison result in a detailed or concise format depending on the boolean parameter provided.
+// Print outputs the formatted result of the comparison, optionally including
+// verbose error details based on the input flag v.
 func (c ComparisonResultInt) Print(v bool) {
+	fmt.Print(c.formatOutput(v))
+}
+
+// formatOutput generates a formatted string representation of the comparison result
+// based on error presence and verbosity.
+func (c ComparisonResultInt) formatOutput(v bool) string {
 	if c.err != nil && v {
-		fmt.Printf("Error during processing: %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+		return fmt.Sprintf("Error during processing: %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
 			ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
-		return
 	} else if c.err != nil && !v {
-		fmt.Printf("%s Error: %s\n", ComparisonResultTypeMap[c.comparisonType], c.err.Error())
-		return
+		return fmt.Sprintf("%s Error: %s\n", ComparisonResultTypeMap[c.comparisonType], c.err.Error())
 	}
 	if v {
-		fmt.Printf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %d\n",
+		return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %d\n",
 			ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
-		return
 	} else {
-		fmt.Printf("%s: %d\n", ComparisonResultTypeMap[c.comparisonType], *c.score)
-		return
+		return fmt.Sprintf("%s: %d\n", ComparisonResultTypeMap[c.comparisonType], *c.score)
 	}
 }
 
@@ -229,25 +233,29 @@ func (c ComparisonResultFloat) GetScoreFloat() *float32 {
 	return c.score
 }
 
-// Print outputs the comparison result or error based on verbosity. If v is true, detailed output is shown.
+// Print outputs the formatted comparison result or error details depending on the verbosity flag (v).
 func (c ComparisonResultFloat) Print(v bool) {
+	fmt.Print(c.formatOutput(v))
+}
+
+// formatOutput formats the comparison result or error into a string based on the verbosity level (v).
+func (c ComparisonResultFloat) formatOutput(v bool) string {
 	if v {
 		if c.err != nil {
-			fmt.Printf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
+			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
-			return
+
 		} else {
-			fmt.Printf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
+			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
 				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
-			return
 		}
 	} else {
 		if c.err != nil {
-			fmt.Printf("%s GetError: %s\n",
+			return fmt.Sprintf("%s GetError: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.err.Error())
-			return
+
 		} else {
-			fmt.Printf("%s: %f\n", ComparisonResultTypeMap[c.comparisonType], *c.score)
+			return fmt.Sprintf("%s: %f\n", ComparisonResultTypeMap[c.comparisonType], *c.score)
 		}
 	}
 }
