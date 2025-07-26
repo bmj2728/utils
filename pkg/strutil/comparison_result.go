@@ -70,7 +70,7 @@ type ComparisonResult interface {
 	GetString1() string
 	GetString2() string
 	GetStrings() (string, string)
-	GetSplitLength() *int
+	GetSplitLength() int
 	GetError() error
 	Print(v bool)
 	formatOutput(v bool) string
@@ -129,8 +129,11 @@ func (c ComparisonResultInt) GetStrings() (string, string) {
 }
 
 // GetSplitLength returns the split length of the comparison result as a pointer to an integer.
-func (c ComparisonResultInt) GetSplitLength() *int {
-	return c.splitLength
+func (c ComparisonResultInt) GetSplitLength() int {
+	if c.splitLength == nil {
+		return 0
+	}
+	return *c.splitLength
 }
 
 // GetError returns the error associated with the ComparisonResultInt, if any.
@@ -138,9 +141,15 @@ func (c ComparisonResultInt) GetError() error {
 	return c.err
 }
 
-// GetScoreInt retrieves the score of the comparison result as a pointer to an integer.
-func (c ComparisonResultInt) GetScoreInt() *int {
-	return c.score
+// GetScoreInt retrieves the comparison score as an integer and returns an error if no score or an error is present.
+func (c ComparisonResultInt) GetScoreInt() (int, error) {
+	if c.score == nil && c.err == nil {
+		return 0, ErrUnknownError
+	}
+	if c.err != nil {
+		return 0, c.err
+	}
+	return *c.score, nil
 }
 
 // Print outputs the formatted result of the comparison, optionally including
@@ -219,8 +228,11 @@ func (c ComparisonResultFloat) GetStrings() (string, string) {
 }
 
 // GetSplitLength retrieves the value of the splitLength field as a pointer to an integer.
-func (c ComparisonResultFloat) GetSplitLength() *int {
-	return c.splitLength
+func (c ComparisonResultFloat) GetSplitLength() int {
+	if c.splitLength == nil {
+		return 0
+	}
+	return *c.splitLength
 }
 
 // GetError returns the error encountered during the comparison, or nil if no error occurred.
@@ -228,9 +240,16 @@ func (c ComparisonResultFloat) GetError() error {
 	return c.err
 }
 
-// GetScoreFloat retrieves the score as a pointer to a float32 from the ComparisonResultFloat object.
-func (c ComparisonResultFloat) GetScoreFloat() *float32 {
-	return c.score
+// GetScoreFloat retrieves the comparison score as a float32 and any associated error.
+// Returns 0.00 and an error if unavailable.
+func (c ComparisonResultFloat) GetScoreFloat() (float32, error) {
+	if c.score == nil && c.err == nil {
+		return 0.00, ErrUnknownError
+	}
+	if c.err != nil {
+		return 0.00, c.err
+	}
+	return *c.score, nil
 }
 
 // Print outputs the formatted comparison result or error details depending on the verbosity flag (v).

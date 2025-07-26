@@ -129,3 +129,43 @@ func TestComparisonResultPrint(t *testing.T) {
 		})
 	}
 }
+
+func TestComparisonResultGettersInt(t *testing.T) {
+	tests := []struct {
+		name    string
+		resType ComparisonResultType
+		string1 string
+		string2 string
+		score   int
+	}{
+		{"GettersTest1", LevDist, "Hello", "Hello", 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := New(tt.string1).
+				WithComparisonManager().
+				LevenshteinDistance(tt.string2).
+				ComparisonManager().
+				ComparisonResultsMap().
+				GetByType(LevDist)[0].(*ComparisonResultInt)
+			if res.GetString1() != tt.string1 {
+				t.Errorf("ComparisonResult.GetString1() = %s, want %s",
+					res.GetString1(), tt.string1)
+			}
+			if res.GetString2() != tt.string2 {
+				t.Errorf("ComparisonResult.GetString2() = %s, want %s",
+					res.GetString2(), tt.string2)
+			}
+			s1, s2 := res.GetStrings()
+			if s1 != tt.string1 || s2 != tt.string2 {
+				t.Errorf("ComparisonResult.GetStrings() = %s, %s, want %s, %s",
+					s1, s2, tt.string1, tt.string2)
+			}
+			score, err := res.GetScoreInt()
+			if err != nil || score != tt.score {
+				t.Errorf("ComparisonResult.GetScoreInt() = %d, want %d",
+					score, tt.score)
+			}
+		})
+	}
+}

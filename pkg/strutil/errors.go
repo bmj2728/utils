@@ -52,4 +52,7 @@ var (
 
 	// ErrShingleLengthOutOfRange indicates that the shingle length provided is outside the acceptable range.
 	ErrShingleLengthOutOfRange = errors.New("shingle length out of range")
+
+	// ErrUnknownError represents an unknown error, typically used when no specific error or score applies.
+	ErrUnknownError = errors.New("no score or error")
 )
