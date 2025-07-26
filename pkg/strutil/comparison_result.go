@@ -70,7 +70,7 @@ type ComparisonResult interface {
 	GetString1() string
 	GetString2() string
 	GetStrings() (string, string)
-	GetSplitLength() int
+	GetSplitLength() (int, error)
 	GetError() error
 	Print(v bool)
 	formatOutput(v bool) string
@@ -129,11 +129,11 @@ func (c ComparisonResultInt) GetStrings() (string, string) {
 }
 
 // GetSplitLength returns the split length of the comparison result as a pointer to an integer.
-func (c ComparisonResultInt) GetSplitLength() int {
+func (c ComparisonResultInt) GetSplitLength() (int, error) {
 	if c.splitLength == nil {
-		return 0
+		return 0, ErrNoSplitLengthSet
 	}
-	return *c.splitLength
+	return *c.splitLength, nil
 }
 
 // GetError returns the error associated with the ComparisonResultInt, if any.
@@ -228,11 +228,11 @@ func (c ComparisonResultFloat) GetStrings() (string, string) {
 }
 
 // GetSplitLength retrieves the value of the splitLength field as a pointer to an integer.
-func (c ComparisonResultFloat) GetSplitLength() int {
+func (c ComparisonResultFloat) GetSplitLength() (int, error) {
 	if c.splitLength == nil {
-		return 0
+		return 0, ErrNoSplitLengthSet
 	}
-	return *c.splitLength
+	return *c.splitLength, nil
 }
 
 // GetError returns the error encountered during the comparison, or nil if no error occurred.

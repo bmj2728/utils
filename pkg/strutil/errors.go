@@ -55,4 +55,7 @@ var (
 
 	// ErrUnknownError represents an unknown error, typically used when no specific error or score applies.
 	ErrUnknownError = errors.New("no score or error")
+
+	// ErrNoSplitLengthSet indicates that no split length was provided or set for the operation.
+	ErrNoSplitLengthSet = errors.New("no split length set")
 )
