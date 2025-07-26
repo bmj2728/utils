@@ -199,7 +199,7 @@ func sorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFl
 // qgramDistance computes the Q-Gram distance between two strings s1 and s2 using the specified q-gram size q.
 // Returns a ComparisonResultInt containing the computed distance or an error if q is invalid.
 func qgramDistance(s1, s2 string, q int) *ComparisonResultInt {
-	if q < 1 {
+	if q < 0 {
 		return NewComparisonResultInt(QGramDist, s1, s2, &q, nil, ErrInvalidLengthRange)
 	}
 	qd := edlib.QgramDistance(s1, s2, q)

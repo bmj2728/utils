@@ -90,6 +90,7 @@ func NormalizeDiacritics(s string) string {
 	return normalizeDiacritics(s)
 }
 
-func NormalizeUnicode(s string) string {
-	panic("Implement me!")
+// NormalizeUnicode normalizes a string to the specified Unicode normalization form (NFC, NFD, NFKC, or NFKD).
+func NormalizeUnicode(s string, form NormalizationFormat) string {
+	return normalizeUnicode(s, form)
 }

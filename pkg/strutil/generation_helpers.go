@@ -6,14 +6,19 @@ import (
 	"github.com/google/uuid"
 )
 
+// makeUUID generates and returns a new random UUID as a string.
 func makeUUID() string {
 	return uuid.NewString()
 }
 
+// makeUUIDV7 generates and returns a new UUID string using UUID version 7 specification.
+// Falls back to generating a standard UUID if UUID V7 generation fails.
+// UUID V7 failures result from manipulating the randomness pool
+// Since we do not manipulate randomness in the uuid package, this should never fire
 func makeUUIDV7() string {
 	u, err := uuid.NewV7()
 	if err != nil {
-		return ""
+		return makeUUID()
 	}
 	return u.String()
 }

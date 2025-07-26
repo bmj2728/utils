@@ -192,6 +192,12 @@ func (sb *StringBuilder) AlphaNumericReplace(replacement string) *StringBuilder 
 	return sb
 }
 
-func (sb *StringBuilder) NormalizeUnicode() *StringBuilder {
-	panic("Implement me!")
+// NormalizeUnicode normalizes the StringBuilder's string to the specified Unicode
+// normalization form (NFC, NFD, NFKC, or NFKD).
+func (sb *StringBuilder) NormalizeUnicode(form NormalizationFormat) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	sb.value = normalizeUnicode(sb.value, form)
+	return sb
 }

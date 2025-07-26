@@ -48,6 +48,11 @@ func IsAlphaString(s string) bool {
 	return isAlphaString(s)
 }
 
+// IsNormalizedUnicode checks if the input string 's' is normalized according to the specified normalization format.
+func IsNormalizedUnicode(s string, format NormalizationFormat) bool {
+	return isNormalizedUnicode(s, format)
+}
+
 // input validation
 
 //func FormatCardNumber(s string) string {

@@ -109,3 +109,15 @@ func (sb *StringBuilder) RequireAlpha() *StringBuilder {
 	}
 	return sb
 }
+
+// RequireNormalizedUnicode ensures the string is normalized according to the specified Unicode normalization format.
+// If not, it sets an error state in the StringBuilder and returns itself for chaining.
+func (sb *StringBuilder) RequireNormalizedUnicode(format NormalizationFormat) *StringBuilder {
+	if sb.err != nil {
+		return sb
+	}
+	if !isNormalizedUnicode(sb.value, format) {
+		sb.err = ErrNotNormalizedUnicode
+	}
+	return sb
+}

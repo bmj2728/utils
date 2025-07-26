@@ -8,6 +8,7 @@ import (
 	"unicode"
 
 	"github.com/google/uuid"
+	"golang.org/x/text/unicode/norm"
 )
 
 // isValidEmail checks if the provided string s is a valid email address format
@@ -101,4 +102,9 @@ func isAlphaNumericRune(r rune) bool {
 // isWhiteSpaceRune checks if the given rune is classified as a whitespace character based on Unicode standards.
 func isWhiteSpaceRune(r rune) bool {
 	return unicode.IsSpace(r)
+}
+
+// isNormalizedUnicode checks if a string is normalized according to the specified Unicode normalization format.
+func isNormalizedUnicode(s string, format NormalizationFormat) bool {
+	return norm.Form(format).IsNormalString(s)
 }

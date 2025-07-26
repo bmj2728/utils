@@ -58,4 +58,7 @@ var (
 
 	// ErrNoSplitLengthSet indicates that no split length was provided or set for the operation.
 	ErrNoSplitLengthSet = errors.New("no split length set")
+
+	// ErrNotNormalizedUnicode indicates that a string is not in a normalized Unicode format.
+	ErrNotNormalizedUnicode = errors.New("string is not normalized unicode")
 )

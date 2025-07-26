@@ -5,6 +5,7 @@ import (
 	"unicode"
 
 	godiacritics "github.com/Regis24GmbH/go-diacritics"
+	"golang.org/x/text/unicode/norm"
 )
 
 // truncate shortens the input string s to the specified length and appends the given suffix if truncation occurs.
@@ -172,4 +173,13 @@ func alphaNumericReplace(s string, replacement string) string {
 		}
 	}
 	return s
+}
+
+// normalizeUnicode converts a string to normalized Unicode form specified by the norm.Form argument.
+// NFC   Unicode Normalization Form C
+// NFD   Unicode Normalization Form D
+// NFKC  Unicode Normalization Form KC
+// NFKD  Unicode Normalization Form KD
+func normalizeUnicode(s string, format NormalizationFormat) string {
+	return string(norm.Form(format).Bytes([]byte(s)))
 }

@@ -494,3 +494,60 @@ func TestAlphaNumericReplace(t *testing.T) {
 		})
 	}
 }
+
+func TestNormalizeUnicode(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		format   NormalizationFormat
+		expected string
+	}{
+		// NFD: Decomposes é (U+00E9) into e (U+0065) + ́ (U+0301)
+		{"NFD_AccentedE", "café", NFD, "cafe\u0301"},
+		{"NFD_AccentedE_Resume", "résumé", NFD, "re\u0301sume\u0301"},
+
+		// NFC: Composes e + ́ back into é
+		{"NFC_CombiningAccent", "cafe\u0301", NFC, "café"},
+		{"NFC_MultipleCombining", "e\u0301\u0302", NFC, "é̂"}, // e + acute + circumflex
+
+		// NFKD: Compatibility decomposition (converts special chars)
+		{"NFKD_FractionHalf", "½", NFKD, "1⁄2"},
+		{"NFKD_SuperscriptTwo", "x²", NFKD, "x2"},
+		{"NFKD_Ligature", "ﬁle", NFKD, "file"},
+		{"NFKD_CircledOne", "①", NFKD, "1"},
+
+		// NFKC: Compatibility composition
+		{"NFKC_FractionHalf", "½", NFKC, "1⁄2"},
+		{"NFKC_WithAccents", "ﬁlé", NFKC, "filé"},
+
+		// Edge cases
+		{"NFD_Empty", "", NFD, ""},
+		{"NFC_AlreadyComposed", "café", NFC, "café"},               // No change needed
+		{"NFD_AlreadyDecomposed", "cafe\u0301", NFD, "cafe\u0301"}, // No change needed
+
+		// Mixed content
+		{"NFD_Mixed", "naïve café", NFD, "nai\u0308ve cafe\u0301"},
+		{"NFKD_Mixed", "½ café", NFKD, "1⁄2 cafe\u0301"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := normalizeUnicode(tt.input, tt.format)
+			result := NormalizeUnicode(tt.input, tt.format)
+			builderResult := New(tt.input).NormalizeUnicode(tt.format).String()
+
+			if helperResult != tt.expected {
+				t.Errorf("normalizeUnicode() = %q, expected %q", helperResult, tt.expected)
+				t.Errorf("  Input bytes: % X", []byte(tt.input))
+				t.Errorf("  Result bytes: % X", []byte(helperResult))
+				t.Errorf("  Expected bytes: % X", []byte(tt.expected))
+			}
+			if result != tt.expected {
+				t.Errorf("NormalizeUnicode() = %q, expected %q", result, tt.expected)
+			}
+			if builderResult != tt.expected {
+				t.Errorf("Builder.NormalizeUnicode() = %q, expected %q", builderResult, tt.expected)
+			}
+		})
+	}
+}
