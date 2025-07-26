@@ -30,12 +30,37 @@ func (crm ComparisonResultsMap) CastComparisonResult(raw *ComparisonResult,
 	}
 	switch compResType {
 	case LevDist, DamLevDist, OSADamLevDist, LCSLength, LCSDist, HammingDist, QGramDist, QGramDistCust:
-		return (*raw).(*ComparisonResultInt)
+		casted, ok := (*raw).(*ComparisonResultInt)
+		if !ok {
+			return *raw
+		}
+		return casted
 	case JaroSim, JaroWinklerSim, JaccardSim, CosineSim, SorensenDiceCo, QGramSim:
-		return (*raw).(*ComparisonResultFloat)
+		casted, ok := (*raw).(*ComparisonResultFloat)
+		if !ok {
+			return *raw
+		}
+		return casted
 	default:
 		return *raw
 	}
+}
+
+// GetCopy creates and returns a deep copy of the current ComparisonResultsMap.
+func (crm ComparisonResultsMap) GetCopy() ComparisonResultsMap {
+	cloned := NewComparisonResultsMap()
+	for compType, v := range crm {
+		cloned[compType] = make(map[string]*ComparisonResult)
+		for compStr, v2 := range v {
+			if v2 != nil {
+				// Dereference the pointer to create a copy of the value.
+				resultCopy := *v2
+				// Store the address of the new copy in the cloned map.
+				cloned[compType][compStr] = &resultCopy
+			}
+		}
+	}
+	return cloned
 }
 
 // Get retrieves a ComparisonResult from the map using the specified ComparisonResultType and comparison string key.
@@ -46,7 +71,7 @@ func (crm ComparisonResultsMap) Get(compResType ComparisonResultType, compStr st
 	return crm.CastComparisonResult(crm[compResType][compStr], compResType)
 }
 
-//TODO refactor to return map for chainable goodness
+// 7/25/25 - added filter by methods
 
 // GetByType retrieves a slice of ComparisonResult for the specified ComparisonResultType or
 // nil if no results are found.
@@ -64,6 +89,22 @@ func (crm ComparisonResultsMap) GetByType(compResType ComparisonResultType) []Co
 	return results
 }
 
+// FilterByType filters the ComparisonResultsMap by the specified ComparisonResultType
+// and returns a new map with the results.
+func (crm ComparisonResultsMap) FilterByType(compResType ComparisonResultType) ComparisonResultsMap {
+	if crm[compResType] == nil {
+		return nil
+	}
+	results := NewComparisonResultsMap()
+	for _, v := range crm[compResType] {
+		results.Add(*v)
+	}
+	if len(results) == 0 {
+		return nil
+	}
+	return results
+}
+
 // GetByComparisonString retrieves a list of ComparisonResult objects associated with the provided comparison string.
 func (crm ComparisonResultsMap) GetByComparisonString(compStr string) []ComparisonResult {
 	if len(crm) == 0 {
@@ -73,6 +114,23 @@ func (crm ComparisonResultsMap) GetByComparisonString(compStr string) []Comparis
 	for compType, v := range crm {
 		if v[compStr] != nil {
 			results = append(results, crm.CastComparisonResult(v[compStr], compType))
+		}
+	}
+	if len(results) == 0 {
+		return nil
+	}
+	return results
+}
+
+// FilterByComparisonString filters the map, returning a new map with results matching the given comparison string key.
+func (crm ComparisonResultsMap) FilterByComparisonString(compStr string) ComparisonResultsMap {
+	if len(crm) == 0 {
+		return nil
+	}
+	results := NewComparisonResultsMap()
+	for _, v := range crm {
+		if v[compStr] != nil {
+			results.Add(*v[compStr])
 		}
 	}
 	if len(results) == 0 {
