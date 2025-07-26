@@ -48,7 +48,7 @@ func IsAlphaString(s string) bool {
 	return isAlphaString(s)
 }
 
-// IsNormalizedUnicode checks if the input string 's' is normalized according to the specified normalization format.
+// IsNormalizedUnicode checks if the given string is normalized according to the specified Unicode normalization format.
 func IsNormalizedUnicode(s string, format NormalizationFormat) bool {
 	return isNormalizedUnicode(s, format)
 }

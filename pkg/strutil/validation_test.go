@@ -305,3 +305,45 @@ func TestIsDomain(t *testing.T) {
 		})
 	}
 }
+
+func TestIsNormalizedUnicode(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		format   NormalizationFormat
+		expected bool
+	}{
+		{"NFC_AlreadyComposed", "café", NFC, true},
+		{"NFD_AlreadyDecomposed", "cafe\u0301", NFD, true},
+		{"NFKC_FractionHalf", "½", NFKC, false},
+		{"NFKC_WithAccents", "ﬁlé", NFKC, false},
+		{"NFKD_FractionHalf", "½", NFKD, false},
+		{"NFKD_SuperscriptTwo", "x²", NFKD, false},
+		{"NFKD_Ligature", "ﬁle", NFKD, false},
+		{"NFKD_CircledOne", "①", NFKD, false},
+		{"NFD_Empty", "", NFD, true},
+		{"NFC_Empty", "", NFC, true},
+		{"NFKC_Empty", "", NFKC, true},
+		{"NFKD_Empty", "", NFKD, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isNormalizedUnicode(tt.input, tt.format)
+			result := IsNormalizedUnicode(tt.input, tt.format)
+			if result != tt.expected || helperResult != tt.expected {
+				t.Errorf("IsNormalizedUnicode(%q, %v) = %v; want %v", tt.input, tt.format, result, tt.expected)
+			}
+			builderErr := New(tt.input).RequireNormalizedUnicode(tt.format)
+			if builderErr.Error() != nil && tt.expected == true {
+				t.Errorf("IsNormalizedUnicode(%q, %v) = %v; want %v",
+					tt.input, tt.format, builderErr.Error(), tt.expected)
+			}
+			if tt.expected == false && (builderErr.Error() == nil ||
+				!errors.Is(builderErr.Error(), ErrNotNormalizedUnicode)) {
+				t.Errorf("IsNormalizedUnicode(%q, %v) = %v; want %v",
+					tt.input, tt.format, builderErr.Error(), tt.expected)
+			}
+
+		})
+	}
+}
