@@ -167,6 +167,14 @@ func TestComparisonResultGettersInt(t *testing.T) {
 					t.Errorf("ComparisonResult.GetScoreInt() = %d, want %d",
 						score, tt.score)
 				}
+				if res.GetType() != tt.resType {
+					t.Errorf("ComparisonResult.GetType() = %s, want %s",
+						res.GetType(), tt.resType)
+				}
+				if res.GetTypeName() != tt.resType.String() {
+					t.Errorf("ComparisonResult.GetTypeName() = %s, want %s",
+						res.GetTypeName(), tt.resType.String())
+				}
 			}
 		})
 	}
