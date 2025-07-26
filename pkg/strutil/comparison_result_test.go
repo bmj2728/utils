@@ -59,37 +59,73 @@ func TestComparisonResultPrint(t *testing.T) {
 		name    string
 		resType ComparisonResultType
 	}{
-		{"PrintLevDist", LevDist},
-		{"PrintDamLevDist", DamLevDist},
-		{"PrintOSADamLevDist", OSADamLevDist},
-		{"PrintLCS", LCSLength},
-		{"PrintLCSDist", LCSDist},
+		{"PrintJaroWink", JaroWinklerSim},
+		{"PrintLev", LevDist},
+		{"PrintHam", HammingDist},
 	}
 	correct := "With great power there must also come great responsibility."
 	common := "With great power comes great responsibility."
 
+	sh := "Jaro-Winkler Similarity: 0.903698\n"
+	verb := "Comparison: Jaro-Winkler Similarity\n" +
+		"First String: With great power there must also come great responsibility.\n" +
+		"Second String: With great power comes great responsibility.\n" +
+		"Score: 0.903698\n"
+
+	shHam := "Hamming Distance Error: error calculating hamming distance\n" +
+		"Undefined for strings of unequal length\n"
+	verbHam := "Error during processing: Hamming Distance\n" +
+		"First String: With great power there must also come great responsibility.\n" +
+		"Second String: With great power comes great responsibility.\n" +
+		"Error: error calculating hamming distance\n" +
+		"Undefined for strings of unequal length\n"
+
+	shLev := "Levenshtein Distance: 17\n"
+	verbLev := "Comparison: Levenshtein Distance\n" +
+		"First String: With great power there must also come great responsibility.\n" +
+		"Second String: With great power comes great responsibility.\n" +
+		"Score: 17\n"
+
 	ls := New(correct).
 		WithComparisonManager().
-		LevenshteinDistance(common).
-		DamerauLevenshteinDistance(common).
-		OSADamerauLevenshteinDistance(common).
-		LCS(common).
-		LCSEditDistance(common).
-		QgramDistance(common, 3).
-		JaroSimilarity(common).
 		JaroWinklerSimilarity(common).
-		JaccardSimilarity(common, 3).
-		CosineSimilarity(common, 3).
-		QgramSimilarity(common, 3).
-		SorensenDiceCoefficient(common, 3).
-		HammingDistance(correct).
+		LevenshteinDistance(common).
+		HammingDistance(common).
 		ComparisonManager().
 		ComparisonResultsMap()
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ls.GetByType(tt.resType)[0].Print(true)
-			ls.GetByType(tt.resType)[0].Print(false)
+			if tt.resType == JaroWinklerSim {
+				if ls.GetByType(tt.resType)[0].formatOutput(false) != sh {
+					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
+						ls.GetByType(tt.resType)[0].formatOutput(false), sh)
+				}
+				if ls.GetByType(tt.resType)[0].formatOutput(true) != verb {
+					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
+						ls.GetByType(tt.resType)[0].formatOutput(true), verb)
+				}
+			}
+			if tt.resType == LevDist {
+				if ls.GetByType(tt.resType)[0].formatOutput(false) != shLev {
+					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
+						ls.GetByType(tt.resType)[0].formatOutput(false), shLev)
+				}
+				if ls.GetByType(tt.resType)[0].formatOutput(true) != verbLev {
+					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
+						ls.GetByType(tt.resType)[0].formatOutput(true), verbLev)
+				}
+			}
+			if tt.resType == HammingDist {
+				if ls.GetByType(tt.resType)[0].formatOutput(false) != shHam {
+					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
+						ls.GetByType(tt.resType)[0].formatOutput(false), shHam)
+				}
+				if ls.GetByType(tt.resType)[0].formatOutput(true) != verbHam {
+					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
+						ls.GetByType(tt.resType)[0].formatOutput(true), verbHam)
+				}
+			}
 		})
 	}
 }

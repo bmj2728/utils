@@ -12,11 +12,18 @@ type StringBuilder struct {
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
 	if sb.err != nil {
-		fmt.Printf("%s", sb.err.Error())
+		fmt.Printf("%s", sb.formatOutput())
 		return sb
 	}
-	fmt.Printf("%s", sb.value)
+	fmt.Printf("%s", sb.formatOutput())
 	return sb
+}
+
+func (sb *StringBuilder) formatOutput() string {
+	if sb.err != nil {
+		return sb.err.Error()
+	}
+	return sb.value
 }
 
 // String returns the current string value of the StringBuilder instance.

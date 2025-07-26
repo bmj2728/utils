@@ -242,7 +242,7 @@ func (c ComparisonResultFloat) Print(v bool) {
 func (c ComparisonResultFloat) formatOutput(v bool) string {
 	if v {
 		if c.err != nil {
-			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
+			return fmt.Sprintf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
 
 		} else {
@@ -251,7 +251,7 @@ func (c ComparisonResultFloat) formatOutput(v bool) string {
 		}
 	} else {
 		if c.err != nil {
-			return fmt.Sprintf("%s GetError: %s\n",
+			return fmt.Sprintf("%s Error: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.err.Error())
 
 		} else {

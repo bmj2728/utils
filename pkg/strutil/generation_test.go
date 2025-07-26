@@ -388,3 +388,114 @@ func TestIsUUID(t *testing.T) {
 		})
 	}
 }
+
+func TestStringBuilderPrint(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"Test 1", "hello world", "hello world"},
+		{"Test 2", "hello world",
+			"error calculating hamming distance\n" +
+				"Undefined for strings of unequal length"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.name == "Test 1" {
+				if New(tt.input).formatOutput() != tt.expected {
+					t.Errorf("Expected %q, got %q for %s", tt.expected, New(tt.input).formatOutput(), tt.name)
+				}
+				New(tt.input).Print()
+			}
+			if tt.name == "Test 2" {
+				if New(tt.input).WithComparisonManager().HammingDistance("ERROR").formatOutput() != tt.expected {
+					t.Errorf("Expected %q, got %q for %s", tt.expected,
+						New(tt.input).WithComparisonManager().HammingDistance("ERROR").formatOutput(), tt.name)
+				}
+				New(tt.input).WithComparisonManager().HammingDistance("ERROR").Print()
+			}
+		})
+	}
+}
+
+func TestStringBuilderResult(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    *StringBuilder
+		expected string
+		err      bool
+		compMan  bool
+	}{
+		{"BuilderResult1", New("Hello World"), "Hello World", false, false},
+		{"BuilderResult2",
+			New("Hello World").
+				WithComparisonManager(),
+			"Hello World",
+			false,
+			true},
+		{"BuilderResult3",
+			New("Hello World").
+				WithComparisonManager().HammingDistance("oops"),
+			"Hello World",
+			true,
+			true},
+		{"BuilderResult4",
+			New("Hello World").
+				WithComparisonManager().LevenshteinDistance("Hello World!"),
+			"Hello World",
+			false,
+			true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ex, comp, err := tt.input.Result()
+			if ex != tt.expected {
+				t.Errorf("Expected %q, got %q for %s", tt.expected, ex, tt.name)
+			}
+			if tt.compMan == true && comp == nil {
+				t.Errorf("Expected comparison manager for %s", tt.name)
+			}
+			if tt.err == true && err == nil {
+				t.Errorf("Expected error for %s", tt.name)
+			}
+		})
+	}
+}
+
+func TestStringBuilderBuild(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    *StringBuilder
+		expected string
+		err      bool
+	}{
+		{"BuilderBuild1", New("Hello World"), "Hello World", false},
+		{"BuilderBuild2",
+			New("Hello World").
+				WithComparisonManager(),
+			"Hello World",
+			false},
+		{"BuilderBuild3",
+			New("Hello World").
+				WithComparisonManager().HammingDistance("oops"),
+			"",
+			true},
+		{"BuilderBuild4",
+			New("Hello World").
+				WithComparisonManager().HammingDistance("Hello World!"),
+			"",
+			false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ex, err := tt.input.Build()
+			if ex != tt.expected {
+				t.Errorf("Expected %q, got %q for %s", tt.expected, ex, tt.name)
+			}
+			if tt.err == true && err == nil {
+				t.Errorf("Expected error for %s", tt.name)
+			}
+		})
+	}
+}
