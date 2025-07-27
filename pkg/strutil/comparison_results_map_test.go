@@ -178,12 +178,9 @@ func TestComparisonResultsMap_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			check := false
-			if tt.compMap.Get(tt.compType, tt.compStr) != nil {
-				check = true
-			}
-			if check != tt.expected {
-				t.Errorf("Expected match to be %t, got %t", tt.expected, check)
+			if (tt.compMap.Get(tt.compType, tt.compStr) != nil) != tt.expected {
+				t.Errorf("Expected match to be %t, got %t",
+					tt.expected, tt.compMap.Get(tt.compType, tt.compStr) != nil)
 			}
 		})
 	}
