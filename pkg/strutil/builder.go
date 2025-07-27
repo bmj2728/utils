@@ -61,3 +61,15 @@ func (sb *StringBuilder) Build() (string, error) {
 func (sb *StringBuilder) Result() (string, *ComparisonManager, error) {
 	return sb.value, sb.comparisonManager, sb.err
 }
+
+// SetValue sets the value of the StringBuilder to the provided string and returns the updated StringBuilder instance.
+func (sb *StringBuilder) SetValue(value string) *StringBuilder {
+	sb.value = value
+	return sb
+}
+
+// SetError sets the error field in the StringBuilder and returns the updated StringBuilder instance.
+func (sb *StringBuilder) SetError(err error) *StringBuilder {
+	sb.err = err
+	return sb
+}

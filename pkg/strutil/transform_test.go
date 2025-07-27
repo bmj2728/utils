@@ -1,6 +1,9 @@
 package strutil
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 func TestTruncate(t *testing.T) {
 	tests := []struct {
@@ -547,6 +550,95 @@ func TestNormalizeUnicode(t *testing.T) {
 			}
 			if builderResult != tt.expected {
 				t.Errorf("Builder.NormalizeUnicode() = %q, expected %q", builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestBuilderIf(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     *StringBuilder
+		condition bool
+		expected  string
+	}{
+		{"IfTrue", New("Hello World"), true, "hello world"},
+		{"IfFalse", New("Hello World"), false, "Hello World"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			out := tt.input.If(tt.condition, func(b *StringBuilder) *StringBuilder {
+				b.ToLower()
+				return b
+			}).String()
+			if out != tt.expected {
+				t.Errorf("If() = %q, expected %q", out, tt.expected)
+			}
+		})
+	}
+}
+
+func TestBuilderTransform(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     *StringBuilder
+		transform func(b string) string
+		expected  string
+	}{
+		{"TransformAnon", New("Hello World"), func(b string) string { return b + "!" }, "Hello World!"},
+		{"TransformLower", New("Hello World"), ToLower, "hello world"},
+		{"TransformUpper", New("Hello World"), ToUpper, "HELLO WORLD"},
+		{"TransformTrim", New("   Hello World   "), Trim, "Hello World"},
+		{"TransformCamel", New("Hello World"), ToCamelCase, "helloWorld"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			out := tt.input.Transform(tt.transform).String()
+			if out != tt.expected {
+				t.Errorf("Transform() = %q, expected %q", out, tt.expected)
+			}
+		})
+	}
+}
+
+func TestBuilderSetterValue(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     *StringBuilder
+		setString string
+		expected  string
+	}{
+		{"Set", New("Hello World"), "Hello John", "Hello John"},
+		{"SetEmpty", New("Hello World"), "", ""},
+		{"SetUnempty", New(""), "Hello World", "Hello World"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.input.SetValue(tt.setString).String() != tt.expected {
+				t.Errorf("Set() = %q, expected %q", tt.input.String(), tt.expected)
+			}
+		})
+	}
+}
+
+func TestBuilderSetterError(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    *StringBuilder
+		setError error
+		expected error
+	}{
+		{"Set", New("Hello World"), ErrUnknownError, ErrUnknownError},
+		{"SetEmpty", New("Hello World"), ErrNoSplitLengthSet, ErrNoSplitLengthSet},
+		{"SetUnempty", New(""), ErrInvalidEmpty, ErrInvalidEmpty},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if !errors.Is(tt.input.SetError(tt.setError).Error(), tt.expected) {
+				t.Errorf("Set() = %q, expected %q", tt.input.String(), tt.expected)
 			}
 		})
 	}
