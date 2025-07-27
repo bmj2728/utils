@@ -310,23 +310,18 @@ func TestComparisonResultIntIsMatch(t *testing.T) {
 				LevenshteinDistance(tt.comp1).
 				ComparisonManager().
 				ComparisonResultsMap()
-			entry1, ok := res1.GetByType(LevDist)[0].(*ComparisonResultInt)
-			if !ok {
-				panic("ComparisonResult is not of type ComparisonResultInt")
-			}
+			entry1 := res1.GetByType(LevDist)[0]
 
 			res2 := New(tt.input2).
 				WithComparisonManager().
 				LevenshteinDistance(tt.comp2).
 				ComparisonManager().
 				ComparisonResultsMap()
-			entry2, ok := res2.GetByType(LevDist)[0].(*ComparisonResultInt)
-			if !ok {
-				panic("ComparisonResult is not of type ComparisonResultInt")
-			}
-			if entry1.IsMatch(*entry2) != tt.result {
+			entry2 := res2.GetByType(LevDist)[0]
+
+			if entry1.IsMatch(entry2) != tt.result {
 				t.Errorf("ComparisonResult.IsMatch() = %v, want %v",
-					entry1.IsMatch(*entry2), tt.result)
+					entry1.IsMatch(entry2), tt.result)
 			}
 		})
 	}
@@ -355,24 +350,60 @@ func TestComparisonResultIntIsMatchError(t *testing.T) {
 				HammingDistance(tt.comp1).
 				ComparisonManager().
 				ComparisonResultsMap()
-			entry1, ok := res1.GetByType(HammingDist)[0].(*ComparisonResultInt)
-			if !ok {
-				panic("ComparisonResult is not of type ComparisonResultInt")
-			}
+			entry1 := res1.GetByType(HammingDist)[0]
 
 			res2 := New(tt.input2).
 				WithComparisonManager().
 				HammingDistance(tt.comp2).
 				ComparisonManager().
 				ComparisonResultsMap()
-			entry2, ok := res2.GetByType(HammingDist)[0].(*ComparisonResultInt)
-			if !ok {
-				panic("ComparisonResult is not of type ComparisonResultInt")
-			}
-			if entry1.IsMatch(*entry2) != tt.result {
+			entry2 := res2.GetByType(HammingDist)[0]
+
+			if entry1.IsMatch(entry2) != tt.result {
 				t.Errorf("ComparisonResult.IsMatch() = %v, want %v",
-					entry1.IsMatch(*entry2), tt.result)
+					entry1.IsMatch(entry2), tt.result)
 			}
+		})
+	}
+
+}
+
+func TestComparisonResultFloatIsMatch(t *testing.T) {
+	tests := []struct {
+		name   string
+		input1 string
+		comp1  string
+		input2 string
+		comp2  string
+		result bool
+	}{
+		{"IsMatch1", "Hello", "Hello!", "Hello", "Hello!", true},
+		{"IsMatch2", "Hello", "Hello!", "Hello", "Hello", false},
+		{"IsMatch3", "Hello", "Hello!", "Hello", "", false},
+		{"IsMatch4", "Hello", "", "Hello", "Hello", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res1 := New(tt.input1).
+				WithComparisonManager().
+				JaroSimilarity(tt.comp1).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry1 := res1.GetByType(JaroSim)[0]
+
+			res2 := New(tt.input2).
+				WithComparisonManager().
+				JaroSimilarity(tt.comp2).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry2 := res2.GetByType(JaroSim)[0]
+			if entry1.IsMatch(entry2) != tt.result {
+				t.Errorf("ComparisonResult.IsMatch() = %v, want %v\n",
+					entry1.IsMatch(entry2), tt.result)
+				entry1.Print(true)
+				entry2.Print(true)
+			}
+
 		})
 	}
 

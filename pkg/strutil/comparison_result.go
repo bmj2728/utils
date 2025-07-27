@@ -176,7 +176,7 @@ func (c ComparisonResultInt) GetScoreInt() (int, error) {
 // IsMatch checks if two ComparisonResultInt objects are equivalent by
 // comparing their type, strings, score, split length, and errors.
 func (c ComparisonResultInt) IsMatch(other ComparisonResult) bool {
-	casted, ok := other.(ComparisonResultInt)
+	casted, ok := other.(*ComparisonResultInt)
 	if !ok {
 		return false
 	}
@@ -300,7 +300,7 @@ func (c ComparisonResultFloat) GetScoreFloat() (float32, error) {
 }
 
 func (c ComparisonResultFloat) IsMatch(other ComparisonResult) bool {
-	casted, ok := other.(ComparisonResultFloat)
+	casted, ok := other.(*ComparisonResultFloat)
 	if !ok {
 		return false
 	}
