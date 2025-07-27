@@ -17,7 +17,7 @@ var (
 			CosineSimilarity("Hello World", 3).
 			SorensenDiceCoefficient("Hello World", 3).
 			ComparisonManager().
-			ComparisonResultsMap()
+			GetComparisonResultsMap()
 
 	testMap2 = New("Hello, World!").
 			WithComparisonManager().
@@ -33,7 +33,7 @@ var (
 			CosineSimilarity("Hello World", 3).
 			SorensenDiceCoefficient("Hello World", 3).
 			ComparisonManager().
-			ComparisonResultsMap()
+			GetComparisonResultsMap()
 
 	testMap3 = New("Hello, World!").
 			WithComparisonManager().
@@ -49,19 +49,19 @@ var (
 			CosineSimilarity("Hello World", 3).
 			SorensenDiceCoefficient("Hello World", 3).
 			ComparisonManager().
-			ComparisonResultsMap()
+			GetComparisonResultsMap()
 
 	testMap4 = New("Hello, World!").
 			WithComparisonManager().
 			LevenshteinDistance("Hello World").
 			DamerauLevenshteinDistance("Hello World").
 			ComparisonManager().
-			ComparisonResultsMap()
+			GetComparisonResultsMap()
 
 	testMap5 = New("Hello, World!").
 			WithComparisonManager().
 			ComparisonManager().
-			ComparisonResultsMap()
+			GetComparisonResultsMap()
 )
 
 func TestComparisonResultsMapTypeCount(t *testing.T) {
