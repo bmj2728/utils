@@ -284,3 +284,92 @@ func TestComparisonResultGettersFloat(t *testing.T) {
 		})
 	}
 }
+
+func TestComparisonResultIntIsMatch(t *testing.T) {
+	tests := []struct {
+		name   string
+		input1 string
+		comp1  string
+		input2 string
+		comp2  string
+		result bool
+	}{
+		{"IsMatch1", "Hello", "Hello!", "Hello", "Hello!", true},
+		{"IsMatch2", "Hello", "Hello!", "Hello", "Hello", false},
+		{"IsMatch3", "Hello", "Hello!", "Hello", "", false},
+		{"IsMatch4", "Hello", "", "Hello", "Hello", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res1 := New(tt.input1).
+				WithComparisonManager().
+				LevenshteinDistance(tt.comp1).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry1, ok := res1.GetByType(LevDist)[0].(*ComparisonResultInt)
+			if !ok {
+				panic("ComparisonResult is not of type ComparisonResultInt")
+			}
+
+			res2 := New(tt.input2).
+				WithComparisonManager().
+				LevenshteinDistance(tt.comp2).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry2, ok := res2.GetByType(LevDist)[0].(*ComparisonResultInt)
+			if !ok {
+				panic("ComparisonResult is not of type ComparisonResultInt")
+			}
+			if entry1.IsMatch(*entry2) != tt.result {
+				t.Errorf("ComparisonResult.IsMatch() = %v, want %v",
+					entry1.IsMatch(*entry2), tt.result)
+			}
+		})
+	}
+
+}
+
+func TestComparisonResultIntIsMatchError(t *testing.T) {
+	tests := []struct {
+		name   string
+		input1 string
+		comp1  string
+		input2 string
+		comp2  string
+		result bool
+	}{
+		{"IsMatch1", "Hello!", "Hello!", "Hello!", "Hello!", true},
+		{"IsMatch2", "Hello", "Hello!", "Hello", "Hello!", true},
+		{"IsMatch3", "Hello", "Hello", "Hello", "world", false},
+		{"IsMatch4", "Hello", "", "Hello", "Hello", false},
+		{"IsMatch5", "Hello", "Hello!", "Hello", "Hello", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res1 := New(tt.input1).
+				WithComparisonManager().
+				HammingDistance(tt.comp1).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry1, ok := res1.GetByType(HammingDist)[0].(*ComparisonResultInt)
+			if !ok {
+				panic("ComparisonResult is not of type ComparisonResultInt")
+			}
+
+			res2 := New(tt.input2).
+				WithComparisonManager().
+				HammingDistance(tt.comp2).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry2, ok := res2.GetByType(HammingDist)[0].(*ComparisonResultInt)
+			if !ok {
+				panic("ComparisonResult is not of type ComparisonResultInt")
+			}
+			if entry1.IsMatch(*entry2) != tt.result {
+				t.Errorf("ComparisonResult.IsMatch() = %v, want %v",
+					entry1.IsMatch(*entry2), tt.result)
+			}
+		})
+	}
+
+}

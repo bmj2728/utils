@@ -1,6 +1,8 @@
 package strutil
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // ComparisonResultScore represents a type constraint for a pointer to either an int or a float32.
 type ComparisonResultScore interface {
@@ -150,6 +152,40 @@ func (c ComparisonResultInt) GetScoreInt() (int, error) {
 		return 0, c.err
 	}
 	return *c.score, nil
+}
+
+// IsMatch checks if two ComparisonResultInt objects are equivalent by
+// comparing their type, strings, score, split length, and errors.
+func (c ComparisonResultInt) IsMatch(other ComparisonResultInt) bool {
+	// check required fields
+	if c.GetType() != other.GetType() || c.GetString1() != other.GetString1() || c.GetString2() != other.GetString2() {
+		return false
+	}
+	// GetScoreInt will return a score/0 + error/nil
+	cScore, cErr := c.GetScoreInt()
+	oScore, oErr := other.GetScoreInt()
+	// check errors first - this is the underlying ComparisonResult error if not null
+	if cErr != nil || oErr != nil {
+		if cErr == nil || oErr == nil {
+			return false
+		}
+		if cErr.Error() != oErr.Error() {
+			return false
+		}
+	}
+	// check int score
+	if cScore != oScore {
+		return false
+
+	}
+	// skip redundant error check - we returned already if there was an error on the builder
+	cSplit, _ := c.GetSplitLength()
+	oSplit, _ := other.GetSplitLength()
+	if cSplit != oSplit {
+		return false
+	}
+	// no returns, we must match
+	return true
 }
 
 // Print outputs the formatted result of the comparison, optionally including
