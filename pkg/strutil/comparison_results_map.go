@@ -63,9 +63,12 @@ func (crm ComparisonResultsMap) GetCopy() ComparisonResultsMap {
 	return cloned
 }
 
-// Get retrieves a ComparisonResult from the map using the specified ComparisonResultType and comparison string key.
+// Get retrieves a ComparisonResult by its type and comparison string, or returns nil if no result is found.
 func (crm ComparisonResultsMap) Get(compResType ComparisonResultType, compStr string) ComparisonResult {
 	if crm[compResType] == nil {
+		return nil
+	}
+	if crm[compResType][compStr] == nil {
 		return nil
 	}
 	return crm.CastComparisonResult(crm[compResType][compStr], compResType)
@@ -137,4 +140,49 @@ func (crm ComparisonResultsMap) FilterByComparisonString(compStr string) Compari
 		return nil
 	}
 	return results
+}
+
+// TypeCount returns the number of distinct ComparisonResultType keys in the ComparisonResultsMap.
+func (crm ComparisonResultsMap) TypeCount() int {
+	return len(crm)
+}
+
+// EntryCount returns the total number of non-nil ComparisonResult entries stored in the nested maps of the structure.
+func (crm ComparisonResultsMap) EntryCount() int {
+	mapLength := 0
+	for _, v := range crm {
+		for _, v2 := range v {
+			if v2 != nil {
+				mapLength++
+			}
+		}
+	}
+	return mapLength
+}
+
+// IsMatch compares the current ComparisonResultsMap with another map for structural and value equality.
+func (crm ComparisonResultsMap) IsMatch(other ComparisonResultsMap) bool {
+	// return quickly if counts don't match
+	if crm.TypeCount() != other.TypeCount() || crm.EntryCount() != other.EntryCount() {
+		return false
+	}
+	//iterate through the type maps
+	for compType, v := range crm {
+		//if the type map doesn't exist, we return
+		if other[compType] == nil {
+			return false
+		}
+		for compStr, v2 := range v {
+			// if we don't have a match on the comp string, return
+			if other[compType][compStr] == nil {
+				return false
+			} else {
+				// cast the result to the appropriate type, then run the match
+				if !crm.CastComparisonResult(v2, compType).IsMatch(*other[compType][compStr]) {
+					return false
+				}
+			}
+		}
+	}
+	return true
 }

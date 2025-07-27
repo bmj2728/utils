@@ -408,3 +408,45 @@ func TestComparisonResultFloatIsMatch(t *testing.T) {
 	}
 
 }
+
+func TestComparisonResultFloatIsMatchError(t *testing.T) {
+	tests := []struct {
+		name   string
+		input1 string
+		comp1  string
+		split1 int
+		input2 string
+		comp2  string
+		split2 int
+		result bool
+	}{
+		{"IsMatch1", "Hello!", "Hello!", 1, "Hello!", "Hello!", 1, true},
+		{"IsMatch2", "Hello", "Hello!", -1, "Hello", "Hello!", -1, true},
+		{"IsMatch3", "Hello", "Hello", 1, "Hello", "world", 2, false},
+		{"IsMatch4", "Hello", "", -1, "Hello", "Hello", -5, false},
+		{"IsMatch5", "Hello", "Hello!", 0, "Hello", "Hello", 0, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res1 := New(tt.input1).
+				WithComparisonManager().
+				JaccardSimilarity(tt.input2, tt.split1).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry1 := res1.GetByType(JaccardSim)[0]
+
+			res2 := New(tt.input2).
+				WithComparisonManager().
+				JaccardSimilarity(tt.input2, tt.split2).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry2 := res2.GetByType(JaccardSim)[0]
+
+			if entry1.IsMatch(entry2) != tt.result {
+				t.Errorf("ComparisonResult.IsMatch() = %v, want %v",
+					entry1.IsMatch(entry2), tt.result)
+			}
+		})
+	}
+
+}
