@@ -2,6 +2,7 @@ package strutil
 
 import (
 	"errors"
+	"math"
 	"testing"
 )
 
@@ -206,6 +207,79 @@ func TestComparisonResultGettersInt(t *testing.T) {
 					t.Errorf("ComparisonResult.GetScoreInt() = %s, want %s",
 						err.Error(), tt.err.Error())
 				}
+				entry.Print(false)
+				entry.Print(true)
+			}
+		})
+	}
+}
+
+func TestComparisonResultGettersFloat(t *testing.T) {
+	tests := []struct {
+		name        string
+		resType     ComparisonResultType
+		string1     string
+		string2     string
+		splitLength int
+		score       float32
+		err         error
+	}{
+		{"GettersTest1", JaroSim, "Hello", "Hello!", 0, 0.944444, nil},
+		{"GettersTest2", JaroWinklerSim, "Hello", "Hello!", 0, 0.966667, nil},
+		{"GettersTest3", JaccardSim, "Hello", "Hello!", 0, 0.000000, nil},
+		{"GettersTest4", QGramSim, "Hello", "Hello!", 2, 0.888889, nil},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := New(tt.string1).
+				WithComparisonManager().
+				JaroSimilarity(tt.string2).
+				JaroWinklerSimilarity(tt.string2).
+				JaccardSimilarity(tt.string2, tt.splitLength).
+				QgramSimilarity(tt.string2, tt.splitLength).
+				ComparisonManager().
+				ComparisonResultsMap()
+			entry, ok := res.GetByType(tt.resType)[0].(*ComparisonResultFloat)
+			if ok {
+				if entry.GetString1() != tt.string1 {
+					t.Errorf("ComparisonResult.GetString1() = %s, want %s",
+						entry.GetString1(), tt.string1)
+				}
+				if entry.GetString2() != tt.string2 {
+					t.Errorf("ComparisonResult.GetString2() = %s, want %s",
+						entry.GetString2(), tt.string2)
+				}
+				s1, s2 := entry.GetStrings()
+				if s1 != tt.string1 || s2 != tt.string2 {
+					t.Errorf("ComparisonResult.GetStrings() = %s, %s, want %s, %s",
+						s1, s2, tt.string1, tt.string2)
+				}
+				score, err := entry.GetScoreFloat()
+				if (err != nil && score != 0) || math.Abs(float64(tt.score)-float64(score)) > 1e-5 {
+					t.Errorf("ComparisonResult.GetScoreInt() = %f, want %f",
+						score, tt.score)
+				}
+				if entry.GetType() != tt.resType {
+					t.Errorf("ComparisonResult.GetType() = %s, want %s",
+						entry.GetType(), tt.resType)
+				}
+				if entry.GetTypeName() != tt.resType.String() {
+					t.Errorf("ComparisonResult.GetTypeName() = %s, want %s",
+						entry.GetTypeName(), tt.resType.String())
+				}
+				split, err := entry.GetSplitLength()
+				if split != tt.splitLength {
+					t.Errorf("ComparisonResult.GetSplitLength() = %d, want %d",
+						split, tt.splitLength)
+				}
+				if entry.GetError() != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
+				}
+				if err != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
+					t.Errorf("ComparisonResult.GetScoreInt() = %s, want %s",
+						err.Error(), tt.err.Error())
+				}
+				entry.Print(false)
+				entry.Print(true)
 			}
 		})
 	}
