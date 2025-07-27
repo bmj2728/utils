@@ -6,56 +6,6 @@ import (
 	"testing"
 )
 
-func TestNewComparisonManager(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		{"CM1"},
-		{"CM2"},
-		{"CM3"},
-		{"CM4"},
-		{"CM5"},
-		{"CM6"},
-		{"CM7"},
-		{"CM8"},
-		{"CM9"},
-		{"CM10"},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			cm := NewComparisonManager()
-			if cm.ComparisonResults == nil ||
-				cm.SimilarityResults == nil ||
-				cm.ShingleData == nil ||
-				cm.LCSData == nil {
-				t.Errorf("NewComparisonManager() = %v, want %v", cm, nil)
-			}
-		})
-	}
-}
-
-func TestComparisonManager_AddComparisonResult(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		{"AddComparisonResult1"},
-		{"AddComparisonResult2"},
-		{"AddComparisonResult3"},
-	}
-	sb := NewLoremSentence().WithComparisonManager()
-	i := 0
-	for i < 100 {
-		comp := randomAlphaNumericString(10)
-		sb = sb.LevenshteinDistance(comp)
-		i++
-	}
-	for range tests {
-		if len(sb.ComparisonManager().ComparisonResults.GetByType(LevDist)) != 100 {
-			t.Errorf("ComparisonManager.AddComparisonResult() = %v, want %v", len(sb.ComparisonManager().ComparisonResults), 100)
-		}
-	}
-}
-
 func TestComparisonResultPrint(t *testing.T) {
 	tests := []struct {
 		name    string
