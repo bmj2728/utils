@@ -62,3 +62,15 @@ var (
 	// ErrNotNormalizedUnicode indicates that a string is not in a normalized Unicode format.
 	ErrNotNormalizedUnicode = errors.New("string is not normalized unicode")
 )
+
+// compareErrors compares two error values for equality by checking their string representations.
+// Returns true if both errors are nil or their messages are the same, otherwise false.
+func compareErrors(err1, err2 error) bool {
+	if err1 == nil {
+		return err2 == nil
+	}
+	if err2 == nil {
+		return false
+	}
+	return err1.Error() == err2.Error()
+}

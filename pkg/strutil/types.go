@@ -6,6 +6,8 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
+const float64EqualityThreshold = 1e-6
+
 //// PhoneFormat represents the enumerated type for different phone number formatting styles.
 //type PhoneFormat int
 //

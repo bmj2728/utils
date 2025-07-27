@@ -188,6 +188,10 @@ func TestComparisonResultGettersInt(t *testing.T) {
 					t.Errorf("ComparisonResult.GetScoreInt() = %d, want %d",
 						score, tt.score)
 				}
+				if entry.GetError() != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
+					t.Errorf("ComparisonResult.GetScoreInt() = %s, want %s",
+						err.Error(), tt.err.Error())
+				}
 				if entry.GetType() != tt.resType {
 					t.Errorf("ComparisonResult.GetType() = %s, want %s",
 						entry.GetType(), tt.resType)
@@ -202,8 +206,6 @@ func TestComparisonResultGettersInt(t *testing.T) {
 						split, tt.splitLength)
 				}
 				if entry.GetError() != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
-				}
-				if err != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
 					t.Errorf("ComparisonResult.GetScoreInt() = %s, want %s",
 						err.Error(), tt.err.Error())
 				}
@@ -255,9 +257,13 @@ func TestComparisonResultGettersFloat(t *testing.T) {
 						s1, s2, tt.string1, tt.string2)
 				}
 				score, err := entry.GetScoreFloat()
-				if (err != nil && score != 0) || math.Abs(float64(tt.score)-float64(score)) > 1e-5 {
-					t.Errorf("ComparisonResult.GetScoreInt() = %f, want %f",
+				if (err != nil && score != 0) || math.Abs(float64(tt.score)-float64(score)) > float64EqualityThreshold {
+					t.Errorf("ComparisonResult.GetScoreFloat() = %f, want %f",
 						score, tt.score)
+				}
+				if entry.GetError() != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
+					t.Errorf("ComparisonResult.GetScoreFloat() = %s, want %s",
+						err.Error(), tt.err.Error())
 				}
 				if entry.GetType() != tt.resType {
 					t.Errorf("ComparisonResult.GetType() = %s, want %s",
@@ -273,9 +279,7 @@ func TestComparisonResultGettersFloat(t *testing.T) {
 						split, tt.splitLength)
 				}
 				if entry.GetError() != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
-				}
-				if err != nil && tt.err != nil && entry.GetError().Error() != tt.err.Error() {
-					t.Errorf("ComparisonResult.GetScoreInt() = %s, want %s",
+					t.Errorf("ComparisonResult.GetScoreSplitLength() = %s, want %s",
 						err.Error(), tt.err.Error())
 				}
 				entry.Print(false)

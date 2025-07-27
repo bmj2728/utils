@@ -570,8 +570,6 @@ func TestHammingDistance(t *testing.T) {
 
 func TestJaroSimilarity(t *testing.T) {
 
-	const float64EqualityThreshold = 1e-6
-
 	tests := []struct {
 		name     string
 		input1   string
@@ -607,8 +605,6 @@ func TestJaroSimilarity(t *testing.T) {
 		})
 	}
 }
-
-const float64EqualityThreshold = 1e-6
 
 func TestJaroWinklerSimilarity(t *testing.T) {
 
@@ -1502,7 +1498,7 @@ func TestSimilarity(t *testing.T) {
 			if helperResult.algorithm != tt.expected.algorithm ||
 				helperResult.string1 != tt.expected.string1 ||
 				helperResult.string2 != tt.expected.string2 ||
-				math.Abs(float64(*tt.expected.GetSimilarity())-float64(*helperResult.GetSimilarity())) > 1e-6 ||
+				math.Abs(float64(*tt.expected.GetSimilarity())-float64(*helperResult.GetSimilarity())) > float64EqualityThreshold ||
 				!errors.Is(helperResult.err, tt.expected.err) {
 				t.Errorf("SimilarityA - expected %f - got %f",
 					*tt.expected.GetSimilarity(),
@@ -1512,7 +1508,7 @@ func TestSimilarity(t *testing.T) {
 			if result.algorithm != tt.expected.algorithm ||
 				result.string1 != tt.expected.string1 ||
 				result.string2 != tt.expected.string2 ||
-				math.Abs(float64(*tt.expected.GetSimilarity())-float64(*result.GetSimilarity())) > 1e-6 ||
+				math.Abs(float64(*tt.expected.GetSimilarity())-float64(*result.GetSimilarity())) > float64EqualityThreshold ||
 				!errors.Is(result.err, tt.expected.err) {
 				t.Errorf("SimilarityB - expected %f - got %f\n",
 					*tt.expected.GetSimilarity(),
@@ -1522,7 +1518,7 @@ func TestSimilarity(t *testing.T) {
 			if brSim.algorithm != tt.expected.algorithm ||
 				brSim.string1 != tt.expected.string1 ||
 				brSim.string2 != tt.expected.string2 ||
-				math.Abs(float64(*tt.expected.GetSimilarity())-float64(*brSim.GetSimilarity())) > 1e-6 ||
+				math.Abs(float64(*tt.expected.GetSimilarity())-float64(*brSim.GetSimilarity())) > float64EqualityThreshold ||
 				!errors.Is(brSim.err, tt.expected.err) {
 				t.Errorf("SimilarityC - expected %f - got %f",
 					*tt.expected.GetSimilarity(),

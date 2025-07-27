@@ -2,6 +2,7 @@ package strutil
 
 import (
 	"fmt"
+	"math"
 )
 
 // ComparisonResultScore represents a type constraint for a pointer to either an int or a float32.
@@ -74,8 +75,26 @@ type ComparisonResult interface {
 	GetStrings() (string, string)
 	GetSplitLength() (int, error)
 	GetError() error
+	IsMatch(other ComparisonResult) bool
 	Print(v bool)
 	formatOutput(v bool) string
+}
+
+// compareInputFields checks if two ComparisonResult objects are equivalent
+// by comparing their types, strings, and split lengths.
+func compareInputFields(c1, c2 ComparisonResult) bool {
+	if c1.GetType() != c2.GetType() || c1.GetString1() != c2.GetString1() || c1.GetString2() != c2.GetString2() {
+		return false
+	}
+	cSplit, cErr := c1.GetSplitLength()
+	oSplit, oErr := c2.GetSplitLength()
+	if !compareErrors(cErr, oErr) {
+		return false
+	}
+	if cSplit != oSplit {
+		return false
+	}
+	return true
 }
 
 // ComparisonResultInt represents the result of a comparison between two strings,
@@ -156,32 +175,24 @@ func (c ComparisonResultInt) GetScoreInt() (int, error) {
 
 // IsMatch checks if two ComparisonResultInt objects are equivalent by
 // comparing their type, strings, score, split length, and errors.
-func (c ComparisonResultInt) IsMatch(other ComparisonResultInt) bool {
-	// check required fields
-	if c.GetType() != other.GetType() || c.GetString1() != other.GetString1() || c.GetString2() != other.GetString2() {
+func (c ComparisonResultInt) IsMatch(other ComparisonResult) bool {
+	casted, ok := other.(ComparisonResultInt)
+	if !ok {
+		return false
+	}
+	// check type, strings, split length
+	if !compareInputFields(c, casted) {
 		return false
 	}
 	// GetScoreInt will return a score/0 + error/nil
 	cScore, cErr := c.GetScoreInt()
-	oScore, oErr := other.GetScoreInt()
+	oScore, oErr := casted.GetScoreInt()
 	// check errors first - this is the underlying ComparisonResult error if not null
-	if cErr != nil || oErr != nil {
-		if cErr == nil || oErr == nil {
-			return false
-		}
-		if cErr.Error() != oErr.Error() {
-			return false
-		}
+	if !compareErrors(cErr, oErr) {
+		return false
 	}
 	// check int score
 	if cScore != oScore {
-		return false
-
-	}
-	// skip redundant error check - we returned already if there was an error on the builder
-	cSplit, _ := c.GetSplitLength()
-	oSplit, _ := other.GetSplitLength()
-	if cSplit != oSplit {
 		return false
 	}
 	// no returns, we must match
@@ -286,6 +297,27 @@ func (c ComparisonResultFloat) GetScoreFloat() (float32, error) {
 		return 0.00, c.err
 	}
 	return *c.score, nil
+}
+
+func (c ComparisonResultFloat) IsMatch(other ComparisonResult) bool {
+	casted, ok := other.(ComparisonResultFloat)
+	if !ok {
+		return false
+	}
+	// check type, strings, split length
+	if !compareInputFields(c, casted) {
+		return false
+	}
+	// get scores/errors
+	cScore, cErr := c.GetScoreFloat()
+	oScore, oErr := casted.GetScoreFloat()
+	if !compareErrors(cErr, oErr) {
+		return false
+	}
+	if math.Abs(float64(cScore-oScore)) > float64EqualityThreshold {
+		return false
+	}
+	return true
 }
 
 // Print outputs the formatted comparison result or error details depending on the verbosity flag (v).
