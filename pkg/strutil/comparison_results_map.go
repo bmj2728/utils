@@ -1,5 +1,7 @@
 package strutil
 
+import "fmt"
+
 // ComparisonResultsMap maps a ComparisonResultType to a nested map of string
 // keys and pointers to ComparisonResult objects.
 type ComparisonResultsMap map[ComparisonResultType]map[string]*ComparisonResult
@@ -185,4 +187,16 @@ func (crm ComparisonResultsMap) IsMatch(other ComparisonResultsMap) bool {
 		}
 	}
 	return true
+}
+
+// Print iterates through the ComparisonResultsMap and prints the comparison results, optionally in verbose mode.
+func (crm ComparisonResultsMap) Print(verbose bool) {
+	for compType, v := range crm {
+		fmt.Printf("***Comparison Results for %s***\n", compType.String())
+		for _, v2 := range v {
+			if v2 != nil {
+				crm.CastComparisonResult(v2, compType).Print(verbose)
+			}
+		}
+	}
 }
