@@ -301,3 +301,90 @@ func TestComparisonResultsMapFilterByCompStr(t *testing.T) {
 		})
 	}
 }
+
+var (
+	testFormatOpt1 = "***Comparison Results for Levenshtein Distance***\n\n" +
+		"Levenshtein Distance (\"Hello, World!\"/\"Hello World\"): 2\n\n" +
+		"***Comparison Results for Sorensen-Dice Coefficient***\n\n" +
+		"Sorensen-Dice Coefficient (\"Hello, World!\"/\"Hello World\"): 0.7\n\n"
+
+	testFormatOpt2 = "***Comparison Results for Sorensen-Dice Coefficient***\n\n" +
+		"Sorensen-Dice Coefficient (\"Hello, World!\"/\"Hello World\"): 0.7\n\n" +
+		"***Comparison Results for Levenshtein Distance***\n\n" +
+		"Levenshtein Distance (\"Hello, World!\"/\"Hello World\"): 2\n\n"
+
+	testFormatLongOpt1 = "***Comparison Results for Levenshtein Distance***\n\n" +
+		"Comparison: Levenshtein Distance\nFirst String: Hello, World!\n" +
+		"Second String: Hello World\n" +
+		"Score: 2\n\n" +
+		"***Comparison Results for Sorensen-Dice Coefficient***\n\n" +
+		"Comparison: Sorensen-Dice Coefficient\n" +
+		"First String: Hello, World!\n" +
+		"Second String: Hello World\n" +
+		"Score: 0.7\n\n"
+
+	testFormatLongOpt2 = "***Comparison Results for Sorensen-Dice Coefficient***\n\n" +
+		"Comparison: Sorensen-Dice Coefficient\n" +
+		"First String: Hello, World!\n" +
+		"Second String: Hello World\n" +
+		"Score: 0.7\n\n" +
+		"***Comparison Results for Levenshtein Distance***\n\n" +
+		"Comparison: Levenshtein Distance\n" +
+		"First String: Hello, World!\n" +
+		"Second String: Hello World\n" +
+		"Score: 2\n\n"
+
+	testFormatMap1 = New("Hello, World!").
+			WithComparisonManager().
+			LevenshteinDistance("Hello World").
+			SorensenDiceCoefficient("Hello World", 3).
+			ComparisonManager().
+			GetComparisonResultsMap()
+
+	testFormatMap2 = New("Hello, World!").
+			WithComparisonManager().
+			DamerauLevenshteinDistance("Hello World").
+			CosineSimilarity("Hello World", 3).
+			ComparisonManager().
+			GetComparisonResultsMap()
+)
+
+func TestCastComparisonResultsMapFormat(t *testing.T) {
+	tests := []struct {
+		name     string
+		compMap  ComparisonResultsMap
+		expected bool
+	}{
+		{"Format1", testFormatMap1, true},
+		{"Format2", testFormatMap2, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var isShortMatch bool
+			var isLongMatch bool
+			resShort := tt.compMap.formatComparisonMapOutput(false)
+			resLong := tt.compMap.formatComparisonMapOutput(true)
+			if resShort == testFormatOpt1 ||
+				resShort == testFormatOpt2 {
+				isShortMatch = true
+			} else {
+				isShortMatch = false
+			}
+			if resLong == testFormatLongOpt1 ||
+				resLong == testFormatLongOpt2 {
+				isLongMatch = true
+			} else {
+				isLongMatch = false
+			}
+			if isShortMatch != tt.expected {
+				t.Errorf("Got:\n%s\nExpected:\n%s\nor\n%s", resShort, testFormatOpt1, testFormatOpt2)
+			}
+			if isLongMatch != tt.expected {
+				t.Errorf("Got:\n%s\nExpected:\n%s\nor\n%s", resLong, testFormatLongOpt1, testFormatLongOpt2)
+			}
+			tt.compMap.Print(true)
+			tt.compMap.Print(false)
+		})
+	}
+}
