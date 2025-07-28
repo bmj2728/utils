@@ -252,6 +252,8 @@ func shingleSlice(s string, k int) *ShingleSliceResult {
 func similarity(s1, s2 string, algorithm Algorithm) *SimilarityResult {
 	sim, err := edlib.StringsSimilarity(s1, s2, edlib.Algorithm(algorithm))
 	if err != nil {
+		// underlying returns 0.0, errors.New("Illegal argument for algorithm method")
+		// the error case occurs when Algorithm is invalid
 		return NewSimilarityResult(algorithm, s1, s2, nil, err)
 	}
 	return NewSimilarityResult(algorithm, s1, s2, &sim, err)

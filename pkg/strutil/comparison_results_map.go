@@ -20,34 +20,6 @@ func (crm ComparisonResultsMap) Add(result ComparisonResult) {
 	crm[result.GetType()][result.GetString2()] = &result
 }
 
-// CastComparisonResult converts a raw ComparisonResult pointer into a specific type based on
-// the ComparisonResultType input.
-// Returns ComparisonResultInt for integer-based types, ComparisonResultFloat for float-based
-// types, or the raw result otherwise.
-// Returns nil if the input raw ComparisonResult pointer is nil.
-func (crm ComparisonResultsMap) CastComparisonResult(raw *ComparisonResult,
-	compResType ComparisonResultType) ComparisonResult {
-	if raw == nil {
-		return nil
-	}
-	switch compResType {
-	case LevDist, DamLevDist, OSADamLevDist, LCSLength, LCSDist, HammingDist, QGramDist, QGramDistCust:
-		casted, ok := (*raw).(*ComparisonResultInt)
-		if !ok {
-			return *raw
-		}
-		return casted
-	case JaroSim, JaroWinklerSim, JaccardSim, CosineSim, SorensenDiceCo, QGramSim:
-		casted, ok := (*raw).(*ComparisonResultFloat)
-		if !ok {
-			return *raw
-		}
-		return casted
-	default:
-		return *raw
-	}
-}
-
 // GetCopy creates and returns a deep copy of the current ComparisonResultsMap.
 func (crm ComparisonResultsMap) GetCopy() ComparisonResultsMap {
 	cloned := NewComparisonResultsMap()
@@ -65,7 +37,7 @@ func (crm ComparisonResultsMap) GetCopy() ComparisonResultsMap {
 	return cloned
 }
 
-// Get retrieves a ComparisonResult by its type and comparison string, or returns nil if no result is found.
+// Get retrieves a ComparisonResult by its type and comparison string or returns nil if no result is found.
 func (crm ComparisonResultsMap) Get(compResType ComparisonResultType, compStr string) ComparisonResult {
 	if crm[compResType] == nil {
 		return nil
@@ -73,7 +45,7 @@ func (crm ComparisonResultsMap) Get(compResType ComparisonResultType, compStr st
 	if crm[compResType][compStr] == nil {
 		return nil
 	}
-	return crm.CastComparisonResult(crm[compResType][compStr], compResType)
+	return CastComparisonResult(crm[compResType][compStr], compResType)
 }
 
 // 7/25/25 - added filter by methods
@@ -86,7 +58,7 @@ func (crm ComparisonResultsMap) GetByType(compResType ComparisonResultType) []Co
 	}
 	var results []ComparisonResult
 	for _, v := range crm[compResType] {
-		results = append(results, crm.CastComparisonResult(v, compResType))
+		results = append(results, CastComparisonResult(v, compResType))
 	}
 	if len(results) == 0 {
 		return nil
@@ -118,7 +90,7 @@ func (crm ComparisonResultsMap) GetByComparisonString(compStr string) []Comparis
 	var results []ComparisonResult
 	for compType, v := range crm {
 		if v[compStr] != nil {
-			results = append(results, crm.CastComparisonResult(v[compStr], compType))
+			results = append(results, CastComparisonResult(v[compStr], compType))
 		}
 	}
 	if len(results) == 0 {
@@ -180,7 +152,7 @@ func (crm ComparisonResultsMap) IsMatch(other ComparisonResultsMap) bool {
 				return false
 			} else {
 				// cast the result to the appropriate type, then run the match
-				if !crm.CastComparisonResult(v2, compType).IsMatch(*other[compType][compStr]) {
+				if !CastComparisonResult(v2, compType).IsMatch(*other[compType][compStr]) {
 					return false
 				}
 			}
@@ -191,13 +163,19 @@ func (crm ComparisonResultsMap) IsMatch(other ComparisonResultsMap) bool {
 
 // Print iterates through the ComparisonResultsMap and prints the comparison results, optionally in verbose mode.
 func (crm ComparisonResultsMap) Print(verbose bool) ComparisonResultsMap {
+	fmt.Println(crm.formatOutput(verbose))
+	return crm
+}
+
+func (crm ComparisonResultsMap) formatOutput(verbose bool) string {
+	var output string
 	for compType, v := range crm {
-		fmt.Printf("***Comparison Results for %s***\n", compType.String())
+		output += fmt.Sprintf("***Comparison Results for %s***\n\n", compType.String())
 		for _, v2 := range v {
 			if v2 != nil {
-				crm.CastComparisonResult(v2, compType).Print(verbose)
+				output += formatComparisonResultOutput(CastComparisonResult(v2, compType), verbose) + "\n"
 			}
 		}
 	}
-	return crm
+	return output
 }

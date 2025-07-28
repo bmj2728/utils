@@ -18,21 +18,27 @@ func TestComparisonResultPrint(t *testing.T) {
 	correct := "With great power there must also come great responsibility."
 	common := "With great power comes great responsibility."
 
-	sh := "Jaro-Winkler Similarity: 0.903698\n"
+	sh := "Jaro-Winkler Similarity " +
+		"(\"With great power there must also come great responsibility.\"/" +
+		"\"With great power comes great responsibility.\"): 0.90369797\n"
 	verb := "Comparison: Jaro-Winkler Similarity\n" +
 		"First String: With great power there must also come great responsibility.\n" +
 		"Second String: With great power comes great responsibility.\n" +
-		"Score: 0.903698\n"
+		"Score: 0.90369797\n"
 
-	shHam := "Hamming Distance GetError: error calculating hamming distance\n" +
+	shHam := "Hamming Distance " +
+		"(\"With great power there must also come great responsibility." +
+		"\"/\"With great power comes great responsibility.\") Error: error calculating hamming distance\n" +
 		"Undefined for strings of unequal length\n"
-	verbHam := "GetError during processing: Hamming Distance\n" +
+	verbHam := "Error during processing Hamming Distance\n" +
 		"First String: With great power there must also come great responsibility.\n" +
 		"Second String: With great power comes great responsibility.\n" +
-		"GetError: error calculating hamming distance\n" +
+		"Error: error calculating hamming distance\n" +
 		"Undefined for strings of unequal length\n"
 
-	shLev := "Levenshtein Distance: 17\n"
+	shLev := "Levenshtein Distance " +
+		"(\"With great power there must also come great responsibility." +
+		"\"/\"With great power comes great responsibility.\"): 17\n"
 	verbLev := "Comparison: Levenshtein Distance\n" +
 		"First String: With great power there must also come great responsibility.\n" +
 		"Second String: With great power comes great responsibility.\n" +
@@ -49,33 +55,33 @@ func TestComparisonResultPrint(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.resType == JaroWinklerSim {
-				if ls.GetByType(tt.resType)[0].formatOutput(false) != sh {
-					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
-						ls.GetByType(tt.resType)[0].formatOutput(false), sh)
+				if formatComparisonResultOutput(ls.GetByType(tt.resType)[0], false) != sh {
+					t.Errorf("ComparisonResult.formatComparisonResultOutput() = %s, want %s",
+						formatComparisonResultOutput(ls.GetByType(tt.resType)[0], false), sh)
 				}
-				if ls.GetByType(tt.resType)[0].formatOutput(true) != verb {
-					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
-						ls.GetByType(tt.resType)[0].formatOutput(true), verb)
+				if formatComparisonResultOutput(ls.GetByType(tt.resType)[0], true) != verb {
+					t.Errorf("ComparisonResult.formatComparisonResultOutput() = %s, want %s",
+						formatComparisonResultOutput(ls.GetByType(tt.resType)[0], true), verb)
 				}
 			}
 			if tt.resType == LevDist {
-				if ls.GetByType(tt.resType)[0].formatOutput(false) != shLev {
-					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
-						ls.GetByType(tt.resType)[0].formatOutput(false), shLev)
+				if formatComparisonResultOutput(ls.GetByType(tt.resType)[0], false) != shLev {
+					t.Errorf("ComparisonResult.formatComparisonResultOutput() = %s, want %s",
+						formatComparisonResultOutput(ls.GetByType(tt.resType)[0], false), shLev)
 				}
-				if ls.GetByType(tt.resType)[0].formatOutput(true) != verbLev {
-					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
-						ls.GetByType(tt.resType)[0].formatOutput(true), verbLev)
+				if formatComparisonResultOutput(ls.GetByType(tt.resType)[0], true) != verbLev {
+					t.Errorf("ComparisonResult.formatComparisonResultOutput() = %s, want %s",
+						formatComparisonResultOutput(ls.GetByType(tt.resType)[0], true), verbLev)
 				}
 			}
 			if tt.resType == HammingDist {
-				if ls.GetByType(tt.resType)[0].formatOutput(false) != shHam {
-					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
-						ls.GetByType(tt.resType)[0].formatOutput(false), shHam)
+				if formatComparisonResultOutput(ls.GetByType(tt.resType)[0], false) != shHam {
+					t.Errorf("ComparisonResult.formatComparisonResultOutput() = %s, want %s",
+						formatComparisonResultOutput(ls.GetByType(tt.resType)[0], false), shHam)
 				}
-				if ls.GetByType(tt.resType)[0].formatOutput(true) != verbHam {
-					t.Errorf("ComparisonResult.formatOutput() = %s, want %s",
-						ls.GetByType(tt.resType)[0].formatOutput(true), verbHam)
+				if formatComparisonResultOutput(ls.GetByType(tt.resType)[0], true) != verbHam {
+					t.Errorf("ComparisonResult.formatComparisonResultOutput() = %s, want %s",
+						formatComparisonResultOutput(ls.GetByType(tt.resType)[0], true), verbHam)
 				}
 			}
 		})

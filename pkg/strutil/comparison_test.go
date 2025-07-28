@@ -1484,6 +1484,17 @@ func TestSimilarity(t *testing.T) {
 				score:     &val22,
 				err:       nil,
 			}},
+		{"SimilarityFake",
+			"Hello",
+			"World",
+			Algorithm(99),
+			&SimilarityResult{
+				string1:   "Hello",
+				string2:   "World",
+				algorithm: Algorithm(99),
+				score:     nil,
+				err:       errors.New("Illegal argument for algorithm method"),
+			}},
 	}
 
 	for _, tt := range tests {
@@ -1500,41 +1511,49 @@ func TestSimilarity(t *testing.T) {
 				SimilarityResults[tt.algorithm][tt.input2]
 			brScore, bErr := (*brSim).GetScore()
 
-			if eErr != nil || hErr != nil || rErr != nil || bErr != nil {
+			if tt.expected == nil && (eErr != nil || hErr != nil || rErr != nil || bErr != nil) {
 				t.Errorf("Similarity - expected %v - got %v",
 					tt.expected,
 					tt.expected,
 				)
 			}
+			if tt.expected.score != nil {
+				hScoreBool := math.Abs(float64(hrScore)-float64(eScore)) < float64EqualityThreshold
+				rScoreBool := math.Abs(float64(rScore)-float64(eScore)) < float64EqualityThreshold
+				bScoreBool := math.Abs(float64(brScore)-float64(eScore)) < float64EqualityThreshold
+				if !hScoreBool || !rScoreBool || !bScoreBool {
+					t.Errorf("Similarity - expected %v - got %v",
+						eScore,
+						rScore,
+					)
+				}
+			}
 
 			if helperResult.algorithm != tt.expected.algorithm ||
 				helperResult.string1 != tt.expected.string1 ||
 				helperResult.string2 != tt.expected.string2 ||
-				math.Abs(float64(eScore)-float64(hrScore)) > float64EqualityThreshold ||
-				!errors.Is(helperResult.err, tt.expected.err) {
-				t.Errorf("SimilarityA - expected %f - got %f",
-					eScore,
-					hrScore,
+				!compareErrors(helperResult.err, tt.expected.err) {
+				t.Errorf("SimilarityA - expected %v - got %v",
+					*tt.expected,
+					*helperResult,
 				)
 			}
 			if result.algorithm != tt.expected.algorithm ||
 				result.string1 != tt.expected.string1 ||
 				result.string2 != tt.expected.string2 ||
-				math.Abs(float64(eScore)-float64(rScore)) > float64EqualityThreshold ||
-				!errors.Is(result.err, tt.expected.err) {
-				t.Errorf("SimilarityB - expected %f - got %f\n",
-					eScore,
-					rScore,
+				!compareErrors(result.err, tt.expected.err) {
+				t.Errorf("SimilarityB - expected %v - got %v\n",
+					*tt.expected,
+					*result,
 				)
 			}
 			if brSim.algorithm != tt.expected.algorithm ||
 				brSim.string1 != tt.expected.string1 ||
 				brSim.string2 != tt.expected.string2 ||
-				math.Abs(float64(eScore)-float64(brScore)) > float64EqualityThreshold ||
-				!errors.Is(brSim.err, tt.expected.err) {
-				t.Errorf("SimilarityC - expected %f - got %f",
-					eScore,
-					brScore,
+				!compareErrors((*brSim).err, tt.expected.err) {
+				t.Errorf("SimilarityC - expected %v - got %v",
+					*tt.expected,
+					*result,
 				)
 			}
 		})
