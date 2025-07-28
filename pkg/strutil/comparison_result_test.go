@@ -24,12 +24,12 @@ func TestComparisonResultPrint(t *testing.T) {
 		"Second String: With great power comes great responsibility.\n" +
 		"Score: 0.903698\n"
 
-	shHam := "Hamming Distance Error: error calculating hamming distance\n" +
+	shHam := "Hamming Distance GetError: error calculating hamming distance\n" +
 		"Undefined for strings of unequal length\n"
-	verbHam := "Error during processing: Hamming Distance\n" +
+	verbHam := "GetError during processing: Hamming Distance\n" +
 		"First String: With great power there must also come great responsibility.\n" +
 		"Second String: With great power comes great responsibility.\n" +
-		"Error: error calculating hamming distance\n" +
+		"GetError: error calculating hamming distance\n" +
 		"Undefined for strings of unequal length\n"
 
 	shLev := "Levenshtein Distance: 17\n"

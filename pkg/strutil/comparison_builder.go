@@ -149,7 +149,7 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 	return sb
 }
 
-// JaroSimilarity computes the Jaro similarity between the StringBuilder's value and the provided string.
+// JaroSimilarity computes the Jaro score between the StringBuilder's value and the provided string.
 // It adds the result to the ComparisonManager and returns the updated StringBuilder instance.
 //
 // The higher the value, the more similar the strings are.
@@ -168,11 +168,11 @@ func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
 	return sb
 }
 
-// JaroWinklerSimilarity calculates the Jaro-Winkler similarity between the StringBuilder value and another string.
+// JaroWinklerSimilarity calculates the Jaro-Winkler score between the StringBuilder value and another string.
 // It adds the result to the ComparisonManager if no internal error is present.
 // Returns the updated StringBuilder instance.
 //
-// Uses Jaro similarity with a more favorable weighting for similar common prefixes.
+// Uses Jaro score with a more favorable weighting for similar common prefixes.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance#Jaro%E2%80%93Winkler_similarity
 func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
@@ -187,7 +187,7 @@ func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
 	return sb
 }
 
-// JaccardSimilarity computes the Jaccard similarity coefficient between two strings, using k-grams
+// JaccardSimilarity computes the Jaccard score coefficient between two strings, using k-grams
 // of the given split length.
 // For splitLength = 0, the strings are split on whitespaces. Negative split lengths return nil
 //
@@ -207,12 +207,12 @@ func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *Strin
 	return sb
 }
 
-// CosineSimilarity computes the cosine similarity between the StringBuilder value and
+// CosineSimilarity computes the cosine score between the StringBuilder value and
 // another string with n-gram splitting. Updates the ComparisonManager with
-// the computed similarity and returns the modified StringBuilder. When an error exists in the StringBuilder,
+// the computed score and returns the modified StringBuilder. When an error exists in the StringBuilder,
 // it skips computation and returns itself.
 //
-// Cosine similarity is the cosine of the angle between the vectors.
+// Cosine score is the cosine of the angle between the vectors.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Cosine_similarity/
 func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *StringBuilder {
@@ -289,9 +289,9 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, cust
 	return sb
 }
 
-// QgramSimilarity calculates the q-gram similarity between the builder's string
+// QgramSimilarity calculates the q-gram score between the builder's string
 // and the given string using a specified q size.
-// It updates the comparison data with the calculated similarity and returns the StringBuilder instance.
+// It updates the comparison data with the calculated score and returns the StringBuilder instance.
 func (sb *StringBuilder) QgramSimilarity(other string, q int) *StringBuilder {
 	if sb.err != nil {
 		return sb
@@ -331,8 +331,8 @@ func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 	return sb
 }
 
-// Similarity computes the similarity between the current string and another string using the specified algorithm.
-// Updates the ComparisonManager with the resulting similarity data and maintains the chainable state of StringBuilder.
+// Similarity computes the score between the current string and another string using the specified algorithm.
+// Updates the ComparisonManager with the resulting score data and maintains the chainable state of StringBuilder.
 // If an error occurs during computation, it sets the error state in the StringBuilder and returns itself.
 func (sb *StringBuilder) Similarity(other string, algorithm Algorithm) *StringBuilder {
 	if sb.err != nil {

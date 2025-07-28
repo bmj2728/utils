@@ -2,7 +2,7 @@ package strutil
 
 import "fmt"
 
-// SimilarityResultsMap is keyed by algorithm and holds maps of similarity results keyed by comparison string.
+// SimilarityResultsMap is keyed by algorithm and holds maps of score results keyed by comparison string.
 //
 //	map[Levenshtein]["comparison text"]SimilarityResult{
 //		algorithm: Levenshtein,
@@ -17,7 +17,7 @@ func NewSimilarityResultsMap() SimilarityResultsMap {
 	return make(map[Algorithm]map[string]*SimilarityResult)
 }
 
-// Print iterates through the SimilarityResultsMap and prints similarity results for each algorithm and comparison word.
+// Print iterates through the SimilarityResultsMap and prints score results for each algorithm and comparison word.
 func (smr SimilarityResultsMap) Print(v bool) SimilarityResultsMap {
 	for algorithm, results := range smr {
 		fmt.Printf("Algorithm: %s\n", algorithm.String())
@@ -35,6 +35,6 @@ func (smr SimilarityResultsMap) Add(result SimilarityResult) {
 	if smr[result.GetAlgorithm()] == nil {
 		smr[result.GetAlgorithm()] = make(map[string]*SimilarityResult)
 	}
-	// add or update similarity for this comparison word
+	// add or update score for this comparison word
 	smr[result.GetAlgorithm()][result.GetString2()] = &result
 }

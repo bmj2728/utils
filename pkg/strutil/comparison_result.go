@@ -10,7 +10,7 @@ type ComparisonResultScore interface {
 	*int | *float32
 }
 
-// ComparisonResultType represents various types of comparison results for string similarity and distance measurements.
+// ComparisonResultType represents various types of comparison results for string score and distance measurements.
 type ComparisonResultType int
 
 // String returns the string representation of the ComparisonResultType value using the ComparisonResultTypeMap.
@@ -24,14 +24,14 @@ func (c ComparisonResultType) String() string {
 // DamLevDist represents the comparison result type using Damerau-Levenshtein distance.
 // OSADamLevDist represents the comparison result type using Optimal String Alignment distance.
 // HammingDist represents the comparison result type using Hamming distance.
-// JaroSim represents the comparison result type using Jaro similarity.
-// JaroWinklerSim represents the comparison result type using Jaro-Winkler similarity.
-// JaccardSim represents the comparison result type using Jaccard similarity.
-// CosineSim represents the comparison result type using Cosine similarity.
+// JaroSim represents the comparison result type using Jaro score.
+// JaroWinklerSim represents the comparison result type using Jaro-Winkler score.
+// JaccardSim represents the comparison result type using Jaccard score.
+// CosineSim represents the comparison result type using Cosine score.
 // SorensenDiceCo represents the comparison result type using Sørensen-Dice coefficient.
 // QGramDist represents the comparison result type using Q-Gram distance with default q-gram size.
 // QGramDistCust represents the comparison result type using Q-Gram distance with custom q-gram size.
-// QGramSim represents the comparison result type using Q-Gram similarity.
+// QGramSim represents the comparison result type using Q-Gram score.
 const (
 	LCSLength ComparisonResultType = iota
 	LCSDist
@@ -170,6 +170,9 @@ func (c ComparisonResultInt) GetScoreInt() (int, error) {
 	if c.err != nil {
 		return 0, c.err
 	}
+	if c.score == nil {
+		return 0, ErrNilScore
+	}
 	return *c.score, nil
 }
 
@@ -209,10 +212,10 @@ func (c ComparisonResultInt) Print(v bool) {
 // based on error presence and verbosity.
 func (c ComparisonResultInt) formatOutput(v bool) string {
 	if c.err != nil && v {
-		return fmt.Sprintf("Error during processing: %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+		return fmt.Sprintf("GetError during processing: %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 			ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
 	} else if c.err != nil && !v {
-		return fmt.Sprintf("%s Error: %s\n", ComparisonResultTypeMap[c.comparisonType], c.err.Error())
+		return fmt.Sprintf("%s GetError: %s\n", ComparisonResultTypeMap[c.comparisonType], c.err.Error())
 	}
 	if v {
 		return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %d\n",
@@ -296,6 +299,9 @@ func (c ComparisonResultFloat) GetScoreFloat() (float32, error) {
 	if c.err != nil {
 		return 0.00, c.err
 	}
+	if c.score == nil {
+		return 0.00, ErrNilScore
+	}
 	return *c.score, nil
 }
 
@@ -329,7 +335,7 @@ func (c ComparisonResultFloat) Print(v bool) {
 func (c ComparisonResultFloat) formatOutput(v bool) string {
 	if v {
 		if c.err != nil {
-			return fmt.Sprintf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
 
 		} else {
@@ -338,7 +344,7 @@ func (c ComparisonResultFloat) formatOutput(v bool) string {
 		}
 	} else {
 		if c.err != nil {
-			return fmt.Sprintf("%s Error: %s\n",
+			return fmt.Sprintf("%s GetError: %s\n",
 				ComparisonResultTypeMap[c.comparisonType], c.err.Error())
 
 		} else {

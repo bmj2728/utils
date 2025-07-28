@@ -13,7 +13,7 @@ func LevenshteinDistance(s1, s2 string) *ComparisonResultInt {
 }
 
 // DamerauLevenshteinDistance calculates the Damerau-Levenshtein distance between
-// two strings to measure their similarity.
+// two strings to measure their score.
 func DamerauLevenshteinDistance(s1, s2 string) *ComparisonResultInt {
 	return damerauLevenshteinDistance(s1, s2)
 }
@@ -61,7 +61,7 @@ func HammingDistance(s1, s2 string) *ComparisonResultInt {
 	return hammingDistance(s1, s2)
 }
 
-// JaroSimilarity calculates the Jaro similarity between two strings, returns a ComparisonResultFloat pointer
+// JaroSimilarity calculates the Jaro score between two strings, returns a ComparisonResultFloat pointer
 //
 // The higher the value, the more similar the strings are.
 // The score is normalized such that 0 equates to no similarities and 1 is an exact match
@@ -71,17 +71,17 @@ func JaroSimilarity(s1, s2 string) *ComparisonResultFloat {
 	return jaroSimilarity(s1, s2)
 }
 
-// JaroWinklerSimilarity computes the Jaro-Winkler similarity between two strings
+// JaroWinklerSimilarity computes the Jaro-Winkler score between two strings
 // and returns a ComparisonResultFloat pointer.
 //
-// Uses Jaro similarity with a more favorable weighting for similar common prefixes.
+// Uses Jaro score with a more favorable weighting for similar common prefixes.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance#Jaro%E2%80%93Winkler_similarity
 func JaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
 	return jaroWinklerSimilarity(s1, s2)
 }
 
-// JaccardSimilarity computes the Jaccard similarity coefficient between two strings, using k-grams
+// JaccardSimilarity computes the Jaccard score coefficient between two strings, using k-grams
 // of the given split length.
 // For splitLength = 0, the strings are split on whitespaces
 //
@@ -93,11 +93,11 @@ func JaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	return jaccardSimilarity(s1, s2, splitLength)
 }
 
-// CosineSimilarity computes the cosine similarity between two strings using the specified n-gram split length.
-// Returns a pointer to the similarity score or nil if the split length is negative.
+// CosineSimilarity computes the cosine score between two strings using the specified n-gram split length.
+// Returns a pointer to the score score or nil if the split length is negative.
 // If the split length is zero, it splits the strings on whitespaces.
 //
-// Cosine similarity is the cosine of the angle between the vectors.
+// Cosine score is the cosine of the angle between the vectors.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Cosine_similarity/
 func CosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
@@ -127,8 +127,8 @@ func QgramDistanceCustomNgram(nmap1, nmap2 map[string]int, customName string) *C
 	return qgramDistanceCustomNgram(nmap1, nmap2, customName)
 }
 
-// QgramSimilarity calculates the q-gram similarity between two strings using the specified q-gram size.
-// Returns a pointer to the similarity score or nil if the q-gram size is less than 1.
+// QgramSimilarity calculates the q-gram score between two strings using the specified q-gram size.
+// Returns a pointer to the score score or nil if the q-gram size is less than 1.
 func QgramSimilarity(s1, s2 string, q int) *ComparisonResultFloat {
 	return qgramSimilarity(s1, s2, q)
 }
@@ -145,8 +145,8 @@ func ShingleSlice(s string, k int) *ShingleSliceResult {
 	return shingleSlice(s, k)
 }
 
-// Similarity computes the similarity between two input strings using the specified algorithm.
-// Returns a SimilarityResult containing the similarity score or any error encountered during computation.
+// Similarity computes the score between two input strings using the specified algorithm.
+// Returns a SimilarityResult containing the score score or any error encountered during computation.
 func Similarity(s1, s2 string, algorithm Algorithm) *SimilarityResult {
 	return similarity(s1, s2, algorithm)
 }

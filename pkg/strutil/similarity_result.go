@@ -6,7 +6,7 @@ import (
 	"github.com/hbollon/go-edlib"
 )
 
-// Algorithm represents a type of string similarity or distance algorithm used for comparison.
+// Algorithm represents a type of string score or distance algorithm used for comparison.
 type Algorithm edlib.Algorithm
 
 // String returns the string representation of the Algorithm type based on the corresponding value in AlgorithmTypeMap.
@@ -14,17 +14,17 @@ func (a Algorithm) String() string {
 	return AlgorithmTypeMap[a]
 }
 
-// Levenshtein represents the Levenshtein distance algorithm for string similarity measurement.
-// DamerauLevenshtein represents the Damerau-Levenshtein algorithm for string similarity measurement.
+// Levenshtein represents the Levenshtein distance algorithm for string score measurement.
+// DamerauLevenshtein represents the Damerau-Levenshtein algorithm for string score measurement.
 // OSADamerauLevenshtein represents the Optimal String Alignment (OSA) Damerau-Levenshtein algorithm.
-// Lcs represents the Longest Common Subsequence algorithm for string similarity measurement.
-// Hamming represents the Hamming distance algorithm for string similarity measurement.
-// Jaro represents the Jaro distance algorithm for string similarity measurement.
-// JaroWinkler represents the Jaro-Winkler distance algorithm for string similarity measurement.
-// Cosine represents the Cosine similarity algorithm used for vector-based string comparison.
-// Jaccard represents the Jaccard similarity algorithm for set-based string comparison.
-// SorensenDice represents the Sørensen-Dice coefficient for string similarity measurement.
-// QGram represents the Q-Gram algorithm for string similarity measurement.
+// Lcs represents the Longest Common Subsequence algorithm for string score measurement.
+// Hamming represents the Hamming distance algorithm for string score measurement.
+// Jaro represents the Jaro distance algorithm for string score measurement.
+// JaroWinkler represents the Jaro-Winkler distance algorithm for string score measurement.
+// Cosine represents the Cosine score algorithm used for vector-based string comparison.
+// Jaccard represents the Jaccard score algorithm for set-based string comparison.
+// SorensenDice represents the Sørensen-Dice coefficient for string score measurement.
+// QGram represents the Q-Gram algorithm for string score measurement.
 const (
 	Levenshtein           = Algorithm(edlib.Levenshtein)
 	DamerauLevenshtein    = Algorithm(edlib.DamerauLevenshtein)
@@ -54,13 +54,13 @@ var AlgorithmTypeMap = map[Algorithm]string{
 	QGram:                 "Q-Gram",
 }
 
-// SimilarityResult represents the result of a similarity computation between two strings.
+// SimilarityResult represents the result of a score computation between two strings.
 type SimilarityResult struct {
-	algorithm  Algorithm // the algorithm used
-	string1    string    // input string/string builder value
-	string2    string    // comparison value
-	similarity *float32  // similarity result
-	err        error     // error if it occurred
+	algorithm Algorithm // the algorithm used
+	string1   string    // input string/string builder value
+	string2   string    // comparison value
+	score     *float32  // score result
+	err       error     // error if it occurred
 }
 
 // NewSimilarityResult initializes and returns a new SimilarityResult instance with the provided parameters.
@@ -70,30 +70,30 @@ func NewSimilarityResult(algorithm Algorithm,
 	similarity *float32,
 	err error) *SimilarityResult {
 	return &SimilarityResult{
-		algorithm:  algorithm,
-		string1:    str1,
-		string2:    str2,
-		similarity: similarity,
-		err:        err,
+		algorithm: algorithm,
+		string1:   str1,
+		string2:   str2,
+		score:     similarity,
+		err:       err,
 	}
 }
 
-// GetAlgorithm returns the algorithm used for the similarity computation.
+// GetAlgorithm returns the algorithm used for the score computation.
 func (sr *SimilarityResult) GetAlgorithm() Algorithm {
 	return sr.algorithm
 }
 
-// GetAlgorithmName returns the string representation of the algorithm used in the similarity computation.
+// GetAlgorithmName returns the string representation of the algorithm used in the score computation.
 func (sr *SimilarityResult) GetAlgorithmName() string {
 	return sr.algorithm.String()
 }
 
-// GetString1 retrieves the first string used in the similarity comparison.
+// GetString1 retrieves the first string used in the score comparison.
 func (sr *SimilarityResult) GetString1() string {
 	return sr.string1
 }
 
-// GetString2 returns the second string used in the similarity comparison.
+// GetString2 returns the second string used in the score comparison.
 func (sr *SimilarityResult) GetString2() string {
 	return sr.string2
 }
@@ -102,36 +102,60 @@ func (sr *SimilarityResult) GetStrings() (string, string) {
 	return sr.string1, sr.string2
 }
 
-// Error returns the error encountered during the similarity calculation, if any.
-func (sr *SimilarityResult) Error() error {
+// GetError returns the error encountered during the score calculation, if any.
+func (sr *SimilarityResult) GetError() error {
 	return sr.err
 }
 
-// GetSimilarity returns a pointer to the similarity score calculated between string1 and string2.
-func (sr *SimilarityResult) GetSimilarity() *float32 {
-	return sr.similarity
+// GetScore returns a pointer to the score calculated between string1 and string2.
+func (sr *SimilarityResult) GetScore() (float32, error) {
+	if sr.score == nil && sr.err == nil {
+		return 0, ErrUnknownError
+	}
+	if sr.err != nil {
+		return 0, sr.err
+	}
+	if sr.score == nil {
+		return 0, ErrNilScore
+	}
+	return *sr.score, nil
 }
 
-// Print outputs the comparison result or error of the SimilarityResult based on verbosity flag 'v'.
+func (sr *SimilarityResult) IsMatch(other *SimilarityResult) bool {
+	if sr.algorithm != other.algorithm || sr.string1 != other.string1 || sr.string2 != other.string2 {
+		return false
+	}
+	if sr.err != nil && other.err != nil {
+		return false
+	}
+	if sr.err != nil && other.err == nil {
+		return false
+	}
+}
+
+// Print outputs the formatted score result or error information based on the verbosity flag.
 func (sr *SimilarityResult) Print(v bool) {
+	fmt.Print(sr.formatOutput(v))
+}
+
+// formatOutput generates a formatted string representation of the similarity result,
+// including algorithm, score, and errors.
+// If the verbose flag (v) is true, it includes detailed information about the strings compared and any errors.
+func (sr *SimilarityResult) formatOutput(v bool) string {
 	if v {
 		if sr.err != nil {
-			fmt.Printf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
+			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 				sr.algorithm.String(), sr.string1, sr.string2, sr.err.Error())
-			return
 		} else {
-			fmt.Printf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
-				sr.algorithm.String(), sr.string1, sr.string2, *sr.similarity)
-			return
+			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
+				sr.algorithm.String(), sr.string1, sr.string2, *sr.score)
 		}
 	} else {
 		if sr.err != nil {
-			fmt.Printf("%s GetError: %s\n",
+			return fmt.Sprintf("%s GetError: %s\n",
 				sr.algorithm.String(), sr.err.Error())
-			return
 		} else {
-			fmt.Printf("%s: %f\n", sr.algorithm.String(), *sr.similarity)
-			return
+			return fmt.Sprintf("%s: %f\n", sr.algorithm.String(), *sr.score)
 		}
 	}
 }

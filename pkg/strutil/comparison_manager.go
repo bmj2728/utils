@@ -1,6 +1,6 @@
 package strutil
 
-// ComparisonManager is a structure for managing comparison, similarity, shingle, and LCS results.
+// ComparisonManager is a structure for managing comparison, score, shingle, and LCS results.
 type ComparisonManager struct {
 	ComparisonResults ComparisonResultsMap
 	SimilarityResults SimilarityResultsMap
@@ -90,7 +90,7 @@ func (cm *ComparisonManager) GetComparisonResultsByString(compStr string) []Comp
 
 // Similarity Results
 
-// GetSimilarityResults retrieves the SimilarityResultsMap, containing similarity
+// GetSimilarityResults retrieves the SimilarityResultsMap, containing score
 // results organized by algorithm and comparison string.
 func (cm *ComparisonManager) GetSimilarityResults() SimilarityResultsMap {
 	return cm.SimilarityResults

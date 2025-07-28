@@ -61,6 +61,9 @@ var (
 
 	// ErrNotNormalizedUnicode indicates that a string is not in a normalized Unicode format.
 	ErrNotNormalizedUnicode = errors.New("string is not normalized unicode")
+
+	// ErrNilScore is returned when the expected score is nil but no specific error is associated.
+	ErrNilScore = errors.New("score is nil")
 )
 
 // compareErrors compares two error values for equality by checking their string representations.
