@@ -163,11 +163,11 @@ func (crm ComparisonResultsMap) IsMatch(other ComparisonResultsMap) bool {
 
 // Print iterates through the ComparisonResultsMap and prints the comparison results, optionally in verbose mode.
 func (crm ComparisonResultsMap) Print(verbose bool) ComparisonResultsMap {
-	fmt.Println(crm.formatComparisonMapOutput(verbose))
+	fmt.Println(formatComparisonMapOutput(crm, verbose))
 	return crm
 }
 
-func (crm ComparisonResultsMap) formatComparisonMapOutput(verbose bool) string {
+func formatComparisonMapOutput(crm ComparisonResultsMap, verbose bool) string {
 	var output string
 	for compType, v := range crm {
 		output += fmt.Sprintf("***Comparison Results for %s***\n\n", compType.String())

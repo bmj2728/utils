@@ -222,16 +222,16 @@ func TestComparisonResultsMapFilterByType(t *testing.T) {
 		compType ComparisonResultType
 		expected int
 	}{
-		{"MapGetByCompStr1", testMap1, LevDist, 2},
-		{"MapGetByCompStr2", testMap2, LevDist, 2},
-		{"MapGetByCompStr3", testMap3, LevDist, 2},
-		{"MapGetByCompStr4", testMap4, LevDist, 1},
-		{"MapGetByCompStr5", testMap5, LevDist, 0},
-		{"MapGetByCompStr6", testMap1, HammingDist, 0},
-		{"MapGetByCompStr7", testMap2, CosineSim, 1},
-		{"MapGetByCompStr8", testMap3, LCSLength, 1},
-		{"MapGetByCompStr9", testMap4, DamLevDist, 1},
-		{"MapGetByCompStr10", testMap5, SorensenDiceCo, 0},
+		{"MapFilterByType1", testMap1, LevDist, 2},
+		{"MapFilterByType2", testMap2, LevDist, 2},
+		{"MapFilterByType3", testMap3, LevDist, 2},
+		{"MapFilterByType4", testMap4, LevDist, 1},
+		{"MapFilterByType5", testMap5, LevDist, 0},
+		{"MapFilterByType6", testMap1, HammingDist, 0},
+		{"MapFilterByType7", testMap2, CosineSim, 1},
+		{"MapFilterByType8", testMap3, LCSLength, 1},
+		{"MapFilterByType9", testMap4, DamLevDist, 1},
+		{"MapFilterByType10", testMap5, SorensenDiceCo, 0},
 	}
 
 	for _, tt := range tests {
@@ -349,7 +349,7 @@ var (
 			GetComparisonResultsMap()
 )
 
-func TestCastComparisonResultsMapFormat(t *testing.T) {
+func TestComparisonResultsMapFormat(t *testing.T) {
 	tests := []struct {
 		name     string
 		compMap  ComparisonResultsMap
@@ -363,8 +363,8 @@ func TestCastComparisonResultsMapFormat(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var isShortMatch bool
 			var isLongMatch bool
-			resShort := tt.compMap.formatComparisonMapOutput(false)
-			resLong := tt.compMap.formatComparisonMapOutput(true)
+			resShort := formatComparisonMapOutput(tt.compMap, false)
+			resLong := formatComparisonMapOutput(tt.compMap, true)
 			if resShort == testFormatOpt1 ||
 				resShort == testFormatOpt2 {
 				isShortMatch = true

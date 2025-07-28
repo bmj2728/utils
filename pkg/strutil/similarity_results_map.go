@@ -28,7 +28,7 @@ func NewSimilarityResultsMap() SimilarityResultsMap {
 //EntryCount
 //IsMatch
 //Print
-//formatComparisonMapOutput
+//formatSimilarityMapOutput
 
 // Add inserts or updates a SimilarityResult in the SimilarityResultsMap based on its algorithm and comparison word.
 func (smr SimilarityResultsMap) Add(result SimilarityResult) {
@@ -177,19 +177,13 @@ func (smr SimilarityResultsMap) IsMatch(other SimilarityResultsMap) bool {
 
 // Print iterates through the SimilarityResultsMap and prints score results for each algorithm and comparison word.
 func (smr SimilarityResultsMap) Print(v bool) SimilarityResultsMap {
-	for algorithm, results := range smr {
-		fmt.Printf("Algorithm: %s\n", algorithm.String())
-		for word, result := range results {
-			fmt.Printf("Comparison Word: %s\n", word)
-			result.Print(v)
-		}
-	}
+	fmt.Print(formatSimilarityMapOutput(smr, v))
 	return smr
 }
 
-// formatComparisonMapOutput generates a formatted string output for all similarity results organized by algorithm.
+// formatSimilarityMapOutput generates a formatted string output for all similarity results organized by algorithm.
 // It includes verbose details if the verbose flag is set to true.
-func (smr SimilarityResultsMap) formatComparisonMapOutput(verbose bool) string {
+func formatSimilarityMapOutput(smr SimilarityResultsMap, verbose bool) string {
 	var output string
 	for algo, v := range smr {
 		output += fmt.Sprintf("***Similarity Results for %s***\n\n", algo.String())
