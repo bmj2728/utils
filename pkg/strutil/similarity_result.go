@@ -140,13 +140,12 @@ func (sr *SimilarityResult) IsMatch(other *SimilarityResult) bool {
 
 // Print outputs the formatted score result or error information based on the verbosity flag.
 func (sr *SimilarityResult) Print(v bool) {
-	fmt.Print(sr.formatOutput(v))
+	fmt.Print(formatSimilarityResultOutput(sr, v))
 }
 
-// formatComparisonResultOutput generates a formatted string representation of the similarity result,
-// including algorithm, score, and errors.
-// If the verbose flag (v) is true, it includes detailed information about the strings compared and any errors.
-func (sr *SimilarityResult) formatOutput(v bool) string {
+// formatSimilarityResultOutput formats the string output of a similarity
+// result based on the verbosity flag and error state.
+func formatSimilarityResultOutput(sr *SimilarityResult, v bool) string {
 	if v {
 		if sr.err != nil {
 			return fmt.Sprintf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",

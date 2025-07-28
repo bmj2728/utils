@@ -181,8 +181,9 @@ func TestSimilarityResultFormatOutput(t *testing.T) {
 				Similarity(tt.compare, tt.algo).
 				ComparisonManager().
 				GetSimilarityResults()[tt.algo][tt.compare]
-			if res.formatOutput(tt.verbose) != tt.expected {
-				t.Errorf("SimilarityResultFormatOutput() = %s, want %s", res.formatOutput(tt.verbose), tt.expected)
+			if formatSimilarityResultOutput(&res, tt.verbose) != tt.expected {
+				t.Errorf("SimilarityResultFormatOutput() = %s, want %s",
+					formatSimilarityResultOutput(&res, tt.verbose), tt.expected)
 			}
 			res.Print(tt.verbose)
 		})
