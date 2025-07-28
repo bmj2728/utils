@@ -1488,41 +1488,53 @@ func TestSimilarity(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			eScore, eErr := tt.expected.GetScore()
 			helperResult := similarity(tt.input1, tt.input2, tt.algorithm)
+			hrScore, hErr := helperResult.GetScore()
 			result := Similarity(tt.input1, tt.input2, tt.algorithm)
+			rScore, rErr := result.GetScore()
 			brSim := New(tt.input1).
 				WithComparisonManager().
 				Similarity(tt.input2, tt.algorithm).
 				comparisonManager.
 				SimilarityResults[tt.algorithm][tt.input2]
+			brScore, bErr := (*brSim).GetScore()
+
+			if eErr != nil || hErr != nil || rErr != nil || bErr != nil {
+				t.Errorf("Similarity - expected %v - got %v",
+					tt.expected,
+					tt.expected,
+				)
+			}
+
 			if helperResult.algorithm != tt.expected.algorithm ||
 				helperResult.string1 != tt.expected.string1 ||
 				helperResult.string2 != tt.expected.string2 ||
-				math.Abs(float64(*tt.expected.GetScore())-float64(*helperResult.GetScore())) > float64EqualityThreshold ||
+				math.Abs(float64(eScore)-float64(hrScore)) > float64EqualityThreshold ||
 				!errors.Is(helperResult.err, tt.expected.err) {
 				t.Errorf("SimilarityA - expected %f - got %f",
-					*tt.expected.GetScore(),
-					*helperResult.GetScore(),
+					eScore,
+					hrScore,
 				)
 			}
 			if result.algorithm != tt.expected.algorithm ||
 				result.string1 != tt.expected.string1 ||
 				result.string2 != tt.expected.string2 ||
-				math.Abs(float64(*tt.expected.GetScore())-float64(*result.GetScore())) > float64EqualityThreshold ||
+				math.Abs(float64(eScore)-float64(rScore)) > float64EqualityThreshold ||
 				!errors.Is(result.err, tt.expected.err) {
 				t.Errorf("SimilarityB - expected %f - got %f\n",
-					*tt.expected.GetScore(),
-					*helperResult.GetScore(),
+					eScore,
+					rScore,
 				)
 			}
 			if brSim.algorithm != tt.expected.algorithm ||
 				brSim.string1 != tt.expected.string1 ||
 				brSim.string2 != tt.expected.string2 ||
-				math.Abs(float64(*tt.expected.GetScore())-float64(*brSim.GetScore())) > float64EqualityThreshold ||
+				math.Abs(float64(eScore)-float64(brScore)) > float64EqualityThreshold ||
 				!errors.Is(brSim.err, tt.expected.err) {
 				t.Errorf("SimilarityC - expected %f - got %f",
-					*tt.expected.GetScore(),
-					*helperResult.GetScore(),
+					eScore,
+					brScore,
 				)
 			}
 		})

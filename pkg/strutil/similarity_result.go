@@ -2,6 +2,7 @@ package strutil
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/hbollon/go-edlib"
 )
@@ -121,16 +122,20 @@ func (sr *SimilarityResult) GetScore() (float32, error) {
 	return *sr.score, nil
 }
 
+// IsMatch compares the current SimilarityResult with another based on their algorithm, strings, and computed scores.
 func (sr *SimilarityResult) IsMatch(other *SimilarityResult) bool {
 	if sr.algorithm != other.algorithm || sr.string1 != other.string1 || sr.string2 != other.string2 {
 		return false
 	}
-	if sr.err != nil && other.err != nil {
+	cScore, CErr := sr.GetScore()
+	oScore, OErr := other.GetScore()
+	if !compareErrors(CErr, OErr) {
 		return false
 	}
-	if sr.err != nil && other.err == nil {
+	if math.Abs(float64(cScore-oScore)) > float64EqualityThreshold {
 		return false
 	}
+	return true
 }
 
 // Print outputs the formatted score result or error information based on the verbosity flag.
