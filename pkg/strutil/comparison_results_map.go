@@ -190,7 +190,7 @@ func (crm ComparisonResultsMap) IsMatch(other ComparisonResultsMap) bool {
 }
 
 // Print iterates through the ComparisonResultsMap and prints the comparison results, optionally in verbose mode.
-func (crm ComparisonResultsMap) Print(verbose bool) {
+func (crm ComparisonResultsMap) Print(verbose bool) ComparisonResultsMap {
 	for compType, v := range crm {
 		fmt.Printf("***Comparison Results for %s***\n", compType.String())
 		for _, v2 := range v {
@@ -199,4 +199,5 @@ func (crm ComparisonResultsMap) Print(verbose bool) {
 			}
 		}
 	}
+	return crm
 }

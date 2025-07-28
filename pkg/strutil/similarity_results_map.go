@@ -18,7 +18,7 @@ func NewSimilarityResultsMap() SimilarityResultsMap {
 }
 
 // Print iterates through the SimilarityResultsMap and prints similarity results for each algorithm and comparison word.
-func (smr SimilarityResultsMap) Print(v bool) {
+func (smr SimilarityResultsMap) Print(v bool) SimilarityResultsMap {
 	for algorithm, results := range smr {
 		fmt.Printf("Algorithm: %s\n", algorithm.String())
 		for word, result := range results {
@@ -26,6 +26,7 @@ func (smr SimilarityResultsMap) Print(v bool) {
 			result.Print(v)
 		}
 	}
+	return smr
 }
 
 // Add inserts or updates a SimilarityResult in the SimilarityResultsMap based on its algorithm and comparison word.

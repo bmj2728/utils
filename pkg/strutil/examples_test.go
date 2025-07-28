@@ -64,3 +64,23 @@ func ExampleStringBuilder_CleanWhitespace() {
 	New(s).CleanWhitespace().Print()
 	// Output: HelloWorld!
 }
+
+func ExampleComparisonResultsMap_Print() {
+	New("Hello, World!").
+		WithComparisonManager().
+		LevenshteinDistance("Hello World").
+		DamerauLevenshteinDistance("Hello World").
+		ComparisonManager().
+		GetComparisonResultsMap().
+		Print(true)
+	// Output: ***Comparison Results for Levenshtein Distance***
+	//Comparison: Levenshtein Distance
+	//First String: Hello, World!
+	//Second String: Hello World
+	//Score: 2
+	//***Comparison Results for Damerau-Levenshtein Distance***
+	//Comparison: Damerau-Levenshtein Distance
+	//First String: Hello, World!
+	//Second String: Hello World
+	//Score: 2
+}
