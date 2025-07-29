@@ -66,5 +66,42 @@ func (lrm LCSResultsMap) GetByType(resType LCSResultType) []LCSResult {
 	for _, v := range lrm[resType] {
 		results = append(results, *v)
 	}
+	if len(results) == 0 {
+		return nil
+	}
+	return results
+}
+
+// FilterByType filters the LCSResultsMap by the specified LCSResultType and returns a new map containing
+// only matching results.
+func (lrm LCSResultsMap) FilterByType(resType LCSResultType) LCSResultsMap {
+	if lrm[resType] == nil {
+		return nil
+	}
+	results := NewLCSResultsMap()
+	for _, v := range lrm[resType] {
+		results.Add(*v)
+	}
+	if len(results) == 0 {
+		return nil
+	}
+	return results
+}
+
+// GetByComparisonString retrieves all LCSResult objects from the map that match the specified comparison string.
+// Returns nil if no results are found or the map is empty.
+func (lrm LCSResultsMap) GetByComparisonString(compStr string) []LCSResult {
+	if len(lrm) == 0 {
+		return nil
+	}
+	var results []LCSResult
+	for _, v := range lrm {
+		if v[compStr] != nil {
+			results = append(results, *v[compStr])
+		}
+	}
+	if len(results) == 0 {
+		return nil
+	}
 	return results
 }
