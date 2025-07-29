@@ -56,3 +56,15 @@ func (lrm LCSResultsMap) Get(resType LCSResultType, compStr string) *LCSResult {
 	}
 	return lrm[resType][compStr]
 }
+
+// GetByType returns a slice of LCSResult objects from the LCSResultsMap based on their LCSResultType
+func (lrm LCSResultsMap) GetByType(resType LCSResultType) []LCSResult {
+	if lrm[resType] == nil {
+		return nil
+	}
+	var results []LCSResult
+	for _, v := range lrm[resType] {
+		results = append(results, *v)
+	}
+	return results
+}
