@@ -151,11 +151,11 @@ func TestSimilarityIsMatch(t *testing.T) {
 var (
 	levShort      = "Levenshtein: 0.846154\n"
 	levLong       = "Comparison: Levenshtein\nFirst String: Hello, World!\nSecond String: Hello World\nScore: 0.846154\n"
-	hamErrorShort = "Hamming Error: Undefined for strings of unequal length\n"
-	hamLongError  = "Error during processing Hamming\n" +
+	hamErrorShort = "Hamming GetError: Undefined for strings of unequal length\n"
+	hamLongError  = "GetError during processing Hamming\n" +
 		"First String: Hello, World!\n" +
 		"Second String: Hello World\n" +
-		"Error: Undefined for strings of unequal length\n"
+		"GetError: Undefined for strings of unequal length\n"
 	prntInput   = "Hello, World!"
 	prntCompare = "Hello World"
 )

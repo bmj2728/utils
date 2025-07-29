@@ -167,6 +167,7 @@ func (crm ComparisonResultsMap) Print(verbose bool) ComparisonResultsMap {
 	return crm
 }
 
+// formatComparisonMapOutput generates a formatted string output for a ComparisonResultsMap with optional verbosity.
 func formatComparisonMapOutput(crm ComparisonResultsMap, verbose bool) string {
 	var output string
 	for compType, v := range crm {

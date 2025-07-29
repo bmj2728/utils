@@ -52,6 +52,10 @@ func (lcs *LCSResult) GetType() LCSResultType {
 	return lcs.resultType
 }
 
+func (lcs *LCSResult) GetTypeName() string {
+	return lcs.resultType.String()
+}
+
 // GetString1 returns the value of string1 from the LCSResult instance.
 func (lcs *LCSResult) GetString1() string {
 	return lcs.string1
@@ -67,95 +71,88 @@ func (lcs *LCSResult) GetStrings() (string, string) {
 	return lcs.string1, lcs.string2
 }
 
-// Error returns the error associated with the LCSResult instance, if any.
-func (lcs *LCSResult) Error() error {
+// GetError returns the error associated with the LCSResult instance, if any.
+func (lcs *LCSResult) GetError() error {
 	return lcs.err
 }
 
 // GetResult retrieves the pointer to the list of longest common subsequence results stored in the LCSResult instance.
-func (lcs *LCSResult) GetResult() *[]string {
-	return lcs.result
+func (lcs *LCSResult) GetResult() []string {
+	if lcs.result == nil {
+		return nil
+	}
+	return *lcs.result
+}
+
+func (lcs *LCSResult) IsMatch(other *LCSResult) bool {
+	if lcs == nil || other == nil {
+		return false
+	}
+	if lcs.resultType != other.resultType ||
+		lcs.string1 != other.string1 ||
+		lcs.string2 != other.string2 ||
+		!compareErrors(lcs.err, other.err) ||
+		!compareStringSlices(lcs.GetResult(), other.GetResult(), false) {
+		return false
+	}
+	return true
 }
 
 // Print outputs the LCSResult details to the console based on the provided verbosity flag.
 func (lcs *LCSResult) Print(v bool) {
-	if v {
-		if lcs.err != nil {
-			fmt.Printf("GetError processing %s\nString 1: %s\nString 2: %s\nGetError: %s\n",
-				LCSResultTypeMap[lcs.resultType], lcs.string1, lcs.string2, lcs.err.Error())
-			return
-		} else {
-			switch lcs.resultType {
-			case LCSBacktrackWord:
-				fmt.Printf("%s\nString 1: %s\nString 2: %s\nLongest Common Substring: %s\n",
-					LCSResultTypeMap[lcs.resultType], lcs.string1, lcs.string2, (*lcs.result)[0])
-				return
-			case LCSBacktrackWordAll:
-				fmt.Printf("%s\nString 1: %s\nString 2: %s\nLongest Common Substrings:\n",
-					LCSResultTypeMap[lcs.resultType], lcs.string1, lcs.string2)
-				for _, lcs := range *lcs.result {
-					fmt.Printf("%s\n", lcs)
-				}
-				return
-			case LCSDiffSlice:
-				fmt.Printf("%s\nString 1: %s\nString 2: %s\n",
-					LCSResultTypeMap[lcs.resultType], lcs.string1, lcs.string2)
-				for _, lcs := range *lcs.result {
-					fmt.Printf("%s\n", lcs)
-				}
-				return
-			default:
-				fmt.Printf("GetError processing %s\nString 1: %s\nString 2: %s\nGetError: %s\n",
-					LCSResultTypeMap[lcs.resultType], lcs.string1, lcs.string2, lcs.err.Error())
-				return
-			}
-		}
-	} else {
-		if lcs.err != nil {
-			fmt.Printf("%s\nGetError: %s\n",
-				LCSResultTypeMap[lcs.resultType], lcs.err.Error())
-			return
-		} else {
-			switch lcs.resultType {
-			case LCSBacktrackWord:
-				fmt.Printf("%s\nLCS: %s\n",
-					LCSResultTypeMap[lcs.resultType], (*lcs.result)[0])
-				return
-			case LCSBacktrackWordAll:
-				fmt.Printf("%s\nLCS List:\n",
-					LCSResultTypeMap[lcs.resultType])
-				for _, lcs := range *lcs.result {
-					fmt.Printf("%s\n", lcs)
-				}
-				return
-			case LCSDiffSlice:
-				fmt.Printf("%s\n",
-					LCSResultTypeMap[lcs.resultType])
-				for _, lcs := range *lcs.result {
-					fmt.Printf("%s\n", lcs)
-				}
-				return
-			default:
-				fmt.Printf("%s\nGetError: %s\n",
-					LCSResultTypeMap[lcs.resultType], lcs.err.Error())
-				return
-			}
-		}
-	}
+	fmt.Print(formatLCSResultOutput(lcs, v))
 }
 
-// LCSResultsMap is a map that organizes LCSResult instances by their LCSResultType and a string identifier.
-type LCSResultsMap map[LCSResultType]map[string]*LCSResult
-
-// NewLCSResultsMap initializes and returns a new LCSResultsMap as an empty nested map.
-func NewLCSResultsMap() LCSResultsMap {
-	return make(map[LCSResultType]map[string]*LCSResult)
-}
-
-// Add inserts an LCSResult into the LCSResultsMap organized by result type and the comparison input string.
-func (lrm LCSResultsMap) Add(result LCSResult) {
-	if lrm[result.GetType()] == nil {
-		lrm[result.GetType()] = make(map[string]*LCSResult)
+func formatLCSResultOutput(lcs *LCSResult, v bool) string {
+	if lcs == nil {
+		return ""
 	}
-	lrm[result.GetType()][result.GetString2()] = &result
+	if lcs.GetError() != nil {
+		if !v {
+			return fmt.Sprintf("Error calculating %s (%s/%s): %s\n",
+				lcs.GetTypeName(), lcs.GetString1(), lcs.GetString2(), lcs.GetError().Error())
+		} else {
+			return fmt.Sprintf("Error calculating %s:\nFirst Word: %s\nSecond Word:%s\nError: %s\n",
+				lcs.GetTypeName(), lcs.GetString1(), lcs.GetString2(), lcs.GetError().Error())
+		}
+	}
+	switch lcs.GetType() {
+	case LCSBacktrackWord:
+		if v {
+			return fmt.Sprintf("%s:\nFirst: %s\nSecond: %s\nWord: %s\n",
+				lcs.GetTypeName(), lcs.GetString1(), lcs.GetString2(), lcs.GetResult()[0])
+		} else {
+			return fmt.Sprintf("%s: %s\n", lcs.GetTypeName(), lcs.GetResult()[0])
+		}
+	case LCSBacktrackWordAll:
+		if v {
+			s := fmt.Sprintf("%s:\nFirst: %s\nSecond: %s\nWords:\n",
+				lcs.GetTypeName(), lcs.GetString1(), lcs.GetString2())
+			for _, word := range lcs.GetResult() {
+				s += fmt.Sprintf("%s\n", word)
+			}
+			return s
+		} else {
+			return fmt.Sprintf("%s(%d):\nFirst: %s\n",
+				lcs.GetTypeName(), len(lcs.GetResult()), lcs.GetResult()[0])
+		}
+	case LCSDiffSlice:
+		if v {
+			s := fmt.Sprintf("%s (%s/%s):\n",
+				lcs.GetTypeName(), lcs.GetString1(), lcs.GetString2())
+			for _, diff := range lcs.GetResult() {
+				s += fmt.Sprintf("%s\n", diff)
+			}
+			return s
+		} else {
+			s := fmt.Sprintf("%s:\n", lcs.GetTypeName())
+			for _, diff := range lcs.GetResult() {
+				s += fmt.Sprintf("%s\n", diff)
+			}
+			return s
+		}
+
+	default:
+		return "Unknown LCS Result Type"
+	}
 }

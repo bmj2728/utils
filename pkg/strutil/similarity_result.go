@@ -148,7 +148,7 @@ func (sr *SimilarityResult) Print(v bool) {
 func formatSimilarityResultOutput(sr *SimilarityResult, v bool) string {
 	if v {
 		if sr.err != nil {
-			return fmt.Sprintf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 				sr.algorithm.String(), sr.string1, sr.string2, sr.err.Error())
 		} else {
 			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
@@ -156,7 +156,7 @@ func formatSimilarityResultOutput(sr *SimilarityResult, v bool) string {
 		}
 	} else {
 		if sr.err != nil {
-			return fmt.Sprintf("%s Error: %s\n",
+			return fmt.Sprintf("%s GetError: %s\n",
 				sr.algorithm.String(), sr.err.Error())
 		} else {
 			return fmt.Sprintf("%s: %f\n", sr.algorithm.String(), *sr.score)

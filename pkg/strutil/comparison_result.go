@@ -212,8 +212,8 @@ func (c ComparisonResultInt) Print(v bool) {
 //func (c ComparisonResultInt) formatComparisonResultOutput(v bool) string {
 //	if v {
 //		if c.err != nil {
-//			return fmt.Sprintf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
+//			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
+//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
 //
 //		} else {
 //			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %d\n",
@@ -221,8 +221,8 @@ func (c ComparisonResultInt) Print(v bool) {
 //		}
 //	} else {
 //		if c.err != nil {
-//			return fmt.Sprintf("%s (%q/%q) Error: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
+//			return fmt.Sprintf("%s (%q/%q) GetError: %s\n",
+//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
 //
 //		} else {
 //			return fmt.Sprintf("%s (%q/%q): %d\n", ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
@@ -340,8 +340,8 @@ func (c ComparisonResultFloat) Print(v bool) {
 //func (c ComparisonResultFloat) formatComparisonResultOutput(v bool) string {
 //	if v {
 //		if c.err != nil {
-//			return fmt.Sprintf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
+//			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
+//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
 //
 //		} else {
 //			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
@@ -349,8 +349,8 @@ func (c ComparisonResultFloat) Print(v bool) {
 //		}
 //	} else {
 //		if c.err != nil {
-//			return fmt.Sprintf("%s (%q/%q) Error: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.Error())
+//			return fmt.Sprintf("%s (%q/%q) GetError: %s\n",
+//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
 //
 //		} else {
 //			return fmt.Sprintf("%s (%q/%q): %f\n", ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
@@ -414,7 +414,7 @@ func formatComparisonResultOutput(result ComparisonResult, v bool) string {
 
 	if v {
 		if err != nil {
-			return fmt.Sprintf("Error during processing %s\nFirst String: %s\nSecond String: %s\nError: %s\n",
+			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
 				ComparisonResultTypeMap[comparisonType], string1, string2, err.Error())
 		} else {
 			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %v\n",
@@ -422,7 +422,7 @@ func formatComparisonResultOutput(result ComparisonResult, v bool) string {
 		}
 	} else {
 		if err != nil {
-			return fmt.Sprintf("%s (%q/%q) Error: %s\n",
+			return fmt.Sprintf("%s (%q/%q) GetError: %s\n",
 				ComparisonResultTypeMap[comparisonType], string1, string2, err.Error())
 		} else {
 			return fmt.Sprintf("%s (%q/%q): %v\n", ComparisonResultTypeMap[comparisonType], string1, string2, score)
