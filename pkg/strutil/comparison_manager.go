@@ -5,7 +5,7 @@ type ComparisonManager struct {
 	ComparisonResults ComparisonResultsMap
 	SimilarityResults SimilarityResultsMap
 	ShingleData       ShingleResultsMap
-	LCSData           LCSResultsMap
+	LCSResults        LCSResultsMap
 }
 
 // NewComparisonManager initializes and returns a new instance of ComparisonManager with empty result maps.
@@ -14,7 +14,7 @@ func NewComparisonManager() *ComparisonManager {
 		ComparisonResults: NewComparisonResultsMap(),
 		SimilarityResults: NewSimilarityResultsMap(),
 		ShingleData:       NewShingleResultsMap(),
-		LCSData:           NewLCSResultsMap(),
+		LCSResults:        NewLCSResultsMap(),
 	}
 }
 
@@ -115,12 +115,13 @@ func (cm *ComparisonManager) AddShingleResult(result ShingleResult) {
 
 // LCS Data
 
-// GetLCSData retrieves the LCSResultsMap containing LCS results organized by type and input string.
-func (cm *ComparisonManager) GetLCSData() LCSResultsMap {
-	return cm.LCSData
+// GetLCSResults retrieves the LCSResultsMap containing LCS results organized by type and input string.
+func (cm *ComparisonManager) GetLCSResults() LCSResultsMap {
+	return cm.LCSResults
 }
 
-// AddLCSResult adds an LCSResult to the LCSData map in the ComparisonManager, organizing it by type and input string.
+// AddLCSResult adds an LCSResult to the LCSResults map in the ComparisonManager,
+// organizing it by type and input string.
 func (cm *ComparisonManager) AddLCSResult(result LCSResult) {
-	cm.LCSData.Add(result)
+	cm.LCSResults.Add(result)
 }

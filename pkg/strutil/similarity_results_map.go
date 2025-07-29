@@ -17,19 +17,6 @@ func NewSimilarityResultsMap() SimilarityResultsMap {
 	return make(map[Algorithm]map[string]*SimilarityResult)
 }
 
-//Add
-//GetCopy
-//Get
-//GetByType
-//FilterByType
-//GetByComparisonString
-//FilterByComparisonString
-//TypeCount
-//EntryCount
-//IsMatch
-//Print
-//formatSimilarityMapOutput
-
 // Add inserts or updates a SimilarityResult in the SimilarityResultsMap based on its algorithm and comparison word.
 func (smr SimilarityResultsMap) Add(result SimilarityResult) {
 	// if there's not a map for this algorithm, add one

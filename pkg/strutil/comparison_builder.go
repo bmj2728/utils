@@ -279,7 +279,7 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, cust
 	} else {
 		sr := sb.comparisonManager.ShingleData[ShinglesMap][k]
 		if shingleMap, ok := (*sr).(*ShingleMapResult); ok {
-			qdc := qgramDistanceCustomNgram(*shingleMap.shingles, nmapOther, customName)
+			qdc := qgramDistanceCustomNgram(shingleMap.shingles, nmapOther, customName)
 			sb.WithComparisonManager().comparisonManager.AddComparisonResult(qdc)
 			if qdc.err != nil {
 				sb.err = qdc.err

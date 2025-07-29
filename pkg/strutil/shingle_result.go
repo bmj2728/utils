@@ -34,9 +34,32 @@ type ShingleResult interface {
 	GetTypeName() string
 	GetInput() string
 	GetNgramLength() int
-	Error() error
+	GetError() error
+	//IsMatch(other ShingleResult) bool
 	Print(v bool)
 }
+
+//func CastShingleResult(result ShingleResult) ShingleResult {
+//	if result == nil {
+//		return nil
+//	}
+//	switch result.GetType() {
+//	case ShinglesMap:
+//		casted, ok := result.(*ShingleMapResult)
+//		if !ok {
+//			return nil
+//		}
+//		return casted
+//	case ShinglesSlice:
+//		casted, ok := result.(*ShingleSliceResult)
+//		if !ok {
+//			return nil
+//		}
+//		return casted
+//	default:
+//		return nil
+//	}
+//}
 
 // ShingleSliceResult represents the result of a shingle operation stored as a slice, encapsulating related metadata.
 type ShingleSliceResult struct {
@@ -83,14 +106,21 @@ func (s ShingleSliceResult) GetNgramLength() int {
 }
 
 // GetShinglesSlice returns a pointer to the slice of shingles contained in the ShingleSliceResult.
-func (s ShingleSliceResult) GetShinglesSlice() *[]string {
-	return s.shingles
+func (s ShingleSliceResult) GetShinglesSlice() []string {
+	if s.shingles == nil {
+		return nil
+	}
+	return *s.shingles
 }
 
-// Error returns the error associated with the ShingleSliceResult, if any.
-func (s ShingleSliceResult) Error() error {
+// GetError returns the error associated with the ShingleSliceResult, if any.
+func (s ShingleSliceResult) GetError() error {
 	return s.err
 }
+
+//func (s ShingleSliceResult) IsMatch(other ShingleResult) bool {
+//	panic("implement me")
+//}
 
 // Print outputs shingle data or error information based on the verbose flag.
 func (s ShingleSliceResult) Print(v bool) {
@@ -132,7 +162,7 @@ type ShingleMapResult struct {
 	resultType ShingleResultType
 	input      string
 	ngram      int
-	shingles   *map[string]int
+	shingles   map[string]int
 	err        error
 }
 
@@ -140,7 +170,7 @@ type ShingleMapResult struct {
 func NewShingleMapResult(resultType ShingleResultType,
 	input string,
 	ngram int,
-	shingles *map[string]int,
+	shingles map[string]int,
 	err error) *ShingleMapResult {
 	return &ShingleMapResult{
 		resultType: resultType,
@@ -172,14 +202,21 @@ func (s ShingleMapResult) GetNgramLength() int {
 }
 
 // GetShinglesMap returns a pointer to the map of shingles and their corresponding counts for the given input.
-func (s ShingleMapResult) GetShinglesMap() *map[string]int {
+func (s ShingleMapResult) GetShinglesMap() map[string]int {
+	if s.shingles == nil {
+		return nil
+	}
 	return s.shingles
 }
 
-// Error returns the error associated with the ShingleMapResult, if any.
-func (s ShingleMapResult) Error() error {
+// GetError returns the error associated with the ShingleMapResult, if any.
+func (s ShingleMapResult) GetError() error {
 	return s.err
 }
+
+//func (s ShingleMapResult) IsMatch(other ShingleResult) bool {
+//	panic("implement me")
+//}
 
 // Print outputs the shingle result information based on the verbose flag.
 // Handles errors and displays shingles if present.
@@ -192,7 +229,7 @@ func (s ShingleMapResult) Print(v bool) {
 		} else {
 			fmt.Printf("Input: %s\nN-Gram Length: %d\nShingles:\n",
 				s.input, s.ngram)
-			for word, length := range *s.shingles {
+			for word, length := range s.shingles {
 				fmt.Printf("%s:%d\n", word, length)
 			}
 			return
@@ -204,26 +241,10 @@ func (s ShingleMapResult) Print(v bool) {
 			return
 		} else {
 			fmt.Printf("%s:\n", ShingleResultTypeMap[s.resultType])
-			for word, length := range *s.shingles {
+			for word, length := range s.shingles {
 				fmt.Printf("%s:%d\n", word, length)
 			}
 			return
 		}
 	}
-}
-
-// ShingleResultsMap is a nested map structure that organizes shingle results by their type and n-gram length.
-type ShingleResultsMap map[ShingleResultType]map[int]*ShingleResult
-
-// NewShingleResultsMap initializes and returns a new ShingleResultsMap as an empty nested map.
-func NewShingleResultsMap() ShingleResultsMap {
-	return make(map[ShingleResultType]map[int]*ShingleResult)
-}
-
-// Add inserts a ShingleResult into the ShingleResultsMap, organizing it by type and n-gram length.
-func (srm ShingleResultsMap) Add(result ShingleResult) {
-	if srm[result.GetType()] == nil {
-		srm[result.GetType()] = make(map[int]*ShingleResult)
-	}
-	srm[result.GetType()][result.GetNgramLength()] = &result
 }

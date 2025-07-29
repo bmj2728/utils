@@ -231,7 +231,7 @@ func shingle(s string, k int) *ShingleMapResult {
 		return NewShingleMapResult(ShinglesMap, s, k, nil, ErrShingleLengthOutOfRange)
 	}
 	shingle := edlib.Shingle(s, k)
-	smr := NewShingleMapResult(ShinglesMap, s, k, &shingle, nil)
+	smr := NewShingleMapResult(ShinglesMap, s, k, shingle, nil)
 	return smr
 }
 

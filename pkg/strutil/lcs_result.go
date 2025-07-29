@@ -109,10 +109,10 @@ func formatLCSResultOutput(lcs *LCSResult, v bool) string {
 	}
 	if lcs.GetError() != nil {
 		if !v {
-			return fmt.Sprintf("Error calculating %s (%s/%s): %s\n",
+			return fmt.Sprintf("GetError calculating %s (%s/%s): %s\n",
 				lcs.GetTypeName(), lcs.GetString1(), lcs.GetString2(), lcs.GetError().Error())
 		} else {
-			return fmt.Sprintf("Error calculating %s:\nFirst Word: %s\nSecond Word:%s\nError: %s\n",
+			return fmt.Sprintf("GetError calculating %s:\nFirst Word: %s\nSecond Word:%s\nGetError: %s\n",
 				lcs.GetTypeName(), lcs.GetString1(), lcs.GetString2(), lcs.GetError().Error())
 		}
 	}
@@ -151,7 +151,6 @@ func formatLCSResultOutput(lcs *LCSResult, v bool) string {
 			}
 			return s
 		}
-
 	default:
 		return "Unknown LCS Result Type"
 	}
