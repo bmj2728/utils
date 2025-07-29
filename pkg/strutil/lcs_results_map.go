@@ -1,5 +1,7 @@
 package strutil
 
+import "fmt"
+
 // LCSResultsMap is a map that organizes LCSResult instances by their LCSResultType and a string identifier.
 type LCSResultsMap map[LCSResultType]map[string]*LCSResult
 
@@ -104,4 +106,84 @@ func (lrm LCSResultsMap) GetByComparisonString(compStr string) []LCSResult {
 		return nil
 	}
 	return results
+}
+
+// FilterByComparisonString filters the LCSResultsMap by a given comparison string and
+// returns a new map with matching results.
+func (lrm LCSResultsMap) FilterByComparisonString(compStr string) LCSResultsMap {
+	if len(lrm) == 0 {
+		return nil
+	}
+	results := NewLCSResultsMap()
+	for _, v := range lrm {
+		if v[compStr] != nil {
+			results.Add(*v[compStr])
+		}
+	}
+	if len(results) == 0 {
+		return nil
+	}
+	return results
+}
+
+// TypeCount returns the number of LCSResultType keys in the LCSResultsMap.
+func (lrm LCSResultsMap) TypeCount() int {
+	return len(lrm)
+}
+
+// EntryCount returns the total number of non-nil LCSResult entries in the LCSResultsMap.
+func (lrm LCSResultsMap) EntryCount() int {
+	mapLength := 0
+	for _, v := range lrm {
+		for _, v2 := range v {
+			if v2 != nil {
+				mapLength++
+			}
+		}
+	}
+	return mapLength
+}
+
+// IsMatch compares the current LCSResultsMap with another,
+// checking if they have identical structure and matching entries.
+func (lrm LCSResultsMap) IsMatch(other LCSResultsMap) bool {
+	if lrm.TypeCount() != other.TypeCount() || lrm.EntryCount() != other.EntryCount() {
+		return false
+	}
+	for resType, v := range lrm {
+		if other[resType] == nil {
+			return false
+		}
+		for compStr, v2 := range v {
+			if other[resType][compStr] == nil {
+				return false
+			}
+			if !v2.IsMatch(other[resType][compStr]) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// Print outputs the contents of the LCSResultsMap to the console in a
+// formatted manner based on the verbosity flag.
+func (lrm LCSResultsMap) Print(v bool) LCSResultsMap {
+	fmt.Print(formatLCSResultsMapOutput(lrm, v))
+	return lrm
+}
+
+// formatLCSResultsMapOutput formats the output of an LCSResultsMap into a string,
+// grouped by result type with verbosity control.
+func formatLCSResultsMapOutput(lrm LCSResultsMap, verbose bool) string {
+	var output string
+	for resType, v := range lrm {
+		output += fmt.Sprintf("***LCS Results for %s***\n\n", resType.String())
+		for _, v2 := range v {
+			if v2 != nil {
+				output += formatLCSResultOutput(v2, verbose) + "\n"
+			}
+		}
+	}
+	return output
 }
