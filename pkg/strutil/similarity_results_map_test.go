@@ -189,7 +189,7 @@ func TestSimilarityResultsMapGet(t *testing.T) {
 	}
 }
 
-func TestSimilarityResultsMapGetByTypes(t *testing.T) {
+func TestSimilarityResultsMapGetByType(t *testing.T) {
 	tests := []struct {
 		name     string
 		simMap   SimilarityResultsMap
