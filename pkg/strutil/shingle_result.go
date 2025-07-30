@@ -195,7 +195,7 @@ func (s ShingleMapResult) IsMatch(other ShingleResult) bool {
 	if s.shingles == nil || casted.shingles == nil {
 		return false
 	}
-	// this function should be sufficient for comparing the resulting shingle maps
+	// this function should work for comparing the resulting shingle maps
 	// the map is expected in format [ngram]count, with no duplicate entries
 	if !maps.Equal(s.shingles, casted.shingles) {
 		return false
@@ -252,77 +252,59 @@ func CastShingleResult(raw *ShingleResult) ShingleResult {
 
 // formatShingleResultOutput formats the output of a ShingleResult based on its type, verbosity,
 // and error state.
-func formatShingleResultOutput(s ShingleResult, v bool) string {
-	var shingleType ShingleResultType
-	var input string
-	var ngram int
-	var err error
-	var shingles interface{}
-
-	switch s := s.(type) {
-	case *ShingleMapResult:
-		shingleType = s.GetType()
-		input = s.GetInput()
-		ngram = s.GetNgramLength()
-		err = s.GetError()
-		shingles = s.GetShinglesMap()
-	case *ShingleSliceResult:
-		shingleType = s.GetType()
-		input = s.GetInput()
-		ngram = s.GetNgramLength()
-		err = s.GetError()
-		shingles = s.GetShinglesSlice()
+func formatShingleResultOutput(result ShingleResult, v bool) string {
+	if result.GetError() != nil {
+		if v {
+			return fmt.Sprintf("Error processing %s (%s/%d):\n%s\n",
+				result.GetTypeName(), result.GetInput(), result.GetNgramLength(), result.GetError().Error())
+		} else {
+			return fmt.Sprintf("%s (%s/%d): %s\n",
+				result.GetTypeName(), result.GetInput(), result.GetNgramLength(), result.GetError().Error())
+		}
 	}
 
-	output := ""
+	header := ""
+	payload := ""
 
 	if v {
-		if err != nil {
-			output += fmt.Sprintf("GetError calculating %s (%s/%d): %s\n",
-				shingleType.String(), input, ngram, err.Error())
-		} else {
-			output += fmt.Sprintf("Input: %s\nN-Gram Length: %d\n", input, ngram)
-			switch shingleType {
-			case ShinglesMap:
-				output += fmt.Sprintf("Shingles:\n")
-				for word, cnt := range shingles.(map[string]int) {
-					output += fmt.Sprintf("%s:%d, ", word, cnt)
-				}
-				output += "\n"
-				break
-			case ShinglesSlice:
-				output += fmt.Sprintf("Shingles:\n")
-				for _, word := range shingles.([]string) {
-					output += fmt.Sprintf("%s, ", word)
-				}
-				output += "\n"
-				break
-			}
-		}
+		header = fmt.Sprintf("Results for %s\nWord: %s\nN-Gram Length: %d\n",
+			result.GetTypeName(), result.GetInput(), result.GetNgramLength())
 	} else {
-		if err != nil {
-			output += fmt.Sprintf("%s (%s/%d): %s\n",
-				shingleType.String(), input, ngram, err.Error())
-		} else {
-			output += fmt.Sprintf("%s (%s/%d):\n",
-				shingleType.String(), input, ngram)
-			switch shingleType {
-			case ShinglesMap:
-				output += fmt.Sprintf("Shingles:\n")
-				for word, cnt := range shingles.(map[string]int) {
-					output += fmt.Sprintf("%s:%d, ", word, cnt)
-				}
-				output += "\n"
-				break
-			case ShinglesSlice:
-				output += fmt.Sprintf("Shingles:\n")
-				for _, word := range shingles.([]string) {
-					output += fmt.Sprintf("%s, ", word)
-				}
-				output += "\n"
-				break
+		header = fmt.Sprintf("%s (%s/%d):\n",
+			result.GetTypeName(), result.GetInput(), result.GetNgramLength())
+	}
+
+	switch result.GetType() {
+	case ShinglesMap:
+		casted, ok := result.(ShingleMapResult)
+		if !ok {
+			payload = "Error accessing ShingleMapResult"
+		}
+		if casted.GetShinglesMap() == nil {
+			payload = "No shingles found"
+		}
+		if v {
+			for k, v := range casted.GetShinglesMap() {
+				payload += fmt.Sprintf("%s: %d, ", k, v)
 			}
+		} else {
+			payload = fmt.Sprintf("%d shingles found", len(casted.GetShinglesMap()))
+		}
+	case ShinglesSlice:
+		casted, ok := result.(ShingleSliceResult)
+		if !ok {
+			payload = "Error accessing ShingleSliceResult"
+		}
+		if casted.GetShinglesSlice() == nil {
+			payload = "No shingles found"
+		}
+		if v {
+			for _, v := range casted.GetShinglesSlice() {
+				payload += fmt.Sprintf("%s, ", v)
+			}
+		} else {
+			payload = "No shingles found"
 		}
 	}
-	return output
+	return header + payload + "\n"
 }
