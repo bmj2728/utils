@@ -1,6 +1,9 @@
 package strutil
 
-import "fmt"
+import (
+	"fmt"
+	"maps"
+)
 
 // ShingleResultType is an enumerated type used to represent the type of shingle result, such as map or slice.
 type ShingleResultType int
@@ -37,40 +40,6 @@ type ShingleResult interface {
 	GetError() error
 	IsMatch(other ShingleResult) bool
 	Print(v bool)
-}
-
-func compareShingleInputFields(s1 ShingleResult, s2 ShingleResult) bool {
-	if s1 == nil || s2 == nil {
-		return false
-	}
-	if s1.GetType() != s2.GetType() ||
-		s1.GetInput() != s2.GetInput() ||
-		s1.GetNgramLength() != s2.GetNgramLength() {
-		return false
-	}
-	return true
-}
-
-func CastShingleResult(raw *ShingleResult) ShingleResult {
-	if raw == nil {
-		return nil
-	}
-	switch (*raw).GetType() {
-	case ShinglesMap:
-		casted, ok := (*raw).(*ShingleMapResult)
-		if !ok {
-			return nil
-		}
-		return casted
-	case ShinglesSlice:
-		casted, ok := (*raw).(*ShingleSliceResult)
-		if !ok {
-			return nil
-		}
-		return casted
-	default:
-		return nil
-	}
 }
 
 // ShingleSliceResult represents the result of a shingle operation stored as a slice, encapsulating related metadata.
@@ -131,37 +100,18 @@ func (s ShingleSliceResult) GetError() error {
 }
 
 func (s ShingleSliceResult) IsMatch(other ShingleResult) bool {
-	panic("implement me")
+	casted, ok := other.(*ShingleSliceResult)
+	if !ok {
+		return false
+	}
+	return compareShingleInputFields(s, *casted) &&
+		compareStringSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
+		compareErrors(s.GetError(), casted.GetError())
 }
 
 // Print outputs shingle data or error information based on the verbose flag.
 func (s ShingleSliceResult) Print(v bool) {
-	if v {
-		if s.err != nil {
-			fmt.Printf("GetError processing %s\nInput: %s\nN-Gram Length: %d\nGetError: %s\n",
-				ShingleResultTypeMap[s.resultType], s.input, s.ngram, s.err.Error())
-			return
-		} else {
-			fmt.Printf("Input: %s\nN-Gram Length: %d\nShingles:\n",
-				s.input, s.ngram)
-			for _, shingle := range *s.shingles {
-				fmt.Printf("%s\n", shingle)
-			}
-			return
-		}
-	} else {
-		if s.err != nil {
-			fmt.Printf("%s GetError: %s\n",
-				ShingleResultTypeMap[s.resultType], s.err.Error())
-			return
-		} else {
-			fmt.Printf("%s:\n", ShingleResultTypeMap[s.resultType])
-			for _, shingle := range *s.shingles {
-				fmt.Printf("%s\n", shingle)
-			}
-			return
-		}
-	}
+	fmt.Print(formatShingleResultOutput(s, v))
 }
 
 // ShingleMapResult is a struct that holds the results of generating shingles, including metadata and possible errors.
@@ -226,37 +176,153 @@ func (s ShingleMapResult) GetError() error {
 	return s.err
 }
 
+// IsMatch compares the current ShingleMapResult with another ShingleResult for equality
+// based on their fields and content.
 func (s ShingleMapResult) IsMatch(other ShingleResult) bool {
-	panic("implement me")
+	casted, ok := other.(*ShingleMapResult)
+	if !ok {
+		return false
+	}
+	if !compareShingleInputFields(s, *casted) {
+		return false
+	}
+	if !compareErrors(s.GetError(), other.GetError()) {
+		return false
+	}
+	if s.shingles == nil && casted.shingles == nil {
+		return true
+	}
+	if s.shingles == nil || casted.shingles == nil {
+		return false
+	}
+	// this function should be sufficient for comparing the resulting shingle maps
+	// the map is expected in format [ngram]count, with no duplicate entries
+	if !maps.Equal(s.shingles, casted.shingles) {
+		return false
+	}
+	return true
 }
 
 // Print outputs the shingle result information based on the verbose flag.
 // Handles errors and displays shingles if present.
 func (s ShingleMapResult) Print(v bool) {
+	fmt.Print(formatShingleResultOutput(s, v))
+}
+
+// Utility Functions
+
+// compareShingleInputFields compares two ShingleResult objects and returns true
+// if their type, input, and n-gram length match.
+func compareShingleInputFields(s1 ShingleResult, s2 ShingleResult) bool {
+	if s1 == nil || s2 == nil {
+		return false
+	}
+	if s1.GetType() != s2.GetType() ||
+		s1.GetInput() != s2.GetInput() ||
+		s1.GetNgramLength() != s2.GetNgramLength() {
+		return false
+	}
+	return true
+}
+
+// CastShingleResult casts a generic ShingleResult to a concrete type like ShingleMapResult
+// or ShingleSliceResult based on its type.
+// Returns nil if the input is nil or cannot be cast to a valid ShingleResult implementation.
+func CastShingleResult(raw *ShingleResult) ShingleResult {
+	if raw == nil {
+		return nil
+	}
+	switch (*raw).GetType() {
+	case ShinglesMap:
+		casted, ok := (*raw).(*ShingleMapResult)
+		if !ok {
+			return nil
+		}
+		return casted
+	case ShinglesSlice:
+		casted, ok := (*raw).(*ShingleSliceResult)
+		if !ok {
+			return nil
+		}
+		return casted
+	default:
+		return nil
+	}
+}
+
+// formatShingleResultOutput formats the output of a ShingleResult based on its type, verbosity,
+// and error state.
+func formatShingleResultOutput(s ShingleResult, v bool) string {
+	var shingleType ShingleResultType
+	var input string
+	var ngram int
+	var err error
+	var shingles interface{}
+
+	switch s := s.(type) {
+	case *ShingleMapResult:
+		shingleType = s.GetType()
+		input = s.GetInput()
+		ngram = s.GetNgramLength()
+		err = s.GetError()
+		shingles = s.GetShinglesMap()
+	case *ShingleSliceResult:
+		shingleType = s.GetType()
+		input = s.GetInput()
+		ngram = s.GetNgramLength()
+		err = s.GetError()
+		shingles = s.GetShinglesSlice()
+	}
+
+	output := ""
+
 	if v {
-		if s.err != nil {
-			fmt.Printf("GetError processing %s\nInput: %s\nN-Gram Length: %d\nGetError: %s\n",
-				ShingleResultTypeMap[s.resultType], s.input, s.ngram, s.err.Error())
-			return
+		if err != nil {
+			output += fmt.Sprintf("GetError calculating %s (%s/%d): %s\n",
+				shingleType.String(), input, ngram, err.Error())
 		} else {
-			fmt.Printf("Input: %s\nN-Gram Length: %d\nShingles:\n",
-				s.input, s.ngram)
-			for word, length := range s.shingles {
-				fmt.Printf("%s:%d\n", word, length)
+			output += fmt.Sprintf("Input: %s\nN-Gram Length: %d\n", input, ngram)
+			switch shingleType {
+			case ShinglesMap:
+				output += fmt.Sprintf("Shingles:\n")
+				for word, cnt := range shingles.(map[string]int) {
+					output += fmt.Sprintf("%s:%d, ", word, cnt)
+				}
+				output += "\n"
+				break
+			case ShinglesSlice:
+				output += fmt.Sprintf("Shingles:\n")
+				for _, word := range shingles.([]string) {
+					output += fmt.Sprintf("%s, ", word)
+				}
+				output += "\n"
+				break
 			}
-			return
 		}
 	} else {
-		if s.err != nil {
-			fmt.Printf("%s GetError: %s\n",
-				ShingleResultTypeMap[s.resultType], s.err.Error())
-			return
+		if err != nil {
+			output += fmt.Sprintf("%s (%s/%d): %s\n",
+				shingleType.String(), input, ngram, err.Error())
 		} else {
-			fmt.Printf("%s:\n", ShingleResultTypeMap[s.resultType])
-			for word, length := range s.shingles {
-				fmt.Printf("%s:%d\n", word, length)
+			output += fmt.Sprintf("%s (%s/%d):\n",
+				shingleType.String(), input, ngram)
+			switch shingleType {
+			case ShinglesMap:
+				output += fmt.Sprintf("Shingles:\n")
+				for word, cnt := range shingles.(map[string]int) {
+					output += fmt.Sprintf("%s:%d, ", word, cnt)
+				}
+				output += "\n"
+				break
+			case ShinglesSlice:
+				output += fmt.Sprintf("Shingles:\n")
+				for _, word := range shingles.([]string) {
+					output += fmt.Sprintf("%s, ", word)
+				}
+				output += "\n"
+				break
 			}
-			return
 		}
 	}
+	return output
 }
