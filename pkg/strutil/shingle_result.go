@@ -35,31 +35,43 @@ type ShingleResult interface {
 	GetInput() string
 	GetNgramLength() int
 	GetError() error
-	//IsMatch(other ShingleResult) bool
+	IsMatch(other ShingleResult) bool
 	Print(v bool)
 }
 
-//func CastShingleResult(result ShingleResult) ShingleResult {
-//	if result == nil {
-//		return nil
-//	}
-//	switch result.GetType() {
-//	case ShinglesMap:
-//		casted, ok := result.(*ShingleMapResult)
-//		if !ok {
-//			return nil
-//		}
-//		return casted
-//	case ShinglesSlice:
-//		casted, ok := result.(*ShingleSliceResult)
-//		if !ok {
-//			return nil
-//		}
-//		return casted
-//	default:
-//		return nil
-//	}
-//}
+func compareShingleInputFields(s1 ShingleResult, s2 ShingleResult) bool {
+	if s1 == nil || s2 == nil {
+		return false
+	}
+	if s1.GetType() != s2.GetType() ||
+		s1.GetInput() != s2.GetInput() ||
+		s1.GetNgramLength() != s2.GetNgramLength() {
+		return false
+	}
+	return true
+}
+
+func CastShingleResult(raw *ShingleResult) ShingleResult {
+	if raw == nil {
+		return nil
+	}
+	switch (*raw).GetType() {
+	case ShinglesMap:
+		casted, ok := (*raw).(*ShingleMapResult)
+		if !ok {
+			return nil
+		}
+		return casted
+	case ShinglesSlice:
+		casted, ok := (*raw).(*ShingleSliceResult)
+		if !ok {
+			return nil
+		}
+		return casted
+	default:
+		return nil
+	}
+}
 
 // ShingleSliceResult represents the result of a shingle operation stored as a slice, encapsulating related metadata.
 type ShingleSliceResult struct {
@@ -118,9 +130,9 @@ func (s ShingleSliceResult) GetError() error {
 	return s.err
 }
 
-//func (s ShingleSliceResult) IsMatch(other ShingleResult) bool {
-//	panic("implement me")
-//}
+func (s ShingleSliceResult) IsMatch(other ShingleResult) bool {
+	panic("implement me")
+}
 
 // Print outputs shingle data or error information based on the verbose flag.
 func (s ShingleSliceResult) Print(v bool) {
@@ -214,9 +226,9 @@ func (s ShingleMapResult) GetError() error {
 	return s.err
 }
 
-//func (s ShingleMapResult) IsMatch(other ShingleResult) bool {
-//	panic("implement me")
-//}
+func (s ShingleMapResult) IsMatch(other ShingleResult) bool {
+	panic("implement me")
+}
 
 // Print outputs the shingle result information based on the verbose flag.
 // Handles errors and displays shingles if present.

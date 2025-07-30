@@ -79,23 +79,6 @@ type ComparisonResult interface {
 	Print(v bool)
 }
 
-// compareInputFields checks if two ComparisonResult objects are equivalent
-// by comparing their types, strings, and split lengths.
-func compareInputFields(c1, c2 ComparisonResult) bool {
-	if c1.GetType() != c2.GetType() || c1.GetString1() != c2.GetString1() || c1.GetString2() != c2.GetString2() {
-		return false
-	}
-	cSplit, cErr := c1.GetSplitLength()
-	oSplit, oErr := c2.GetSplitLength()
-	if !compareErrors(cErr, oErr) {
-		return false
-	}
-	if cSplit != oSplit {
-		return false
-	}
-	return true
-}
-
 // ComparisonResultInt represents the result of a comparison between two strings,
 // including type, score, and error details.
 type ComparisonResultInt struct {
@@ -207,29 +190,6 @@ func (c ComparisonResultInt) Print(v bool) {
 	fmt.Print(formatComparisonResultOutput(c, v))
 }
 
-//// formatComparisonResultOutput generates a formatted string representation of the comparison result
-//// based on error presence and verbosity.
-//func (c ComparisonResultInt) formatComparisonResultOutput(v bool) string {
-//	if v {
-//		if c.err != nil {
-//			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
-//
-//		} else {
-//			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %d\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
-//		}
-//	} else {
-//		if c.err != nil {
-//			return fmt.Sprintf("%s (%q/%q) GetError: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
-//
-//		} else {
-//			return fmt.Sprintf("%s (%q/%q): %d\n", ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
-//		}
-//	}
-//}
-
 // ComparisonResultFloat represents the result of a comparison operation,
 // including its type, input strings, score, and an optional error.
 type ComparisonResultFloat struct {
@@ -336,39 +296,35 @@ func (c ComparisonResultFloat) Print(v bool) {
 	fmt.Print(formatComparisonResultOutput(c, v))
 }
 
-//// formatComparisonResultOutput formats the comparison result or error into a string based on the verbosity level (v).
-//func (c ComparisonResultFloat) formatComparisonResultOutput(v bool) string {
-//	if v {
-//		if c.err != nil {
-//			return fmt.Sprintf("GetError during processing %s\nFirst String: %s\nSecond String: %s\nGetError: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
-//
-//		} else {
-//			return fmt.Sprintf("Comparison: %s\nFirst String: %s\nSecond String: %s\nScore: %f\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
-//		}
-//	} else {
-//		if c.err != nil {
-//			return fmt.Sprintf("%s (%q/%q) GetError: %s\n",
-//				ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, c.err.GetError())
-//
-//		} else {
-//			return fmt.Sprintf("%s (%q/%q): %f\n", ComparisonResultTypeMap[c.comparisonType], c.string1, c.string2, *c.score)
-//		}
-//	}
-//}
+// Utility Functions
+
+// compareInputFields checks if two ComparisonResult objects are equivalent
+// by comparing their types, strings, and split lengths.
+func compareInputFields(c1, c2 ComparisonResult) bool {
+	if c1.GetType() != c2.GetType() || c1.GetString1() != c2.GetString1() || c1.GetString2() != c2.GetString2() {
+		return false
+	}
+	cSplit, cErr := c1.GetSplitLength()
+	oSplit, oErr := c2.GetSplitLength()
+	if !compareErrors(cErr, oErr) {
+		return false
+	}
+	if cSplit != oSplit {
+		return false
+	}
+	return true
+}
 
 // CastComparisonResult converts a raw ComparisonResult pointer into a specific type based on
 // the ComparisonResultType input.
 // Returns ComparisonResultInt for integer-based types, ComparisonResultFloat for float-based
 // types, or the raw result otherwise.
 // Returns nil if the input raw ComparisonResult pointer is nil.
-func CastComparisonResult(raw *ComparisonResult,
-	compResType ComparisonResultType) ComparisonResult {
+func CastComparisonResult(raw *ComparisonResult) ComparisonResult {
 	if raw == nil {
 		return nil
 	}
-	switch compResType {
+	switch (*raw).GetType() {
 	case LevDist, DamLevDist, OSADamLevDist, LCSLength, LCSDist, HammingDist, QGramDist, QGramDistCust:
 		casted, ok := (*raw).(*ComparisonResultInt)
 		if !ok {
