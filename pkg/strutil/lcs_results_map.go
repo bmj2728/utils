@@ -18,19 +18,6 @@ func (lrm LCSResultsMap) Add(result LCSResult) {
 	lrm[result.GetType()][result.GetString2()] = &result
 }
 
-//Add
-//GetCopy
-//Get
-//GetByType
-//FilterByType
-//GetByComparisonString
-//FilterByComparisonString
-//TypeCount
-//EntryCount
-//IsMatch
-//Print
-//formatLCSResultsMapOutput
-
 // GetCopy creates and returns a deep copy of the LCSResultsMap, duplicating all
 // nested maps and their LCSResult values.
 func (lrm LCSResultsMap) GetCopy() LCSResultsMap {

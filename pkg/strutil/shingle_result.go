@@ -303,7 +303,7 @@ func formatShingleResultOutput(result ShingleResult, v bool) string {
 				payload += fmt.Sprintf("%s, ", v)
 			}
 		} else {
-			payload = ErrNoShinglesFound.Error()
+			payload += fmt.Sprintf("%d shingles found", len(casted.GetShinglesSlice()))
 		}
 	}
 	return header + payload + "\n"
