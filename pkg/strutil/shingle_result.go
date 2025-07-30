@@ -278,10 +278,10 @@ func formatShingleResultOutput(result ShingleResult, v bool) string {
 	case ShinglesMap:
 		casted, ok := result.(ShingleMapResult)
 		if !ok {
-			payload = "Error accessing ShingleMapResult"
+			payload = ErrAccessingShingleResult.Error()
 		}
 		if casted.GetShinglesMap() == nil {
-			payload = "No shingles found"
+			payload = ErrNoShinglesFound.Error()
 		}
 		if v {
 			for k, v := range casted.GetShinglesMap() {
@@ -293,17 +293,17 @@ func formatShingleResultOutput(result ShingleResult, v bool) string {
 	case ShinglesSlice:
 		casted, ok := result.(ShingleSliceResult)
 		if !ok {
-			payload = "Error accessing ShingleSliceResult"
+			payload = ErrAccessingShingleResult.Error()
 		}
 		if casted.GetShinglesSlice() == nil {
-			payload = "No shingles found"
+			payload = ErrNoShinglesFound.Error()
 		}
 		if v {
 			for _, v := range casted.GetShinglesSlice() {
 				payload += fmt.Sprintf("%s, ", v)
 			}
 		} else {
-			payload = "No shingles found"
+			payload = ErrNoShinglesFound.Error()
 		}
 	}
 	return header + payload + "\n"

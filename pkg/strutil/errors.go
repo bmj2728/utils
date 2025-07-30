@@ -64,6 +64,12 @@ var (
 
 	// ErrNilScore is returned when the expected score is nil but no specific error is associated.
 	ErrNilScore = errors.New("score is nil")
+
+	// ErrNoShinglesFound indicates that no shingles were found during the processing of the input string.
+	ErrNoShinglesFound = errors.New("no shingles found")
+
+	// ErrAccessingShingleResult indicates an error occurred while accessing the shingle result.
+	ErrAccessingShingleResult = errors.New("error accessing shingle result")
 )
 
 // compareErrors compares two error values for equality by checking their string representations.
