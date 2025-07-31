@@ -107,32 +107,32 @@ func NewComparisonResultInt(comparisonType ComparisonResultType,
 }
 
 // GetType returns the ComparisonResultType associated with the ComparisonResultInt instance.
-func (c ComparisonResultInt) GetType() ComparisonResultType {
+func (c *ComparisonResultInt) GetType() ComparisonResultType {
 	return c.comparisonType
 }
 
 // GetTypeName retrieves the string representation of the comparison type for the ComparisonResultInt instance.
-func (c ComparisonResultInt) GetTypeName() string {
+func (c *ComparisonResultInt) GetTypeName() string {
 	return c.comparisonType.String()
 }
 
 // GetString1 retrieves the first string (string1) associated with the ComparisonResultInt instance.
-func (c ComparisonResultInt) GetString1() string {
+func (c *ComparisonResultInt) GetString1() string {
 	return c.string1
 }
 
 // GetString2 returns the second comparison string from the ComparisonResultInt instance.
-func (c ComparisonResultInt) GetString2() string {
+func (c *ComparisonResultInt) GetString2() string {
 	return c.string2
 }
 
 // GetStrings returns the two strings, string1 and string2, stored in the ComparisonResultInt instance.
-func (c ComparisonResultInt) GetStrings() (string, string) {
+func (c *ComparisonResultInt) GetStrings() (string, string) {
 	return c.string1, c.string2
 }
 
 // GetSplitLength returns the split length of the comparison result as a pointer to an integer.
-func (c ComparisonResultInt) GetSplitLength() (int, error) {
+func (c *ComparisonResultInt) GetSplitLength() (int, error) {
 	if c.splitLength == nil {
 		return 0, ErrNoSplitLengthSet
 	}
@@ -140,12 +140,12 @@ func (c ComparisonResultInt) GetSplitLength() (int, error) {
 }
 
 // GetError returns the error associated with the ComparisonResultInt, if any.
-func (c ComparisonResultInt) GetError() error {
+func (c *ComparisonResultInt) GetError() error {
 	return c.err
 }
 
 // GetScoreInt retrieves the comparison score as an integer and returns an error if no score or an error is present.
-func (c ComparisonResultInt) GetScoreInt() (int, error) {
+func (c *ComparisonResultInt) GetScoreInt() (int, error) {
 	if c.score == nil && c.err == nil {
 		return 0, ErrUnknownError
 	}
@@ -160,7 +160,7 @@ func (c ComparisonResultInt) GetScoreInt() (int, error) {
 
 // IsMatch checks if two ComparisonResultInt objects are equivalent by
 // comparing their type, strings, score, split length, and errors.
-func (c ComparisonResultInt) IsMatch(other ComparisonResult) bool {
+func (c *ComparisonResultInt) IsMatch(other ComparisonResult) bool {
 	casted, ok := other.(*ComparisonResultInt)
 	if !ok {
 		return false
@@ -186,7 +186,7 @@ func (c ComparisonResultInt) IsMatch(other ComparisonResult) bool {
 
 // Print outputs the formatted result of the comparison, optionally including
 // verbose error details based on the input flag v.
-func (c ComparisonResultInt) Print(v bool) {
+func (c *ComparisonResultInt) Print(v bool) {
 	fmt.Print(formatComparisonResultOutput(c, v))
 }
 
@@ -218,32 +218,32 @@ func NewComparisonResultFloat(comparisonType ComparisonResultType,
 }
 
 // GetType returns the type of comparison as a value of ComparisonResultType.
-func (c ComparisonResultFloat) GetType() ComparisonResultType {
+func (c *ComparisonResultFloat) GetType() ComparisonResultType {
 	return c.comparisonType
 }
 
 // GetTypeName returns the string representation of the comparison type from the comparisonType field.
-func (c ComparisonResultFloat) GetTypeName() string {
+func (c *ComparisonResultFloat) GetTypeName() string {
 	return c.comparisonType.String()
 }
 
 // GetString1 returns the first string (string1) stored in the ComparisonResultFloat instance.
-func (c ComparisonResultFloat) GetString1() string {
+func (c *ComparisonResultFloat) GetString1() string {
 	return c.string1
 }
 
 // GetString2 returns the second string associated with the ComparisonResultFloat instance.
-func (c ComparisonResultFloat) GetString2() string {
+func (c *ComparisonResultFloat) GetString2() string {
 	return c.string2
 }
 
 // GetStrings returns the two strings stored in the ComparisonResultFloat instance.
-func (c ComparisonResultFloat) GetStrings() (string, string) {
+func (c *ComparisonResultFloat) GetStrings() (string, string) {
 	return c.string1, c.string2
 }
 
 // GetSplitLength retrieves the value of the splitLength field as a pointer to an integer.
-func (c ComparisonResultFloat) GetSplitLength() (int, error) {
+func (c *ComparisonResultFloat) GetSplitLength() (int, error) {
 	if c.splitLength == nil {
 		return 0, ErrNoSplitLengthSet
 	}
@@ -251,13 +251,13 @@ func (c ComparisonResultFloat) GetSplitLength() (int, error) {
 }
 
 // GetError returns the error encountered during the comparison, or nil if no error occurred.
-func (c ComparisonResultFloat) GetError() error {
+func (c *ComparisonResultFloat) GetError() error {
 	return c.err
 }
 
 // GetScoreFloat retrieves the comparison score as a float32 and any associated error.
 // Returns 0.00 and an error if unavailable.
-func (c ComparisonResultFloat) GetScoreFloat() (float32, error) {
+func (c *ComparisonResultFloat) GetScoreFloat() (float32, error) {
 	if c.score == nil && c.err == nil {
 		return 0.00, ErrUnknownError
 	}
@@ -272,7 +272,7 @@ func (c ComparisonResultFloat) GetScoreFloat() (float32, error) {
 
 // IsMatch compares another ComparisonResult instance to determine equivalence
 // based on type, fields, and score criteria.
-func (c ComparisonResultFloat) IsMatch(other ComparisonResult) bool {
+func (c *ComparisonResultFloat) IsMatch(other ComparisonResult) bool {
 	casted, ok := other.(*ComparisonResultFloat)
 	if !ok {
 		return false
@@ -294,7 +294,7 @@ func (c ComparisonResultFloat) IsMatch(other ComparisonResult) bool {
 }
 
 // Print outputs the formatted comparison result or error details depending on the verbosity flag (v).
-func (c ComparisonResultFloat) Print(v bool) {
+func (c *ComparisonResultFloat) Print(v bool) {
 	fmt.Print(formatComparisonResultOutput(c, v))
 }
 

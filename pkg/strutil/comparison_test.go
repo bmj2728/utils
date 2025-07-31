@@ -32,7 +32,7 @@ func TestLevenshteinDistance(t *testing.T) {
 				t.Errorf("LevenshteinDistance - expected %d - got %d / %d",
 					tt.expected, *helperResult.score, *result.score)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[LevDist][tt.input2]).(ComparisonResultInt); ok {
+			if brInt, ok := (*builderResult.ComparisonResults[LevDist][tt.input2]).(*ComparisonResultInt); ok {
 				if *brInt.score != tt.expected {
 					t.Errorf("LevenshteinDistance - expected %d - got %d / %d",
 						tt.expected, *brInt.score, *result.score)
@@ -70,7 +70,7 @@ func TestDamerauLevenshteinDistance(t *testing.T) {
 					*helperResult.score,
 					*result.score)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[DamLevDist][tt.input2]).(ComparisonResultInt); ok {
+			if brInt, ok := (*builderResult.ComparisonResults[DamLevDist][tt.input2]).(*ComparisonResultInt); ok {
 				if *brInt.score != tt.expected {
 					t.Errorf("Damarau-LevenshteinDistance - expected %d - got %d",
 						tt.expected,
@@ -115,7 +115,7 @@ func TestOSADamerauLevenshteinDistance(t *testing.T) {
 					*helperResult.score,
 					*result.score)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[OSADamLevDist][tt.input2]).(ComparisonResultInt); ok {
+			if brInt, ok := (*builderResult.ComparisonResults[OSADamLevDist][tt.input2]).(*ComparisonResultInt); ok {
 				if *brInt.score != tt.expected {
 					t.Errorf("OSALevenshteinDistance - expected %d - got %d",
 						tt.expected,
@@ -159,7 +159,7 @@ func TestLCS(t *testing.T) {
 				t.Errorf("LCS - expected %d - got %d / %d",
 					tt.expected, *helperResult.score, *result.score)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[LCSLength][tt.input2]).(ComparisonResultInt); ok {
+			if brInt, ok := (*builderResult.ComparisonResults[LCSLength][tt.input2]).(*ComparisonResultInt); ok {
 				if *brInt.score != tt.expected {
 					t.Errorf("LCS - expected %d - got %d",
 						tt.expected, *brInt.score)
@@ -512,7 +512,7 @@ func TestLCSEditDistance(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[LCSDist][tt.input2]).(ComparisonResultInt); ok {
+			if brInt, ok := (*builderResult.ComparisonResults[LCSDist][tt.input2]).(*ComparisonResultInt); ok {
 				if *brInt.score != tt.expected {
 					t.Errorf("LCS - expected %d - got %d",
 						tt.expected, *brInt.score)
@@ -558,8 +558,8 @@ func TestHammingDistance(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[HammingDist][tt.input2]).(ComparisonResultInt); ok {
-				if *brInt.score != *tt.expected {
+			if brInt, ok := (*builderResult.ComparisonResults[HammingDist][tt.input2]).(*ComparisonResultInt); ok {
+				if tt.expected != nil && (*brInt.score != *tt.expected) {
 					t.Errorf("LCS - expected %d - got %d",
 						*tt.expected, *brInt.score)
 				}
@@ -594,7 +594,7 @@ func TestJaroSimilarity(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brFloat, ok := (*builderResult.ComparisonResults[JaroSim][tt.input2]).(ComparisonResultFloat); ok {
+			if brFloat, ok := (*builderResult.ComparisonResults[JaroSim][tt.input2]).(*ComparisonResultFloat); ok {
 				if math.Abs(float64(tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
 					t.Errorf("JaroSimilarity - expected %f - got %f",
 						tt.expected,
@@ -632,7 +632,7 @@ func TestJaroWinklerSimilarity(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brFloat, ok := (*builderResult.ComparisonResults[JaroWinklerSim][tt.input2]).(ComparisonResultFloat); ok {
+			if brFloat, ok := (*builderResult.ComparisonResults[JaroWinklerSim][tt.input2]).(*ComparisonResultFloat); ok {
 				if math.Abs(float64(tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
 					t.Errorf("JaroWinklerSimilarity - expected %f - got %f",
 						tt.expected,
@@ -700,8 +700,9 @@ func TestJaccardSimilarity(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brFloat, ok := (*builderResult.ComparisonResults[JaccardSim][tt.input2]).(ComparisonResultFloat); ok {
-				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+			if brFloat, ok := (*builderResult.ComparisonResults[JaccardSim][tt.input2]).(*ComparisonResultFloat); ok {
+				if tt.expected != nil &&
+					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
 					t.Errorf("JaccardSimilarity - expected %f - got %f",
 						*tt.expected,
 						*brFloat.score,
@@ -771,8 +772,9 @@ func TestCosineSimilarity(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brFloat, ok := (*builderResult.ComparisonResults[CosineSim][tt.input2]).(ComparisonResultFloat); ok {
-				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+			if brFloat, ok := (*builderResult.ComparisonResults[CosineSim][tt.input2]).(*ComparisonResultFloat); ok {
+				if tt.expected != nil &&
+					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
 					t.Errorf("CosineSimilarity - expected %f - got %f",
 						*tt.expected,
 						*brFloat.score,
@@ -846,8 +848,9 @@ func TestSorensenDiceCoefficient(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brFloat, ok := (*builderResult.ComparisonResults[SorensenDiceCo][tt.input2]).(ComparisonResultFloat); ok {
-				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+			if brFloat, ok := (*builderResult.ComparisonResults[SorensenDiceCo][tt.input2]).(*ComparisonResultFloat); ok {
+				if tt.expected != nil &&
+					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
 					t.Errorf("SorensenDiceCoefficient - expected %f - got %f",
 						*tt.expected,
 						*brFloat.score,
@@ -922,8 +925,8 @@ func TestQGramDistance(t *testing.T) {
 					result.score,
 				)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[QGramDist][tt.input2]).(ComparisonResultInt); ok {
-				if *brInt.score != *tt.expected {
+			if brInt, ok := (*builderResult.ComparisonResults[QGramDist][tt.input2]).(*ComparisonResultInt); ok {
+				if tt.expected != nil && *brInt.score != *tt.expected {
 					t.Errorf("QgramDistance - expected %d - got %d",
 						*tt.expected,
 						*brInt.score,
@@ -1015,7 +1018,7 @@ func TestQgramDistanceCustomNgramBuilder(t *testing.T) {
 				tt.input1 = New("hello").WithComparisonManager().Shingle(2)
 			}
 			builderResult := tt.input1.WithComparisonManager().QgramDistanceCustomNgram(tt.input2, "Test").comparisonManager
-			if brInt, ok := (*builderResult.ComparisonResults[QGramDistCust]["Test"]).(ComparisonResultInt); ok {
+			if brInt, ok := (*builderResult.ComparisonResults[QGramDistCust]["Test"]).(*ComparisonResultInt); ok {
 				if brInt.score != nil && *brInt.score != tt.expected {
 					t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
 						tt.expected,
@@ -1080,8 +1083,9 @@ func TestQgramSimilarity(t *testing.T) {
 					*result.score,
 				)
 			}
-			if brFloat, ok := (*builderResult.ComparisonResults[QGramSim][tt.input2]).(ComparisonResultFloat); ok {
-				if math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
+			if brFloat, ok := (*builderResult.ComparisonResults[QGramSim][tt.input2]).(*ComparisonResultFloat); ok {
+				if tt.expected != nil &&
+					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > float64EqualityThreshold {
 					t.Errorf("QgramSimilarity - expected %f - got %f",
 						*tt.expected,
 						*brFloat.score,

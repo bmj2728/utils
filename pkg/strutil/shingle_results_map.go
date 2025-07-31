@@ -10,9 +10,6 @@ func NewShingleResultsMap() ShingleResultsMap {
 	return make(map[ShingleResultType]map[int]*ShingleResult)
 }
 
-//Print
-//formatLCSResultsMapOutput
-
 // Add inserts a ShingleResult into the ShingleResultsMap, organizing it by type and n-gram length.
 func (srm ShingleResultsMap) Add(result ShingleResult) {
 	if srm[result.GetType()] == nil {

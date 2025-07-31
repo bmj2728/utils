@@ -253,58 +253,55 @@ func CastShingleResult(raw *ShingleResult) ShingleResult {
 // formatShingleResultOutput formats the output of a ShingleResult based on its type, verbosity,
 // and error state.
 func formatShingleResultOutput(result ShingleResult, v bool) string {
+	header := ""
+	payload := ""
+	resType := result.GetTypeName()
+	input := result.GetInput()
+	ngram := result.GetNgramLength()
+	err := result.GetError()
+	var shinglesSlice []string
+	var shinglesMap map[string]int
+
 	if result.GetError() != nil {
 		if v {
 			return fmt.Sprintf("Error processing %s (%s/%d):\n%s\n",
-				result.GetTypeName(), result.GetInput(), result.GetNgramLength(), result.GetError().Error())
+				resType, input, ngram, err.Error())
 		} else {
 			return fmt.Sprintf("%s (%s/%d): %s\n",
-				result.GetTypeName(), result.GetInput(), result.GetNgramLength(), result.GetError().Error())
+				resType, input, ngram, err.Error())
 		}
 	}
-
-	header := ""
-	payload := ""
 
 	if v {
 		header = fmt.Sprintf("Results for %s\nWord: %s\nN-Gram Length: %d\n",
-			result.GetTypeName(), result.GetInput(), result.GetNgramLength())
+			resType, input, ngram)
 	} else {
 		header = fmt.Sprintf("%s (%s/%d):\n",
-			result.GetTypeName(), result.GetInput(), result.GetNgramLength())
+			resType, input, ngram)
 	}
 
-	switch result.GetType() {
-	case ShinglesMap:
-		casted, ok := result.(ShingleMapResult)
-		if !ok {
-			payload = ErrAccessingShingleResult.Error()
-		}
-		if casted.GetShinglesMap() == nil {
-			payload = ErrNoShinglesFound.Error()
-		}
+	switch s := result.(type) {
+	case ShingleMapResult:
+		shinglesMap = s.GetShinglesMap()
 		if v {
-			for k, v := range casted.GetShinglesMap() {
-				payload += fmt.Sprintf("%s: %d, ", k, v)
+			payload = "Shingles Map:\n"
+			for k, v := range shinglesMap {
+				payload += fmt.Sprintf("%s: %d\n", k, v)
 			}
 		} else {
-			payload = fmt.Sprintf("%d shingles found", len(casted.GetShinglesMap()))
+			payload = fmt.Sprintf("%d shingles found\n", len(shinglesMap))
 		}
-	case ShinglesSlice:
-		casted, ok := result.(ShingleSliceResult)
-		if !ok {
-			payload = ErrAccessingShingleResult.Error()
-		}
-		if casted.GetShinglesSlice() == nil {
-			payload = ErrNoShinglesFound.Error()
-		}
+	case ShingleSliceResult:
+		shinglesSlice = s.GetShinglesSlice()
 		if v {
-			for _, v := range casted.GetShinglesSlice() {
-				payload += fmt.Sprintf("%s, ", v)
+			payload = "Shingles Slice:\n"
+			for _, v := range shinglesSlice {
+				payload += fmt.Sprintf("%s\n", v)
 			}
 		} else {
-			payload += fmt.Sprintf("%d shingles found", len(casted.GetShinglesSlice()))
+			payload = fmt.Sprintf("%d shingles found\n", len(shinglesSlice))
 		}
 	}
-	return header + payload + "\n"
+	formatted := header + payload
+	return formatted
 }
