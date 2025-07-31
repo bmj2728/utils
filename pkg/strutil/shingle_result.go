@@ -67,27 +67,27 @@ func NewShingleSliceResult(resultType ShingleResultType,
 }
 
 // GetType returns the ShingleResultType associated with a ShingleSliceResult instance.
-func (s ShingleSliceResult) GetType() ShingleResultType {
+func (s *ShingleSliceResult) GetType() ShingleResultType {
 	return s.resultType
 }
 
 // GetTypeName returns the string representation of the result type associated with the ShingleSliceResult instance.
-func (s ShingleSliceResult) GetTypeName() string {
+func (s *ShingleSliceResult) GetTypeName() string {
 	return s.resultType.String()
 }
 
 // GetInput returns the input string associated with the ShingleSliceResult.
-func (s ShingleSliceResult) GetInput() string {
+func (s *ShingleSliceResult) GetInput() string {
 	return s.input
 }
 
 // GetNgramLength returns the n-gram length associated with the ShingleSliceResult instance.
-func (s ShingleSliceResult) GetNgramLength() int {
+func (s *ShingleSliceResult) GetNgramLength() int {
 	return s.ngram
 }
 
 // GetShinglesSlice returns a pointer to the slice of shingles contained in the ShingleSliceResult.
-func (s ShingleSliceResult) GetShinglesSlice() []string {
+func (s *ShingleSliceResult) GetShinglesSlice() []string {
 	if s.shingles == nil {
 		return nil
 	}
@@ -95,22 +95,22 @@ func (s ShingleSliceResult) GetShinglesSlice() []string {
 }
 
 // GetError returns the error associated with the ShingleSliceResult, if any.
-func (s ShingleSliceResult) GetError() error {
+func (s *ShingleSliceResult) GetError() error {
 	return s.err
 }
 
-func (s ShingleSliceResult) IsMatch(other ShingleResult) bool {
+func (s *ShingleSliceResult) IsMatch(other ShingleResult) bool {
 	casted, ok := other.(*ShingleSliceResult)
 	if !ok {
 		return false
 	}
-	return compareShingleInputFields(s, *casted) &&
+	return compareShingleInputFields(s, casted) &&
 		compareStringSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
 		compareErrors(s.GetError(), casted.GetError())
 }
 
 // Print outputs shingle data or error information based on the verbose flag.
-func (s ShingleSliceResult) Print(v bool) {
+func (s *ShingleSliceResult) Print(v bool) {
 	fmt.Print(formatShingleResultOutput(s, v))
 }
 
@@ -144,27 +144,27 @@ func NewShingleMapResult(resultType ShingleResultType,
 }
 
 // GetType returns the type of the shingle result as a ShingleResultType.
-func (s ShingleMapResult) GetType() ShingleResultType {
+func (s *ShingleMapResult) GetType() ShingleResultType {
 	return s.resultType
 }
 
 // GetTypeName returns the string representation of the result type stored in the ShingleMapResult instance.
-func (s ShingleMapResult) GetTypeName() string {
+func (s *ShingleMapResult) GetTypeName() string {
 	return s.resultType.String()
 }
 
 // GetInput returns the input string associated with the ShingleMapResult.
-func (s ShingleMapResult) GetInput() string {
+func (s *ShingleMapResult) GetInput() string {
 	return s.input
 }
 
 // GetNgramLength returns the n-gram length associated with the ShingleMapResult instance.
-func (s ShingleMapResult) GetNgramLength() int {
+func (s *ShingleMapResult) GetNgramLength() int {
 	return s.ngram
 }
 
 // GetShinglesMap returns a pointer to the map of shingles and their corresponding counts for the given input.
-func (s ShingleMapResult) GetShinglesMap() map[string]int {
+func (s *ShingleMapResult) GetShinglesMap() map[string]int {
 	if s.shingles == nil {
 		return nil
 	}
@@ -172,18 +172,18 @@ func (s ShingleMapResult) GetShinglesMap() map[string]int {
 }
 
 // GetError returns the error associated with the ShingleMapResult, if any.
-func (s ShingleMapResult) GetError() error {
+func (s *ShingleMapResult) GetError() error {
 	return s.err
 }
 
 // IsMatch compares the current ShingleMapResult with another ShingleResult for equality
 // based on their fields and content.
-func (s ShingleMapResult) IsMatch(other ShingleResult) bool {
+func (s *ShingleMapResult) IsMatch(other ShingleResult) bool {
 	casted, ok := other.(*ShingleMapResult)
 	if !ok {
 		return false
 	}
-	if !compareShingleInputFields(s, *casted) {
+	if !compareShingleInputFields(s, casted) {
 		return false
 	}
 	if !compareErrors(s.GetError(), other.GetError()) {
@@ -205,7 +205,7 @@ func (s ShingleMapResult) IsMatch(other ShingleResult) bool {
 
 // Print outputs the shingle result information based on the verbose flag.
 // Handles errors and displays shingles if present.
-func (s ShingleMapResult) Print(v bool) {
+func (s *ShingleMapResult) Print(v bool) {
 	fmt.Print(formatShingleResultOutput(s, v))
 }
 
@@ -281,7 +281,7 @@ func formatShingleResultOutput(result ShingleResult, v bool) string {
 	}
 
 	switch s := result.(type) {
-	case ShingleMapResult:
+	case *ShingleMapResult:
 		shinglesMap = s.GetShinglesMap()
 		if v {
 			payload = "Shingles Map:\n"
@@ -291,7 +291,7 @@ func formatShingleResultOutput(result ShingleResult, v bool) string {
 		} else {
 			payload = fmt.Sprintf("%d shingles found\n", len(shinglesMap))
 		}
-	case ShingleSliceResult:
+	case *ShingleSliceResult:
 		shinglesSlice = s.GetShinglesSlice()
 		if v {
 			payload = "Shingles Slice:\n"

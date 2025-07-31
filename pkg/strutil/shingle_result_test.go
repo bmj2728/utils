@@ -161,26 +161,121 @@ func TestShingleSliceResultGetters(t *testing.T) {
 	}
 }
 
-//func TestShingleResultPrintMap(t *testing.T) {
-//	tests := []struct {
-//		name     string
-//		resMap   ShingleResultsMap
-//		expected bool
-//	}{
-//		{"ShingleMap1", shinMapPrt, true},
-//		{"ShingleMap2", shinMap1, false},
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			res := tt.resMap[ShinglesMap][2]
-//			casted, ok := (*res).(*ShingleMapResult)
-//			if !ok {
-//				t.Errorf("Panic casting to map")
-//			}
-//			if formatShingleResultOutput(casted, false) != shinMapPrntShort {
-//				t.Errorf("ShingleResultPrintMap() = %v, want %v",
-//					formatShingleResultOutput(casted, false), shinMapPrntShort)
-//			}
-//		})
-//	}
-//}
+func TestShingleResultPrint(t *testing.T) {
+	tests := []struct {
+		name     string
+		resMap   ShingleResultsMap
+		expected bool
+	}{
+		{"ShingleMap1", shinMapPrt, true},
+		{"ShingleMap2", shinMap1, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			resM := tt.resMap[ShinglesMap][2]
+			castedM, ok := (*resM).(*ShingleMapResult)
+			if !ok {
+				t.Errorf("Panic casting to map")
+			}
+			resS := tt.resMap[ShinglesSlice][2]
+			castedS, ok := (*resS).(*ShingleSliceResult)
+			if !ok {
+				t.Errorf("Panic casting to slice")
+			}
+			mS := formatShingleResultOutput(castedM, false)
+			sS := formatShingleResultOutput(castedS, false)
+			mL := formatShingleResultOutput(castedM, true)
+			sL := formatShingleResultOutput(castedS, true)
+			isShortMatch := true
+			isLongMatch := true
+			if mS != shinMapPrntShort || sS != shinSlicePrntShort {
+				isShortMatch = false
+			}
+			if (mL != shinMapPrntLongOpt1 && mL != shinMapPrntLongOpt2) ||
+				(sL != shinSlicePrntLongOpt1 && sL != shinSlicePrntLongOpt2) {
+				isLongMatch = false
+			}
+			if isShortMatch != tt.expected {
+				t.Errorf("ShingleResultPrintMap() = %v, want %v", mS, shinMapPrntShort)
+			}
+			if isLongMatch != tt.expected {
+				t.Errorf("ShingleResultPrintMap() = %v, want %v", mL, shinMapPrntLongOpt1)
+			}
+			if isShortMatch != tt.expected {
+				t.Errorf("ShingleResultPrintMap() = %v, want %v", sS, shinSlicePrntShort)
+			}
+			castedS.Print(true)
+			castedM.Print(true)
+			castedS.Print(false)
+			castedM.Print(false)
+		})
+	}
+}
+
+func TestShingleResultIsMatchMap(t *testing.T) {
+	tests := []struct {
+		name     string
+		resMap1  ShingleResultsMap
+		rt1      ShingleResultType
+		n1       int
+		resMap2  ShingleResultsMap
+		rt2      ShingleResultType
+		n2       int
+		expected bool
+	}{
+		{"ShingleMap1", shinMap1, ShinglesMap, 2, shinMap2, ShinglesMap, 2, true},
+		{"ShingleMap2", shinMap1, ShinglesMap, 2, shinMap3, ShinglesMap, 2, false},
+		{"ShingleMap3", shinMap1, ShinglesMap, 2, shinMap3, ShinglesMap, 1, false},
+		{"ShingleMap4", shinMap1, ShinglesMap, 2, shinMap3, ShinglesMap, 2, false},
+		{"ShingleMap5", shinMap1, ShinglesMap, 2, shinMap1, ShinglesMap, 2, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sr1, ok := (*tt.resMap1[tt.rt1][tt.n1]).(*ShingleMapResult)
+			if !ok {
+				t.Errorf("Panic casting to map")
+			}
+			sr2, ok := (*tt.resMap2[tt.rt2][tt.n2]).(*ShingleMapResult)
+			if !ok {
+				t.Errorf("Panic casting to map")
+			}
+			if sr1.IsMatch(sr2) != tt.expected {
+				t.Errorf("ShingleResultIsMatchMap() = %v, want %v", sr1.IsMatch(sr2), tt.expected)
+			}
+		})
+	}
+}
+
+func TestShingleResultIsMatchSlice(t *testing.T) {
+	tests := []struct {
+		name     string
+		resMap1  ShingleResultsMap
+		rt1      ShingleResultType
+		n1       int
+		resMap2  ShingleResultsMap
+		rt2      ShingleResultType
+		n2       int
+		expected bool
+	}{
+		{"ShingleSlice1", shinMap1, ShinglesSlice, 2, shinMap2, ShinglesSlice, 2, true},
+		{"ShingleSlice2", shinMap1, ShinglesSlice, 2, shinMap3, ShinglesSlice, 1, false},
+		{"ShingleSlice3", shinMap1, ShinglesSlice, 2, shinMap4, ShinglesSlice, 1, false},
+		{"ShingleSlice4", shinMap1, ShinglesSlice, 2, shinMap3, ShinglesSlice, 1, false},
+		{"ShingleSlice5", shinMap1, ShinglesSlice, 2, shinMap1, ShinglesSlice, 2, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sr1, ok := (*tt.resMap1[tt.rt1][tt.n1]).(*ShingleSliceResult)
+			if !ok {
+				t.Errorf("Panic casting to map")
+			}
+			sr2, ok := (*tt.resMap2[tt.rt2][tt.n2]).(*ShingleSliceResult)
+			if !ok {
+				t.Errorf("Panic casting to map")
+			}
+			if sr1.IsMatch(sr2) != tt.expected {
+				t.Errorf("ShingleResultIsMatchSlice() = %v, want %v", sr1.IsMatch(sr2), tt.expected)
+			}
+		})
+	}
+}
