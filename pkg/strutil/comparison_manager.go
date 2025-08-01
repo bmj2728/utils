@@ -116,6 +116,49 @@ func (cm *ComparisonManager) AddSimilarityResult(result SimilarityResult) {
 	cm.SimilarityResults.Add(result)
 }
 
+// GetSimilarityResult retrieves a SimilarityResult for the specified algorithm and comparison string.
+// Returns nil if no results are found.
+func (cm *ComparisonManager) GetSimilarityResult(algo Algorithm, compStr string) *SimilarityResult {
+	if cm.SimilarityResults == nil {
+		return nil
+	}
+	return cm.SimilarityResults.Get(algo, compStr)
+}
+
+// GetSimilarityResultsByType retrieves all SimilarityResults corresponding to the specified Algorithm type.
+func (cm *ComparisonManager) GetSimilarityResultsByType(algo Algorithm) []SimilarityResult {
+	if cm.SimilarityResults == nil {
+		return nil
+	}
+	return cm.SimilarityResults.GetByType(algo)
+}
+
+// FilterSimilarityResultsByType filters the SimilarityResultsMap to include entries
+// matching the specified algorithm type.
+func (cm *ComparisonManager) FilterSimilarityResultsByType(algo Algorithm) SimilarityResultsMap {
+	if cm.SimilarityResults == nil {
+		return nil
+	}
+	return cm.SimilarityResults.FilterByType(algo)
+}
+
+// GetSimilarityResultsByComparisonString retrieves a slice of SimilarityResult associated with
+// the given comparison string.
+func (cm *ComparisonManager) GetSimilarityResultsByComparisonString(compStr string) []SimilarityResult {
+	if cm.SimilarityResults == nil {
+		return nil
+	}
+	return cm.SimilarityResults.GetByComparisonString(compStr)
+}
+
+// FilterSimilarityResultsByComparisonString filters the SimilarityResultsMap based on a given comparison string.
+func (cm *ComparisonManager) FilterSimilarityResultsByComparisonString(compStr string) SimilarityResultsMap {
+	if cm.SimilarityResults == nil {
+		return nil
+	}
+	return cm.SimilarityResults.FilterByComparisonString(compStr)
+}
+
 // Shingle Data
 
 // GetShingleData retrieves the ShingleResultsMap from the ComparisonManager instance.

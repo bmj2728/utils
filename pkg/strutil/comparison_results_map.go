@@ -37,7 +37,8 @@ func (crm ComparisonResultsMap) GetCopy() ComparisonResultsMap {
 	return cloned
 }
 
-// Get retrieves a ComparisonResult by its type and comparison string or returns nil if no result is found.
+// Get retrieves a ComparisonResult from the map using the specified ComparisonResultType and comparison string.
+// The underlying returned objects are pointers to either ComparisonResultInt or ComparisonResultFloat
 func (crm ComparisonResultsMap) Get(compResType ComparisonResultType, compStr string) ComparisonResult {
 	if crm[compResType] == nil {
 		return nil
