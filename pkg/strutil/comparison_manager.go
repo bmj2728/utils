@@ -4,7 +4,7 @@ package strutil
 type ComparisonManager struct {
 	ComparisonResults ComparisonResultsMap
 	SimilarityResults SimilarityResultsMap
-	ShingleData       ShingleResultsMap
+	ShingleResults    ShingleResultsMap
 	LCSResults        LCSResultsMap
 }
 
@@ -13,7 +13,7 @@ func NewComparisonManager() *ComparisonManager {
 	return &ComparisonManager{
 		ComparisonResults: NewComparisonResultsMap(),
 		SimilarityResults: NewSimilarityResultsMap(),
-		ShingleData:       NewShingleResultsMap(),
+		ShingleResults:    NewShingleResultsMap(),
 		LCSResults:        NewLCSResultsMap(),
 	}
 }
@@ -161,28 +161,70 @@ func (cm *ComparisonManager) FilterSimilarityResultsByComparisonString(compStr s
 
 // Shingle Data
 
-// GetShingleData retrieves the ShingleResultsMap from the ComparisonManager instance.
-func (cm *ComparisonManager) GetShingleData() ShingleResultsMap {
-	if cm.ShingleData == nil {
+// GetShingleResultsMap retrieves the ShingleResultsMap from the ComparisonManager instance.
+func (cm *ComparisonManager) GetShingleResultsMap() ShingleResultsMap {
+	if cm.ShingleResults == nil {
 		return nil
 	}
-	return cm.ShingleData
+	return cm.ShingleResults
 }
 
-// CopyShingleData returns a copy of the ShingleResultsMap if it exists; otherwise, it returns nil.
-func (cm *ComparisonManager) CopyShingleData() ShingleResultsMap {
-	if cm.ShingleData == nil {
+// CopyShingleResultsMap returns a copy of the ShingleResultsMap if it exists; otherwise, it returns nil.
+func (cm *ComparisonManager) CopyShingleResultsMap() ShingleResultsMap {
+	if cm.ShingleResults == nil {
 		return nil
 	}
-	return cm.ShingleData.GetCopy()
+	return cm.ShingleResults.GetCopy()
 }
 
-// AddShingleResult inserts a ShingleResult into the ShingleData map organized by type and n-gram length.
+// AddShingleResult inserts a ShingleResult into the ShingleResults map organized by type and n-gram length.
 func (cm *ComparisonManager) AddShingleResult(result ShingleResult) {
-	if cm.ShingleData == nil {
-		cm.ShingleData = NewShingleResultsMap()
+	if cm.ShingleResults == nil {
+		cm.ShingleResults = NewShingleResultsMap()
 	}
-	cm.ShingleData.Add(result)
+	cm.ShingleResults.Add(result)
+}
+
+// GetShingleResult retrieves a ShingleResult based on the specified ShingleResultType and n-gram length.
+// Returns nil if no matching result exists or if the ShingleResults map is uninitialized.
+func (cm *ComparisonManager) GetShingleResult(resType ShingleResultType, ngramLength int) ShingleResult {
+	if cm.ShingleResults == nil {
+		return nil
+	}
+	return cm.ShingleResults.Get(resType, ngramLength)
+}
+
+// GetShingleResultsByType retrieves all ShingleResults of the specified ShingleResultType from the ShingleResults map.
+func (cm *ComparisonManager) GetShingleResultsByType(resType ShingleResultType) []ShingleResult {
+	if cm.ShingleResults == nil {
+		return nil
+	}
+	return cm.ShingleResults.GetByType(resType)
+}
+
+// FilterShingleResultsByType filters the ShingleResultsMap to include entries matching the specified ShingleResultType.
+func (cm *ComparisonManager) FilterShingleResultsByType(resType ShingleResultType) ShingleResultsMap {
+	if cm.ShingleResults == nil {
+		return nil
+	}
+	return cm.ShingleResults.FilterByType(resType)
+}
+
+// GetShingleResultsByNGramLength retrieves a slice of ShingleResult based on the specified n-gram length.
+// Returns nil if no ShingleResults are available.
+func (cm *ComparisonManager) GetShingleResultsByNGramLength(ngramLength int) []ShingleResult {
+	if cm.ShingleResults == nil {
+		return nil
+	}
+	return cm.ShingleResults.GetByNGramLength(ngramLength)
+}
+
+// FilterShingleResultsByNGramLength filters ShingleResultsMap to include entries matching the specified n-gram length.
+func (cm *ComparisonManager) FilterShingleResultsByNGramLength(ngramLength int) ShingleResultsMap {
+	if cm.ShingleResults == nil {
+		return nil
+	}
+	return cm.ShingleResults.FilterByNGramLength(ngramLength)
 }
 
 // LCS Data
@@ -211,4 +253,46 @@ func (cm *ComparisonManager) AddLCSResult(result LCSResult) {
 		cm.LCSResults = NewLCSResultsMap()
 	}
 	cm.LCSResults.Add(result)
+}
+
+// GetLCSResult retrieves the LCSResult object based on the provided LCSResultType and input string.
+// Returns nil if the LCSResults map is uninitialized.
+func (cm *ComparisonManager) GetLCSResult(lcsType LCSResultType, inputStr string) *LCSResult {
+	if cm.LCSResults == nil {
+		return nil
+	}
+	return cm.LCSResults.Get(lcsType, inputStr)
+}
+
+// GetLCSResultsByType retrieves LCSResults filtered by the specified LCSResultType from the ComparisonManager.
+func (cm *ComparisonManager) GetLCSResultsByType(lcsType LCSResultType) []LCSResult {
+	if cm.LCSResults == nil {
+		return nil
+	}
+	return cm.LCSResults.GetByType(lcsType)
+}
+
+// FilterLCSResultsByType filters the LCS results based on the given LCSResultType and returns the filtered results map.
+func (cm *ComparisonManager) FilterLCSResultsByType(lcsType LCSResultType) LCSResultsMap {
+	if cm.LCSResults == nil {
+		return nil
+	}
+	return cm.LCSResults.FilterByType(lcsType)
+}
+
+// GetLCSResultsByComparisonString retrieves LCS results that match the provided comparison string.
+// It returns a slice of LCSResult or nil if no results are available.
+func (cm *ComparisonManager) GetLCSResultsByComparisonString(compStr string) []LCSResult {
+	if cm.LCSResults == nil {
+		return nil
+	}
+	return cm.LCSResults.GetByComparisonString(compStr)
+}
+
+// FilterLCSResultsByComparisonString filters LCS results based on the provided comparison string and returns a filtered map.
+func (cm *ComparisonManager) FilterLCSResultsByComparisonString(compStr string) LCSResultsMap {
+	if cm.LCSResults == nil {
+		return nil
+	}
+	return cm.LCSResults.FilterByComparisonString(compStr)
 }

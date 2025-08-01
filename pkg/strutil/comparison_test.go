@@ -1140,7 +1140,7 @@ func TestShingle(t *testing.T) {
 					WithComparisonManager().
 					Shingle(tt.k).
 					ComparisonManager().
-					ShingleData[ShinglesMap][tt.k]
+					ShingleResults[ShinglesMap][tt.k]
 				if brMap, ok := (*builderResult).(*ShingleMapResult); ok {
 					if (brMap.shingles)[k] == 0 || (brMap.shingles)[k] != v {
 						t.Errorf("Shingle b0 - expected %d - got %d",
@@ -1201,7 +1201,7 @@ func TestShingleSlice(t *testing.T) {
 					*helperResult,
 				)
 			}
-			builderResult := New(tt.input).ShingleSlice(tt.k).ComparisonManager().ShingleData[ShinglesSlice][tt.k]
+			builderResult := New(tt.input).ShingleSlice(tt.k).ComparisonManager().ShingleResults[ShinglesSlice][tt.k]
 			if brSlice, ok := (*builderResult).(*ShingleSliceResult); ok {
 				if !CompareStringSlices(*brSlice.shingles, tt.expected, false) {
 					t.Errorf("ShingleSlice - expected %v - got %v",

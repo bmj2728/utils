@@ -79,7 +79,7 @@ func TestNewComparisonManager(t *testing.T) {
 			cm := NewComparisonManager()
 			if cm.ComparisonResults == nil ||
 				cm.SimilarityResults == nil ||
-				cm.ShingleData == nil ||
+				cm.ShingleResults == nil ||
 				cm.LCSResults == nil {
 				t.Errorf("NewComparisonManager() = %v, want %v", cm, nil)
 			}

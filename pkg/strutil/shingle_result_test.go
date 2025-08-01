@@ -11,7 +11,7 @@ var (
 			Shingle(2).
 			ShingleSlice(2).
 			ComparisonManager().
-			GetShingleData()
+			GetShingleResultsMap()
 
 	shinMapPrntShort    = "Shingle Map (ababababababababa/2):\n2 shingles found\n"
 	shinMapPrntLongOpt1 = "Results for Shingle Map\nWord: ababababababababa\n" +
@@ -29,14 +29,14 @@ var (
 			Shingle(2).
 			ShingleSlice(2).
 			ComparisonManager().
-			GetShingleData()
+			GetShingleResultsMap()
 
 	shinMap2 = New("ooooo").
 			WithComparisonManager().
 			Shingle(2).
 			ShingleSlice(2).
 			ComparisonManager().
-			GetShingleData()
+			GetShingleResultsMap()
 
 	shinMap3 = New("aaaa").
 			WithComparisonManager().
@@ -44,18 +44,18 @@ var (
 			Shingle(2).
 			ShingleSlice(1).
 			ComparisonManager().
-			GetShingleData()
+			GetShingleResultsMap()
 
 	shinMap4 = New("abab").
 			WithComparisonManager().
 			ShingleSlice(1).
 			ComparisonManager().
-			GetShingleData()
+			GetShingleResultsMap()
 
 	shinMap5 = New("none").
 			WithComparisonManager().
 			ComparisonManager().
-			GetShingleData()
+			GetShingleResultsMap()
 )
 
 func TestShingleMapResultGetters(t *testing.T) {
