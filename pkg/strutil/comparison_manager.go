@@ -289,7 +289,8 @@ func (cm *ComparisonManager) GetLCSResultsByComparisonString(compStr string) []L
 	return cm.LCSResults.GetByComparisonString(compStr)
 }
 
-// FilterLCSResultsByComparisonString filters LCS results based on the provided comparison string and returns a filtered map.
+// FilterLCSResultsByComparisonString filters LCS results based on the provided
+// comparison string and returns a filtered map.
 func (cm *ComparisonManager) FilterLCSResultsByComparisonString(compStr string) LCSResultsMap {
 	if cm.LCSResults == nil {
 		return nil
