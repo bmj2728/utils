@@ -18,7 +18,7 @@ var (
 		Similarity("Hello World", QGram).
 		Similarity("Hello World", Hamming).
 		ComparisonManager().
-		GetSimilarityResults()
+		GetSimilarityResultsMap()
 
 	simMap2 = New("Hello, World!").
 		WithComparisonManager().
@@ -35,7 +35,7 @@ var (
 		Similarity("Hello World", QGram).
 		Similarity("Hello World", Hamming).
 		ComparisonManager().
-		GetSimilarityResults()
+		GetSimilarityResultsMap()
 
 	simMap3 = New("Hello, World!").
 		WithComparisonManager().
@@ -52,19 +52,19 @@ var (
 		Similarity("Hello World", QGram).
 		Similarity("Hello World", Hamming).
 		ComparisonManager().
-		GetSimilarityResults()
+		GetSimilarityResultsMap()
 
 	simMap4 = New("Hello, World!").
 		WithComparisonManager().
 		Similarity("Hello World", Levenshtein).
 		Similarity("Hello World", DamerauLevenshtein).
 		ComparisonManager().
-		GetSimilarityResults()
+		GetSimilarityResultsMap()
 
 	simMap5 = New("Hello, World!").
 		WithComparisonManager().
 		ComparisonManager().
-		GetSimilarityResults()
+		GetSimilarityResultsMap()
 )
 
 func TestSimilarityResultsMapTypeCount(t *testing.T) {
@@ -312,14 +312,14 @@ var (
 			Similarity("Hello World", Levenshtein).
 			Similarity("Hello World", JaroWinkler).
 			ComparisonManager().
-			GetSimilarityResults()
+			GetSimilarityResultsMap()
 
 	testSimMap2 = New("Hello, World!").
 			WithComparisonManager().
 			Similarity("Hello World", DamerauLevenshtein).
 			Similarity("Hello World", Cosine).
 			ComparisonManager().
-			GetSimilarityResults()
+			GetSimilarityResultsMap()
 
 	short1 = "***Similarity Results for Levenshtein***\n\n" +
 		"Levenshtein: 0.846154\n\n***Similarity Results for Jaro-Winkler***\n\nJaro-Winkler: 0.969231\n\n"

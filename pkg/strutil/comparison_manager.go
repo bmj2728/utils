@@ -90,14 +90,29 @@ func (cm *ComparisonManager) GetComparisonResultsByString(compStr string) []Comp
 
 // Similarity Results
 
-// GetSimilarityResults retrieves the SimilarityResultsMap, containing score
+// GetSimilarityResultsMap retrieves the SimilarityResultsMap, containing score
 // results organized by algorithm and comparison string.
-func (cm *ComparisonManager) GetSimilarityResults() SimilarityResultsMap {
+func (cm *ComparisonManager) GetSimilarityResultsMap() SimilarityResultsMap {
+	if cm.SimilarityResults == nil {
+		return nil
+	}
 	return cm.SimilarityResults
+}
+
+// CopySimilarityResultsMap returns a copy of the SimilarityResultsMap held by the ComparisonManager instance.
+// If the SimilarityResults map is nil, it returns nil.
+func (cm *ComparisonManager) CopySimilarityResultsMap() SimilarityResultsMap {
+	if cm.SimilarityResults == nil {
+		return nil
+	}
+	return cm.SimilarityResults.GetCopy()
 }
 
 // AddSimilarityResult adds a given SimilarityResult to the SimilarityResultsMap of the ComparisonManager instance.
 func (cm *ComparisonManager) AddSimilarityResult(result SimilarityResult) {
+	if cm.SimilarityResults == nil {
+		cm.SimilarityResults = NewSimilarityResultsMap()
+	}
 	cm.SimilarityResults.Add(result)
 }
 
@@ -105,23 +120,52 @@ func (cm *ComparisonManager) AddSimilarityResult(result SimilarityResult) {
 
 // GetShingleData retrieves the ShingleResultsMap from the ComparisonManager instance.
 func (cm *ComparisonManager) GetShingleData() ShingleResultsMap {
+	if cm.ShingleData == nil {
+		return nil
+	}
 	return cm.ShingleData
+}
+
+// CopyShingleData returns a copy of the ShingleResultsMap if it exists; otherwise, it returns nil.
+func (cm *ComparisonManager) CopyShingleData() ShingleResultsMap {
+	if cm.ShingleData == nil {
+		return nil
+	}
+	return cm.ShingleData.GetCopy()
 }
 
 // AddShingleResult inserts a ShingleResult into the ShingleData map organized by type and n-gram length.
 func (cm *ComparisonManager) AddShingleResult(result ShingleResult) {
+	if cm.ShingleData == nil {
+		cm.ShingleData = NewShingleResultsMap()
+	}
 	cm.ShingleData.Add(result)
 }
 
 // LCS Data
 
-// GetLCSResults retrieves the LCSResultsMap containing LCS results organized by type and input string.
-func (cm *ComparisonManager) GetLCSResults() LCSResultsMap {
+// GetLCSResultsMap retrieves the LCSResultsMap containing LCS results organized by type and input string.
+func (cm *ComparisonManager) GetLCSResultsMap() LCSResultsMap {
+	if cm.LCSResults == nil {
+		return nil
+	}
 	return cm.LCSResults
+}
+
+// CopyLCSResultsMap returns a copy of the LCSResultsMap from the ComparisonManager,
+// or nil if LCSResults is uninitialized.
+func (cm *ComparisonManager) CopyLCSResultsMap() LCSResultsMap {
+	if cm.LCSResults == nil {
+		return nil
+	}
+	return cm.LCSResults.GetCopy()
 }
 
 // AddLCSResult adds an LCSResult to the LCSResults map in the ComparisonManager,
 // organizing it by type and input string.
 func (cm *ComparisonManager) AddLCSResult(result LCSResult) {
+	if cm.LCSResults == nil {
+		cm.LCSResults = NewLCSResultsMap()
+	}
 	cm.LCSResults.Add(result)
 }

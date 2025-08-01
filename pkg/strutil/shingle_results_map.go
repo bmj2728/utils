@@ -78,7 +78,7 @@ func (srm ShingleResultsMap) FilterByType(resType ShingleResultType) ShingleResu
 
 // GetByNGramLength retrieves all ShingleResult instances from the map that match the specified n-gram length.
 func (srm ShingleResultsMap) GetByNGramLength(ngramLength int) []ShingleResult {
-	if len(srm) == 0 {
+	if len(srm) == 0 || ngramLength < 1 {
 		return nil
 	}
 	var results []ShingleResult
@@ -95,7 +95,7 @@ func (srm ShingleResultsMap) GetByNGramLength(ngramLength int) []ShingleResult {
 
 // FilterByNGramLength filters the map by a specified n-gram length and returns a new map containing the results.
 func (srm ShingleResultsMap) FilterByNGramLength(ngramLength int) ShingleResultsMap {
-	if len(srm) == 0 {
+	if len(srm) == 0 || ngramLength < 1 {
 		return nil
 	}
 	results := NewShingleResultsMap()

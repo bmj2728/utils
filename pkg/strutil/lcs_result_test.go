@@ -9,7 +9,7 @@ var (
 		LCSBacktrackAll("With great power comes great responsibility.").
 		LCSDiff("With great power comes great responsibility.").
 		ComparisonManager().
-		GetLCSResults()
+		GetLCSResultsMap()
 	bt1  = lcsAll1[LCSBacktrackWord]["With great power comes great responsibility."]
 	bta1 = lcsAll1[LCSBacktrackWordAll]["With great power comes great responsibility."]
 	ld1  = lcsAll1[LCSDiffSlice]["With great power comes great responsibility."]
@@ -20,7 +20,7 @@ var (
 		LCSBacktrackAll("With great power comes great responsibility.").
 		LCSDiff("With great power comes great responsibility.").
 		ComparisonManager().
-		GetLCSResults()
+		GetLCSResultsMap()
 	bt2  = lcsAll2[LCSBacktrackWord]["With great power comes great responsibility."]
 	bta2 = lcsAll2[LCSBacktrackWordAll]["With great power comes great responsibility."]
 	ld2  = lcsAll2[LCSDiffSlice]["With great power comes great responsibility."]
@@ -31,7 +31,7 @@ var (
 		LCSBacktrackAll("Hello World").
 		LCSDiff("Hello World").
 		ComparisonManager().
-		GetLCSResults()
+		GetLCSResultsMap()
 	bt3 = lcsAll3[LCSBacktrackWord]["Hello World"]
 
 	ld3 = lcsAll3[LCSDiffSlice]["Hello World"]
@@ -116,7 +116,7 @@ func TestLCSResultGetters(t *testing.T) {
 				LCSBacktrackAll(tt.str2).
 				LCSDiff(tt.str2).
 				ComparisonManager().
-				GetLCSResults()[tt.lcsResultType][tt.str2]
+				GetLCSResultsMap()[tt.lcsResultType][tt.str2]
 			s1, s2 := res.GetStrings()
 			if res.GetType() != tt.lcsResultType ||
 				res.GetTypeName() != tt.lcsResultType.String() ||
