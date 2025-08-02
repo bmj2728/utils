@@ -65,12 +65,6 @@ var (
 	// ErrNilScore is returned when the expected score is nil but no specific error is associated.
 	ErrNilScore = errors.New("score is nil")
 
-	// ErrNoShinglesFound indicates that no shingles were found during the processing of the input string.
-	ErrNoShinglesFound = errors.New("no shingles found")
-
-	// ErrAccessingShingleResult indicates an error occurred while accessing the shingle result.
-	ErrAccessingShingleResult = errors.New("error accessing shingle result")
-
 	// ErrInvalidHistoryIndex indicates that the provided index is out of bounds for the history collection.
 	ErrInvalidHistoryIndex = errors.New("invalid history index")
 
@@ -80,7 +74,7 @@ var (
 	// ErrHistoryIsEmpty indicates that a history operation was attempted on an empty history.
 	ErrHistoryIsEmpty = errors.New("history is empty")
 
-	// ErrInvalidNgramLength indicates that the provided ngram length is invalid or out of range.
+	// ErrInvalidNgramMap indicates that the provided ngram map is invalid.
 	ErrInvalidNgramMap = errors.New("invalid ngram map")
 )
 
