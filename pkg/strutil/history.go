@@ -3,12 +3,6 @@ package strutil
 import "fmt"
 
 // StringHistory represents a collection of string values used to track the history of
-// string changes or operations.
-/*
-[
-"Hello
-]
-*/
 type StringHistory []string
 
 // NewStringHistory creates and returns a new, empty StringHistory instance.
