@@ -57,12 +57,12 @@ func (sh *StringHistory) GetByIndex(index int) (string, error) {
 func formatHistoryOutput(history StringHistory, verbose bool) string {
 	output := ""
 	if verbose {
-		output += fmt.Sprintf("\nHistory: \n")
+		output += "\nHistory: \n"
 		for seq, str := range history {
 			output += fmt.Sprintf("%d: %s\n", seq+1, str)
 		}
 	} else {
-		output += fmt.Sprintf("\nHistory: \n")
+		output += "\nHistory: \n"
 		for i, str := range history {
 			if i != len(history)-1 {
 				output += fmt.Sprintf("%s, ", str)

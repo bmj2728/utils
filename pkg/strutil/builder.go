@@ -20,15 +20,15 @@ type StringBuilder struct {
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
 	if sb.err != nil {
-		fmt.Printf("%s", sb.formatOutput())
+		fmt.Printf("%s\n", sb.formatOutput())
 		return sb
 	}
-	fmt.Printf("%s", sb.formatOutput())
+	fmt.Printf("%s\n", sb.formatOutput())
 	return sb
 }
 
 func (sb *StringBuilder) formatOutput() string {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb.err.Error()
 	}
 	return sb.value
