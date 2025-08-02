@@ -616,7 +616,7 @@ func TestBuilderSetterValue(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.input.SetValue(tt.setString).String() != tt.expected {
+			if tt.input.setValue(tt.setString).String() != tt.expected {
 				t.Errorf("Set() = %q, expected %q", tt.input.String(), tt.expected)
 			}
 		})
@@ -625,21 +625,27 @@ func TestBuilderSetterValue(t *testing.T) {
 
 func TestBuilderSetterError(t *testing.T) {
 	tests := []struct {
-		name     string
-		input    *StringBuilder
-		setError error
-		expected error
+		name        string
+		input       *StringBuilder
+		setError    error
+		expectedErr error
+		isFatal     bool
+		expected    string
 	}{
-		{"Set", New("Hello World"), ErrUnknownError, ErrUnknownError},
-		{"SetEmpty", New("Hello World"), ErrNoSplitLengthSet, ErrNoSplitLengthSet},
-		{"SetUnempty", New(""), ErrInvalidEmpty, ErrInvalidEmpty},
+		{"Set", New("Hello World"), ErrUnknownError, ErrUnknownError, false, "Hello World"},
+		{"Set", New("Hello World"), ErrNoSplitLengthSet, ErrNoSplitLengthSet, false, "Hello World"},
+		{"Set", New("Hello World"), ErrInvalidEmpty, ErrInvalidEmpty, false, "Hello World"},
+		{"Set", New("Hello World"), ErrNoSplitLengthSet, ErrNoSplitLengthSet, true, ""},
+		{"Set", New("Hello World"), ErrInvalidEmpty, ErrInvalidEmpty, true, ""},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if !errors.Is(tt.input.SetError(tt.setError).Error(), tt.expected) {
-				t.Errorf("Set() = %q, expected %q", tt.input.String(), tt.expected)
+			if !errors.Is(tt.input.setError(tt.setError, tt.isFatal).Error(), tt.expectedErr) ||
+				tt.input.String() != tt.expected {
+				t.Errorf("Set() = %q, expected %q", tt.input.String(), tt.expectedErr)
 			}
+
 		})
 	}
 }

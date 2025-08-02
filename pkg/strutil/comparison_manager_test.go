@@ -159,7 +159,8 @@ func TestComparisonManager_AddComparisonResult(t *testing.T) {
 	}
 	for range tests {
 		if len(sb.GetComparisonManager().ComparisonResults.GetByType(LevDist)) != 100 {
-			t.Errorf("GetComparisonManager.AddComparisonResult() = %v, want %v", len(sb.GetComparisonManager().ComparisonResults), 100)
+			t.Errorf("GetComparisonManager.AddComparisonResult() = %v, want %v",
+				len(sb.GetComparisonManager().ComparisonResults), 100)
 		}
 	}
 }

@@ -70,6 +70,15 @@ var (
 
 	// ErrAccessingShingleResult indicates an error occurred while accessing the shingle result.
 	ErrAccessingShingleResult = errors.New("error accessing shingle result")
+
+	// ErrInvalidHistoryIndex indicates that the provided index is out of bounds for the history collection.
+	ErrInvalidHistoryIndex = errors.New("invalid history index")
+
+	// ErrHistoryNotInitialized indicates that the history has not been initialized prior to use.
+	ErrHistoryNotInitialized = errors.New("history not initialized")
+
+	// ErrHistoryIsEmpty indicates that a history operation was attempted on an empty history.
+	ErrHistoryIsEmpty = errors.New("history is empty")
 )
 
 // compareErrors compares two error values for equality by checking their string representations.

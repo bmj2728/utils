@@ -1,6 +1,9 @@
 package strutil
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // StringBuilder Type & Core Methods
 type StringBuilder struct {
@@ -11,11 +14,8 @@ type StringBuilder struct {
 }
 
 // TODO builder logic to be updated re: error handling
-// new design - add field to struct - history*** - probably a custom type wrapping a []string
-// make it opt-in for updates with a WithHistory, otherwise always will be history[0] for original
 // fatal errors: transforms cause undefined behavior if incomplete and security functions
 // non-fatal errors: other errors e.g. Hamming Dist on unequal lengths
-// fatal will join errors AND set value to "", while not changing original
 
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
@@ -57,16 +57,17 @@ func (sb *StringBuilder) WithHistory() *StringBuilder {
 	if sb.history == nil {
 		sb.history = NewStringHistory()
 	}
-	sb.UpdateHistory(sb.value)
+	sb.updateHistory(sb.value)
 	return sb
 }
 
+// GetHistory returns the StringHistory associated with the StringBuilder, which tracks all string modifications.
 func (sb *StringBuilder) GetHistory() *StringHistory {
 	return sb.history
 }
 
-// UpdateHistory appends a string to the history if it exists and returns the updated StringBuilder instance.
-func (sb *StringBuilder) UpdateHistory(s string) *StringBuilder {
+// updateHistory appends a string to the history if it exists and returns the updated StringBuilder instance.
+func (sb *StringBuilder) updateHistory(s string) *StringBuilder {
 	if sb.history != nil {
 		sb.history.Add(s)
 	}
@@ -91,14 +92,100 @@ func (sb *StringBuilder) Result() (string, *ComparisonManager, error) {
 	return sb.value, sb.comparisonManager, sb.err
 }
 
-// SetValue sets the value of the StringBuilder to the provided string and returns the updated StringBuilder instance.
-func (sb *StringBuilder) SetValue(value string) *StringBuilder {
+// setValue sets the value of the StringBuilder to the provided string and returns the updated StringBuilder instance.
+func (sb *StringBuilder) setValue(value string) *StringBuilder {
 	sb.value = value
 	return sb
 }
 
-// SetError sets the error field in the StringBuilder and returns the updated StringBuilder instance.
-func (sb *StringBuilder) SetError(err error) *StringBuilder {
+// setError sets the error field in the StringBuilder and returns the updated StringBuilder instance.
+func (sb *StringBuilder) setError(err error, fatal bool) *StringBuilder {
 	sb.err = err
+	if fatal {
+		sb.value = ""
+	}
+	return sb
+}
+
+// shouldContinueProcessing determines whether processing should continue based on the state of the error and the value.
+func (sb *StringBuilder) shouldContinueProcessing() bool {
+	if sb.err != nil {
+		if sb.value == "" {
+			return false
+		}
+	}
+	return true
+}
+
+// RevertToOriginal restores the StringBuilder value to its initial
+// state based on its history or sets an error if unresolved.
+func (sb *StringBuilder) RevertToOriginal() *StringBuilder {
+	if sb.history != nil {
+		orig, err := sb.history.GetOriginalValue()
+		if err == nil {
+			sb.value = orig
+		} else {
+			// fatal - reversion failure
+			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
+		}
+	} else {
+		sb.setError(ErrHistoryNotInitialized, false)
+	}
+	return sb
+}
+
+// RevertToPrevious restores the StringBuilder's value to the previous entry in history or sets an error if unavailable.
+func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
+	if sb.history != nil {
+		prev, err := sb.history.GetPreviousValue()
+		if err == nil {
+			// this throws an error if there is only an original value
+			sb.value = prev
+		} else {
+			// fatal - reversion failed
+			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
+		}
+	} else {
+		sb.setError(ErrHistoryNotInitialized, false)
+	}
+	return sb
+}
+
+// RevertToIndex reverts the StringBuilder's value to the state stored at the specified history index.
+// Returns an error if the index is invalid or if the history is not initialized.
+// Sets an error in the StringBuilder if issues occur during the operation.
+func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
+	if sb.history != nil {
+		ind, err := sb.history.GetByIndex(index)
+		if err == nil {
+			// throws error when invalid index
+			sb.value = ind
+		} else {
+			// fatal - reversion has failed
+			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
+		}
+	} else {
+		sb.setError(ErrHistoryNotInitialized, false)
+	}
+	return sb
+}
+
+// RevertWithFunction reverts the StringBuilder to a specific state based on the
+// index returned by the provided function.
+// The function receives the current StringBuilder instance and must return an index to revert to.
+// If history is not initialized, it sets an error indicating the issue and takes no action.
+// Returns the modified StringBuilder instance.
+func (sb *StringBuilder) RevertWithFunction(fn func(history *StringHistory) int) *StringBuilder {
+	if sb.history != nil {
+		index := fn(sb.history)
+		if index >= 0 {
+			sb.RevertToIndex(index)
+		} else {
+			// fatal when expected revert fails
+			sb.setError(ErrInvalidHistoryIndex, true)
+		}
+	} else {
+		sb.setError(ErrHistoryNotInitialized, false)
+	}
 	return sb
 }
