@@ -79,6 +79,9 @@ var (
 
 	// ErrHistoryIsEmpty indicates that a history operation was attempted on an empty history.
 	ErrHistoryIsEmpty = errors.New("history is empty")
+
+	// ErrInvalidNgramLength indicates that the provided ngram length is invalid or out of range.
+	ErrInvalidNgramMap = errors.New("invalid ngram map")
 )
 
 // compareErrors compares two error values for equality by checking their string representations.

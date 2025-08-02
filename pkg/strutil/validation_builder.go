@@ -3,22 +3,22 @@ package strutil
 // RequireEmail validates if the StringBuilder's value is a valid email format,
 // sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireEmail() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !isValidEmail(sb.value) {
-		sb.err = ErrInvalidEmail
+		return sb.setError(ErrInvalidEmail, true)
 	}
 	return sb
 }
 
 // RequireDomain ensures that the value of the StringBuilder is a valid domain, setting an error if validation fails.
 func (sb *StringBuilder) RequireDomain() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !isValidDomain(sb.value) {
-		sb.err = ErrInvalidDomain
+		return sb.setError(ErrInvalidDomain, true)
 	}
 	return sb
 }
@@ -26,11 +26,11 @@ func (sb *StringBuilder) RequireDomain() *StringBuilder {
 // RequireURL validates if the StringBuilder's value is a properly formatted URL,
 // sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireURL() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !isValidURL(sb.value) {
-		sb.err = ErrInvalidURL
+		return sb.setError(ErrInvalidURL, true)
 	}
 	return sb
 }
@@ -38,11 +38,11 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 // RequireUUID validates whether the StringBuilder's value conforms to a valid UUID format,
 // sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireUUID() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !isValidUUID(sb.value) {
-		sb.err = ErrInvalidUUID
+		return sb.setError(ErrInvalidUUID, true)
 	}
 	return sb
 }
@@ -50,27 +50,27 @@ func (sb *StringBuilder) RequireUUID() *StringBuilder {
 // RequireLength validates that the StringBuilder's value length is within the specified min and max range.
 // Sets an error if invalid.
 func (sb *StringBuilder) RequireLength(min, max int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if min < 0 || max < 0 {
-		sb.err = ErrInvalidLengthRange
-		return sb
+		return sb.setError(ErrInvalidLengthRange, true)
+
 	} else if min > max {
-		sb.err = ErrInvalidLengthRange
+		return sb.setError(ErrInvalidLengthRange, true)
 	} else if !isLengthInRange(sb.value, min, max) {
-		sb.err = ErrInvalidLength
+		return sb.setError(ErrInvalidLength, true)
 	}
 	return sb
 }
 
 // RequireNotEmpty ensures the StringBuilder's value is not empty, sets an error if it is, and returns the instance.
 func (sb *StringBuilder) RequireNotEmpty() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if isEmpty(sb.value) {
-		sb.err = ErrInvalidEmpty
+		return sb.setError(ErrInvalidEmpty, true)
 	}
 	return sb
 }
@@ -78,11 +78,11 @@ func (sb *StringBuilder) RequireNotEmpty() *StringBuilder {
 // RequireNotEmptyNormalized ensures the StringBuilder's value is not empty after normalizing whitespace,
 // setting an error otherwise.
 func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if isEmptyNormalized(sb.value) {
-		sb.err = ErrInvalidEmptyAfterNormalization
+		return sb.setError(ErrInvalidEmptyAfterNormalization, true)
 	}
 	return sb
 }
@@ -90,22 +90,22 @@ func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
 // RequireAlphaNumeric ensures the StringBuilder's value contains only alphanumeric characters,
 // setting an error if invalid.
 func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !isAlphaNumericString(sb.value) {
-		sb.err = ErrInvalidNotAlphaNumeric
+		return sb.setError(ErrInvalidNotAlphaNumeric, true)
 	}
 	return sb
 }
 
 // RequireAlpha ensures the StringBuilder's value contains only alphabetic characters, setting an error if invalid.
 func (sb *StringBuilder) RequireAlpha() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !isAlphaString(sb.value) {
-		sb.err = ErrInvalidNotAlpha
+		return sb.setError(ErrInvalidNotAlpha, true)
 	}
 	return sb
 }
@@ -113,11 +113,11 @@ func (sb *StringBuilder) RequireAlpha() *StringBuilder {
 // RequireNormalizedUnicode ensures the string is normalized according to the specified Unicode normalization format.
 // If not, it sets an error state in the StringBuilder and returns itself for chaining.
 func (sb *StringBuilder) RequireNormalizedUnicode(format NormalizationFormat) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !isNormalizedUnicode(sb.value, format) {
-		sb.err = ErrNotNormalizedUnicode
+		return sb.setError(ErrNotNormalizedUnicode, true)
 	}
 	return sb
 }

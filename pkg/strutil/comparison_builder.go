@@ -12,13 +12,13 @@ func CompareStringBuilderSlices(a, b []StringBuilder, nulls bool) bool {
 // It tracks and stores the result using a ComparisonManager.
 // Returns the StringBuilder instance, enabling method chaining.
 func (sb *StringBuilder) LevenshteinDistance(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	ld := levenshteinDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(ld)
 	if ld.err != nil {
-		sb.err = ld.err
+		return sb.setError(ld.err, false)
 	}
 	return sb
 }
@@ -28,13 +28,13 @@ func (sb *StringBuilder) LevenshteinDistance(other string) *StringBuilder {
 // It calculates the minimum transformation operations including insertion, deletion, substitution, and transposition.
 // The result is stored in the ComparisonManager of the StringBuilder instance.
 func (sb *StringBuilder) DamerauLevenshteinDistance(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	dld := damerauLevenshteinDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(dld)
 	if dld.err != nil {
-		sb.err = dld.err
+		return sb.setError(dld.err, false)
 	}
 	return sb
 }
@@ -45,13 +45,13 @@ func (sb *StringBuilder) DamerauLevenshteinDistance(other string) *StringBuilder
 // result in the ComparisonManager.
 // Returns the StringBuilder instance for chaining or error handling if an error exists in the current object.
 func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	osadld := osaDamerauLevenshteinDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(osadld)
 	if osadld.err != nil {
-		sb.err = osadld.err
+		return sb.setError(osadld.err, false)
 	}
 	return sb
 }
@@ -60,13 +60,13 @@ func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) *StringBuil
 // It updates the comparison manager with the result of the LCS computation and returns the updated StringBuilder.
 // If an error exists in the StringBuilder, it returns itself without performing computations.
 func (sb *StringBuilder) LCS(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	lcs := lcs(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(lcs)
 	if lcs.err != nil {
-		sb.err = lcs.err
+		return sb.setError(lcs.err, false)
 	}
 	return sb
 }
@@ -74,13 +74,13 @@ func (sb *StringBuilder) LCS(other string) *StringBuilder {
 // LCSEditDistance calculates the edit distance based on the Longest Common Subsequence (LCS) between two strings.
 // It updates the ComparisonManager of the StringBuilder instance with the result and returns the StringBuilder.
 func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	l := lcsEditDistance(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(l)
 	if l.err != nil {
-		sb.err = l.err
+		return sb.setError(l.err, false)
 	}
 	return sb
 }
@@ -89,13 +89,13 @@ func (sb *StringBuilder) LCSEditDistance(other string) *StringBuilder {
 // It updates the StringBuilder's ComparisonManager with the LCS result and handles potential errors during computation.
 // Returns the updated StringBuilder instance.
 func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	lb := lcsBacktrack(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lb)
 	if lb.err != nil {
-		sb.err = lb.err
+		return sb.setError(lb.err, false)
 	}
 	return sb
 }
@@ -104,13 +104,13 @@ func (sb *StringBuilder) LCSBacktrack(other string) *StringBuilder {
 // It updates the ComparisonManager with the computed LCS result.
 // If an error occurs during computation, it propagates the error state to the StringBuilder.
 func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	lba := lcsBacktrackAll(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddLCSResult(*lba)
 	if lba.err != nil {
-		sb.err = lba.err
+		return sb.setError(lba.err, false)
 	}
 	return sb
 }
@@ -120,13 +120,13 @@ func (sb *StringBuilder) LCSBacktrackAll(other string) *StringBuilder {
 // It updates the comparison manager with the LCS result and returns the updated StringBuilder instance.
 // If an error occurs during the computation, it sets the error on the StringBuilder instance.
 func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	ld := lcsDiff(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddLCSResult(*ld)
 	if ld.err != nil {
-		sb.err = ld.err
+		return sb.setError(ld.err, false)
 	}
 	return sb
 }
@@ -135,16 +135,13 @@ func (sb *StringBuilder) LCSDiff(other string) *StringBuilder {
 // string, updating comparison data.
 // Returns the StringBuilder instance. If an error occurs, it sets the internal error and preserves the original state.
 func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	dist := hammingDistance(sb.value, other)
-	if dist.err != nil {
-		sb.err = dist.err
-	}
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(dist)
 	if dist.err != nil {
-		sb.err = dist.err
+		return sb.setError(dist.err, false)
 	}
 	return sb
 }
@@ -157,13 +154,13 @@ func (sb *StringBuilder) HammingDistance(other string) *StringBuilder {
 //
 // Additional Info: https://rosettacode.org/wiki/Jaro_similarity
 func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	js := jaroSimilarity(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(js)
 	if js.err != nil {
-		sb.err = js.err
+		return sb.setError(js.err, false)
 	}
 	return sb
 }
@@ -176,13 +173,13 @@ func (sb *StringBuilder) JaroSimilarity(other string) *StringBuilder {
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance#Jaro%E2%80%93Winkler_similarity
 func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	jws := jaroWinklerSimilarity(sb.value, other)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(jws)
 	if jws.err != nil {
-		sb.err = jws.err
+		return sb.setError(jws.err, false)
 	}
 	return sb
 }
@@ -196,13 +193,13 @@ func (sb *StringBuilder) JaroWinklerSimilarity(other string) *StringBuilder {
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaccard_index
 func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	js := jaccardSimilarity(sb.value, other, splitLength)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(js)
 	if js.err != nil {
-		sb.err = js.err
+		return sb.setError(js.err, false)
 	}
 	return sb
 }
@@ -216,13 +213,13 @@ func (sb *StringBuilder) JaccardSimilarity(other string, splitLength int) *Strin
 //
 // Additional Info: https://en.wikipedia.org/wiki/Cosine_similarity/
 func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	cs := cosineSimilarity(sb.value, other, splitLength)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(cs)
 	if cs.err != nil {
-		sb.err = cs.err
+		return sb.setError(cs.err, false)
 	}
 	return sb
 }
@@ -235,13 +232,13 @@ func (sb *StringBuilder) CosineSimilarity(other string, splitLength int) *String
 //
 // Additional Info: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
 func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	sdc := sorensenDiceCoefficient(sb.value, other, splitLength)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(sdc)
 	if sdc.err != nil {
-		sb.err = sdc.err
+		return sb.setError(sdc.err, false)
 	}
 	return sb
 }
@@ -250,13 +247,13 @@ func (sb *StringBuilder) SorensenDiceCoefficient(other string, splitLength int) 
 // Stores the result in the ComparisonManager for further access or management.
 // Returns the updated StringBuilder instance.
 func (sb *StringBuilder) QgramDistance(other string, q int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	qd := qgramDistance(sb.value, other, q)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(qd)
 	if qd.err != nil {
-		sb.err = qd.err
+		return sb.setError(qd.err, false)
 	}
 	return sb
 }
@@ -266,23 +263,36 @@ func (sb *StringBuilder) QgramDistance(other string, q int) *StringBuilder {
 // It uses a custom comparison name, storing the result in the ComparisonManager if applicable,
 // and returns the StringBuilder.
 func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, customName string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
+	// get ngram length of other map
 	var k int
 	for n := range nmapOther {
 		k = len(n)
+		if k < 1 {
+			return sb.setError(ErrInvalidNgramMap, false)
+		}
 		break
 	}
-	if sb.comparisonManager == nil || sb.comparisonManager.ShingleResults[ShinglesMap][k] == nil {
+	// if there's no comp manager or matching shingle map - we add the manager, shingles and re-run
+	if sb.comparisonManager == nil {
 		return sb.WithComparisonManager().Shingle(k).QgramDistanceCustomNgram(nmapOther, customName)
+	} else if sb.comparisonManager.ShingleResults[ShinglesMap][k] == nil {
+		sb.Shingle(k)
 	} else {
+		// get the record and cast it to the correct map type
 		sr := sb.comparisonManager.ShingleResults[ShinglesMap][k]
 		if shingleMap, ok := (*sr).(*ShingleMapResult); ok {
+			if shingleMap.err != nil {
+				return sb.setError(shingleMap.err, false)
+			}
+			//run the comparison and add results
 			qdc := qgramDistanceCustomNgram(shingleMap.shingles, nmapOther, customName)
 			sb.WithComparisonManager().comparisonManager.AddComparisonResult(qdc)
 			if qdc.err != nil {
-				sb.err = qdc.err
+				//return with error if exists
+				return sb.setError(qdc.err, false)
 			}
 		}
 	}
@@ -293,13 +303,13 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, cust
 // and the given string using a specified q size.
 // It updates the comparison data with the calculated score and returns the StringBuilder instance.
 func (sb *StringBuilder) QgramSimilarity(other string, q int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	qs := qgramSimilarity(sb.value, other, q)
 	sb.WithComparisonManager().comparisonManager.AddComparisonResult(qs)
 	if qs.err != nil {
-		sb.err = qs.err
+		return sb.setError(qs.err, false)
 	}
 	return sb
 }
@@ -307,26 +317,26 @@ func (sb *StringBuilder) QgramSimilarity(other string, q int) *StringBuilder {
 // Shingle generates k-shingles for the current string value and stores the result using the ComparisonManager.
 // Updates the error state if shingle generation fails. Returns the updated StringBuilder instance.
 func (sb *StringBuilder) Shingle(k int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	shingle := shingle(sb.value, k)
 	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	if shingle.err != nil {
-		sb.err = shingle.err
+		return sb.setError(shingle.err, false)
 	}
 	return sb
 }
 
 // ShingleSlice processes the string to generate k-length shingles, manages errors, and updates the ComparisonManager.
 func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	shingle := shingleSlice(sb.value, k)
 	sb.WithComparisonManager().comparisonManager.AddShingleResult(shingle)
 	if shingle.err != nil {
-		sb.err = shingle.err
+		return sb.setError(shingle.err, false)
 	}
 	return sb
 }
@@ -335,13 +345,13 @@ func (sb *StringBuilder) ShingleSlice(k int) *StringBuilder {
 // Updates the ComparisonManager with the resulting score data and maintains the chainable state of StringBuilder.
 // If an error occurs during computation, it sets the error state in the StringBuilder and returns itself.
 func (sb *StringBuilder) Similarity(other string, algorithm Algorithm) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	sr := similarity(sb.value, other, algorithm)
 	sb.WithComparisonManager().comparisonManager.AddSimilarityResult(*sr)
 	if sr.err != nil {
-		sb.err = sr.err
+		return sb.setError(sr.err, false)
 	}
 	return sb
 }
