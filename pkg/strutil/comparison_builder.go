@@ -279,7 +279,7 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, cust
 	if sb.comparisonManager == nil {
 		return sb.WithComparisonManager().Shingle(k).QgramDistanceCustomNgram(nmapOther, customName)
 	} else if sb.comparisonManager.ShingleResults[ShinglesMap][k] == nil {
-		sb.Shingle(k)
+		sb.Shingle(k).QgramDistanceCustomNgram(nmapOther, customName)
 	} else {
 		// get the record and cast it to the correct map type
 		sr := sb.comparisonManager.ShingleResults[ShinglesMap][k]

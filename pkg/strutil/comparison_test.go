@@ -1017,8 +1017,9 @@ func TestQgramDistanceCustomNgramBuilder(t *testing.T) {
 			if tt.input1 == nil {
 				tt.input1 = New("hello").WithComparisonManager().Shingle(2)
 			}
-			builderResult := tt.input1.WithComparisonManager().QgramDistanceCustomNgram(tt.input2, "Test").comparisonManager
-			if brInt, ok := (*builderResult.ComparisonResults[QGramDistCust]["Test"]).(*ComparisonResultInt); ok {
+			builderResult := tt.input1.WithComparisonManager().QgramDistanceCustomNgram(tt.input2, "Test").GetComparisonManager()
+			brInt, ok := (*builderResult.ComparisonResults[QGramDistCust]["Test"]).(*ComparisonResultInt)
+			if ok {
 				if brInt.score != nil && *brInt.score != tt.expected {
 					t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
 						tt.expected,
