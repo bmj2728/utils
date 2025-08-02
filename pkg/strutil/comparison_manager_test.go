@@ -33,7 +33,7 @@ var (
 			Similarity("Hello World", Lcs).
 			Similarity("Hello World", QGram).
 			Similarity("Hello World", Hamming).
-			ComparisonManager()
+			GetComparisonManager()
 
 	testMan2 = New("Hello, World!").
 			WithComparisonManager().
@@ -65,7 +65,7 @@ var (
 			Similarity("Hello World", SorensenDice).
 			Similarity("Hello World", Lcs).
 			Similarity("Hello World", Hamming).
-			ComparisonManager()
+			GetComparisonManager()
 
 	testMan3 = New("Hello, World!").
 			WithComparisonManager().
@@ -97,7 +97,7 @@ var (
 			Similarity("Hello World", SorensenDice).
 			Similarity("Hello World", Lcs).
 			Similarity("Hello World", Hamming).
-			ComparisonManager()
+			GetComparisonManager()
 
 	testMan4 = New("Hello, World!").
 			WithComparisonManager().
@@ -107,11 +107,11 @@ var (
 			LCSDiff("Hello World").
 			Similarity("Hello World", Levenshtein).
 			Similarity("Hello World", Cosine).
-			ComparisonManager()
+			GetComparisonManager()
 
 	testMan5 = New("Hello, World!").
 			WithComparisonManager().
-			ComparisonManager()
+			GetComparisonManager()
 )
 
 func TestNewComparisonManager(t *testing.T) {
@@ -158,8 +158,8 @@ func TestComparisonManager_AddComparisonResult(t *testing.T) {
 		i++
 	}
 	for range tests {
-		if len(sb.ComparisonManager().ComparisonResults.GetByType(LevDist)) != 100 {
-			t.Errorf("ComparisonManager.AddComparisonResult() = %v, want %v", len(sb.ComparisonManager().ComparisonResults), 100)
+		if len(sb.GetComparisonManager().ComparisonResults.GetByType(LevDist)) != 100 {
+			t.Errorf("GetComparisonManager.AddComparisonResult() = %v, want %v", len(sb.GetComparisonManager().ComparisonResults), 100)
 		}
 	}
 }

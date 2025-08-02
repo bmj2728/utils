@@ -17,7 +17,7 @@ var (
 		Similarity("Hello World", SorensenDice).
 		Similarity("Hello World", QGram).
 		Similarity("Hello World", Hamming).
-		ComparisonManager().
+		GetComparisonManager().
 		GetSimilarityResultsMap()
 
 	simMap2 = New("Hello, World!").
@@ -34,7 +34,7 @@ var (
 		Similarity("Hello World", SorensenDice).
 		Similarity("Hello World", QGram).
 		Similarity("Hello World", Hamming).
-		ComparisonManager().
+		GetComparisonManager().
 		GetSimilarityResultsMap()
 
 	simMap3 = New("Hello, World!").
@@ -51,19 +51,19 @@ var (
 		Similarity("Hello World", SorensenDice).
 		Similarity("Hello World", QGram).
 		Similarity("Hello World", Hamming).
-		ComparisonManager().
+		GetComparisonManager().
 		GetSimilarityResultsMap()
 
 	simMap4 = New("Hello, World!").
 		WithComparisonManager().
 		Similarity("Hello World", Levenshtein).
 		Similarity("Hello World", DamerauLevenshtein).
-		ComparisonManager().
+		GetComparisonManager().
 		GetSimilarityResultsMap()
 
 	simMap5 = New("Hello, World!").
 		WithComparisonManager().
-		ComparisonManager().
+		GetComparisonManager().
 		GetSimilarityResultsMap()
 )
 
@@ -311,14 +311,14 @@ var (
 			WithComparisonManager().
 			Similarity("Hello World", Levenshtein).
 			Similarity("Hello World", JaroWinkler).
-			ComparisonManager().
+			GetComparisonManager().
 			GetSimilarityResultsMap()
 
 	testSimMap2 = New("Hello, World!").
 			WithComparisonManager().
 			Similarity("Hello World", DamerauLevenshtein).
 			Similarity("Hello World", Cosine).
-			ComparisonManager().
+			GetComparisonManager().
 			GetSimilarityResultsMap()
 
 	short1 = "***Similarity Results for Levenshtein***\n\n" +

@@ -10,7 +10,7 @@ var (
 			WithComparisonManager().
 			Shingle(2).
 			ShingleSlice(2).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMapPrntShort    = "Shingle Map (ababababababababa/2):\n2 shingles found\n"
@@ -28,14 +28,14 @@ var (
 			WithComparisonManager().
 			Shingle(2).
 			ShingleSlice(2).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMap2 = New("ooooo").
 			WithComparisonManager().
 			Shingle(2).
 			ShingleSlice(2).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMap3 = New("aaaa").
@@ -43,18 +43,18 @@ var (
 			Shingle(1).
 			Shingle(2).
 			ShingleSlice(1).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMap4 = New("abab").
 			WithComparisonManager().
 			ShingleSlice(1).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMap5 = New("none").
 			WithComparisonManager().
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 )
 

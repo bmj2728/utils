@@ -54,7 +54,7 @@ func TestSimilarityResultGetters(t *testing.T) {
 			res := *New(tt.input).
 				WithComparisonManager().
 				Similarity(tt.compare, tt.algo).
-				ComparisonManager().
+				GetComparisonManager().
 				GetSimilarityResultsMap()[tt.algo][tt.compare]
 			s1, s2 := res.GetStrings()
 			score, err := res.GetScore()
@@ -102,7 +102,7 @@ var (
 				Similarity("Hello World", SorensenDice).
 				Similarity("Hello World", Lcs).
 				Similarity("Hello World", QGram).
-				ComparisonManager().
+				GetComparisonManager().
 				GetSimilarityResultsMap()
 
 	fullSimilarityResults2 = New("Hi, World!").
@@ -118,7 +118,7 @@ var (
 				Similarity("Hello World", Lcs).
 				Similarity("Hello World", QGram).
 				Similarity("Hello World", Hamming).
-				ComparisonManager().
+				GetComparisonManager().
 				GetSimilarityResultsMap()
 )
 
@@ -179,7 +179,7 @@ func TestSimilarityResultFormatOutput(t *testing.T) {
 			res := *New(tt.input).
 				WithComparisonManager().
 				Similarity(tt.compare, tt.algo).
-				ComparisonManager().
+				GetComparisonManager().
 				GetSimilarityResultsMap()[tt.algo][tt.compare]
 			if formatSimilarityResultOutput(&res, tt.verbose) != tt.expected {
 				t.Errorf("SimilarityResultFormatOutput() = %s, want %s",

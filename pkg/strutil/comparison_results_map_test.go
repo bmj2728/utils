@@ -16,7 +16,7 @@ var (
 			JaccardSimilarity("Hello World", 3).
 			CosineSimilarity("Hello World", 3).
 			SorensenDiceCoefficient("Hello World", 3).
-			ComparisonManager().
+			GetComparisonManager().
 			GetComparisonResultsMap()
 
 	testMap2 = New("Hello, World!").
@@ -32,7 +32,7 @@ var (
 			JaccardSimilarity("Hello World", 3).
 			CosineSimilarity("Hello World", 3).
 			SorensenDiceCoefficient("Hello World", 3).
-			ComparisonManager().
+			GetComparisonManager().
 			GetComparisonResultsMap()
 
 	testMap3 = New("Hello, World!").
@@ -48,19 +48,19 @@ var (
 			JaccardSimilarity("Hello World", 3).
 			CosineSimilarity("Hello World", 3).
 			SorensenDiceCoefficient("Hello World", 3).
-			ComparisonManager().
+			GetComparisonManager().
 			GetComparisonResultsMap()
 
 	testMap4 = New("Hello, World!").
 			WithComparisonManager().
 			LevenshteinDistance("Hello World").
 			DamerauLevenshteinDistance("Hello World").
-			ComparisonManager().
+			GetComparisonManager().
 			GetComparisonResultsMap()
 
 	testMap5 = New("Hello, World!").
 			WithComparisonManager().
-			ComparisonManager().
+			GetComparisonManager().
 			GetComparisonResultsMap()
 )
 
@@ -338,14 +338,14 @@ var (
 			WithComparisonManager().
 			LevenshteinDistance("Hello World").
 			SorensenDiceCoefficient("Hello World", 3).
-			ComparisonManager().
+			GetComparisonManager().
 			GetComparisonResultsMap()
 
 	testFormatMap2 = New("Hello, World!").
 			WithComparisonManager().
 			DamerauLevenshteinDistance("Hello World").
 			CosineSimilarity("Hello World", 3).
-			ComparisonManager().
+			GetComparisonManager().
 			GetComparisonResultsMap()
 )
 

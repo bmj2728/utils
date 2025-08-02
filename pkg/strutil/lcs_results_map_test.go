@@ -8,7 +8,7 @@ var (
 		LCSBacktrack("With great power comes great responsibility.").
 		LCSBacktrackAll("With great power comes great responsibility.").
 		LCSDiff("With great power comes great responsibility.").
-		ComparisonManager().
+		GetComparisonManager().
 		GetLCSResultsMap()
 
 	lcsMap2 = New("With great power there must also come great responsibility.").
@@ -16,7 +16,7 @@ var (
 		LCSBacktrack("With great power comes great responsibility.").
 		LCSBacktrackAll("With great power comes great responsibility.").
 		LCSDiff("With great power comes great responsibility.").
-		ComparisonManager().
+		GetComparisonManager().
 		GetLCSResultsMap()
 
 	lcsMap3 = New("Hello, World!").
@@ -25,19 +25,19 @@ var (
 		LCSBacktrack("Hello Whirled").
 		LCSBacktrackAll("Hello World").
 		LCSDiff("Hello World").
-		ComparisonManager().
+		GetComparisonManager().
 		GetLCSResultsMap()
 
 	lcsMap4 = New("With great power there must also come great responsibility.").
 		WithComparisonManager().
 		LCSBacktrack("With great power comes great responsibility.").
 		LCSDiff("With great power comes great responsibility.").
-		ComparisonManager().
+		GetComparisonManager().
 		GetLCSResultsMap()
 
 	lcsMap5 = New("With great power there must also come great responsibility.").
 		WithComparisonManager().
-		ComparisonManager().
+		GetComparisonManager().
 		GetLCSResultsMap()
 
 	lcsMapPrintLongOpt1 = "***LCS Results for LCS Backtrack***\n\n" +

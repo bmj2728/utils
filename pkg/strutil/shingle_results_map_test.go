@@ -15,7 +15,7 @@ var (
 			ShingleSlice(3).
 			ShingleSlice(2).
 			ShingleSlice(1).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	testShinMap2 = New("aaaaa").
@@ -30,7 +30,7 @@ var (
 			ShingleSlice(3).
 			ShingleSlice(2).
 			ShingleSlice(1).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	testShinMap3 = New("ooooo").
@@ -45,19 +45,19 @@ var (
 			ShingleSlice(3).
 			ShingleSlice(2).
 			ShingleSlice(1).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	testShinMap4 = New("xxxxx").
 			WithComparisonManager().
 			Shingle(1).
 			ShingleSlice(1).
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	testShinMap5 = New("aaaaa").
 			WithComparisonManager().
-			ComparisonManager().
+			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMapPrtLongOpt1 = "Shingle Results for Shingle Map\n" +

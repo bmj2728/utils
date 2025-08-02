@@ -49,7 +49,7 @@ func TestComparisonResultPrint(t *testing.T) {
 		JaroWinklerSimilarity(common).
 		LevenshteinDistance(common).
 		HammingDistance(common).
-		ComparisonManager().
+		GetComparisonManager().
 		GetComparisonResultsMap()
 
 	for _, tt := range tests {
@@ -122,7 +122,7 @@ func TestComparisonResultGettersInt(t *testing.T) {
 				LCSEditDistance(tt.string2).
 				QgramDistance(tt.string2, tt.splitLength).
 				HammingDistance(tt.string2).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry, ok := res.GetByType(tt.resType)[0].(*ComparisonResultInt)
 			if ok {
@@ -195,7 +195,7 @@ func TestComparisonResultGettersFloat(t *testing.T) {
 				JaroWinklerSimilarity(tt.string2).
 				JaccardSimilarity(tt.string2, tt.splitLength).
 				QgramSimilarity(tt.string2, tt.splitLength).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry, ok := res.GetByType(tt.resType)[0].(*ComparisonResultFloat)
 			if ok {
@@ -264,14 +264,14 @@ func TestComparisonResultIntIsMatch(t *testing.T) {
 			res1 := New(tt.input1).
 				WithComparisonManager().
 				LevenshteinDistance(tt.comp1).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry1 := res1.GetByType(LevDist)[0]
 
 			res2 := New(tt.input2).
 				WithComparisonManager().
 				LevenshteinDistance(tt.comp2).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry2 := res2.GetByType(LevDist)[0]
 
@@ -304,14 +304,14 @@ func TestComparisonResultIntIsMatchError(t *testing.T) {
 			res1 := New(tt.input1).
 				WithComparisonManager().
 				HammingDistance(tt.comp1).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry1 := res1.GetByType(HammingDist)[0]
 
 			res2 := New(tt.input2).
 				WithComparisonManager().
 				HammingDistance(tt.comp2).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry2 := res2.GetByType(HammingDist)[0]
 
@@ -343,14 +343,14 @@ func TestComparisonResultFloatIsMatch(t *testing.T) {
 			res1 := New(tt.input1).
 				WithComparisonManager().
 				JaroSimilarity(tt.comp1).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry1 := res1.GetByType(JaroSim)[0]
 
 			res2 := New(tt.input2).
 				WithComparisonManager().
 				JaroSimilarity(tt.comp2).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry2 := res2.GetByType(JaroSim)[0]
 			if entry1.IsMatch(entry2) != tt.result {
@@ -387,14 +387,14 @@ func TestComparisonResultFloatIsMatchError(t *testing.T) {
 			res1 := New(tt.input1).
 				WithComparisonManager().
 				JaccardSimilarity(tt.input2, tt.split1).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry1 := res1.GetByType(JaccardSim)[0]
 
 			res2 := New(tt.input2).
 				WithComparisonManager().
 				JaccardSimilarity(tt.input2, tt.split2).
-				ComparisonManager().
+				GetComparisonManager().
 				GetComparisonResultsMap()
 			entry2 := res2.GetByType(JaccardSim)[0]
 

@@ -7,7 +7,15 @@ type StringBuilder struct {
 	value             string
 	err               error
 	comparisonManager *ComparisonManager
+	history           *StringHistory
 }
+
+// TODO builder logic to be updated re: error handling
+// new design - add field to struct - history*** - probably a custom type wrapping a []string
+// make it opt-in for updates with a WithHistory, otherwise always will be history[0] for original
+// fatal errors: transforms cause undefined behavior if incomplete and security functions
+// non-fatal errors: other errors e.g. Hamming Dist on unequal lengths
+// fatal will join errors AND set value to "", while not changing original
 
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
@@ -44,8 +52,29 @@ func (sb *StringBuilder) WithComparisonManager() *StringBuilder {
 	return sb
 }
 
-// ComparisonManager returns the associated ComparisonManager instance of the StringBuilder.
-func (sb *StringBuilder) ComparisonManager() *ComparisonManager {
+// WithHistory initializes the history for the StringBuilder if it does not already exist and returns the instance.
+func (sb *StringBuilder) WithHistory() *StringBuilder {
+	if sb.history == nil {
+		sb.history = NewStringHistory()
+	}
+	sb.UpdateHistory(sb.value)
+	return sb
+}
+
+func (sb *StringBuilder) GetHistory() *StringHistory {
+	return sb.history
+}
+
+// UpdateHistory appends a string to the history if it exists and returns the updated StringBuilder instance.
+func (sb *StringBuilder) UpdateHistory(s string) *StringBuilder {
+	if sb.history != nil {
+		sb.history.Add(s)
+	}
+	return sb
+}
+
+// GetComparisonManager returns the associated ComparisonManager instance of the StringBuilder.
+func (sb *StringBuilder) GetComparisonManager() *ComparisonManager {
 	return sb.comparisonManager
 }
 
