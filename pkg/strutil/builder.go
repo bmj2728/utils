@@ -161,6 +161,10 @@ func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
 // Sets an error in the StringBuilder if issues occur during the operation.
 func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
 	if sb.history != nil {
+		if index < 0 {
+			sb.setError(ErrInvalidHistoryIndex, false)
+			return sb
+		}
 		ind, err := sb.history.GetByIndex(index)
 		if err == nil {
 			// throws error when invalid index

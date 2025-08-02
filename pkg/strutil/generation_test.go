@@ -397,8 +397,7 @@ func TestStringBuilderPrint(t *testing.T) {
 	}{
 		{"Test 1", "hello world", "hello world"},
 		{"Test 2", "hello world",
-			"error calculating hamming distance\n" +
-				"Undefined for strings of unequal length"},
+			"error"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -409,7 +408,10 @@ func TestStringBuilderPrint(t *testing.T) {
 				New(tt.input).Print()
 			}
 			if tt.name == "Test 2" {
-				if New(tt.input).WithComparisonManager().HammingDistance("ERROR").formatOutput() != tt.expected {
+				if New(tt.input).
+					WithComparisonManager().
+					setError(errors.New("error"), true).
+					formatOutput() != tt.expected {
 					t.Errorf("Expected %q, got %q for %s", tt.expected,
 						New(tt.input).WithComparisonManager().HammingDistance("ERROR").formatOutput(), tt.name)
 				}

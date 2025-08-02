@@ -18,6 +18,9 @@ func (sh *StringHistory) Add(s string) {
 
 // Len returns the number of items in the StringHistory collection.
 func (sh *StringHistory) Len() int {
+	if sh == nil {
+		return 0
+	}
 	return len(*sh)
 }
 
