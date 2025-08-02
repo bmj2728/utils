@@ -3,112 +3,112 @@ package strutil
 // Append adds the given string `s` to the current value with the specified
 // separator `sep` and returns the updated StringBuilder.
 func (sb *StringBuilder) Append(s string, sep string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = appendString(sb.value, s, sep)
+	sb.setValue(appendString(sb.value, s, sep))
 	return sb
 }
 
 // Prepend adds the specified string and separator to the beginning of the StringBuilder's value.
 func (sb *StringBuilder) Prepend(s string, ser string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = prependString(sb.value, s, ser)
+	sb.setValue(prependString(sb.value, s, ser))
 	return sb
 }
 
 // Trim removes leading and trailing whitespace or specific characters from the StringBuilder's value.
 func (sb *StringBuilder) Trim() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = trim(sb.value)
+	sb.setValue(trim(sb.value))
 	return sb
 }
 
 // TrimLeft removes all leading whitespace characters from the string stored in the StringBuilder and updates its value.
 func (sb *StringBuilder) TrimLeft() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = trimLeft(sb.value)
+	sb.setValue(trimLeft(sb.value))
 	return sb
 }
 
 // TrimRight removes trailing whitespace or specified characters from the end of the StringBuilder's value.
 func (sb *StringBuilder) TrimRight() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = trimRight(sb.value)
+	sb.setValue(trimRight(sb.value))
 	return sb
 }
 
 // TrimChars removes all leading and trailing characters specified in the input string from the StringBuilder's value.
 func (sb *StringBuilder) TrimChars(chars string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = trimChars(sb.value, chars)
+	sb.setValue(trimChars(sb.value, chars))
 	return sb
 }
 
 // TrimCharsLeft removes all leading occurrences of the specified characters from the string
 // and returns the updated StringBuilder.
 func (sb *StringBuilder) TrimCharsLeft(chars string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = trimCharsLeft(sb.value, chars)
+	sb.setValue(trimCharsLeft(sb.value, chars))
 	return sb
 }
 
 // TrimCharsRight removes all occurrences of the specified characters from the end of the string
 // and returns the StringBuilder.
 func (sb *StringBuilder) TrimCharsRight(chars string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = trimCharsRight(sb.value, chars)
+	sb.setValue(trimCharsRight(sb.value, chars))
 	return sb
 }
 
 // NormalizeDiacritics removes diacritical marks from the string and replaces them with their non-accented counterparts.
 func (sb *StringBuilder) NormalizeDiacritics() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = normalizeDiacritics(sb.value)
+	sb.setValue(normalizeDiacritics(sb.value))
 	return sb
 }
 
 // Slugify converts the string into a URL-friendly slug with a maximum length specified by the parameter.
 func (sb *StringBuilder) Slugify(length int) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = slugify(sb.value, length)
+	sb.setValue(slugify(sb.value, length))
 	return sb
 }
 
 // Truncate shortens the string to the specified length and appends the provided suffix if truncation occurs.
 func (sb *StringBuilder) Truncate(length int, suffix string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = truncate(sb.value, length, suffix)
+	sb.setValue(truncate(sb.value, length, suffix))
 	return sb
 }
 
-// If conditionally applies the provided function to the StringBuilder if the condition is true and no error exists.
-func (sb *StringBuilder) If(condition bool, fn func(*StringBuilder) *StringBuilder) *StringBuilder {
-	if sb.err != nil {
+// If applies the provided function to the StringBuilder's value if the condition is true and continues processing.
+func (sb *StringBuilder) If(condition bool, fn func(string) string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if condition {
-		return fn(sb)
+		sb.setValue(fn(sb.value))
 	}
 	return sb
 }
@@ -127,77 +127,77 @@ func (sb *StringBuilder) If(condition bool, fn func(*StringBuilder) *StringBuild
 //
 // result: "Hello World! Goodbye!"
 func (sb *StringBuilder) Transform(fn func(string) string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = fn(sb.value)
+	sb.setValue(fn(sb.value))
 	return sb
 }
 
 // NormalizeWhitespace collapses consecutive whitespace characters into a single space
 // and trims leading and trailing spaces.
 func (sb *StringBuilder) NormalizeWhitespace() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = normalizeWhitespace(sb.value)
+	sb.setValue(normalizeWhitespace(sb.value))
 	return sb
 }
 
 // CollapseWhitespace collapses consecutive whitespace characters in the StringBuilder's value into a single space
 // and preserves leading and trailing spaces.
 func (sb *StringBuilder) CollapseWhitespace() *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = collapseWhitespace(sb.value)
+	sb.setValue(collapseWhitespace(sb.value))
 	return sb
 }
 
 // ReplaceWhitespace replaces all whitespace characters in the StringBuilder's value
 // with the specified replacement string.
 func (sb *StringBuilder) ReplaceWhitespace(replacement string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = replaceWhitespace(sb.value, replacement)
+	sb.setValue(replaceWhitespace(sb.value, replacement))
 	return sb
 }
 
 // ReplaceSpaces replaces all spaces in the StringBuilder's value with the specified replacement string.
 func (sb *StringBuilder) ReplaceSpaces(replacement string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = replaceSpaces(sb.value, replacement)
+	sb.setValue(replaceSpaces(sb.value, replacement))
 	return sb
 }
 
 // AlphaReplace replaces all alphabetical characters in the StringBuilder's value with the specified replacement string.
 func (sb *StringBuilder) AlphaReplace(replacement string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = alphaReplace(sb.value, replacement)
+	sb.setValue(alphaReplace(sb.value, replacement))
 	return sb
 }
 
 // AlphaNumericReplace replaces all alphanumeric characters in the StringBuilder value
 // with the specified replacement string.
 func (sb *StringBuilder) AlphaNumericReplace(replacement string) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = alphaNumericReplace(sb.value, replacement)
+	sb.setValue(alphaNumericReplace(sb.value, replacement))
 	return sb
 }
 
 // NormalizeUnicode normalizes the StringBuilder's string to the specified Unicode
 // normalization form (NFC, NFD, NFKC, or NFKD).
 func (sb *StringBuilder) NormalizeUnicode(form NormalizationFormat) *StringBuilder {
-	if sb.err != nil {
+	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = normalizeUnicode(sb.value, form)
+	sb.setValue(normalizeUnicode(sb.value, form))
 	return sb
 }

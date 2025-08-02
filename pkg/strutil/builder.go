@@ -95,6 +95,9 @@ func (sb *StringBuilder) Result() (string, *ComparisonManager, error) {
 // setValue sets the value of the StringBuilder to the provided string and returns the updated StringBuilder instance.
 func (sb *StringBuilder) setValue(value string) *StringBuilder {
 	sb.value = value
+	if sb.history != nil {
+		sb.updateHistory(value)
+	}
 	return sb
 }
 
@@ -102,7 +105,7 @@ func (sb *StringBuilder) setValue(value string) *StringBuilder {
 func (sb *StringBuilder) setError(err error, fatal bool) *StringBuilder {
 	sb.err = err
 	if fatal {
-		sb.value = ""
+		sb.setValue("")
 	}
 	return sb
 }
@@ -123,7 +126,7 @@ func (sb *StringBuilder) RevertToOriginal() *StringBuilder {
 	if sb.history != nil {
 		orig, err := sb.history.GetOriginalValue()
 		if err == nil {
-			sb.value = orig
+			sb.setValue(orig)
 		} else {
 			// fatal - reversion failure
 			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
@@ -140,7 +143,7 @@ func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
 		prev, err := sb.history.GetPreviousValue()
 		if err == nil {
 			// this throws an error if there is only an original value
-			sb.value = prev
+			sb.setValue(prev)
 		} else {
 			// fatal - reversion failed
 			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
@@ -159,7 +162,7 @@ func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
 		ind, err := sb.history.GetByIndex(index)
 		if err == nil {
 			// throws error when invalid index
-			sb.value = ind
+			sb.setValue(ind)
 		} else {
 			// fatal - reversion has failed
 			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)

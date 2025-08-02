@@ -5,7 +5,7 @@ func (sb *StringBuilder) ToLower() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toLower(sb.value)
+	sb.setValue(toLower(sb.value))
 	return sb
 }
 
@@ -14,7 +14,7 @@ func (sb *StringBuilder) ToUpper() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toUpper(sb.value)
+	sb.setValue(toUpper(sb.value))
 	return sb
 }
 
@@ -23,7 +23,7 @@ func (sb *StringBuilder) Capitalize() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = capitalize(sb.value)
+	sb.setValue(capitalize(sb.value))
 	return sb
 }
 
@@ -32,7 +32,7 @@ func (sb *StringBuilder) Uncapitalize() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = uncapitalize(sb.value)
+	sb.setValue(uncapitalize(sb.value))
 	return sb
 }
 
@@ -42,7 +42,7 @@ func (sb *StringBuilder) ToTitleCase() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toTitleCase(sb.value)
+	sb.setValue(toTitleCase(sb.value))
 	return sb
 }
 
@@ -51,7 +51,7 @@ func (sb *StringBuilder) SplitCamelCase() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = splitCamelCase(sb.value)
+	sb.setValue(splitCamelCase(sb.value))
 	return sb
 }
 
@@ -60,7 +60,7 @@ func (sb *StringBuilder) SplitPascalCase() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = splitPascalCase(sb.value)
+	sb.setValue(splitPascalCase(sb.value))
 	return sb
 }
 
@@ -69,7 +69,7 @@ func (sb *StringBuilder) ToSnakeCase(scream bool) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toSnakeCase(sb.value, scream)
+	sb.setValue(toSnakeCase(sb.value, scream))
 	return sb
 }
 
@@ -79,7 +79,7 @@ func (sb *StringBuilder) ToSnakeCaseWithIgnore(scream bool, ignore string) *Stri
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toSnakeCaseWithIgnore(sb.value, scream, ignore)
+	sb.setValue(toSnakeCaseWithIgnore(sb.value, scream, ignore))
 	return sb
 }
 
@@ -88,7 +88,7 @@ func (sb *StringBuilder) ToKebabCase(scream bool) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toKebabCase(sb.value, scream)
+	sb.setValue(toKebabCase(sb.value, scream))
 	return sb
 }
 
@@ -97,7 +97,7 @@ func (sb *StringBuilder) ToCamelCase() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toCamelCase(sb.value)
+	sb.setValue(toCamelCase(sb.value))
 	return sb
 }
 
@@ -107,7 +107,7 @@ func (sb *StringBuilder) ToPascalCase() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toPascalCase(sb.value)
+	sb.setValue(toPascalCase(sb.value))
 	return sb
 }
 
@@ -116,6 +116,6 @@ func (sb *StringBuilder) ToDelimited(delim uint8, ignore string, scream bool) *S
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	sb.value = toDelimited(sb.value, delim, ignore, scream)
+	sb.setValue(toDelimited(sb.value, delim, ignore, scream))
 	return sb
 }

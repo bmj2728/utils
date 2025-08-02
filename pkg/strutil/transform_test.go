@@ -560,17 +560,26 @@ func TestBuilderIf(t *testing.T) {
 		name      string
 		input     *StringBuilder
 		condition bool
+		transform func(b string) string
 		expected  string
 	}{
-		{"IfTrue", New("Hello World"), true, "hello world"},
-		{"IfFalse", New("Hello World"), false, "Hello World"},
+		{"TransformAnon", New("Hello World"),
+			true, func(b string) string { return b + "!" }, "Hello World!"},
+		{"TransformLower", New("Hello World"), true, ToLower, "hello world"},
+		{"TransformUpper", New("Hello World"), true, ToUpper, "HELLO WORLD"},
+		{"TransformTrim", New("   Hello World   "), true, Trim, "Hello World"},
+		{"TransformCamel", New("Hello World"), true, ToCamelCase, "helloWorld"},
+		{"TransformAnon", New("Hello World"),
+			false, func(b string) string { return b + "!" }, "Hello World"},
+		{"TransformLower", New("Hello World"), false, ToLower, "Hello World"},
+		{"TransformUpper", New("Hello World"), false, ToUpper, "Hello World"},
+		{"TransformTrim", New("   Hello World   "),
+			false, Trim, "   Hello World   "},
+		{"TransformCamel", New("Hello World"), false, ToCamelCase, "Hello World"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			out := tt.input.If(tt.condition, func(b *StringBuilder) *StringBuilder {
-				b.ToLower()
-				return b
-			}).String()
+			out := tt.input.If(tt.condition, tt.transform).String()
 			if out != tt.expected {
 				t.Errorf("If() = %q, expected %q", out, tt.expected)
 			}
