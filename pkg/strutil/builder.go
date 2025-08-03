@@ -1,7 +1,6 @@
 package strutil
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -130,7 +129,7 @@ func (sb *StringBuilder) RevertToOriginal() *StringBuilder {
 			// Keep only the original (index 0)
 			*sb.history = (*sb.history)[:1]
 		} else {
-			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
+			sb.setError(err, true)
 		}
 	} else {
 		sb.setError(ErrHistoryNotInitialized, false)
@@ -148,7 +147,7 @@ func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
 			*sb.history = (*sb.history)[:len(*sb.history)-1]
 		} else {
 			// fatal - reversion failed
-			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
+			sb.setError(err, true)
 		}
 	} else {
 		sb.setError(ErrHistoryNotInitialized, false)
@@ -159,10 +158,11 @@ func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
 // RevertToIndex reverts the StringBuilder's value to the state stored at the specified history index.
 // Returns an error if the index is invalid or if the history is not initialized.
 // Sets an error in the StringBuilder if issues occur during the operation.
+// Invalid indexes will result in a fatal error
 func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
 	if sb.history != nil {
 		if index < 0 {
-			sb.setError(ErrInvalidHistoryIndex, false)
+			sb.setError(ErrInvalidHistoryIndex, true)
 			return sb
 		}
 		ind, err := sb.history.GetByIndex(index)
@@ -172,7 +172,7 @@ func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
 			*sb.history = (*sb.history)[:index+1]
 		} else {
 			// fatal - reversion has failed
-			sb.setError(errors.Join(err, ErrInvalidHistoryIndex), true)
+			sb.setError(err, true)
 		}
 	} else {
 		sb.setError(ErrHistoryNotInitialized, false)
