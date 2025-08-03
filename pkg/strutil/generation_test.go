@@ -451,12 +451,9 @@ func TestStringBuilderResult(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ex, comp, err := tt.input.Result()
+			ex, err := tt.input.Result()
 			if ex != tt.expected {
 				t.Errorf("Expected %q, got %q for %s", tt.expected, ex, tt.name)
-			}
-			if tt.compMan == true && comp == nil {
-				t.Errorf("Expected comparison manager for %s", tt.name)
 			}
 			if tt.err == true && err == nil {
 				t.Errorf("Expected error for %s", tt.name)
