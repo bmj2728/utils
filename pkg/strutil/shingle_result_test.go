@@ -3,6 +3,8 @@ package strutil
 import (
 	"maps"
 	"testing"
+
+	"utils/pkg/internal"
 )
 
 var (
@@ -96,7 +98,7 @@ func TestShingleMapResultGetters(t *testing.T) {
 				if casted.GetNgramLength() != tt.nGramLength {
 					t.Errorf("ShingleMapResultGetters() = %v, want %v", casted.GetNgramLength(), tt.nGramLength)
 				}
-				if !compareErrors(casted.GetError(), tt.err) {
+				if !internal.CompareErrors(casted.GetError(), tt.err) {
 					t.Errorf("ShingleMapResultGetters() = %v, want %v", casted.GetError(), tt.err)
 				}
 				if !maps.Equal(casted.GetShinglesMap(), tt.result) {
@@ -150,7 +152,7 @@ func TestShingleSliceResultGetters(t *testing.T) {
 				if casted.GetNgramLength() != tt.nGramLength {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetNgramLength(), tt.nGramLength)
 				}
-				if !compareErrors(casted.GetError(), tt.err) {
+				if !internal.CompareErrors(casted.GetError(), tt.err) {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetError(), tt.err)
 				}
 				if !compareStringSlices(casted.GetShinglesSlice(), tt.result, false) {

@@ -1,4 +1,4 @@
-package strutil
+package internal
 
 import "errors"
 
@@ -78,9 +78,9 @@ var (
 	ErrInvalidNgramMap = errors.New("invalid ngram map")
 )
 
-// compareErrors compares two error values for equality by checking their string representations.
+// CompareErrors compares two error values for equality by checking their string representations.
 // Returns true if both errors are nil or their messages are the same, otherwise false.
-func compareErrors(err1, err2 error) bool {
+func CompareErrors(err1, err2 error) bool {
 	if err1 == nil {
 		return err2 == nil
 	}

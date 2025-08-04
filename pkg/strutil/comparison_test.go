@@ -4,6 +4,8 @@ import (
 	"errors"
 	"math"
 	"testing"
+
+	"utils/pkg/internal"
 )
 
 func TestLevenshteinDistance(t *testing.T) {
@@ -426,7 +428,7 @@ func TestLCSDiff(t *testing.T) {
 			helperResult := lcsDiff(tt.input1, tt.input2)
 			result := LCSDiff(tt.input1, tt.input2)
 			builderResult := New(tt.input1).WithComparisonManager().LCSDiff(tt.input2)
-			if builderResult.Error() != nil && !errors.Is(builderResult.Error(), ErrLCSDiffFailure) {
+			if builderResult.Error() != nil && !errors.Is(builderResult.Error(), internal.ErrLCSDiffFailure) {
 				t.Errorf("GetError: %s", builderResult.Error())
 			}
 			if tt.expected != nil &&
@@ -1537,7 +1539,7 @@ func TestSimilarity(t *testing.T) {
 			if helperResult.algorithm != tt.expected.algorithm ||
 				helperResult.string1 != tt.expected.string1 ||
 				helperResult.string2 != tt.expected.string2 ||
-				!compareErrors(helperResult.err, tt.expected.err) {
+				!internal.CompareErrors(helperResult.err, tt.expected.err) {
 				t.Errorf("SimilarityA - expected %v - got %v",
 					*tt.expected,
 					*helperResult,
@@ -1546,7 +1548,7 @@ func TestSimilarity(t *testing.T) {
 			if result.algorithm != tt.expected.algorithm ||
 				result.string1 != tt.expected.string1 ||
 				result.string2 != tt.expected.string2 ||
-				!compareErrors(result.err, tt.expected.err) {
+				!internal.CompareErrors(result.err, tt.expected.err) {
 				t.Errorf("SimilarityB - expected %v - got %v\n",
 					*tt.expected,
 					*result,
@@ -1555,7 +1557,7 @@ func TestSimilarity(t *testing.T) {
 			if brSim.algorithm != tt.expected.algorithm ||
 				brSim.string1 != tt.expected.string1 ||
 				brSim.string2 != tt.expected.string2 ||
-				!compareErrors((*brSim).err, tt.expected.err) {
+				!internal.CompareErrors((*brSim).err, tt.expected.err) {
 				t.Errorf("SimilarityC - expected %v - got %v",
 					*tt.expected,
 					*result,

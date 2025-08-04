@@ -1,6 +1,10 @@
 package strutil
 
-import "testing"
+import (
+	"testing"
+
+	"utils/pkg/internal"
+)
 
 var (
 	lcsAll1 = New("With great power there must also come great responsibility.").
@@ -124,7 +128,7 @@ func TestLCSResultGetters(t *testing.T) {
 				res.GetString2() != tt.str2 ||
 				s1 != tt.str1 ||
 				s2 != tt.str2 ||
-				!compareErrors(res.GetError(), tt.err) ||
+				!internal.CompareErrors(res.GetError(), tt.err) ||
 				!compareStringSlices(res.GetResult(), tt.result, false) {
 				t.Errorf("LCSResultGetters() = %v, want %v", res.GetResult(), tt.result)
 			}

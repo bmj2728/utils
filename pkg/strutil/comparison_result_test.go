@@ -4,6 +4,8 @@ import (
 	"errors"
 	"math"
 	"testing"
+
+	"utils/pkg/internal"
 )
 
 func TestComparisonResultPrint(t *testing.T) {
@@ -108,7 +110,7 @@ func TestComparisonResultGettersInt(t *testing.T) {
 			"Hello!",
 			0,
 			0,
-			errors.Join(ErrHammingDistanceFailure, errors.New("Undefined for strings of unequal length")),
+			errors.Join(internal.ErrHammingDistanceFailure, errors.New("Undefined for strings of unequal length")),
 		},
 	}
 	for _, tt := range tests {

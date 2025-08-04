@@ -3,6 +3,8 @@ package strutil
 import (
 	"fmt"
 	"maps"
+
+	"utils/pkg/internal"
 )
 
 // ShingleResultType is an enumerated type used to represent the type of shingle result, such as map or slice.
@@ -106,7 +108,7 @@ func (s *ShingleSliceResult) IsMatch(other ShingleResult) bool {
 	}
 	return compareShingleInputFields(s, casted) &&
 		compareStringSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
-		compareErrors(s.GetError(), casted.GetError())
+		internal.CompareErrors(s.GetError(), casted.GetError())
 }
 
 // Print outputs shingle data or error information based on the verbose flag.
@@ -186,7 +188,7 @@ func (s *ShingleMapResult) IsMatch(other ShingleResult) bool {
 	if !compareShingleInputFields(s, casted) {
 		return false
 	}
-	if !compareErrors(s.GetError(), other.GetError()) {
+	if !internal.CompareErrors(s.GetError(), other.GetError()) {
 		return false
 	}
 	if s.shingles == nil && casted.shingles == nil {

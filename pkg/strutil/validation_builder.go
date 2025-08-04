@@ -1,5 +1,7 @@
 package strutil
 
+import "utils/pkg/internal"
+
 // RequireEmail validates if the StringBuilder's value is a valid email format,
 // sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireEmail() *StringBuilder {
@@ -7,7 +9,7 @@ func (sb *StringBuilder) RequireEmail() *StringBuilder {
 		return sb
 	}
 	if !isValidEmail(sb.value) {
-		return sb.setError(ErrInvalidEmail, true)
+		return sb.setError(internal.ErrInvalidEmail, true)
 	}
 	return sb
 }
@@ -18,7 +20,7 @@ func (sb *StringBuilder) RequireDomain() *StringBuilder {
 		return sb
 	}
 	if !isValidDomain(sb.value) {
-		return sb.setError(ErrInvalidDomain, true)
+		return sb.setError(internal.ErrInvalidDomain, true)
 	}
 	return sb
 }
@@ -30,7 +32,7 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 		return sb
 	}
 	if !isValidURL(sb.value) {
-		return sb.setError(ErrInvalidURL, true)
+		return sb.setError(internal.ErrInvalidURL, true)
 	}
 	return sb
 }
@@ -42,7 +44,7 @@ func (sb *StringBuilder) RequireUUID() *StringBuilder {
 		return sb
 	}
 	if !isValidUUID(sb.value) {
-		return sb.setError(ErrInvalidUUID, true)
+		return sb.setError(internal.ErrInvalidUUID, true)
 	}
 	return sb
 }
@@ -54,12 +56,12 @@ func (sb *StringBuilder) RequireLength(min, max int) *StringBuilder {
 		return sb
 	}
 	if min < 0 || max < 0 {
-		return sb.setError(ErrInvalidLengthRange, true)
+		return sb.setError(internal.ErrInvalidLengthRange, true)
 
 	} else if min > max {
-		return sb.setError(ErrInvalidLengthRange, true)
+		return sb.setError(internal.ErrInvalidLengthRange, true)
 	} else if !isLengthInRange(sb.value, min, max) {
-		return sb.setError(ErrInvalidLength, true)
+		return sb.setError(internal.ErrInvalidLength, true)
 	}
 	return sb
 }
@@ -70,7 +72,7 @@ func (sb *StringBuilder) RequireNotEmpty() *StringBuilder {
 		return sb
 	}
 	if isEmpty(sb.value) {
-		return sb.setError(ErrInvalidEmpty, true)
+		return sb.setError(internal.ErrInvalidEmpty, true)
 	}
 	return sb
 }
@@ -82,7 +84,7 @@ func (sb *StringBuilder) RequireNotEmptyNormalized() *StringBuilder {
 		return sb
 	}
 	if isEmptyNormalized(sb.value) {
-		return sb.setError(ErrInvalidEmptyAfterNormalization, true)
+		return sb.setError(internal.ErrInvalidEmptyAfterNormalization, true)
 	}
 	return sb
 }
@@ -94,7 +96,7 @@ func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
 		return sb
 	}
 	if !isAlphaNumericString(sb.value) {
-		return sb.setError(ErrInvalidNotAlphaNumeric, true)
+		return sb.setError(internal.ErrInvalidNotAlphaNumeric, true)
 	}
 	return sb
 }
@@ -105,7 +107,7 @@ func (sb *StringBuilder) RequireAlpha() *StringBuilder {
 		return sb
 	}
 	if !isAlphaString(sb.value) {
-		return sb.setError(ErrInvalidNotAlpha, true)
+		return sb.setError(internal.ErrInvalidNotAlpha, true)
 	}
 	return sb
 }
@@ -117,7 +119,7 @@ func (sb *StringBuilder) RequireNormalizedUnicode(format NormalizationFormat) *S
 		return sb
 	}
 	if !isNormalizedUnicode(sb.value, format) {
-		return sb.setError(ErrNotNormalizedUnicode, true)
+		return sb.setError(internal.ErrNotNormalizedUnicode, true)
 	}
 	return sb
 }

@@ -3,6 +3,8 @@ package strutil
 import (
 	"fmt"
 	"math"
+
+	"utils/pkg/internal"
 )
 
 // ComparisonResultScore represents a type constraint for a pointer to either an int or a float32.
@@ -134,7 +136,7 @@ func (c *ComparisonResultInt) GetStrings() (string, string) {
 // GetSplitLength returns the split length of the comparison result as a pointer to an integer.
 func (c *ComparisonResultInt) GetSplitLength() (int, error) {
 	if c.splitLength == nil {
-		return 0, ErrNoSplitLengthSet
+		return 0, internal.ErrNoSplitLengthSet
 	}
 	return *c.splitLength, nil
 }
@@ -147,13 +149,13 @@ func (c *ComparisonResultInt) GetError() error {
 // GetScoreInt retrieves the comparison score as an integer and returns an error if no score or an error is present.
 func (c *ComparisonResultInt) GetScoreInt() (int, error) {
 	if c.score == nil && c.err == nil {
-		return 0, ErrUnknownError
+		return 0, internal.ErrUnknownError
 	}
 	if c.err != nil {
 		return 0, c.err
 	}
 	if c.score == nil {
-		return 0, ErrNilScore
+		return 0, internal.ErrNilScore
 	}
 	return *c.score, nil
 }
@@ -173,7 +175,7 @@ func (c *ComparisonResultInt) IsMatch(other ComparisonResult) bool {
 	cScore, cErr := c.GetScoreInt()
 	oScore, oErr := casted.GetScoreInt()
 	// check errors first - this is the underlying ComparisonResult error if not null
-	if !compareErrors(cErr, oErr) {
+	if !internal.CompareErrors(cErr, oErr) {
 		return false
 	}
 	// check int score
@@ -245,7 +247,7 @@ func (c *ComparisonResultFloat) GetStrings() (string, string) {
 // GetSplitLength retrieves the value of the splitLength field as a pointer to an integer.
 func (c *ComparisonResultFloat) GetSplitLength() (int, error) {
 	if c.splitLength == nil {
-		return 0, ErrNoSplitLengthSet
+		return 0, internal.ErrNoSplitLengthSet
 	}
 	return *c.splitLength, nil
 }
@@ -259,13 +261,13 @@ func (c *ComparisonResultFloat) GetError() error {
 // Returns 0.00 and an error if unavailable.
 func (c *ComparisonResultFloat) GetScoreFloat() (float32, error) {
 	if c.score == nil && c.err == nil {
-		return 0.00, ErrUnknownError
+		return 0.00, internal.ErrUnknownError
 	}
 	if c.err != nil {
 		return 0.00, c.err
 	}
 	if c.score == nil {
-		return 0.00, ErrNilScore
+		return 0.00, internal.ErrNilScore
 	}
 	return *c.score, nil
 }
@@ -284,7 +286,7 @@ func (c *ComparisonResultFloat) IsMatch(other ComparisonResult) bool {
 	// get scores/errors
 	cScore, cErr := c.GetScoreFloat()
 	oScore, oErr := casted.GetScoreFloat()
-	if !compareErrors(cErr, oErr) {
+	if !internal.CompareErrors(cErr, oErr) {
 		return false
 	}
 	if math.Abs(float64(cScore-oScore)) > float64EqualityThreshold {
@@ -308,7 +310,7 @@ func compareInputFields(c1, c2 ComparisonResult) bool {
 	}
 	cSplit, cErr := c1.GetSplitLength()
 	oSplit, oErr := c2.GetSplitLength()
-	if !compareErrors(cErr, oErr) {
+	if !internal.CompareErrors(cErr, oErr) {
 		return false
 	}
 	if cSplit != oSplit {

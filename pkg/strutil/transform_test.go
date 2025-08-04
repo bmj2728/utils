@@ -3,6 +3,8 @@ package strutil
 import (
 	"errors"
 	"testing"
+
+	"utils/pkg/internal"
 )
 
 func TestTruncate(t *testing.T) {
@@ -641,11 +643,11 @@ func TestBuilderSetterError(t *testing.T) {
 		isFatal     bool
 		expected    string
 	}{
-		{"Set", New("Hello World"), ErrUnknownError, ErrUnknownError, false, "Hello World"},
-		{"Set", New("Hello World"), ErrNoSplitLengthSet, ErrNoSplitLengthSet, false, "Hello World"},
-		{"Set", New("Hello World"), ErrInvalidEmpty, ErrInvalidEmpty, false, "Hello World"},
-		{"Set", New("Hello World"), ErrNoSplitLengthSet, ErrNoSplitLengthSet, true, ""},
-		{"Set", New("Hello World"), ErrInvalidEmpty, ErrInvalidEmpty, true, ""},
+		{"Set", New("Hello World"), internal.ErrUnknownError, internal.ErrUnknownError, false, "Hello World"},
+		{"Set", New("Hello World"), internal.ErrNoSplitLengthSet, internal.ErrNoSplitLengthSet, false, "Hello World"},
+		{"Set", New("Hello World"), internal.ErrInvalidEmpty, internal.ErrInvalidEmpty, false, "Hello World"},
+		{"Set", New("Hello World"), internal.ErrNoSplitLengthSet, internal.ErrNoSplitLengthSet, true, ""},
+		{"Set", New("Hello World"), internal.ErrInvalidEmpty, internal.ErrInvalidEmpty, true, ""},
 	}
 
 	for _, tt := range tests {

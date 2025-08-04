@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math"
 
+	"utils/pkg/internal"
+
 	"github.com/hbollon/go-edlib"
 )
 
@@ -111,13 +113,13 @@ func (sr *SimilarityResult) GetError() error {
 // GetScore returns a pointer to the score calculated between string1 and string2.
 func (sr *SimilarityResult) GetScore() (float32, error) {
 	if sr.score == nil && sr.err == nil {
-		return 0, ErrUnknownError
+		return 0, internal.ErrUnknownError
 	}
 	if sr.err != nil {
 		return 0, sr.err
 	}
 	if sr.score == nil {
-		return 0, ErrNilScore
+		return 0, internal.ErrNilScore
 	}
 	return *sr.score, nil
 }
@@ -129,7 +131,7 @@ func (sr *SimilarityResult) IsMatch(other *SimilarityResult) bool {
 	}
 	cScore, CErr := sr.GetScore()
 	oScore, OErr := other.GetScore()
-	if !compareErrors(CErr, OErr) {
+	if !internal.CompareErrors(CErr, OErr) {
 		return false
 	}
 	if math.Abs(float64(cScore-oScore)) > float64EqualityThreshold {

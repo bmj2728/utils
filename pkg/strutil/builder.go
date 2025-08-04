@@ -2,6 +2,8 @@ package strutil
 
 import (
 	"fmt"
+
+	"utils/pkg/internal"
 )
 
 // StringBuilder Type & Core Methods
@@ -132,7 +134,7 @@ func (sb *StringBuilder) RevertToOriginal() *StringBuilder {
 			sb.setError(err, true)
 		}
 	} else {
-		sb.setError(ErrHistoryNotInitialized, false)
+		sb.setError(internal.ErrHistoryNotInitialized, false)
 	}
 	return sb
 }
@@ -150,7 +152,7 @@ func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
 			sb.setError(err, true)
 		}
 	} else {
-		sb.setError(ErrHistoryNotInitialized, false)
+		sb.setError(internal.ErrHistoryNotInitialized, false)
 	}
 	return sb
 }
@@ -162,7 +164,7 @@ func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
 func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
 	if sb.history != nil {
 		if index < 0 {
-			sb.setError(ErrInvalidHistoryIndex, true)
+			sb.setError(internal.ErrInvalidHistoryIndex, true)
 			return sb
 		}
 		ind, err := sb.history.GetByIndex(index)
@@ -175,7 +177,7 @@ func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
 			sb.setError(err, true)
 		}
 	} else {
-		sb.setError(ErrHistoryNotInitialized, false)
+		sb.setError(internal.ErrHistoryNotInitialized, false)
 	}
 	return sb
 }
@@ -192,10 +194,10 @@ func (sb *StringBuilder) RevertWithFunction(fn func(history *StringHistory) int)
 			sb.RevertToIndex(index)
 		} else {
 			// fatal when expected revert fails
-			sb.setError(ErrInvalidHistoryIndex, true)
+			sb.setError(internal.ErrInvalidHistoryIndex, true)
 		}
 	} else {
-		sb.setError(ErrHistoryNotInitialized, false)
+		sb.setError(internal.ErrHistoryNotInitialized, false)
 	}
 	return sb
 }

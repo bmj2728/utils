@@ -1,6 +1,10 @@
 package strutil
 
-import "testing"
+import (
+	"testing"
+
+	"utils/pkg/internal"
+)
 
 func TestStringBuilder_RevertToOriginal(t *testing.T) {
 	rb := New("Hello World"). //Hello World 0
@@ -48,7 +52,7 @@ func TestBuilderRevertToPrevious(t *testing.T) {
 	if rb.RevertToPrevious().String() != "Hello World" {
 		t.Errorf("RevertToPrevious failed, expected Hello World, got %s", rb.String())
 	}
-	if rb.RevertToPrevious().String() != "" || !compareErrors(rb.Error(), ErrInvalidHistoryIndex) {
+	if rb.RevertToPrevious().String() != "" || !internal.CompareErrors(rb.Error(), internal.ErrInvalidHistoryIndex) {
 		t.Errorf("RevertToPrevious failed, expected empty string, got %s", rb.String())
 	}
 }
@@ -138,7 +142,7 @@ func TestRevertNoHistoryOrig(t *testing.T) {
 
 	str := rb.RevertToOriginal().String()
 	err := rb.Error()
-	if str != "Hello- John" || !compareErrors(err, ErrHistoryNotInitialized) {
+	if str != "Hello- John" || !internal.CompareErrors(err, internal.ErrHistoryNotInitialized) {
 		t.Errorf("RevertToPrevious failed, expected empty string, got %s", str)
 	}
 }
@@ -154,7 +158,7 @@ func TestRevertNoHistoryPrev(t *testing.T) {
 
 	str := rb.RevertToPrevious().String()
 	err := rb.Error()
-	if str != "Hello- John" || !compareErrors(err, ErrHistoryNotInitialized) {
+	if str != "Hello- John" || !internal.CompareErrors(err, internal.ErrHistoryNotInitialized) {
 		t.Errorf("RevertToPrevious failed, expected empty string, got %s", str)
 	}
 }
@@ -170,7 +174,7 @@ func TestRevertNoHistoryIndex(t *testing.T) {
 
 	str := rb.RevertToIndex(1).String()
 	err := rb.Error()
-	if str != "Hello- John" || !compareErrors(err, ErrHistoryNotInitialized) {
+	if str != "Hello- John" || !internal.CompareErrors(err, internal.ErrHistoryNotInitialized) {
 		t.Errorf("RevertToPrevious failed, expected empty string, got %s", str)
 	}
 }
@@ -188,7 +192,7 @@ func TestRevertNoHistoryFunc(t *testing.T) {
 		return len(*rb.GetHistory()) - 2
 	}).String()
 	err := rb.Error()
-	if str != "Hello- John" || !compareErrors(err, ErrHistoryNotInitialized) {
+	if str != "Hello- John" || !internal.CompareErrors(err, internal.ErrHistoryNotInitialized) {
 		t.Errorf("RevertToPrevious failed, expected empty string, got %s", str)
 	}
 }
@@ -199,8 +203,8 @@ func TestMissingOrig(t *testing.T) {
 	s.RevertToOriginal()
 	str := s.String()
 	err := s.Error()
-	if str != "" || !compareErrors(err, ErrHistoryIsEmpty) {
+	if str != "" || !internal.CompareErrors(err, internal.ErrHistoryIsEmpty) {
 		t.Errorf("RevertToPrevious failed, expected %q, got %q", "", str)
-		t.Errorf("RevertToPrevious failed, expected %s, got %s", ErrHistoryIsEmpty, err)
+		t.Errorf("RevertToPrevious failed, expected %s, got %s", internal.ErrHistoryIsEmpty, err)
 	}
 }

@@ -1,6 +1,10 @@
 package strutil
 
-import "fmt"
+import (
+	"fmt"
+
+	"utils/pkg/internal"
+)
 
 // LCSResultType represents an enumerated type used to define different
 // result types for Longest Common Subsequence calculations.
@@ -91,7 +95,7 @@ func (lcs *LCSResult) IsMatch(other *LCSResult) bool {
 	if lcs.resultType != other.resultType ||
 		lcs.string1 != other.string1 ||
 		lcs.string2 != other.string2 ||
-		!compareErrors(lcs.err, other.err) ||
+		!internal.CompareErrors(lcs.err, other.err) ||
 		!compareStringSlices(lcs.GetResult(), other.GetResult(), false) {
 		return false
 	}

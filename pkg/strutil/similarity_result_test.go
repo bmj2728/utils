@@ -4,6 +4,8 @@ import (
 	"errors"
 	"math"
 	"testing"
+
+	"utils/pkg/internal"
 )
 
 func TestAlgorithmString(t *testing.T) {
@@ -81,7 +83,7 @@ func TestSimilarityResultGetters(t *testing.T) {
 				t.Errorf("SimilarityResultGetters() = %f, want %f - %f", score, tt.score,
 					math.Abs(float64(score-tt.score)))
 			}
-			if !compareErrors(res.GetError(), tt.err) {
+			if !internal.CompareErrors(res.GetError(), tt.err) {
 				t.Errorf("SimilarityResultGetters() = %v, want %v", res, tt.err)
 			}
 		})

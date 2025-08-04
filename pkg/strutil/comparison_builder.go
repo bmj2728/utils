@@ -1,5 +1,7 @@
 package strutil
 
+import "utils/pkg/internal"
+
 // CompareStringBuilderSlices compares two slices of StringBuilder for equality,
 // optionally allowing nil slices to be considered equal.
 // The order of elements in the slices does not affect the comparisonData,
@@ -271,7 +273,7 @@ func (sb *StringBuilder) QgramDistanceCustomNgram(nmapOther map[string]int, cust
 	for n := range nmapOther {
 		k = len(n)
 		if k < 1 {
-			return sb.setError(ErrInvalidNgramMap, false)
+			return sb.setError(internal.ErrInvalidNgramMap, false)
 		}
 		break
 	}
