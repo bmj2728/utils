@@ -3,7 +3,7 @@ package strutil
 import (
 	"fmt"
 
-	"utils/pkg/internal"
+	"utils/pkg/internal/errors"
 )
 
 // LCSResultType represents an enumerated type used to define different
@@ -95,7 +95,7 @@ func (lcs *LCSResult) IsMatch(other *LCSResult) bool {
 	if lcs.resultType != other.resultType ||
 		lcs.string1 != other.string1 ||
 		lcs.string2 != other.string2 ||
-		!internal.CompareErrors(lcs.err, other.err) ||
+		!errors.CompareErrors(lcs.err, other.err) ||
 		!compareStringSlices(lcs.GetResult(), other.GetResult(), false) {
 		return false
 	}

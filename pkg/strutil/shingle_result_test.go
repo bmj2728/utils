@@ -4,7 +4,7 @@ import (
 	"maps"
 	"testing"
 
-	"utils/pkg/internal"
+	"utils/pkg/internal/errors"
 )
 
 var (
@@ -98,7 +98,7 @@ func TestShingleMapResultGetters(t *testing.T) {
 				if casted.GetNgramLength() != tt.nGramLength {
 					t.Errorf("ShingleMapResultGetters() = %v, want %v", casted.GetNgramLength(), tt.nGramLength)
 				}
-				if !internal.CompareErrors(casted.GetError(), tt.err) {
+				if !errors.CompareErrors(casted.GetError(), tt.err) {
 					t.Errorf("ShingleMapResultGetters() = %v, want %v", casted.GetError(), tt.err)
 				}
 				if !maps.Equal(casted.GetShinglesMap(), tt.result) {
@@ -152,7 +152,7 @@ func TestShingleSliceResultGetters(t *testing.T) {
 				if casted.GetNgramLength() != tt.nGramLength {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetNgramLength(), tt.nGramLength)
 				}
-				if !internal.CompareErrors(casted.GetError(), tt.err) {
+				if !errors.CompareErrors(casted.GetError(), tt.err) {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetError(), tt.err)
 				}
 				if !compareStringSlices(casted.GetShinglesSlice(), tt.result, false) {

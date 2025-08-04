@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"utils/pkg/internal"
+	errors2 "utils/pkg/internal/errors"
 )
 
 func TestIsEmail(t *testing.T) {
@@ -37,8 +37,8 @@ func TestIsEmail(t *testing.T) {
 			if isValidEmail(tt.input) && builderErr != nil {
 				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderErr != nil && !errors.Is(builderErr, internal.ErrInvalidEmail) {
-				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, builderErr.Error(), internal.ErrInvalidEmail)
+			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidEmail) {
+				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, builderErr.Error(), errors2.ErrInvalidEmail)
 			}
 		})
 	}
@@ -84,8 +84,8 @@ func TestIsUrl(t *testing.T) {
 			if isValidURL(tt.input) && builderErr != nil {
 				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderErr != nil && !errors.Is(builderErr, internal.ErrInvalidURL) {
-				t.Errorf("IsURL(%q) = %v; want %v", tt.input, builderErr.Error(), internal.ErrInvalidURL)
+			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidURL) {
+				t.Errorf("IsURL(%q) = %v; want %v", tt.input, builderErr.Error(), errors2.ErrInvalidURL)
 			}
 		})
 	}
@@ -123,22 +123,23 @@ func TestIsValidLength(t *testing.T) {
 			if isLengthInRange(tt.input, tt.min, tt.max) && builderErr != nil {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
 			}
-			if (tt.min < 0 || tt.max < 0) && !errors.Is(builderErr, internal.ErrInvalidLengthRange) {
+			if (tt.min < 0 || tt.max < 0) && !errors.Is(builderErr, errors2.ErrInvalidLengthRange) {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
-					tt.input, tt.min, tt.max, builderErr.Error(), internal.ErrInvalidLengthRange)
+					tt.input, tt.min, tt.max, builderErr.Error(), errors2.ErrInvalidLengthRange)
 			}
 
-			if tt.min > tt.max && !errors.Is(builderErr, internal.ErrInvalidLengthRange) {
+			if tt.min > tt.max && !errors.Is(builderErr, errors2.ErrInvalidLengthRange) {
 				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
-					tt.input, tt.min, tt.max, builderErr.Error(), internal.ErrInvalidLengthRange)
+					tt.input, tt.min, tt.max, builderErr.Error(), errors2.ErrInvalidLengthRange)
 			}
 
 			if tt.min > 0 &&
 				tt.max > 0 &&
 				tt.min <= tt.max &&
 				!isLengthInRange(tt.input, tt.min, tt.max) &&
-				!errors.Is(builderErr, internal.ErrInvalidLength) {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, builderErr.Error(), internal.ErrInvalidLength)
+				!errors.Is(builderErr, errors2.ErrInvalidLength) {
+				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
+					tt.input, tt.min, tt.max, builderErr.Error(), errors2.ErrInvalidLength)
 			}
 		})
 	}
@@ -166,8 +167,8 @@ func TestIsEmpty(t *testing.T) {
 			if !isEmpty(tt.input) && builderErr != nil {
 				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if isEmpty(tt.input) && !errors.Is(builderErr, internal.ErrInvalidEmpty) {
-				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, builderErr.Error(), internal.ErrInvalidEmpty)
+			if isEmpty(tt.input) && !errors.Is(builderErr, errors2.ErrInvalidEmpty) {
+				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, builderErr.Error(), errors2.ErrInvalidEmpty)
 			}
 		})
 	}
@@ -208,8 +209,9 @@ func TestIsEmptyNormalized(t *testing.T) {
 			if !isEmptyNormalized(tt.input) && builderErr != nil {
 				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if isEmptyNormalized(tt.input) && !errors.Is(builderErr, internal.ErrInvalidEmptyAfterNormalization) {
-				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, builderErr.Error(), internal.ErrInvalidEmptyAfterNormalization)
+			if isEmptyNormalized(tt.input) && !errors.Is(builderErr, errors2.ErrInvalidEmptyAfterNormalization) {
+				t.Errorf("IsEmptyNormalized(%q) = %v; want %v",
+					tt.input, builderErr.Error(), errors2.ErrInvalidEmptyAfterNormalization)
 			}
 		})
 	}
@@ -238,8 +240,8 @@ func TestIsAlphaNumericString(t *testing.T) {
 			if isAlphaNumericString(tt.input) && builderResult != nil {
 				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderResult != nil && !errors.Is(builderResult, internal.ErrInvalidNotAlphaNumeric) {
-				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, builderResult, internal.ErrInvalidNotAlphaNumeric)
+			if builderResult != nil && !errors.Is(builderResult, errors2.ErrInvalidNotAlphaNumeric) {
+				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, builderResult, errors2.ErrInvalidNotAlphaNumeric)
 			}
 		})
 	}
@@ -269,8 +271,8 @@ func TestIsAlphaString(t *testing.T) {
 			if isAlphaString(tt.input) && builderResult != nil {
 				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderResult != nil && !errors.Is(builderResult, internal.ErrInvalidNotAlpha) {
-				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, builderResult.Error(), internal.ErrInvalidNotAlpha)
+			if builderResult != nil && !errors.Is(builderResult, errors2.ErrInvalidNotAlpha) {
+				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, builderResult.Error(), errors2.ErrInvalidNotAlpha)
 			}
 		})
 	}
@@ -341,7 +343,7 @@ func TestIsNormalizedUnicode(t *testing.T) {
 					tt.input, tt.format, builderErr.Error(), tt.expected)
 			}
 			if tt.expected == false && (builderErr.Error() == nil ||
-				!errors.Is(builderErr.Error(), internal.ErrNotNormalizedUnicode)) {
+				!errors.Is(builderErr.Error(), errors2.ErrNotNormalizedUnicode)) {
 				t.Errorf("IsNormalizedUnicode(%q, %v) = %v; want %v",
 					tt.input, tt.format, builderErr.Error(), tt.expected)
 			}

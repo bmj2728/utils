@@ -3,7 +3,7 @@ package strutil
 import (
 	"fmt"
 
-	"utils/pkg/internal"
+	"utils/pkg/internal/errors"
 )
 
 // StringHistory represents a collection of string values used to track the history of
@@ -31,7 +31,7 @@ func (sh *StringHistory) Len() int {
 // GetOriginalValue returns the first string value in the StringHistory, representing its original value.
 func (sh *StringHistory) GetOriginalValue() (string, error) {
 	if sh.Len() < 1 {
-		return "", internal.ErrHistoryIsEmpty
+		return "", errors.ErrHistoryIsEmpty
 	}
 	return (*sh)[0], nil
 }
@@ -39,7 +39,7 @@ func (sh *StringHistory) GetOriginalValue() (string, error) {
 // GetPreviousValue returns the second-to-last string value from the StringHistory collection.
 func (sh *StringHistory) GetPreviousValue() (string, error) {
 	if sh.Len() < 2 {
-		return "", internal.ErrInvalidHistoryIndex
+		return "", errors.ErrInvalidHistoryIndex
 	}
 	return (*sh)[sh.Len()-2], nil
 }
@@ -48,7 +48,7 @@ func (sh *StringHistory) GetPreviousValue() (string, error) {
 // Returns an error if the index is out of bounds.
 func (sh *StringHistory) GetByIndex(index int) (string, error) {
 	if index < 0 || index >= len(*sh) {
-		return "", internal.ErrInvalidHistoryIndex
+		return "", errors.ErrInvalidHistoryIndex
 	}
 	return (*sh)[index], nil
 }

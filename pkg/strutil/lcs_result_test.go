@@ -3,7 +3,7 @@ package strutil
 import (
 	"testing"
 
-	"utils/pkg/internal"
+	"utils/pkg/internal/errors"
 )
 
 var (
@@ -128,7 +128,7 @@ func TestLCSResultGetters(t *testing.T) {
 				res.GetString2() != tt.str2 ||
 				s1 != tt.str1 ||
 				s2 != tt.str2 ||
-				!internal.CompareErrors(res.GetError(), tt.err) ||
+				!errors.CompareErrors(res.GetError(), tt.err) ||
 				!compareStringSlices(res.GetResult(), tt.result, false) {
 				t.Errorf("LCSResultGetters() = %v, want %v", res.GetResult(), tt.result)
 			}

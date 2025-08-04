@@ -5,7 +5,8 @@ import (
 	"math"
 	"testing"
 
-	"utils/pkg/internal"
+	errors2 "utils/pkg/internal/errors"
+	"utils/pkg/internal/types"
 )
 
 func TestComparisonResultPrint(t *testing.T) {
@@ -110,7 +111,7 @@ func TestComparisonResultGettersInt(t *testing.T) {
 			"Hello!",
 			0,
 			0,
-			errors.Join(internal.ErrHammingDistanceFailure, errors.New("Undefined for strings of unequal length")),
+			errors.Join(errors2.ErrHammingDistanceFailure, errors.New("Undefined for strings of unequal length")),
 		},
 	}
 	for _, tt := range tests {
@@ -215,7 +216,7 @@ func TestComparisonResultGettersFloat(t *testing.T) {
 						s1, s2, tt.string1, tt.string2)
 				}
 				score, err := entry.GetScoreFloat()
-				if (err != nil && score != 0) || math.Abs(float64(tt.score)-float64(score)) > float64EqualityThreshold {
+				if (err != nil && score != 0) || math.Abs(float64(tt.score)-float64(score)) > types.Float64EqualityThreshold {
 					t.Errorf("ComparisonResult.GetScoreFloat() = %f, want %f",
 						score, tt.score)
 				}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"maps"
 
-	"utils/pkg/internal"
+	"utils/pkg/internal/errors"
 )
 
 // ShingleResultType is an enumerated type used to represent the type of shingle result, such as map or slice.
@@ -108,7 +108,7 @@ func (s *ShingleSliceResult) IsMatch(other ShingleResult) bool {
 	}
 	return compareShingleInputFields(s, casted) &&
 		compareStringSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
-		internal.CompareErrors(s.GetError(), casted.GetError())
+		errors.CompareErrors(s.GetError(), casted.GetError())
 }
 
 // Print outputs shingle data or error information based on the verbose flag.
@@ -188,7 +188,7 @@ func (s *ShingleMapResult) IsMatch(other ShingleResult) bool {
 	if !compareShingleInputFields(s, casted) {
 		return false
 	}
-	if !internal.CompareErrors(s.GetError(), other.GetError()) {
+	if !errors.CompareErrors(s.GetError(), other.GetError()) {
 		return false
 	}
 	if s.shingles == nil && casted.shingles == nil {

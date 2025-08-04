@@ -5,7 +5,8 @@ import (
 	"math"
 	"testing"
 
-	"utils/pkg/internal"
+	errors2 "utils/pkg/internal/errors"
+	"utils/pkg/internal/types"
 )
 
 func TestAlgorithmString(t *testing.T) {
@@ -79,11 +80,11 @@ func TestSimilarityResultGetters(t *testing.T) {
 			if s1 != tt.input || s2 != tt.compare {
 				t.Errorf("SimilarityResultGetters() = %s, %s, want %s", s1, s2, tt.input)
 			}
-			if scoreComp > float64EqualityThreshold {
+			if scoreComp > types.Float64EqualityThreshold {
 				t.Errorf("SimilarityResultGetters() = %f, want %f - %f", score, tt.score,
 					math.Abs(float64(score-tt.score)))
 			}
-			if !internal.CompareErrors(res.GetError(), tt.err) {
+			if !errors2.CompareErrors(res.GetError(), tt.err) {
 				t.Errorf("SimilarityResultGetters() = %v, want %v", res, tt.err)
 			}
 		})

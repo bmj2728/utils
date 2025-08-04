@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"utils/pkg/internal"
+	errors2 "utils/pkg/internal/errors"
 
 	"github.com/google/uuid"
 )
@@ -384,8 +384,8 @@ func TestIsUUID(t *testing.T) {
 			if isValidUUID(tt.input) && builderErr != nil {
 				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderErr != nil && !errors.Is(builderErr, internal.ErrInvalidUUID) {
-				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, builderErr.Error(), internal.ErrInvalidUUID)
+			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidUUID) {
+				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, builderErr.Error(), errors2.ErrInvalidUUID)
 			}
 		})
 	}

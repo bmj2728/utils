@@ -4,7 +4,7 @@ import (
 	"errors"
 	"slices"
 
-	"utils/pkg/internal"
+	errors2 "utils/pkg/internal/errors"
 
 	"github.com/hbollon/go-edlib"
 )
@@ -53,7 +53,7 @@ func lcsBacktrack(str1 string, str2 string) *LCSResult {
 	var resultSlice []string
 	result, err := edlib.LCSBacktrack(str1, str2)
 	if err != nil {
-		return NewLCSResult(LCSBacktrackWord, str1, str2, nil, errors.Join(internal.ErrLCSBacktrackFailure, err))
+		return NewLCSResult(LCSBacktrackWord, str1, str2, nil, errors.Join(errors2.ErrLCSBacktrackFailure, err))
 	}
 	resultSlice = append(resultSlice, result)
 	return NewLCSResult(LCSBacktrackWord, str1, str2, &resultSlice, nil)
@@ -65,7 +65,7 @@ func lcsBacktrack(str1 string, str2 string) *LCSResult {
 func lcsBacktrackAll(str1 string, str2 string) *LCSResult {
 	result, err := edlib.LCSBacktrackAll(str1, str2)
 	if err != nil {
-		return NewLCSResult(LCSBacktrackWordAll, str1, str2, nil, errors.Join(internal.ErrLCSBacktrackAllFailure, err))
+		return NewLCSResult(LCSBacktrackWordAll, str1, str2, nil, errors.Join(errors2.ErrLCSBacktrackAllFailure, err))
 	}
 	return NewLCSResult(LCSBacktrackWordAll, str1, str2, &result, nil)
 }
@@ -76,7 +76,7 @@ func lcsBacktrackAll(str1 string, str2 string) *LCSResult {
 func lcsDiff(str1, str2 string) *LCSResult {
 	result, err := edlib.LCSDiff(str1, str2)
 	if err != nil {
-		return NewLCSResult(LCSDiffSlice, str1, str2, nil, errors.Join(internal.ErrLCSDiffFailure, err))
+		return NewLCSResult(LCSDiffSlice, str1, str2, nil, errors.Join(errors2.ErrLCSDiffFailure, err))
 	}
 	return NewLCSResult(LCSDiffSlice, str1, str2, &result, nil)
 }
@@ -146,7 +146,7 @@ func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
 func hammingDistance(s1, s2 string) *ComparisonResultInt {
 	dist, err := edlib.HammingDistance(s1, s2)
 	if err != nil {
-		return NewComparisonResultInt(HammingDist, s1, s2, nil, nil, errors.Join(internal.ErrHammingDistanceFailure, err))
+		return NewComparisonResultInt(HammingDist, s1, s2, nil, nil, errors.Join(errors2.ErrHammingDistanceFailure, err))
 	}
 	return NewComparisonResultInt(HammingDist, s1, s2, nil, &dist, nil)
 }
@@ -170,7 +170,7 @@ func jaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
 // Returns a ComparisonResultFloat object containing the result or an error if the splitLength is invalid (< 0).
 func jaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	if splitLength < 0 {
-		return NewComparisonResultFloat(JaccardSim, s1, s2, &splitLength, nil, internal.ErrInvalidLengthRange)
+		return NewComparisonResultFloat(JaccardSim, s1, s2, &splitLength, nil, errors2.ErrInvalidLengthRange)
 	}
 	js := edlib.JaccardSimilarity(s1, s2, splitLength)
 	return NewComparisonResultFloat(JaccardSim, s1, s2, &splitLength, &js, nil)
@@ -181,7 +181,7 @@ func jaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 // if the split length is invalid.
 func cosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	if splitLength < 0 {
-		return NewComparisonResultFloat(CosineSim, s1, s2, &splitLength, nil, internal.ErrInvalidLengthRange)
+		return NewComparisonResultFloat(CosineSim, s1, s2, &splitLength, nil, errors2.ErrInvalidLengthRange)
 	}
 	cs := edlib.CosineSimilarity(s1, s2, splitLength)
 	return NewComparisonResultFloat(CosineSim, s1, s2, &splitLength, &cs, nil)
@@ -192,7 +192,7 @@ func cosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 // value or an error if the splitLength is invalid.
 func sorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFloat {
 	if splitLength < 0 {
-		return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, nil, internal.ErrInvalidLengthRange)
+		return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, nil, errors2.ErrInvalidLengthRange)
 	}
 	sdc := edlib.SorensenDiceCoefficient(s1, s2, splitLength)
 	return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, &sdc, nil)
@@ -202,7 +202,7 @@ func sorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFl
 // Returns a ComparisonResultInt containing the computed distance or an error if q is invalid.
 func qgramDistance(s1, s2 string, q int) *ComparisonResultInt {
 	if q < 0 {
-		return NewComparisonResultInt(QGramDist, s1, s2, &q, nil, internal.ErrInvalidLengthRange)
+		return NewComparisonResultInt(QGramDist, s1, s2, &q, nil, errors2.ErrInvalidLengthRange)
 	}
 	qd := edlib.QgramDistance(s1, s2, q)
 	return NewComparisonResultInt(QGramDist, s1, s2, &q, &qd, nil)
@@ -218,7 +218,7 @@ func qgramDistanceCustomNgram(nmap1, nmap2 map[string]int, customName string) *C
 // Returns a ComparisonResultFloat containing the similarity score or an error if q is invalid.
 func qgramSimilarity(s1, s2 string, q int) *ComparisonResultFloat {
 	if q < 1 {
-		return NewComparisonResultFloat(QGramSim, s1, s2, &q, nil, internal.ErrInvalidLengthRange)
+		return NewComparisonResultFloat(QGramSim, s1, s2, &q, nil, errors2.ErrInvalidLengthRange)
 	}
 	qs := edlib.QgramSimilarity(s1, s2, q)
 	return NewComparisonResultFloat(QGramSim, s1, s2, &q, &qs, nil)
@@ -230,7 +230,7 @@ func qgramSimilarity(s1, s2 string, q int) *ComparisonResultFloat {
 // Returns nil if `k` is less than 1.
 func shingle(s string, k int) *ShingleMapResult {
 	if k < 1 {
-		return NewShingleMapResult(ShinglesMap, s, k, nil, internal.ErrShingleLengthOutOfRange)
+		return NewShingleMapResult(ShinglesMap, s, k, nil, errors2.ErrShingleLengthOutOfRange)
 	}
 	shingle := edlib.Shingle(s, k)
 	smr := NewShingleMapResult(ShinglesMap, s, k, shingle, nil)
@@ -242,7 +242,7 @@ func shingle(s string, k int) *ShingleMapResult {
 // Returns nil if k is less than 1.
 func shingleSlice(s string, k int) *ShingleSliceResult {
 	if k < 1 {
-		return NewShingleSliceResult(ShinglesSlice, s, k, nil, internal.ErrShingleLengthOutOfRange)
+		return NewShingleSliceResult(ShinglesSlice, s, k, nil, errors2.ErrShingleLengthOutOfRange)
 	}
 	shingle := edlib.ShingleSlice(s, k)
 	slr := NewShingleSliceResult(ShinglesSlice, s, k, &shingle, nil)

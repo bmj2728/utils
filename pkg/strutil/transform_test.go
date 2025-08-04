@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"utils/pkg/internal"
+	errors2 "utils/pkg/internal/errors"
 )
 
 func TestTruncate(t *testing.T) {
@@ -643,11 +643,11 @@ func TestBuilderSetterError(t *testing.T) {
 		isFatal     bool
 		expected    string
 	}{
-		{"Set", New("Hello World"), internal.ErrUnknownError, internal.ErrUnknownError, false, "Hello World"},
-		{"Set", New("Hello World"), internal.ErrNoSplitLengthSet, internal.ErrNoSplitLengthSet, false, "Hello World"},
-		{"Set", New("Hello World"), internal.ErrInvalidEmpty, internal.ErrInvalidEmpty, false, "Hello World"},
-		{"Set", New("Hello World"), internal.ErrNoSplitLengthSet, internal.ErrNoSplitLengthSet, true, ""},
-		{"Set", New("Hello World"), internal.ErrInvalidEmpty, internal.ErrInvalidEmpty, true, ""},
+		{"Set", New("Hello World"), errors2.ErrUnknownError, errors2.ErrUnknownError, false, "Hello World"},
+		{"Set", New("Hello World"), errors2.ErrNoSplitLengthSet, errors2.ErrNoSplitLengthSet, false, "Hello World"},
+		{"Set", New("Hello World"), errors2.ErrInvalidEmpty, errors2.ErrInvalidEmpty, false, "Hello World"},
+		{"Set", New("Hello World"), errors2.ErrNoSplitLengthSet, errors2.ErrNoSplitLengthSet, true, ""},
+		{"Set", New("Hello World"), errors2.ErrInvalidEmpty, errors2.ErrInvalidEmpty, true, ""},
 	}
 
 	for _, tt := range tests {

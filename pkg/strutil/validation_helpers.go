@@ -3,7 +3,6 @@ package strutil
 import (
 	"net/mail"
 	"net/url"
-	"regexp"
 	"strings"
 	"unicode"
 
@@ -37,10 +36,7 @@ func isValidDomain(domain string) bool {
 	if domain == "" {
 		return false
 	}
-
-	domainRegex := regexp.MustCompile(`^(` + LabelRegex + `\.)+` + TLDRegex + `$`)
-
-	return domainRegex.MatchString(strings.TrimSpace(domain))
+	return DomainRegex.MatchString(strings.TrimSpace(domain))
 }
 
 // isValidUUID checks if the provided string is a valid UUID. Returns true if valid, otherwise false.

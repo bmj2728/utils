@@ -3,7 +3,7 @@ package strutil
 import (
 	"testing"
 
-	"utils/pkg/internal"
+	"utils/pkg/internal/errors"
 )
 
 func TestNewStringHistory(t *testing.T) {
@@ -137,29 +137,29 @@ func TestHistoryGetOriginal(t *testing.T) {
 func TestHistoryGetNil(t *testing.T) {
 	empty := &StringHistory{}
 	orig, err1 := empty.GetOriginalValue()
-	if !internal.CompareErrors(err1, internal.ErrHistoryIsEmpty) {
-		t.Errorf("HistoryGetOriginal() = %s, want %s", err1.Error(), internal.ErrHistoryIsEmpty.Error())
+	if !errors.CompareErrors(err1, errors.ErrHistoryIsEmpty) {
+		t.Errorf("HistoryGetOriginal() = %s, want %s", err1.Error(), errors.ErrHistoryIsEmpty.Error())
 	}
 	if orig != "" {
 		t.Errorf("HistoryGetOriginal() = %s, want %s", orig, "")
 	}
 	prev, err2 := empty.GetPreviousValue()
-	if !internal.CompareErrors(err2, internal.ErrInvalidHistoryIndex) {
-		t.Errorf("HistoryGetPrevious() = %s, want %s", err2.Error(), internal.ErrInvalidHistoryIndex.Error())
+	if !errors.CompareErrors(err2, errors.ErrInvalidHistoryIndex) {
+		t.Errorf("HistoryGetPrevious() = %s, want %s", err2.Error(), errors.ErrInvalidHistoryIndex.Error())
 	}
 	if prev != "" {
 		t.Errorf("HistoryGetPrevious() = %s, want %s", prev, "")
 	}
 	ind, err3 := empty.GetByIndex(1)
-	if !internal.CompareErrors(err3, internal.ErrInvalidHistoryIndex) {
-		t.Errorf("HistoryGetByIndex(1) = %s, want %s", err3.Error(), internal.ErrInvalidHistoryIndex.Error())
+	if !errors.CompareErrors(err3, errors.ErrInvalidHistoryIndex) {
+		t.Errorf("HistoryGetByIndex(1) = %s, want %s", err3.Error(), errors.ErrInvalidHistoryIndex.Error())
 	}
 	if ind != "" {
 		t.Errorf("HistoryGetByIndex(1) = %s, want %s", ind, "")
 	}
 	ind2, err4 := empty.GetByIndex(-1)
-	if !internal.CompareErrors(err4, internal.ErrInvalidHistoryIndex) {
-		t.Errorf("HistoryGetByIndex(-1) = %s, want %s", err4.Error(), internal.ErrInvalidHistoryIndex.Error())
+	if !errors.CompareErrors(err4, errors.ErrInvalidHistoryIndex) {
+		t.Errorf("HistoryGetByIndex(-1) = %s, want %s", err4.Error(), errors.ErrInvalidHistoryIndex.Error())
 	}
 	if ind2 != "" {
 		t.Errorf("HistoryGetByIndex(-1) = %s, want %s", ind, "")
