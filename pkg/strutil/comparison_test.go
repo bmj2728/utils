@@ -688,7 +688,8 @@ func TestJaccardSimilarity(t *testing.T) {
 				WithComparisonManager().
 				JaccardSimilarity(tt.input2, tt.splitLength).
 				comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > types.Float64EqualityThreshold ||
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+				types.Float64EqualityThreshold ||
 				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
 				t.Errorf("JaccardSimilarity - expected %f - got %f / %f",
 					*tt.expected,
@@ -760,7 +761,8 @@ func TestCosineSimilarity(t *testing.T) {
 			helperResult := cosineSimilarity(tt.input1, tt.input2, tt.splitLen)
 			result := CosineSimilarity(tt.input1, tt.input2, tt.splitLen)
 			builderResult := New(tt.input1).WithComparisonManager().CosineSimilarity(tt.input2, tt.splitLen).comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > types.Float64EqualityThreshold ||
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+				types.Float64EqualityThreshold ||
 				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
 				t.Errorf("CosineSimilarity - expected %f - got %f / %f",
 					*tt.expected,
@@ -835,7 +837,8 @@ func TestSorensenDiceCoefficient(t *testing.T) {
 				WithComparisonManager().
 				SorensenDiceCoefficient(tt.input2, tt.splitLen).
 				comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > types.Float64EqualityThreshold ||
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+				types.Float64EqualityThreshold ||
 				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
 				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f",
 					*tt.expected,
@@ -1079,7 +1082,8 @@ func TestQgramSimilarity(t *testing.T) {
 			helperResult := qgramSimilarity(tt.input1, tt.input2, tt.q)
 			result := QgramSimilarity(tt.input1, tt.input2, tt.q)
 			builderResult := New(tt.input1).WithComparisonManager().QgramSimilarity(tt.input2, tt.q).comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) > types.Float64EqualityThreshold ||
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+				types.Float64EqualityThreshold ||
 				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
 				t.Errorf("QgramSimilarity - expected %f - got %f / %f",
 					*tt.expected,
