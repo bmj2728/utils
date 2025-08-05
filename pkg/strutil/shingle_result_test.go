@@ -4,6 +4,7 @@ import (
 	"maps"
 	"testing"
 
+	"utils/pkg/internal/comparison"
 	"utils/pkg/internal/errors"
 )
 
@@ -155,7 +156,7 @@ func TestShingleSliceResultGetters(t *testing.T) {
 				if !errors.CompareErrors(casted.GetError(), tt.err) {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetError(), tt.err)
 				}
-				if !compareStringSlices(casted.GetShinglesSlice(), tt.result, false) {
+				if !comparison.CompareStringSlices(casted.GetShinglesSlice(), tt.result, false) {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetShinglesSlice(), tt.result)
 				}
 			}

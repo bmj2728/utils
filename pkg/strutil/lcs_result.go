@@ -3,6 +3,7 @@ package strutil
 import (
 	"fmt"
 
+	"utils/pkg/internal/comparison"
 	"utils/pkg/internal/errors"
 )
 
@@ -96,7 +97,7 @@ func (lcs *LCSResult) IsMatch(other *LCSResult) bool {
 		lcs.string1 != other.string1 ||
 		lcs.string2 != other.string2 ||
 		!errors.CompareErrors(lcs.err, other.err) ||
-		!compareStringSlices(lcs.GetResult(), other.GetResult(), false) {
+		!comparison.CompareStringSlices(lcs.GetResult(), other.GetResult(), false) {
 		return false
 	}
 	return true

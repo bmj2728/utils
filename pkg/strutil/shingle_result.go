@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"maps"
 
+	"utils/pkg/internal/comparison"
 	"utils/pkg/internal/errors"
 )
 
@@ -107,7 +108,7 @@ func (s *ShingleSliceResult) IsMatch(other ShingleResult) bool {
 		return false
 	}
 	return compareShingleInputFields(s, casted) &&
-		compareStringSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
+		comparison.CompareStringSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
 		errors.CompareErrors(s.GetError(), casted.GetError())
 }
 
