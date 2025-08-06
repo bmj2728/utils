@@ -19,9 +19,9 @@ func TestNewStringHistory(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			hist := New(tt.want).WithHistory().GetHistory()
-			if (*hist)[0] != tt.want {
-				t.Errorf("NewStringHistory() = %v, want %v", (*hist)[0], tt.want)
+			hist := New(tt.want).WithHistory(10).GetHistory()
+			if (*hist).transforms[0] != tt.want {
+				t.Errorf("NewStringHistory() = %v, want %v", (*hist).transforms[0], tt.want)
 			}
 		})
 	}
@@ -41,7 +41,7 @@ func TestHistoryLength(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			str := New("Hello World").WithHistory()
+			str := New("Hello World").WithHistory(10)
 			i := tt.loops
 			for i > 0 {
 				str.Append("loop", "-")
@@ -86,7 +86,7 @@ func TestFormatHistory(t *testing.T) {
 	short := "\nHistory: \nHello, World!, hello-world, HELLO-WORLD, hello-world\n"
 
 	x := New("Hello, World!").
-		WithHistory().
+		WithHistory(10).
 		Slugify(25).
 		ToUpper().
 		ToLower().
@@ -103,46 +103,8 @@ func TestFormatHistory(t *testing.T) {
 	x.Print(false)
 }
 
-func TestHistoryGetOriginal(t *testing.T) {
-	tests := []struct {
-		name     string
-		input    string
-		expected string
-	}{
-		{"Hist1", "Hello World", "Hello World"},
-		{"Hist2", "Hello", "Hello"},
-		{"Hist3", "Hi", "Hi"},
-		{"Hist4", "World", "World"},
-		{"Hist5", "Hello, World!", "Hello, World!"},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			x := New(tt.input).
-				WithHistory().
-				Slugify(25).
-				ToUpper().
-				ToLower().
-				GetHistory()
-			orig, err := x.GetOriginalValue()
-			if err != nil {
-				t.Errorf("HistoryGetOriginal() = %v, want %v", err, nil)
-			}
-			if orig != tt.expected {
-				t.Errorf("HistoryGetOriginal() = %v, want %v", orig, tt.expected)
-			}
-		})
-	}
-}
-
 func TestHistoryGetNil(t *testing.T) {
 	empty := &StringHistory{}
-	orig, err1 := empty.GetOriginalValue()
-	if !errors.CompareErrors(err1, errors.ErrHistoryIsEmpty) {
-		t.Errorf("HistoryGetOriginal() = %s, want %s", err1.Error(), errors.ErrHistoryIsEmpty.Error())
-	}
-	if orig != "" {
-		t.Errorf("HistoryGetOriginal() = %s, want %s", orig, "")
-	}
 	prev, err2 := empty.GetPreviousValue()
 	if !errors.CompareErrors(err2, errors.ErrInvalidHistoryIndex) {
 		t.Errorf("HistoryGetPrevious() = %s, want %s", err2.Error(), errors.ErrInvalidHistoryIndex.Error())
@@ -182,7 +144,7 @@ func TestHistoryGetPrevious(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := New(tt.input).
-				WithHistory().
+				WithHistory(10).
 				Slugify(25).
 				ToLower().
 				ToUpper().
@@ -215,7 +177,7 @@ func TestHistoryGetByIndex(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := New(tt.input).
-				WithHistory().
+				WithHistory(10).
 				Slugify(25).
 				ToUpper().
 				ToLower().

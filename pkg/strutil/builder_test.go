@@ -9,7 +9,7 @@ import (
 
 func TestStringBuilder_RevertToOriginal(t *testing.T) {
 	rb := New("Hello World"). //Hello World 0
-					WithHistory().
+					WithHistory(25).
 					ToCamelCase().            //helloWorld 1
 					ToKebabCase(true).        //HELLO-WORLD 2
 					ToKebabCase(false).       //hello-world 3
@@ -24,7 +24,7 @@ func TestStringBuilder_RevertToOriginal(t *testing.T) {
 
 func TestBuilderRevertToPrevious(t *testing.T) {
 	rb := New("Hello World"). //Hello World 0
-					WithHistory().
+					WithHistory(10).
 					ToCamelCase().            //helloWorld 1
 					ToKebabCase(true).        //HELLO-WORLD 2
 					ToKebabCase(false).       //hello-world 3
@@ -78,7 +78,7 @@ func TestBuilderRevertToIndex(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			rb := New("Hello World"). //Hello World 0
-							WithHistory().
+							WithHistory(10).
 							ToCamelCase().            //helloWorld 1
 							ToKebabCase(true).        //HELLO-WORLD 2
 							ToKebabCase(false).       //hello-world 3
@@ -114,7 +114,7 @@ func TestRevertByFunc(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			rb := New("Hello World"). //Hello World 0
-							WithHistory().
+							WithHistory(10).
 							ToCamelCase().            //helloWorld 1
 							ToKebabCase(true).        //HELLO-WORLD 2
 							ToKebabCase(false).       //hello-world 3
@@ -142,11 +142,6 @@ func TestRevertNoHistory(t *testing.T) {
 					Append("John", " ")       // 6
 	str := rb.RevertToPrevious().String()
 	err := rb.Error()
-	if str != "Hello- John" || !errors.CompareErrors(err, errors.ErrHistoryNotInitialized) {
-		t.Errorf("RevertToPrevious failed, expected empty string, got %s", str)
-	}
-	str = rb.RevertToOriginal().String()
-	err = rb.Error()
 	if str != "Hello- John" || !errors.CompareErrors(err, errors.ErrHistoryNotInitialized) {
 		t.Errorf("RevertToPrevious failed, expected empty string, got %s", str)
 	}
@@ -178,23 +173,11 @@ func TestRevertNoHistoryFunc(t *testing.T) {
 					Append("John", " ")       // 6
 
 	str := rb.RevertWithFunction(func(history *StringHistory) int {
-		return len(*rb.GetHistory()) - 2
+		return (*rb.GetHistory()).Len() - 2
 	}).String()
 	err := rb.Error()
 	if str != "Hello- John" || !errors.CompareErrors(err, errors.ErrHistoryNotInitialized) {
 		t.Errorf("RevertToPrevious failed, expected empty string, got %s", str)
-	}
-}
-
-func TestMissingOrig(t *testing.T) {
-	s := New("Hello World")
-	s.history = &StringHistory{}
-	s.RevertToOriginal()
-	str := s.String()
-	err := s.Error()
-	if str != "" || !errors.CompareErrors(err, errors.ErrHistoryIsEmpty) {
-		t.Errorf("RevertToPrevious failed, expected %q, got %q", "", str)
-		t.Errorf("RevertToPrevious failed, expected %s, got %s", errors.ErrHistoryIsEmpty, err)
 	}
 }
 
@@ -204,11 +187,11 @@ var (
 	ngramLength  = 2
 	allWithFatal = New(inWord).
 			WithComparisonManager().
-			WithHistory().
+			WithHistory(10).
 			setError(errors.ErrUnknownError, true)
 	allWithNonFatal = New(inWord).
 			WithComparisonManager().
-			WithHistory().
+			WithHistory(10).
 			setError(errors.ErrUnknownError, false)
 )
 

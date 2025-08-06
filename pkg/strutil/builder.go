@@ -10,6 +10,7 @@ import (
 type StringBuilder struct {
 	value             string
 	err               error
+	originalValue     string
 	comparisonManager *ComparisonManager
 	history           *StringHistory
 }
@@ -40,6 +41,10 @@ func (sb *StringBuilder) String() string {
 	return sb.value
 }
 
+func (sb *StringBuilder) GetOriginalValue() string {
+	return sb.originalValue
+}
+
 // Error returns the error stored in the StringBuilder instance, or nil if no error is set.
 func (sb *StringBuilder) Error() error {
 	return sb.err
@@ -54,9 +59,9 @@ func (sb *StringBuilder) WithComparisonManager() *StringBuilder {
 }
 
 // WithHistory initializes the history for the StringBuilder if it does not already exist and returns the instance.
-func (sb *StringBuilder) WithHistory() *StringBuilder {
+func (sb *StringBuilder) WithHistory(limit int) *StringBuilder {
 	if sb.history == nil {
-		sb.history = NewStringHistory()
+		sb.history = NewStringHistory(limit)
 	}
 	sb.updateHistory(sb.value)
 	return sb
@@ -124,18 +129,7 @@ func (sb *StringBuilder) shouldContinueProcessing() bool {
 // RevertToOriginal restores the StringBuilder value to its initial
 // state based on its history or sets an error if unresolved.
 func (sb *StringBuilder) RevertToOriginal() *StringBuilder {
-	if sb.history != nil {
-		orig, err := sb.history.GetOriginalValue()
-		if err == nil {
-			sb.value = orig
-			// Keep only the original (index 0)
-			*sb.history = (*sb.history)[:1]
-		} else {
-			sb.setError(err, true)
-		}
-	} else {
-		sb.setError(errors.ErrHistoryNotInitialized, false)
-	}
+	sb.value = sb.originalValue
 	return sb
 }
 
@@ -146,7 +140,7 @@ func (sb *StringBuilder) RevertToPrevious() *StringBuilder {
 		if err == nil {
 			// this throws an error if there is only an original value
 			sb.value = prev
-			*sb.history = (*sb.history)[:len(*sb.history)-1]
+			(*sb.history).transforms = (*sb.history).transforms[:sb.history.Len()-1]
 		} else {
 			// fatal - reversion failed
 			sb.setError(err, true)
@@ -171,7 +165,7 @@ func (sb *StringBuilder) RevertToIndex(index int) *StringBuilder {
 		if err == nil {
 			// throws error when invalid index
 			sb.value = ind
-			*sb.history = (*sb.history)[:index+1]
+			(*sb.history).transforms = (*sb.history).transforms[:index+1]
 		} else {
 			// fatal - reversion has failed
 			sb.setError(err, true)
