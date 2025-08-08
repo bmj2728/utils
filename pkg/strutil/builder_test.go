@@ -7,6 +7,43 @@ import (
 	"utils/pkg/internal/errors"
 )
 
+func TestBuilderGetOriginal(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+	}{
+		{"Test 1", "Hello World"},
+		{"Test 2", "Hi"},
+		{"Test 3", "www.example.com"},
+		{"Test 4", "asdfghjkl;1234567890!@#$%^&*("},
+		{"Test 5", " "},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			rb := New(tt.input). //Hello World 0
+						Append("append 1", "-").
+						Append("append 2", "-").
+						Append("append 3", "-").
+						Append("append 4", "-")
+
+			if rb.GetOriginalValue() != tt.input {
+				t.Errorf("GetOriginal failed, expected Hello World, got %s", rb.GetOriginalValue())
+			}
+		})
+	}
+
+	rb := New("Hello World"). //Hello World 0
+					Append("append 1", "-").
+					Append("append 2", "-").
+					Append("append 3", "-").
+					Append("append 4", "-")
+
+	if rb.GetOriginalValue() != "Hello World" {
+		t.Errorf("GetOriginal failed, expected Hello World, got %s", rb.GetOriginalValue())
+	}
+}
+
 func TestStringBuilder_RevertToOriginal(t *testing.T) {
 	rb := New("Hello World"). //Hello World 0
 					WithHistory(25).

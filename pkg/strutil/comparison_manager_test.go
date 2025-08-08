@@ -1018,3 +1018,28 @@ func TestEmptyTestGet(t *testing.T) {
 		t.Errorf("Expected result to be nil")
 	}
 }
+
+func TestEmptyAdds(t *testing.T) {
+	testManager := ComparisonManager{}
+	l := LCSBacktrack("Hi", "Hi")
+	s := Shingle("Hi", 1)
+	c := LevenshteinDistance("Hi", "Hi")
+	si := Similarity("Hi", "Hi", Cosine)
+	testManager.AddLCSResult(*l)
+	testManager.AddShingleResult(s)
+	testManager.AddComparisonResult(c)
+	testManager.AddSimilarityResult(*si)
+
+	if testManager.GetLCSResult(LCSBacktrackWord, "Hi") == nil {
+		t.Errorf("Expected result to not be nil")
+	}
+	if testManager.GetShingleResult(ShinglesMap, 1) == nil {
+		t.Errorf("Expected result to not be nil")
+	}
+	if testManager.GetComparisonResult(LevDist, "Hi") == nil {
+		t.Errorf("Expected result to not be nil")
+	}
+	if testManager.GetSimilarityResult(Cosine, "Hi") == nil {
+		t.Errorf("Expected result to not be nil")
+	}
+}
