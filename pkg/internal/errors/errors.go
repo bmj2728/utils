@@ -71,14 +71,20 @@ var (
 	// ErrHistoryNotInitialized indicates that the history has not been initialized prior to use.
 	ErrHistoryNotInitialized = errors.New("history not initialized")
 
-	// ErrHistoryIsEmpty indicates that a history operation was attempted on an empty history.
-	ErrHistoryIsEmpty = errors.New("history is empty")
-
 	// ErrInvalidNgramMap indicates that the provided ngram map is invalid.
 	ErrInvalidNgramMap = errors.New("invalid ngram map")
 
 	// ErrPatternNotFound indicates that the specified pattern could not be found.
 	ErrPatternNotFound = errors.New("pattern not found")
+
+	// ErrDoesNotContainSubstring indicates that a string does not contain the expected substring.
+	ErrDoesNotContainSubstring = errors.New("does not contain substring")
+
+	// ErrMissingPrefix indicates that a required prefix is missing from a given string.
+	ErrMissingPrefix = errors.New("missing prefix")
+
+	// ErrMissingSuffix indicates that the required suffix is missing from a string.
+	ErrMissingSuffix = errors.New("missing suffix")
 )
 
 // CompareErrors compares two error values for equality by checking their string representations.

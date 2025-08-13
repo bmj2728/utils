@@ -125,3 +125,89 @@ func (sb *StringBuilder) RequireNormalizedUnicode(format NormalizationFormat) *S
 	}
 	return sb
 }
+
+// RequireContains ensures the StringBuilder's value contains the specified substring or sets an error if not.
+func (sb *StringBuilder) RequireContains(substr string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !contains(sb.value, substr) {
+		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+	}
+	return sb
+}
+
+// RequireContainsIgnoreCase ensures the StringBuilder's value contains the specified substring,
+// ignoring case sensitivity.
+// If the substring is not found, it sets an error and stops further processing.
+// Returns the updated StringBuilder instance.
+func (sb *StringBuilder) RequireContainsIgnoreCase(substr string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !containsIgnoreCase(sb.value, substr) {
+		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+	}
+	return sb
+}
+
+// RequireContainsAny ensures the string contains at least one of the specified substrings or sets an error if not.
+func (sb *StringBuilder) RequireContainsAny(substrs []string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !containsAny(sb.value, substrs) {
+		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+	}
+	return sb
+}
+
+func (sb *StringBuilder) RequireContainsAnyIgnoreCase(substrs []string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !containsAnyIgnoreCase(sb.value, substrs) {
+		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+	}
+	return sb
+}
+
+func (sb *StringBuilder) RequireContainsAll(substrs []string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !containsAll(sb.value, substrs) {
+		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+	}
+	return sb
+}
+
+func (sb *StringBuilder) RequireContainsAllIgnoreCase(substrs []string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !containsAllIgnoreCase(sb.value, substrs) {
+		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+	}
+	return sb
+}
+
+func (sb *StringBuilder) RequireHasPrefix(prefix string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !hasPrefix(sb.value, prefix) {
+		return sb.setError(errors.ErrMissingPrefix, false)
+	}
+	return sb
+}
+
+func (sb *StringBuilder) RequireHasSuffix(suffix string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !hasSuffix(sb.value, suffix) {
+		return sb.setError(errors.ErrMissingSuffix, false)
+	}
+	return sb
+}

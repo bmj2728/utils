@@ -550,6 +550,78 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("RemoveANSIEscapeCodes failed, expected %t, got %t", tt.expected,
 					tt.input.RemoveANSIEscapeCodes().String() == "")
 			}
+			if tt.input.RequireContains(compWord).String() == "" != tt.expected {
+				t.Errorf("RequireContains failed, expected %t, got %t", tt.expected,
+					tt.input.RequireContains(compWord).String() == "")
+			}
+			if tt.input.RequireContainsIgnoreCase(compWord).String() == "" != tt.expected {
+				t.Errorf("RequireContainsIgnoreCase failed, expected %t, got %t", tt.expected,
+					tt.input.RequireContainsIgnoreCase(compWord).String() == "")
+			}
+			if tt.input.RequireContainsAny([]string{compWord}).String() == "" != tt.expected {
+				t.Errorf("RequireContainsAny failed, expected %t, got %t", tt.expected,
+					tt.input.RequireContainsAny([]string{compWord}).String() == "")
+			}
+			if tt.input.RequireContainsAnyIgnoreCase([]string{compWord}).String() == "" != tt.expected {
+				t.Errorf("RequireContainsAnyIgnoreCase failed, expected %t, got %t", tt.expected,
+					tt.input.RequireContainsAnyIgnoreCase([]string{compWord}).String() == "")
+			}
+			if tt.input.RequireContainsAll([]string{compWord}).String() == "" != tt.expected {
+				t.Errorf("RequireContainsAll failed, expected %t, got %t", tt.expected,
+					tt.input.RequireContainsAll([]string{compWord}).String() == "")
+			}
+			if tt.input.RequireContainsAllIgnoreCase([]string{compWord}).String() == "" != tt.expected {
+				t.Errorf("RequireContainsAllIgnoreCase failed, expected %t, got %t", tt.expected,
+					tt.input.RequireContainsAllIgnoreCase([]string{compWord}).String() == "")
+			}
+			if tt.input.RequireHasPrefix(compWord).String() == "" != tt.expected {
+				t.Errorf("RequireHasPrefix failed, expected %t, got %t", tt.expected,
+					tt.input.RequireHasPrefix(compWord).String() == "")
+			}
+			if tt.input.RequireHasSuffix(compWord).String() == "" != tt.expected {
+				t.Errorf("RequireHasSuffix failed, expected %t, got %t", tt.expected,
+					tt.input.RequireHasSuffix(compWord).String() == "")
+			}
+			if tt.input.RequireEmail().String() == "" != tt.expected {
+				t.Errorf("RequireEmail failed, expected %t, got %t", tt.expected,
+					tt.input.RequireEmail().String() == "")
+			}
+			if tt.input.RequireDomain().String() == "" != tt.expected {
+				t.Errorf("RequireDomain failed, expected %t, got %t", tt.expected,
+					tt.input.RequireDomain().String() == "")
+			}
+			if tt.input.RequireURL().String() == "" != tt.expected {
+				t.Errorf("RequireURL failed, expected %t, got %t", tt.expected,
+					tt.input.RequireURL().String() == "")
+			}
+			if tt.input.RequireUUID().String() == "" != tt.expected {
+				t.Errorf("RequireUUID failed, expected %t, got %t", tt.expected,
+					tt.input.RequireUUID().String() == "")
+			}
+			if tt.input.RequireLength(0, 100).String() == "" != tt.expected {
+				t.Errorf("RequireLength failed, expected %t, got %t", tt.expected,
+					tt.input.RequireLength(0, 100).String() == "")
+			}
+			if tt.input.RequireNotEmpty().String() == "" != tt.expected {
+				t.Errorf("RequireNotEmpty failed, expected %t, got %t", tt.expected,
+					tt.input.RequireNotEmpty().String() == "")
+			}
+			if tt.input.RequireNotEmptyNormalized().String() == "" != tt.expected {
+				t.Errorf("RequireNotEmptyNormalized failed, expected %t, got %t", tt.expected,
+					tt.input.RequireNotEmptyNormalized().String() == "")
+			}
+			if tt.input.RequireAlpha().String() == "" != tt.expected {
+				t.Errorf("RequireAlpha failed, expected %t, got %t", tt.expected,
+					tt.input.RequireAlpha().String() == "")
+			}
+			if tt.input.RequireAlphaNumeric().String() == "" != tt.expected {
+				t.Errorf("RequireAlphaNumeric failed, expected %t, got %t", tt.expected,
+					tt.input.RequireAlphaNumeric().String() == "")
+			}
+			if tt.input.RequireNormalizedUnicode(NFC).String() == "" != tt.expected {
+				t.Errorf("RequireNormalizedUnicode failed, expected %t, got %t", tt.expected,
+					tt.input.RequireNormalizedUnicode(NFC).String() == "")
+			}
 		})
 	}
 }
