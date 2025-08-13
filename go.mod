@@ -1,4 +1,4 @@
-module utils
+module github.com/bmj2728/utils
 
 go 1.24
 
