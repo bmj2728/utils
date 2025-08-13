@@ -138,7 +138,7 @@ kebab := strutil.ToKebabCase(text)     // "hello-world"
 
 // String manipulation
 original := "Hello World"
-padded := strutil.PadLeft(original, 20, "*")      // "*********Hello World"
+prepended := strutil.Prepend(original, "*********")      // "*********Hello World"
 truncated := strutil.Truncate(original, 5, "...")  // "Hello..."
 ```
 
