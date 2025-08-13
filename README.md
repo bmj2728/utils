@@ -19,7 +19,7 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/bmj2728/utils)](https://golang.org/)
 [![Release](https://img.shields.io/github/v/release/bmj2728/utils?include_prereleases)](https://github.com/bmj2728/utils/releases)
 
-> **Status**: Ready for v0.1.0 🚀 - Stable API with comprehensive testing
+> **Status**: Ready for v0.1.1 🚀 - Stable API with comprehensive testing
 
 A comprehensive collection of utility packages for Go, designed to fill the gaps in the standard library and provide a consistent, well-tested set of tools for common programming tasks.
 
