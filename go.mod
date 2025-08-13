@@ -1,4 +1,4 @@
-module utils
+module github.com/bmj2728/utils
 
 go 1.24
 
@@ -11,12 +11,12 @@ require (
 	github.com/hbollon/go-edlib v1.6.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/microcosm-cc/bluemonday v1.0.27
-	github.com/mrz1836/go-sanitize v1.5.0
-	golang.org/x/text v0.27.0
+	github.com/mrz1836/go-sanitize v1.5.2
+	golang.org/x/text v0.28.0
 )
 
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
-	golang.org/x/net v0.42.0 // indirect
+	golang.org/x/net v0.43.0 // indirect
 )

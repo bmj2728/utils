@@ -1,7 +1,7 @@
 package strutil
 
 import (
-	"utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 // CompareStringBuilderSlices compares two slices of StringBuilder for equality,

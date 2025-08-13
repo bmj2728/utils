@@ -5,9 +5,9 @@ import (
 	"math"
 	"testing"
 
-	"utils/pkg/internal/comparison"
-	errors2 "utils/pkg/internal/errors"
-	"utils/pkg/internal/types"
+	"github.com/bmj2728/utils/pkg/internal/comparison"
+	errors2 "github.com/bmj2728/utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/types"
 )
 
 func TestLevenshteinDistance(t *testing.T) {

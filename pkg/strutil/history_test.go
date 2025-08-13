@@ -3,7 +3,7 @@ package strutil
 import (
 	"testing"
 
-	"utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 func TestNewStringHistory(t *testing.T) {

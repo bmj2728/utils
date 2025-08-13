@@ -1,6 +1,6 @@
 package strutil
 
-import "utils/pkg/internal/comparison"
+import "github.com/bmj2728/utils/pkg/internal/comparison"
 
 // CompareSlices compares two slices of strings for equality, with an option
 // to treat nil slices as equal if nulls is set to true.

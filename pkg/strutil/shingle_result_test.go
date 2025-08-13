@@ -4,8 +4,8 @@ import (
 	"maps"
 	"testing"
 
-	"utils/pkg/internal/comparison"
-	"utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/comparison"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 var (

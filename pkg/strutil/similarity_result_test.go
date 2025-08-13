@@ -5,8 +5,8 @@ import (
 	"math"
 	"testing"
 
-	errors2 "utils/pkg/internal/errors"
-	"utils/pkg/internal/types"
+	errors2 "github.com/bmj2728/utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/types"
 )
 
 func TestAlgorithmString(t *testing.T) {

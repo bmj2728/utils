@@ -4,7 +4,7 @@ import (
 	"errors"
 	"slices"
 
-	errors2 "utils/pkg/internal/errors"
+	errors2 "github.com/bmj2728/utils/pkg/internal/errors"
 
 	"github.com/hbollon/go-edlib"
 )

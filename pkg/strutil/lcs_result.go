@@ -3,8 +3,8 @@ package strutil
 import (
 	"fmt"
 
-	"utils/pkg/internal/comparison"
-	"utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/comparison"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 // LCSResultType represents an enumerated type used to define different

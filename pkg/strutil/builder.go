@@ -3,7 +3,7 @@ package strutil
 import (
 	"fmt"
 
-	"utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 // StringBuilder Type & Core Methods

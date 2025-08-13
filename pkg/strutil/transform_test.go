@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	errors2 "utils/pkg/internal/errors"
+	errors2 "github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 func TestTruncate(t *testing.T) {

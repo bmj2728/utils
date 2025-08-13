@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"math"
 
-	"utils/pkg/internal/errors"
-	"utils/pkg/internal/types"
+	"github.com/bmj2728/utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/types"
 
 	"github.com/hbollon/go-edlib"
 )

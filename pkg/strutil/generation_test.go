@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	errors2 "utils/pkg/internal/errors"
+	errors2 "github.com/bmj2728/utils/pkg/internal/errors"
 
 	"github.com/google/uuid"
 )

@@ -3,7 +3,7 @@ package pattern
 import (
 	"regexp"
 
-	"utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 // CustomPatternSet is a type that maps string keys to compiled regular expressions.
