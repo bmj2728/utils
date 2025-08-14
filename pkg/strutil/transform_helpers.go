@@ -348,3 +348,38 @@ func replaceNonAlphaNumericWithIgnore(s string, replacement string, ignoreChars 
 func normalizeUnicode(s string, format NormalizationFormat) string {
 	return string(norm.Form(format).Bytes([]byte(s)))
 }
+
+// removePrefix removes the specified prefix from the given string if it exists and returns the resulting string.
+func removePrefix(s string, prefix string) string {
+	if prefix == "" {
+		return s
+	}
+	return strings.TrimPrefix(s, prefix)
+}
+
+// removePrefixWithResult removes the specified prefix from the input string and returns the
+// result and a boolean flag.
+func removePrefixWithResult(s string, prefix string) (string, bool) {
+	if prefix == "" {
+		return s, false
+	}
+	return strings.CutPrefix(s, prefix)
+}
+
+// removeSuffix removes the specified suffix from the given string if it is present.
+func removeSuffix(s string, suffix string) string {
+	if suffix == "" {
+		return s
+	}
+	return strings.TrimSuffix(s, suffix)
+}
+
+// removeSuffixWithResult removes the specified suffix from the input string and returns the
+// modified string and a boolean.
+// The boolean indicates whether the suffix was found and removed.
+func removeSuffixWithResult(s string, suffix string) (string, bool) {
+	if suffix == "" {
+		return s, false
+	}
+	return strings.CutSuffix(s, suffix)
+}

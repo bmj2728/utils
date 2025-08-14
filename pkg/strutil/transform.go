@@ -124,3 +124,28 @@ func NormalizeDiacritics(s string) string {
 func NormalizeUnicode(s string, form NormalizationFormat) string {
 	return normalizeUnicode(s, form)
 }
+
+// RemovePrefix removes the specified prefix from a string and returns the resulting string.
+func RemovePrefix(s string, prefix string) string {
+	return removePrefix(s, prefix)
+}
+
+// RemovePrefixWithResult removes the specified prefix from the input string and
+// returns the modified string and a boolean.
+// The boolean indicates whether the prefix was found and removed.
+func RemovePrefixWithResult(s string, prefix string) (string, bool) {
+	return removePrefixWithResult(s, prefix)
+}
+
+// RemoveSuffix removes the specified suffix from the input string if it exists and
+// returns the resulting string.
+func RemoveSuffix(s string, suffix string) string {
+	return removeSuffix(s, suffix)
+}
+
+// RemoveSuffixWithResult removes the specified suffix from the input string and
+// returns the modified string and a boolean.
+// The boolean indicates whether the suffix was found and removed.
+func RemoveSuffixWithResult(s string, suffix string) (string, bool) {
+	return removeSuffixWithResult(s, suffix)
+}

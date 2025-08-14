@@ -526,6 +526,24 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("RemoveANSIEscapeCodes failed, expected %t, got %t", tt.expected,
 					tt.input.RemoveANSIEscapeCodes().String() == "")
 			}
+			if tt.input.RemovePrefix(".").String() == "" != tt.expected {
+				t.Errorf("RemovePrefix failed, expected %t, got %t", tt.expected,
+					tt.input.RemovePrefix(".").String() == "")
+			}
+			if tt.input.RemoveSuffix(".exe").String() == "" != tt.expected {
+				t.Errorf("RemoveSuffix failed, expected %t, got %t", tt.expected,
+					tt.input.RemoveSuffix(".exe").String() == "")
+			}
+			prefRes, prefOk := tt.input.RemovePrefixWithResult(".")
+			if prefRes.String() == "" != tt.expected || prefOk {
+				t.Errorf("RemovePrefixWithResult failed, expected %t, got %t", tt.expected,
+					prefRes.String() == "")
+			}
+			sufRes, sufOk := tt.input.RemoveSuffixWithResult(".exe")
+			if sufRes.String() == "" != tt.expected || sufOk {
+				t.Errorf("RemoveSuffixWithResult failed, expected %t, got %t", tt.expected,
+					sufRes.String() == "")
+			}
 		})
 	}
 }

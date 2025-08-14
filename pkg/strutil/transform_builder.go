@@ -255,3 +255,41 @@ func (sb *StringBuilder) NormalizeUnicode(form NormalizationFormat) *StringBuild
 	sb.setValue(normalizeUnicode(sb.value, form))
 	return sb
 }
+
+// RemovePrefix removes the specified prefix from the StringBuilder's value if it exists
+// and returns the updated StringBuilder.
+func (sb *StringBuilder) RemovePrefix(prefix string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	return sb.setValue(removePrefix(sb.value, prefix))
+}
+
+// RemoveSuffix removes the specified suffix from the current string if it is
+// present and returns the updated StringBuilder.
+func (sb *StringBuilder) RemoveSuffix(suffix string) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	return sb.setValue(removeSuffix(sb.value, suffix))
+}
+
+// RemovePrefixWithResult removes the specified prefix from the StringBuilder's value
+// and returns the modified instance and a boolean indicating whether the prefix was found and removed.
+func (sb *StringBuilder) RemovePrefixWithResult(prefix string) (*StringBuilder, bool) {
+	if !sb.shouldContinueProcessing() {
+		return sb, false
+	}
+	s, result := removePrefixWithResult(sb.value, prefix)
+	return sb.setValue(s), result
+}
+
+// RemoveSuffixWithResult removes the specified suffix from the StringBuilder's value
+// and returns the modified instance and a boolean indicating whether the suffix was found and removed.
+func (sb *StringBuilder) RemoveSuffixWithResult(suffix string) (*StringBuilder, bool) {
+	if !sb.shouldContinueProcessing() {
+		return sb, false
+	}
+	s, result := removeSuffixWithResult(sb.value, suffix)
+	return sb.setValue(s), result
+}

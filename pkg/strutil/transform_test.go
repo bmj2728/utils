@@ -1,10 +1,9 @@
 package strutil
 
 import (
-	"errors"
 	"testing"
 
-	errors2 "github.com/bmj2728/utils/pkg/internal/errors"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
 func TestTruncate(t *testing.T) {
@@ -871,20 +870,166 @@ func TestBuilderSetterError(t *testing.T) {
 		isFatal     bool
 		expected    string
 	}{
-		{"Set", New("Hello World"), errors2.ErrUnknownError, errors2.ErrUnknownError, false, "Hello World"},
-		{"Set", New("Hello World"), errors2.ErrNoSplitLengthSet, errors2.ErrNoSplitLengthSet, false, "Hello World"},
-		{"Set", New("Hello World"), errors2.ErrInvalidEmpty, errors2.ErrInvalidEmpty, false, "Hello World"},
-		{"Set", New("Hello World"), errors2.ErrNoSplitLengthSet, errors2.ErrNoSplitLengthSet, true, ""},
-		{"Set", New("Hello World"), errors2.ErrInvalidEmpty, errors2.ErrInvalidEmpty, true, ""},
+		{"SetError1",
+			New("Hello World"),
+			errors.ErrUnknownError,
+			errors.ErrUnknownError,
+			false,
+			"Hello World"},
+		{"SetError2",
+			New("Hello World"),
+			errors.ErrNoSplitLengthSet,
+			errors.ErrNoSplitLengthSet,
+			false,
+			"Hello World"},
+		{"SetError3",
+			New("Hello World"),
+			errors.ErrInvalidEmpty,
+			errors.ErrInvalidEmpty,
+			false,
+			"Hello World"},
+		{"SetError4",
+			New("Hello World"),
+			errors.ErrNoSplitLengthSet,
+			errors.ErrNoSplitLengthSet,
+			true,
+			""},
+		{"SetError5",
+			New("Hello World"),
+			errors.ErrInvalidEmpty,
+			errors.ErrInvalidEmpty,
+			true,
+			""},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if !errors.Is(tt.input.setError(tt.setError, tt.isFatal).Error(), tt.expectedErr) ||
+			if !errors.CompareErrors(tt.input.setError(tt.setError, tt.isFatal).Error(), tt.expectedErr) ||
 				tt.input.String() != tt.expected {
-				t.Errorf("Set() = %q, expected %q", tt.input.String(), tt.expectedErr)
+				t.Errorf("setError(%v, %t): expected %q/%t", tt.setError, tt.isFatal, tt.expected, tt.isFatal)
+				t.Errorf("  Input: %q", tt.input.String())
+				t.Errorf("  Expected: %q", tt.expected)
+				t.Errorf("  Actual: %q", tt.input.String())
 			}
+		})
+	}
+}
 
+func TestRemovePrefix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		prefix   string
+		expected string
+	}{
+		{"RemovePrefix", "Pre-Release", "Pre-", "Release"},
+		{"RemovePrefixNotThere", "Release", "Pre-", "Release"},
+		{"RemovePrefixEmpty", "", "Pre-", ""},
+		{"RemovePrefixEmptyPrefix", "Pre-", "", "Pre-"},
+		{"RemovePrefixEmptyInput", "", "Pre-", ""},
+		{"RemovePrefixEmptyBoth", "", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := removePrefix(tt.input, tt.prefix)
+			result := RemovePrefix(tt.input, tt.prefix)
+			builderResult := New(tt.input).RemovePrefix(tt.prefix).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("RemovePrefix() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestRemoveSuffix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		suffix   string
+		expected string
+	}{
+		{"RemoveSuffix", "v0.1.0-alpha", "-alpha", "v0.1.0"},
+		{"RemoveSuffixNotThere", "Release", "-alpha", "Release"},
+		{"RemoveSuffixEmptySuffix", "-alpha", "", "-alpha"},
+		{"RemoveSuffixEmptyInput", "", "-alpha", ""},
+		{"RemoveSuffixEmptyBoth", "", "", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := removeSuffix(tt.input, tt.suffix)
+			result := RemoveSuffix(tt.input, tt.suffix)
+			builderResult := New(tt.input).RemoveSuffix(tt.suffix).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("RemoveSuffix() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestRemovePrefixWithResult(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		prefix string
+		out    string
+		result bool
+	}{
+		{"RemovePrefix", "Pre-Release", "Pre-", "Release", true},
+		{"RemovePrefixNotThere", "Release", "Pre-", "Release", false},
+		{"RemovePrefixEmpty", "", "Pre-", "", false},
+		{"RemovePrefixEmptyPrefix", "Pre-", "", "Pre-", false},
+		{"RemovePrefixEmptyInput", "", "Pre-", "", false},
+		{"RemovePrefixEmptyBoth", "", "", "", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperOut, helperResult := removePrefixWithResult(tt.input, tt.prefix)
+			out, result := RemovePrefixWithResult(tt.input, tt.prefix)
+			builderOut, builderResult := New(tt.input).RemovePrefixWithResult(tt.prefix)
+
+			if helperOut != tt.out || out != tt.out || builderOut.String() != tt.out {
+				t.Errorf("RemovePrefixWithResult() = %s / %s / %s / expected %s",
+					helperOut, out, builderOut.String(), tt.out)
+			}
+			if helperResult != tt.result || result != tt.result || builderResult != tt.result {
+				t.Errorf("RemovePrefixWithResult() = %t / %t / %t / expected %t",
+					helperResult, result, builderResult, tt.result)
+			}
+		})
+	}
+}
+
+func TestRemoveSuffixWithResult(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		suffix string
+		out    string
+		result bool
+	}{
+		{"RemoveSuffix", "v0.1.0-alpha", "-alpha", "v0.1.0", true},
+		{"RemoveSuffixNotThere", "Release", "-alpha", "Release", false},
+		{"RemoveSuffixEmptySuffix", "-alpha", "", "-alpha", false},
+		{"RemoveSuffixEmptyInput", "", "-alpha", "", false},
+		{"RemoveSuffixEmptyBoth", "", "", "", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperOut, helperResult := removeSuffixWithResult(tt.input, tt.suffix)
+			out, result := RemoveSuffixWithResult(tt.input, tt.suffix)
+			builderOut, builderResult := New(tt.input).RemoveSuffixWithResult(tt.suffix)
+			if helperOut != tt.out || out != tt.out || builderOut.String() != tt.out {
+				t.Errorf("RemoveSuffixWithResult() = %s / %s / %s / expected %s",
+					helperOut, out, builderOut.String(), tt.out)
+			}
+			if helperResult != tt.result || result != tt.result || builderResult != tt.result {
+				t.Errorf("RemoveSuffixWithResult() = %t / %t / %t / expected %t",
+					helperResult, result, builderResult, tt.result)
+			}
 		})
 	}
 }
