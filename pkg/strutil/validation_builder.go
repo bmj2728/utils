@@ -126,88 +126,97 @@ func (sb *StringBuilder) RequireNormalizedUnicode(format NormalizationFormat) *S
 	return sb
 }
 
-// RequireContains ensures the StringBuilder's value contains the specified substring or sets an error if not.
+// RequireContains ensures that the StringBuilder's value contains the specified substring.
+// If the substring is not found, it sets an error and halts further processing.
 func (sb *StringBuilder) RequireContains(substr string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !contains(sb.value, substr) {
-		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+		return sb.setError(errors.ErrDoesNotContainSubstring, true)
 	}
 	return sb
 }
 
-// RequireContainsIgnoreCase ensures the StringBuilder's value contains the specified substring,
-// ignoring case sensitivity.
-// If the substring is not found, it sets an error and stops further processing.
-// Returns the updated StringBuilder instance.
+// RequireContainsIgnoreCase verifies that the StringBuilder's value contains the given substring, ignoring case.
+// Returns the StringBuilder itself, or sets an error if the substring is not found.
 func (sb *StringBuilder) RequireContainsIgnoreCase(substr string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !containsIgnoreCase(sb.value, substr) {
-		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+		return sb.setError(errors.ErrDoesNotContainSubstring, true)
 	}
 	return sb
 }
 
-// RequireContainsAny ensures the string contains at least one of the specified substrings or sets an error if not.
+// RequireContainsAny ensures the string contains at least one of the specified substrings, else sets an error.
 func (sb *StringBuilder) RequireContainsAny(substrs []string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !containsAny(sb.value, substrs) {
-		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+		return sb.setError(errors.ErrDoesNotContainSubstring, true)
 	}
 	return sb
 }
 
+// RequireContainsAnyIgnoreCase ensures the string contains at least one of the specified substrings, disregarding case.
+// If none of the substrings are found, it sets an error and halts further processing.
+// Returns the updated StringBuilder instance.
 func (sb *StringBuilder) RequireContainsAnyIgnoreCase(substrs []string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !containsAnyIgnoreCase(sb.value, substrs) {
-		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+		return sb.setError(errors.ErrDoesNotContainSubstring, true)
 	}
 	return sb
 }
 
+// RequireContainsAll ensures the StringBuilder's value contains all provided substrings; sets an error if not.
 func (sb *StringBuilder) RequireContainsAll(substrs []string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !containsAll(sb.value, substrs) {
-		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+		return sb.setError(errors.ErrDoesNotContainSubstring, true)
 	}
 	return sb
 }
 
+// RequireContainsAllIgnoreCase checks if all substrings in the slice exist in the current value,
+// ignoring case sensitivity.
+// Returns the StringBuilder instance with an error set if any substring is missing.
 func (sb *StringBuilder) RequireContainsAllIgnoreCase(substrs []string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !containsAllIgnoreCase(sb.value, substrs) {
-		return sb.setError(errors.ErrDoesNotContainSubstring, false)
+		return sb.setError(errors.ErrDoesNotContainSubstring, true)
 	}
 	return sb
 }
 
+// RequireHasPrefix ensures the builder's string value has the specified prefix or sets an error
+// if the prefix is missing.
 func (sb *StringBuilder) RequireHasPrefix(prefix string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !hasPrefix(sb.value, prefix) {
-		return sb.setError(errors.ErrMissingPrefix, false)
+		return sb.setError(errors.ErrMissingPrefix, true)
 	}
 	return sb
 }
 
+// RequireHasSuffix ensures the StringBuilder's value ends with the specified suffix, setting an error if not.
 func (sb *StringBuilder) RequireHasSuffix(suffix string) *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
 	if !hasSuffix(sb.value, suffix) {
-		return sb.setError(errors.ErrMissingSuffix, false)
+		return sb.setError(errors.ErrMissingSuffix, true)
 	}
 	return sb
 }

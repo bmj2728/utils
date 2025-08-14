@@ -436,30 +436,6 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("SanitizeHTML failed, expected %t, got %t", tt.expected,
 					tt.input.SanitizeHTML().String() == "")
 			}
-			//if tt.input.RemoveNonPrintable().String() == "" != tt.expected {
-			//	t.Errorf("RemoveNonPrintable failed, expected %t, got %t", tt.expected,
-			//		tt.input.RemoveNonPrintable().String() == "")
-			//}
-			//if tt.input.RemoveANSIEscapeCodes().String() == "" != tt.expected {
-			//	t.Errorf("RemoveANSIEscapeCodes failed, expected %t, got %t", tt.expected,
-			//		tt.input.RemoveANSIEscapeCodes().String() == "")
-			//}
-			//if tt.input.SanitizeFilename().String() == "" != tt.expected {
-			//	t.Errorf("SanitizeFilename failed, expected %t, got %t", tt.expected,
-			//		tt.input.SanitizeFilename().String() == "")
-			//}
-			//if tt.input.SanitizePath().String() == "" != tt.expected {
-			//	t.Errorf("SanitizePath failed, expected %t, got %t", tt.expected,
-			//		tt.input.SanitizePath().String() == "")
-			//}
-			//if tt.input.SanitizeEmail().String() == "" != tt.expected {
-			//	t.Errorf("SanitizeEmail failed, expected %t, got %t", tt.expected,
-			//		tt.input.SanitizeEmail().String() == "")
-			//}
-			//if tt.input.SanitizeUsername().String() == "" != tt.expected {
-			//	t.Errorf("SanitizeUsername failed, expected %t, got %t", tt.expected,
-			//		tt.input.SanitizeUsername().String() == "")
-			//}
 			if tt.input.LevenshteinDistance(compWord).String() == "" != tt.expected {
 				t.Errorf("LevenshteinDistance failed, expected %t, got %t", tt.expected,
 					tt.input.LevenshteinDistance(compWord).String() == "")
@@ -550,78 +526,431 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("RemoveANSIEscapeCodes failed, expected %t, got %t", tt.expected,
 					tt.input.RemoveANSIEscapeCodes().String() == "")
 			}
-			if tt.input.RequireContains(compWord).String() == "" != tt.expected {
-				t.Errorf("RequireContains failed, expected %t, got %t", tt.expected,
-					tt.input.RequireContains(compWord).String() == "")
-			}
-			if tt.input.RequireContainsIgnoreCase(compWord).String() == "" != tt.expected {
-				t.Errorf("RequireContainsIgnoreCase failed, expected %t, got %t", tt.expected,
-					tt.input.RequireContainsIgnoreCase(compWord).String() == "")
-			}
-			if tt.input.RequireContainsAny([]string{compWord}).String() == "" != tt.expected {
-				t.Errorf("RequireContainsAny failed, expected %t, got %t", tt.expected,
-					tt.input.RequireContainsAny([]string{compWord}).String() == "")
-			}
-			if tt.input.RequireContainsAnyIgnoreCase([]string{compWord}).String() == "" != tt.expected {
-				t.Errorf("RequireContainsAnyIgnoreCase failed, expected %t, got %t", tt.expected,
-					tt.input.RequireContainsAnyIgnoreCase([]string{compWord}).String() == "")
-			}
-			if tt.input.RequireContainsAll([]string{compWord}).String() == "" != tt.expected {
-				t.Errorf("RequireContainsAll failed, expected %t, got %t", tt.expected,
-					tt.input.RequireContainsAll([]string{compWord}).String() == "")
-			}
-			if tt.input.RequireContainsAllIgnoreCase([]string{compWord}).String() == "" != tt.expected {
-				t.Errorf("RequireContainsAllIgnoreCase failed, expected %t, got %t", tt.expected,
-					tt.input.RequireContainsAllIgnoreCase([]string{compWord}).String() == "")
-			}
-			if tt.input.RequireHasPrefix(compWord).String() == "" != tt.expected {
-				t.Errorf("RequireHasPrefix failed, expected %t, got %t", tt.expected,
-					tt.input.RequireHasPrefix(compWord).String() == "")
-			}
-			if tt.input.RequireHasSuffix(compWord).String() == "" != tt.expected {
-				t.Errorf("RequireHasSuffix failed, expected %t, got %t", tt.expected,
-					tt.input.RequireHasSuffix(compWord).String() == "")
-			}
-			if tt.input.RequireEmail().String() == "" != tt.expected {
-				t.Errorf("RequireEmail failed, expected %t, got %t", tt.expected,
-					tt.input.RequireEmail().String() == "")
-			}
-			if tt.input.RequireDomain().String() == "" != tt.expected {
-				t.Errorf("RequireDomain failed, expected %t, got %t", tt.expected,
-					tt.input.RequireDomain().String() == "")
-			}
-			if tt.input.RequireURL().String() == "" != tt.expected {
-				t.Errorf("RequireURL failed, expected %t, got %t", tt.expected,
-					tt.input.RequireURL().String() == "")
-			}
-			if tt.input.RequireUUID().String() == "" != tt.expected {
-				t.Errorf("RequireUUID failed, expected %t, got %t", tt.expected,
-					tt.input.RequireUUID().String() == "")
-			}
-			if tt.input.RequireLength(0, 100).String() == "" != tt.expected {
-				t.Errorf("RequireLength failed, expected %t, got %t", tt.expected,
-					tt.input.RequireLength(0, 100).String() == "")
-			}
-			if tt.input.RequireNotEmpty().String() == "" != tt.expected {
-				t.Errorf("RequireNotEmpty failed, expected %t, got %t", tt.expected,
-					tt.input.RequireNotEmpty().String() == "")
-			}
-			if tt.input.RequireNotEmptyNormalized().String() == "" != tt.expected {
-				t.Errorf("RequireNotEmptyNormalized failed, expected %t, got %t", tt.expected,
-					tt.input.RequireNotEmptyNormalized().String() == "")
-			}
-			if tt.input.RequireAlpha().String() == "" != tt.expected {
-				t.Errorf("RequireAlpha failed, expected %t, got %t", tt.expected,
-					tt.input.RequireAlpha().String() == "")
-			}
-			if tt.input.RequireAlphaNumeric().String() == "" != tt.expected {
-				t.Errorf("RequireAlphaNumeric failed, expected %t, got %t", tt.expected,
-					tt.input.RequireAlphaNumeric().String() == "")
-			}
-			if tt.input.RequireNormalizedUnicode(NFC).String() == "" != tt.expected {
-				t.Errorf("RequireNormalizedUnicode failed, expected %t, got %t", tt.expected,
-					tt.input.RequireNormalizedUnicode(NFC).String() == "")
-			}
 		})
+	}
+}
+
+func TestBuilderRequiresEmail(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("guy@email.com"), true},
+		{New("guy"), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireEmail().String() == "" {
+			t.Errorf("RequireEmail failed, expected %t, got %t", tt.passed,
+				tt.input.RequireEmail().String() == "")
+		}
+		if !tt.passed && tt.input.RequireEmail().String() != "" {
+			t.Errorf("RequireEmail failed, expected %t, got %t", tt.passed,
+				tt.input.RequireEmail().String() == "")
+		}
+	}
+}
+
+func TestBuilderRequiresDomain(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("sub.my.home"), true},
+		{New("9081---12"), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireDomain().String() == "" {
+			t.Errorf("RequireDomain failed, expected %t, got %t", tt.passed,
+				tt.input.RequireDomain().String() == "")
+		}
+		if !tt.passed && tt.input.RequireDomain().String() != "" {
+			t.Errorf("RequireDomain failed, expected %t, got %t", tt.passed,
+				tt.input.RequireDomain().String() == "")
+		}
+	}
+}
+
+func TestBuilderRequiresURL(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("https://www.google.com"), true},
+		{New("hello world"), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireURL().String() == "" {
+			t.Errorf("RequireURL failed, expected %t, got %t", tt.passed,
+				tt.input.RequireURL().String() == "")
+		}
+		if !tt.passed && tt.input.RequireURL().String() != "" {
+			t.Errorf("RequireURL failed, expected %t, got %t", tt.passed,
+				tt.input.RequireURL().String() == "")
+		}
+	}
+}
+
+func TestBuilderRequiresUUID(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("0198a5ea-423d-7ad2-916d-d91b01dad7c7"), true},
+		{New("hello world"), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireUUID().String() == "" {
+			t.Errorf("RequireUUID failed, expected %t, got %t", tt.passed,
+				tt.input.RequireUUID().String() == "")
+		}
+		if !tt.passed && tt.input.RequireUUID().String() != "" {
+			t.Errorf("RequireUUID failed, expected %t, got %t", tt.passed,
+				tt.input.RequireUUID().String() == "")
+		}
+	}
+}
+
+func TestBuilderRequiresLength(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		min    int
+		max    int
+		passed bool
+	}{
+		{New("hello world"), 1, 100, true},
+		{New("hello world"), 25, 255, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), 1, 100, false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireLength(tt.min, tt.max).String() == "" {
+			t.Errorf("RequireLength failed, expected %t, got %t", tt.passed,
+				tt.input.RequireLength(tt.min, tt.max).String() == "")
+		}
+		if !tt.passed && tt.input.RequireLength(tt.min, tt.max).String() != "" {
+			t.Errorf("RequireLength failed, expected %t, got %t", tt.passed,
+				tt.input.RequireLength(tt.min, tt.max).String() == "")
+		}
+	}
+}
+
+func TestRequireNotEmpty(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("hello world"), true},
+		{New(""), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireNotEmpty().String() == "" {
+			t.Errorf("RequireNotEmpty failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNotEmpty().String() == "")
+		}
+		if !tt.passed && tt.input.RequireNotEmpty().String() != "" {
+			t.Errorf("RequireNotEmpty failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNotEmpty().String() == "")
+		}
+	}
+}
+
+func TestRequireNotEmptyNormalized(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("hello world"), true},
+		{New("   "), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireNotEmptyNormalized().String() == "" {
+			t.Errorf("RequireNotEmptyNormalized failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNotEmptyNormalized().String() == "")
+		}
+		if !tt.passed && tt.input.RequireNotEmptyNormalized().String() != "" {
+			t.Errorf("RequireNotEmptyNormalized failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNotEmptyNormalized().String() == "")
+		}
+	}
+}
+
+func TestRequireAlpha(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("helloworld"), true},
+		{New("hello world!"), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireAlpha().String() == "" {
+			t.Errorf("RequireAlpha failed, expected %t, got %t", tt.passed,
+				tt.input.RequireAlpha().String() == "")
+		}
+		if !tt.passed && tt.input.RequireAlpha().String() != "" {
+			t.Errorf("RequireAlpha failed, expected %t, got %t", tt.passed,
+				tt.input.RequireAlpha().String() == "")
+		}
+	}
+
+}
+
+func TestRequireAlphaNumeric(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		passed bool
+	}{
+		{New("helloworld123"), true},
+		{New("hello world!"), false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireAlphaNumeric().String() == "" {
+			t.Errorf("RequireAlphaNumeric failed, expected %t, got %t", tt.passed,
+				tt.input.RequireAlphaNumeric().String() == "")
+		}
+		if !tt.passed && tt.input.RequireAlphaNumeric().String() != "" {
+			t.Errorf("RequireAlphaNumeric failed, expected %t, got %t", tt.passed,
+				tt.input.RequireAlphaNumeric().String() == "")
+		}
+	}
+}
+
+func TestRequireNormalizedUnicode(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		form   NormalizationFormat
+		passed bool
+	}{
+		{New("hello world"), NFC, true},
+		{New("w̤𝓲𝔱𝙝 𝔣🇦m̤𝗂𝚕ⓨ ⒜ｎ𝐝 f́r̤ï𝘦⒩𝚍s̤❗❕"), NFD, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), NFC, false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireNormalizedUnicode(tt.form).String() == "" {
+			t.Errorf("RequireNormalizedUnicode failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNormalizedUnicode(tt.form).String() == "")
+		}
+		res2 := tt.input.RequireNormalizedUnicode(tt.form).String()
+		if !tt.passed && res2 != "" {
+			t.Errorf("RequireNormalizedUnicode failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNormalizedUnicode(tt.form).String() == "")
+		}
+	}
+}
+
+func TestRequireContains(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   string
+		passed bool
+	}{
+		{New("hello world"), "world", true},
+		{New("hello world"), "hi", false},
+		{New("hello world"), "HELLO", false},
+		{New("hello world"), "", false},
+		{New(""), "hello", false},
+		{New(""), "", false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), "", false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireContains(tt.comp).String() == "" {
+			t.Errorf("RequireContains failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContains(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireContains(tt.comp).String() != "" {
+			t.Errorf("RequireContains failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContains(tt.comp).String() == "")
+		}
+	}
+}
+
+func TestRequireContainsIgnoreCase(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   string
+		passed bool
+	}{
+		{New("hello world"), "world", true},
+		{New("hello world"), "hi", false},
+		{New("hello world"), "HELLO", true},
+		{New("hello world"), "", false},
+		{New(""), "hello", false},
+		{New(""), "", false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), "", false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireContainsIgnoreCase(tt.comp).String() == "" {
+			t.Errorf("RequireContainsIgnoreCase failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContains(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireContainsIgnoreCase(tt.comp).String() != "" {
+			t.Errorf("RequireContainsIgnoreCase failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsIgnoreCase(tt.comp).String() == "")
+		}
+	}
+}
+
+func TestRequireContainsAny(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   []string
+		passed bool
+	}{
+		{New("hello world"), []string{"world", "hi"}, true},
+		{New("HELLO WORLD"), []string{"hi", "HELLO"}, true},
+		{New("hello world"), []string{"HELLO", "hi"}, false},
+		{New("hello world"), []string{"", "hi"}, false},
+		{New("hello world"), []string{}, false},
+		{New(""), []string{"hello", "hi"}, false},
+		{New(""), []string{}, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), []string{}, false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireContainsAny(tt.comp).String() == "" {
+			t.Errorf("RequireContainsAny failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAny(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireContainsAny(tt.comp).String() != "" {
+			t.Errorf("RequireContainsAny failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAny(tt.comp).String() != "")
+		}
+	}
+}
+
+func TestRequireContainsAnyIgnoreCase(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   []string
+		passed bool
+	}{
+		{New("hello world"), []string{"world", "hi"}, true},
+		{New("HELLO WORLD"), []string{"hi", "HELLO"}, true},
+		{New("hello world"), []string{"HELLO", "hi"}, true},
+		{New("hello world"), []string{"", "hi"}, false},
+		{New("hello world"), []string{}, false},
+		{New(""), []string{"hello", "hi"}, false},
+		{New(""), []string{}, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), []string{}, false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireContainsAnyIgnoreCase(tt.comp).String() == "" {
+			t.Errorf("RequireContainsAnyIgnoreCase failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAnyIgnoreCase(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireContainsAnyIgnoreCase(tt.comp).String() != "" {
+			t.Errorf("RequireContainsAnyIgnoreCase failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAnyIgnoreCase(tt.comp).String() != "")
+		}
+	}
+}
+
+func TestRequireContainsAll(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   []string
+		passed bool
+	}{
+		{New("hello world"), []string{"world", "hello"}, true},
+		{New("HELLO WORLD"), []string{"hi", "HELLO"}, false},
+		{New("hello world"), []string{"HELLO", "world"}, false},
+		{New("hello world"), []string{"", "hi"}, false},
+		{New("hello world"), []string{}, false},
+		{New(""), []string{"hello", "hi"}, false},
+		{New(""), []string{}, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), []string{}, false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireContainsAll(tt.comp).String() == "" {
+			t.Errorf("RequireContainsAll failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAll(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireContainsAll(tt.comp).String() != "" {
+			t.Errorf("RequireContainsAll failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAll(tt.comp).String() != "")
+		}
+	}
+}
+
+func TestStringBuilderRequireContainsAllIgnoreCase(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   []string
+		passed bool
+	}{
+		{New("hello world"), []string{"world", "hello"}, true},
+		{New("HELLO WORLD"), []string{"hi", "HELLO"}, false},
+		{New("hello world"), []string{"HELLO", "world"}, true},
+		{New("hello world"), []string{"", "hi"}, false},
+		{New("hello world"), []string{}, false},
+		{New(""), []string{"hello", "hi"}, false},
+		{New(""), []string{}, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), []string{}, false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireContainsAllIgnoreCase(tt.comp).String() == "" {
+			t.Errorf("RequireContainsAllI failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAll(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireContainsAllIgnoreCase(tt.comp).String() != "" {
+			t.Errorf("RequireContainsAllIgnoreCase failed, expected %t, got %t", tt.passed,
+				tt.input.RequireContainsAllIgnoreCase(tt.comp).String() != "")
+		}
+	}
+}
+
+func TestRequireHasPrefix(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   string
+		passed bool
+	}{
+		{New("pre-release"), "pre", true},
+		{New("APP_ENV_VAR"), "APP", true},
+		{New("hello world"), "", false},
+		{New(""), "hello", false},
+		{New(""), "", false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), "", false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireHasPrefix(tt.comp).String() == "" {
+			t.Errorf("RequireHasPrefix failed, expected %t, got %t", tt.passed,
+				tt.input.RequireHasPrefix(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireHasPrefix(tt.comp).String() != "" {
+			t.Errorf("RequireHasPrefix failed, expected %t, got %t", tt.passed,
+				tt.input.RequireHasPrefix(tt.comp).String() == "")
+		}
+	}
+}
+
+func TestRequireHasSuffix(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		comp   string
+		passed bool
+	}{
+		{New("Hello World!"), "!", true},
+		{New("Hello World"), "!", false},
+		{New("hello world"), "", false},
+		{New(""), "hello", false},
+		{New(""), "", false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), "", false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireHasSuffix(tt.comp).String() == "" {
+			t.Errorf("RequireHasSuffix failed, expected %t, got %t", tt.passed,
+				tt.input.RequireHasSuffix(tt.comp).String() == "")
+		}
+		if !tt.passed && tt.input.RequireHasSuffix(tt.comp).String() != "" {
+			t.Errorf("RequireHasSuffix failed, expected %t, got %t", tt.passed,
+				tt.input.RequireHasSuffix(tt.comp).String() == "")
+		}
 	}
 }
