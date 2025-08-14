@@ -90,3 +90,90 @@ func isAlphaString(s string) bool {
 func isNormalizedUnicode(s string, format NormalizationFormat) bool {
 	return norm.Form(format).IsNormalString(s)
 }
+
+// contains determines if the substring `substr` exists within the string `s` and returns true if found,
+// otherwise false.
+func contains(s string, substr string) bool {
+	if isEmpty(s) || isEmpty(substr) {
+		return false
+	}
+	return strings.Contains(s, substr)
+}
+
+// containsIgnoreCase checks if substr is present in s, ignoring case sensitivity. Returns true if found,
+// false otherwise.
+func containsIgnoreCase(s string, substr string) bool {
+	if isEmpty(s) || isEmpty(substr) {
+		return false
+	}
+	return strings.Contains(strings.ToLower(s), strings.ToLower(substr))
+}
+
+// containsAny checks if any string in the slice substrs is present in the string s and returns true if found.
+func containsAny(s string, substrs []string) bool {
+	if isEmpty(s) || len(substrs) == 0 {
+		return false
+	}
+	for _, substr := range substrs {
+		if contains(s, substr) {
+			return true
+		}
+	}
+	return false
+}
+
+// containsAnyIgnoreCase checks if the input string contains any of the given substrings, ignoring case sensitivity.
+func containsAnyIgnoreCase(s string, substrs []string) bool {
+	if isEmpty(s) || len(substrs) == 0 {
+		return false
+	}
+	for _, substr := range substrs {
+		if containsIgnoreCase(s, substr) {
+			return true
+		}
+	}
+	return false
+}
+
+// containsAll returns true if all strings in substrs are present in s; returns false if s is empty or substrs is empty.
+func containsAll(s string, substrs []string) bool {
+	if isEmpty(s) || len(substrs) == 0 {
+		return false
+	}
+	for _, substr := range substrs {
+		if !contains(s, substr) {
+			return false
+		}
+	}
+	return true
+}
+
+// containsAllIgnoreCase checks if all substrings in the slice are present in the given string,
+// ignoring case sensitivity.
+func containsAllIgnoreCase(s string, substrs []string) bool {
+	if isEmpty(s) || len(substrs) == 0 {
+		return false
+	}
+	for _, substr := range substrs {
+		if !containsIgnoreCase(s, substr) {
+			return false
+		}
+	}
+	return true
+}
+
+// hasPrefix checks if the string 's' starts with the specified 'prefix'. Returns true if it does, otherwise false.
+func hasPrefix(s string, prefix string) bool {
+	if isEmpty(s) || isEmpty(prefix) {
+		return false
+	}
+	return strings.HasPrefix(s, prefix)
+}
+
+// hasSuffix checks if the string `s` ends with the given `suffix` and returns true if it does, otherwise false.
+func hasSuffix(s string, suffix string) bool {
+	if isEmpty(s) || isEmpty(suffix) {
+		return false
+	}
+	return strings.HasSuffix(s, suffix)
+}

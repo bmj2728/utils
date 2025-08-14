@@ -351,3 +351,221 @@ func TestIsNormalizedUnicode(t *testing.T) {
 		})
 	}
 }
+
+func TestContains(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		substr   string
+		expected bool
+	}{
+		{"Contains", "hello world", "hello", true},
+		{"ContainsUpper", "HELLO WORLD", "hello", false},
+		{"ContainsInvalid", "hello world!", "John", false},
+		{"ContainsEmpty", "", "hello", false},
+		{"ContainsEmptySubstr", "hello", "", false},
+		{"ContainsEmptyBoth", "", "", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := contains(tt.input, tt.substr)
+			result := Contains(tt.input, tt.substr)
+			builderResult := New(tt.input).RequireContains(tt.substr).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("Contains(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.substr, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestContainsIgnoreCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		substr   string
+		expected bool
+	}{
+		{"Contains", "hello world", "HELLO", true},
+		{"ContainsUpper", "HELLO WORLD", "hello", true},
+		{"ContainsInvalid", "hello world!", "John", false},
+		{"ContainsEmpty", "", "hello", false},
+		{"ContainsEmptySubstr", "hello", "", false},
+		{"ContainsEmptyBoth", "", "", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := containsIgnoreCase(tt.input, tt.substr)
+			result := ContainsIgnoreCase(tt.input, tt.substr)
+			builderResult := New(tt.input).RequireContainsIgnoreCase(tt.substr).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("ContainsIgnoreCase(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.substr, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestContainsAny(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		substrs  []string
+		expected bool
+	}{
+		{"Contains", "hello world", []string{"hello", "world"}, true},
+		{"ContainsUpper", "HELLO WORLD", []string{"hello", "world"}, false},
+		{"ContainsInvalid", "hello world!", []string{"hi", "John"}, false},
+		{"ContainsOneInvalid", "hello world!", []string{"hello", "John"}, true},
+		{"ContainsEmpty", "", []string{"hello", "world"}, false},
+		{"ContainsEmptySubstr", "hello", []string{}, false},
+		{"ContainsEmptyBoth", "", []string{}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := containsAny(tt.input, tt.substrs)
+			result := ContainsAny(tt.input, tt.substrs)
+			builderResult := New(tt.input).RequireContainsAny(tt.substrs).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("ContainsAny(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestContainsAnyIgnoreCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		substrs  []string
+		expected bool
+	}{
+		{"Contains", "hello world", []string{"HELLO", "WORLD"}, true},
+		{"ContainsUpper", "HELLO WORLD", []string{"hello", "world"}, true},
+		{"ContainsInvalid", "hello world!", []string{"hi", "John"}, false},
+		{"ContainsOneInvalid", "hello world!", []string{"hello", "John"}, true},
+		{"ContainsEmpty", "", []string{"hello", "world"}, false},
+		{"ContainsEmptySubstr", "hello", []string{}, false},
+		{"ContainsEmptyBoth", "", []string{}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := containsAnyIgnoreCase(tt.input, tt.substrs)
+			result := ContainsAnyIgnoreCase(tt.input, tt.substrs)
+			builderResult := New(tt.input).RequireContainsAnyIgnoreCase(tt.substrs).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("ContainsAnyIgnoreCase(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestContainsAll(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		substrs  []string
+		expected bool
+	}{
+		{"Contains", "hello world", []string{"hello", "world"}, true},
+		{"ContainsUpper", "HELLO WORLD", []string{"hello", "world"}, false},
+		{"ContainsInvalid", "hello world!", []string{"hi", "John"}, false},
+		{"ContainsOneInvalid", "hello world!", []string{"hello", "John"}, false},
+		{"ContainsEmpty", "", []string{"hello", "world"}, false},
+		{"ContainsEmptySubstr", "hello", []string{}, false},
+		{"ContainsEmptyBoth", "", []string{}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := containsAll(tt.input, tt.substrs)
+			result := ContainsAll(tt.input, tt.substrs)
+			builderResult := New(tt.input).RequireContainsAll(tt.substrs).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("ContainsAll(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestContainsAllIgnoreCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		substrs  []string
+		expected bool
+	}{
+		{"Contains", "hello world", []string{"hello", "WORLD"}, true},
+		{"ContainsUpper", "HELLO WORLD", []string{"hello", "world"}, true},
+		{"ContainsInvalid", "hello world!", []string{"hi", "John"}, false},
+		{"ContainsOneInvalid", "hello world!", []string{"hello", "John"}, false},
+		{"ContainsEmpty", "", []string{"hello", "world"}, false},
+		{"ContainsEmptySubstr", "hello", []string{}, false},
+		{"ContainsEmptyBoth", "", []string{}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := containsAllIgnoreCase(tt.input, tt.substrs)
+			result := ContainsAllIgnoreCase(tt.input, tt.substrs)
+			builderResult := New(tt.input).RequireContainsAllIgnoreCase(tt.substrs).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("ContainsAllIgnoreCase(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestHasPrefix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		prefix   string
+		expected bool
+	}{
+		{"HasPrefix", "Prehistoric", "Pre", true},
+		{"HasPrefixUpper", "APP_ENV_VAR", "APP", true},
+		{"HasPrefixInvalid", "hello world!", "hi", false},
+		{"HasPrefixEmpty", "", "hello", false},
+		{"HasPrefixEmptyPrefix", "hello", "", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := hasPrefix(tt.input, tt.prefix)
+			result := HasPrefix(tt.input, tt.prefix)
+			builderResult := New(tt.input).RequireHasPrefix(tt.prefix).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("HasPrefix(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.prefix, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestHasSuffix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		suffix   string
+		expected bool
+	}{
+		{"HasPrefix", "Running", "ing", true},
+		{"HasPrefixUpper", "APP_ENV_VAR_DEV", "DEV", true},
+		{"HasPrefixInvalid", "hello world!", "hi", false},
+		{"HasPrefixEmpty", "", "hello", false},
+		{"HasPrefixEmptyPrefix", "hello", "", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := hasSuffix(tt.input, tt.suffix)
+			result := HasSuffix(tt.input, tt.suffix)
+			builderResult := New(tt.input).RequireHasSuffix(tt.suffix).Error() == nil
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("HasPrefix(%q, %q) = %t/%t/%t; want %t",
+					tt.input, tt.suffix, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
