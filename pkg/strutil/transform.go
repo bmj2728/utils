@@ -149,3 +149,38 @@ func RemoveSuffix(s string, suffix string) string {
 func RemoveSuffixWithResult(s string, suffix string) (string, bool) {
 	return removeSuffixWithResult(s, suffix)
 }
+
+// AddLeftPadding adds spaces to the left of a string until it reaches the specified total
+// length and returns the result.
+func AddLeftPadding(s string, length int) string {
+	return addLeftPadding(s, length)
+}
+
+// AddRightPadding appends spaces to the right of a string until it reaches the specified total length.
+func AddRightPadding(s string, length int) string {
+	return addRightPadding(s, length)
+}
+
+// AddPadding adds equal padding of spaces to both sides of a string for the specified length and returns the result.
+func AddPadding(s string, length int) string {
+	return addPadding(s, length)
+}
+
+// LeftPadToLength pads the input string with spaces on the left to reach the specified length.
+// If the string already meets or exceeds the length, it is returned unchanged.
+func LeftPadToLength(s string, length int) string {
+	return leftPadToLength(s, length)
+}
+
+// RightPadToLength pads the input string with spaces on the right until it reaches the specified length.
+// Returns the input string unchanged if it is empty or if the specified length is less than 1.
+func RightPadToLength(s string, length int) string {
+	return rightPadToLength(s, length)
+}
+
+// PadToLength adjusts the given string to the specified length by padding spaces evenly on both sides.
+// If the string exceeds the specified length, it returns the original string.
+// The provided length must be non-negative for proper functionality.
+func PadToLength(s string, length int, equalize bool) string {
+	return padToLength(s, length, equalize)
+}

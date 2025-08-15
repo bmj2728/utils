@@ -617,6 +617,30 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("HasSuffix failed, expected %t, got %t", false,
 					tt.input.HasSuffix(compWord))
 			}
+			if tt.input.AddLeftPadding(10).String() == "" != tt.expected {
+				t.Errorf("AddLeftPadding failed, expected %t, got %t", tt.expected,
+					tt.input.AddLeftPadding(10).String() == "")
+			}
+			if tt.input.AddRightPadding(10).String() == "" != tt.expected {
+				t.Errorf("AddRightPadding failed, expected %t, got %t", tt.expected,
+					tt.input.AddRightPadding(10).String() == "")
+			}
+			if tt.input.AddPadding(10).String() == "" != tt.expected {
+				t.Errorf("AddPadding failed, expected %t, got %t", tt.expected,
+					tt.input.AddPadding(10).String() == "")
+			}
+			if tt.input.LeftPadToLength(10).String() == "" != tt.expected {
+				t.Errorf("LeftPadToLength failed, expected %t, got %t", tt.expected,
+					tt.input.LeftPadToLength(10).String() == "")
+			}
+			if tt.input.RightPadToLength(10).String() == "" != tt.expected {
+				t.Errorf("RightPadToLength failed, expected %t, got %t", tt.expected,
+					tt.input.RightPadToLength(10).String() == "")
+			}
+			if tt.input.PadToLength(10, true).String() == "" != tt.expected {
+				t.Errorf("PadToLength failed, expected %t, got %t", tt.expected,
+					tt.input.PadToLength(10, true).String() == "")
+			}
 		})
 	}
 }

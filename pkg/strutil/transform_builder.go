@@ -293,3 +293,65 @@ func (sb *StringBuilder) RemoveSuffixWithResult(suffix string) (*StringBuilder, 
 	s, result := removeSuffixWithResult(sb.value, suffix)
 	return sb.setValue(s), result
 }
+
+// AddLeftPadding adds the specified number of spaces to the left of the string stored in
+// the StringBuilder instance.
+func (sb *StringBuilder) AddLeftPadding(length int) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	sb.setValue(addLeftPadding(sb.value, length))
+	return sb
+}
+
+// AddRightPadding appends a specified number of spaces to the right of the current string and
+// updates the StringBuilder value.
+func (sb *StringBuilder) AddRightPadding(length int) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	sb.setValue(addRightPadding(sb.value, length))
+	return sb
+}
+
+// AddPadding appends the specified number of spaces to both sides of the string and
+// updates the StringBuilder value.
+func (sb *StringBuilder) AddPadding(length int) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	sb.setValue(addPadding(sb.value, length))
+	return sb
+}
+
+// LeftPadToLength left-pads the current string value with spaces until it reaches the specified length.
+// Returns the StringBuilder instance with the updated value for method chaining.
+// If processing is interrupted or the length is invalid, it does nothing and returns the current instance.
+func (sb *StringBuilder) LeftPadToLength(length int) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	sb.setValue(leftPadToLength(sb.value, length))
+	return sb
+}
+
+// RightPadToLength pads the current string with spaces on the right to match the
+// specified length if not already processed.
+func (sb *StringBuilder) RightPadToLength(length int) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	sb.setValue(rightPadToLength(sb.value, length))
+	return sb
+}
+
+// PadToLength adjusts the StringBuilder's value to the specified length by padding with spaces.
+// If processing is discontinued or the length is invalid, it returns the existing value.
+// Returns a reference to the updated StringBuilder instance.
+func (sb *StringBuilder) PadToLength(length int, equalize bool) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	sb.setValue(padToLength(sb.value, length, equalize))
+	return sb
+}

@@ -1033,3 +1033,179 @@ func TestRemoveSuffixWithResult(t *testing.T) {
 		})
 	}
 }
+
+func TestAddLeftPadding(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		expected string
+	}{
+		{"AddLeftPadding1", "Hello", 1, " Hello"},
+		{"AddLeftPadding2", "Hello", 2, "  Hello"},
+		{"AddLeftPadding3", "Hello", 3, "   Hello"},
+		{"AddLeftPadding4", "Hello", 4, "    Hello"},
+		{"AddLeftPadding5", "Hello", 5, "     Hello"},
+		{"AddLeftPadding6", "Hello", 0, "Hello"},
+		{"AddLeftPadding7", "", 10, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := addLeftPadding(tt.input, tt.length)
+			result := AddLeftPadding(tt.input, tt.length)
+			builderResult := New(tt.input).AddLeftPadding(tt.length).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("AddLeftPadding() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestAddRightPadding(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		expected string
+	}{
+		{"AddRightPadding1", "Hello", 1, "Hello "},
+		{"AddRightPadding2", "Hello", 2, "Hello  "},
+		{"AddRightPadding3", "Hello", 3, "Hello   "},
+		{"AddRightPadding4", "Hello", 4, "Hello    "},
+		{"AddRightPadding5", "Hello", 5, "Hello     "},
+		{"AddRightPadding6", "Hello", 0, "Hello"},
+		{"AddRightPadding7", "", 10, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := addRightPadding(tt.input, tt.length)
+			result := AddRightPadding(tt.input, tt.length)
+			builderResult := New(tt.input).AddRightPadding(tt.length).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("AddRightPadding() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestAddPadding(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		expected string
+	}{
+		{"AddPadding1", "Hello", 1, " Hello "},
+		{"AddPadding2", "Hello", 2, "  Hello  "},
+		{"AddPadding3", "Hello", 3, "   Hello   "},
+		{"AddPadding4", "Hello", 4, "    Hello    "},
+		{"AddPadding5", "Hello", 5, "     Hello     "},
+		{"AddPadding6", "Hello", 0, "Hello"},
+		{"AddPadding7", "", 10, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := addPadding(tt.input, tt.length)
+			result := AddPadding(tt.input, tt.length)
+			builderResult := New(tt.input).AddPadding(tt.length).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("AddPadding() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestLeftPadToLength(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		expected string
+	}{
+		{"LeftPadToLength1", "Hello", 6, " Hello"},
+		{"LeftPadToLength2", "Hello", 7, "  Hello"},
+		{"LeftPadToLength3", "Hello", 8, "   Hello"},
+		{"LeftPadToLength4", "Hello", 9, "    Hello"},
+		{"LeftPadToLength5", "Hello", 10, "     Hello"},
+		{"LeftPadToLength6", "Hello", 0, "Hello"},
+		{"LeftPadToLength7", "", 10, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := leftPadToLength(tt.input, tt.length)
+			result := LeftPadToLength(tt.input, tt.length)
+			builderResult := New(tt.input).LeftPadToLength(tt.length).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("LeftPadToLength() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestRightPadToLength(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		expected string
+	}{
+		{"RightPadToLength1", "Hello", 6, "Hello "},
+		{"RightPadToLength2", "Hello", 7, "Hello  "},
+		{"RightPadToLength3", "Hello", 8, "Hello   "},
+		{"RightPadToLength4", "Hello", 9, "Hello    "},
+		{"RightPadToLength5", "Hello", 10, "Hello     "},
+		{"RightPadToLength6", "Hello", 0, "Hello"},
+		{"RightPadToLength7", "", 10, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := rightPadToLength(tt.input, tt.length)
+			result := RightPadToLength(tt.input, tt.length)
+			builderResult := New(tt.input).RightPadToLength(tt.length).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("RightPadToLength() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
+func TestPadToLength(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		equalize bool
+		expected string
+	}{
+		{"PadToLength1", "Hello", 6, false, " Hello"},
+		{"PadToLength2", "Hello", 7, false, " Hello "},
+		{"PadToLength3", "Hello", 8, false, "  Hello "},
+		{"PadToLength4", "Hello", 9, false, "  Hello  "},
+		{"PadToLength5", "Hello", 10, false, "   Hello  "},
+		{"PadToLength6", "Hello", 0, false, "Hello"},
+		{"PadToLength7", "", 10, false, ""},
+		{"PadToLength8", "Hello", 6, true, " Hello "},
+		{"PadToLength9", "Hello", 7, true, " Hello "},
+		{"PadToLength10", "Hello", 8, true, "  Hello  "},
+		{"PadToLength11", "Hello", 9, true, "  Hello  "},
+		{"PadToLength12", "Hello", 10, true, "   Hello   "},
+		{"PadToLength13", "Hello", 0, true, "Hello"},
+		{"PadToLength14", "", 10, true, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := padToLength(tt.input, tt.length, tt.equalize)
+			result := PadToLength(tt.input, tt.length, tt.equalize)
+			builderResult := New(tt.input).PadToLength(tt.length, tt.equalize).String()
+			if helperResult != tt.expected || result != tt.expected || builderResult != tt.expected {
+				t.Errorf("PadToLength() = %s / %s / %s, expected %s",
+					helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}

@@ -1,6 +1,7 @@
 package strutil
 
 import (
+	"math"
 	"strings"
 	"unicode"
 
@@ -382,4 +383,115 @@ func removeSuffixWithResult(s string, suffix string) (string, bool) {
 		return s, false
 	}
 	return strings.CutSuffix(s, suffix)
+}
+
+// addLeftPadding adds a specified number of spaces to the left of the provided string and returns the resulting string.
+// If the string is empty or the pad length is less than 1, the original string is returned unchanged.
+func addLeftPadding(s string, padLength int) string {
+	if isEmpty(s) || padLength < 1 {
+		return s
+	}
+	var b strings.Builder
+	b.Grow(len(s) + padLength)
+	for i := 0; i < padLength; i++ {
+		b.WriteRune(' ')
+	}
+	b.WriteString(s)
+	return b.String()
+}
+
+// addRightPadding appends a specified number of spaces to the right of the given string and returns the padded string.
+func addRightPadding(s string, padLength int) string {
+	if isEmpty(s) || padLength < 1 {
+		return s
+	}
+	var b strings.Builder
+	b.Grow(len(s) + padLength)
+	b.WriteString(s)
+	for i := 0; i < padLength; i++ {
+		b.WriteRune(' ')
+	}
+	return b.String()
+}
+
+// addPadding adds padding of spaces to both sides of the input string for the specified length.
+// Returns the original string if it's empty or the length is less than 1.
+func addPadding(s string, length int) string {
+	if isEmpty(s) || length < 1 {
+		return s
+	}
+	var b strings.Builder
+	b.Grow(len(s) + (length * 2))
+	for i := 0; i < length; i++ {
+		b.WriteRune(' ')
+	}
+	b.WriteString(s)
+	for i := 0; i < length; i++ {
+		b.WriteRune(' ')
+	}
+	return b.String()
+}
+
+// leftPadToLength left pads a string with spaces until it reaches the specified length.
+// Returns the string unmodified if shorter.
+func leftPadToLength(s string, length int) string {
+	if isEmpty(s) || length < 1 {
+		return s
+	}
+	var b strings.Builder
+	b.Grow(len(s) + (length - len(s)))
+	for i := 0; i < length-len(s); i++ {
+		b.WriteRune(' ')
+	}
+	b.WriteString(s)
+	return b.String()
+}
+
+// rightPadToLength appends spaces to the right of the input string until it reaches the specified length.
+// It returns the input string unchanged if it is empty or if the specified length is less than 1.
+func rightPadToLength(s string, length int) string {
+	if isEmpty(s) || length < 1 {
+		return s
+	}
+	var b strings.Builder
+	b.Grow(len(s) + (length - len(s)))
+	b.WriteString(s)
+	for i := 0; i < length-len(s); i++ {
+		b.WriteRune(' ')
+	}
+	return b.String()
+}
+
+// padToLength centers a string by adding spaces evenly to both sides until the string reaches the specified length.
+// If the string exceeds the given length or the length is less than 1, it returns the original string.
+func padToLength(s string, length int, equalize bool) string {
+	if isEmpty(s) || length < 1 {
+		return s
+	}
+	padLength := length - len(s)
+	leftPad := 0
+	rightPad := 0
+	if math.Mod(float64(padLength), 2) == 0 {
+		leftPad = padLength / 2
+		rightPad = leftPad
+	} else if !equalize {
+		rightPad = padLength / 2
+		leftPad = rightPad + 1
+	} else {
+		padLength = padLength + 1
+		// account for the extra space added to padding
+		length = length + 1
+		leftPad = padLength / 2
+		rightPad = leftPad
+	}
+	var b strings.Builder
+	b.Grow(len(s) + (length - len(s)))
+	for i := 0; i < leftPad; i++ {
+		b.WriteRune(' ')
+	}
+	b.WriteString(s)
+	for i := 0; i < rightPad; i++ {
+		b.WriteRune(' ')
+	}
+	return b.String()
 }
