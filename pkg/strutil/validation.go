@@ -3,28 +3,28 @@ package strutil
 // IsEmail checks if the input string is in a valid email address format and
 // returns true if valid, false otherwise.
 func IsEmail(s string) bool {
-	return isValidEmail(s)
+	return isEmail(s)
 }
 
 // IsURL determines whether the input string is a valid URL with a scheme and host.
 // Returns true if valid, otherwise false.
 func IsURL(s string) bool {
-	return isValidURL(s)
+	return isURL(s)
 }
 
 // IsDomain checks if a given string is a valid domain name format as per defined rules.
 func IsDomain(domain string) bool {
-	return isValidDomain(domain)
+	return isDomain(domain)
 }
 
 // IsUUID verifies if the provided string has a valid UUID format. Returns true if valid, false otherwise.
 func IsUUID(s string) bool {
-	return isValidUUID(s)
+	return isUUID(s)
 }
 
-// IsValidLength checks if the length of the given string s is within the inclusive range
+// IsLengthInRange checks if the length of the given string s is within the inclusive range
 // defined by min and max values.
-func IsValidLength(s string, min, max int) bool {
+func IsLengthInRange(s string, min, max int) bool {
 	return isLengthInRange(s, min, max)
 }
 

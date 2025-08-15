@@ -378,7 +378,7 @@ func TestLoremDomain(t *testing.T) {
 			if helperResult == "" || builderResult == "" || result == "" {
 				t.Errorf("LoremDomain - %q, %q, %q", result, helperResult, builderResult)
 			}
-			if !isValidDomain(result) || !isValidDomain(builderResult) || !isValidDomain(helperResult) {
+			if !isDomain(result) || !isDomain(builderResult) || !isDomain(helperResult) {
 				t.Errorf("LoremDomain - invalid domain: %q / %q / %q", result, builderResult, helperResult)
 			}
 		})
@@ -400,7 +400,7 @@ func TestLoremURL(t *testing.T) {
 			if result == "" || builderResult == "" || helperResult == "" {
 				t.Errorf("LoremURL - %q, %q", result, builderResult)
 			}
-			if !isValidURL(result) || !isValidURL(builderResult) || !isValidURL(helperResult) {
+			if !isURL(result) || !isURL(builderResult) || !isURL(helperResult) {
 				t.Errorf("LoremURL - invalid url: %q / %q", result, builderResult)
 			}
 
@@ -423,7 +423,7 @@ func TestLoremEmail(t *testing.T) {
 			if result == "" || builderResult == "" || helperResult == "" {
 				t.Errorf("LoremEmail - %q, %q", result, builderResult)
 			}
-			if !isValidEmail(result) || !isValidEmail(builderResult) || !isValidEmail(helperResult) {
+			if !isEmail(result) || !isEmail(builderResult) || !isEmail(helperResult) {
 				t.Errorf("LoremEmail - invalid email: %q / %q", result, builderResult)
 			}
 		})
