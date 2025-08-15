@@ -375,13 +375,14 @@ func TestIsUUID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := isValidUUID(tt.input)
+			helperResult := isUUID(tt.input)
 			result := IsUUID(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsUUID()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			builderErr := New(tt.input).RequireUUID().Error()
-			if isValidUUID(tt.input) && builderErr != nil {
+			if isUUID(tt.input) && builderErr != nil {
 				t.Errorf("IsUUID(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidUUID) {

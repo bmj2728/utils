@@ -10,16 +10,16 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
-// isValidEmail checks if the provided string s is a valid email address format
+// isEmail checks if the provided string s is a valid email address format
 // and returns true if valid, false otherwise.
-func isValidEmail(s string) bool {
+func isEmail(s string) bool {
 	_, err := mail.ParseAddress(s)
 	return err == nil
 }
 
-// isValidURL checks if the provided string is a valid URL with a defined scheme and host.
+// isURL checks if the provided string is a valid URL with a defined scheme and host.
 // Returns true if valid, false otherwise.
-func isValidURL(s string) bool {
+func isURL(s string) bool {
 	_, err := url.ParseRequestURI(s)
 	if err != nil {
 		return false
@@ -31,16 +31,16 @@ func isValidURL(s string) bool {
 	return true
 }
 
-// isValidDomain validates whether a given string conforms to a valid domain name format based on specified rules.
-func isValidDomain(domain string) bool {
+// isDomain validates whether a given string conforms to a valid domain name format based on specified rules.
+func isDomain(domain string) bool {
 	if domain == "" {
 		return false
 	}
 	return DomainRegex.MatchString(strings.TrimSpace(domain))
 }
 
-// isValidUUID checks if the provided string is a valid UUID. Returns true if valid, otherwise false.
-func isValidUUID(s string) bool {
+// isUUID checks if the provided string is a valid UUID. Returns true if valid, otherwise false.
+func isUUID(s string) bool {
 	err := uuid.Validate(s)
 	return err == nil
 }

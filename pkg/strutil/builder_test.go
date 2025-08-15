@@ -345,9 +345,10 @@ func TestBuilderError(t *testing.T) {
 				return s + "(If)"
 			}).String() == "" != tt.expected {
 				t.Errorf("If failed, expected %t, got %t", tt.expected,
-					tt.input.If(rand.Int() > 1, func(s string) string {
-						return s + "(IF)"
-					}).String() == "" != tt.expected)
+					tt.input.If(rand.Int() > 1,
+						func(s string) string {
+							return s + "(IF)"
+						}).String() == "" != tt.expected)
 			}
 
 			if tt.input.Transform(func(s string) string {
@@ -525,6 +526,120 @@ func TestBuilderError(t *testing.T) {
 			if tt.input.RemoveANSIEscapeCodes().String() == "" != tt.expected {
 				t.Errorf("RemoveANSIEscapeCodes failed, expected %t, got %t", tt.expected,
 					tt.input.RemoveANSIEscapeCodes().String() == "")
+			}
+			if tt.input.RemovePrefix(".").String() == "" != tt.expected {
+				t.Errorf("RemovePrefix failed, expected %t, got %t", tt.expected,
+					tt.input.RemovePrefix(".").String() == "")
+			}
+			if tt.input.RemoveSuffix(".exe").String() == "" != tt.expected {
+				t.Errorf("RemoveSuffix failed, expected %t, got %t", tt.expected,
+					tt.input.RemoveSuffix(".exe").String() == "")
+			}
+			prefRes, prefOk := tt.input.RemovePrefixWithResult(".")
+			if prefRes.String() == "" != tt.expected || prefOk {
+				t.Errorf("RemovePrefixWithResult failed, expected %t, got %t", tt.expected,
+					prefRes.String() == "")
+			}
+			sufRes, sufOk := tt.input.RemoveSuffixWithResult(".exe")
+			if sufRes.String() == "" != tt.expected || sufOk {
+				t.Errorf("RemoveSuffixWithResult failed, expected %t, got %t", tt.expected,
+					sufRes.String() == "")
+			}
+			if tt.expected == true && tt.input.IsEmail() != false {
+				t.Errorf("IsEmail failed, expected %t, got %t", tt.expected,
+					tt.input.IsEmail())
+			}
+			if tt.expected == true && tt.input.IsDomain() != false {
+				t.Errorf("IsDomain failed, expected %t, got %t", tt.expected,
+					tt.input.IsDomain())
+			}
+			if tt.expected == true && tt.input.IsURL() != false {
+				t.Errorf("IsURL failed, expected %t, got %t", tt.expected,
+					tt.input.IsURL())
+			}
+			if tt.expected == true && tt.input.IsUUID() != false {
+				t.Errorf("IsUUID failed, expected %t, got %t", tt.expected,
+					tt.input.IsUUID())
+			}
+			if tt.expected == true && tt.input.IsLengthInRange(1, 100) != false {
+				t.Errorf("IsLengthInRange failed, expected %t, got %t", tt.expected,
+					tt.input.IsLengthInRange(1, 100))
+			}
+			if tt.expected == true && tt.input.IsEmpty() != tt.expected {
+				t.Errorf("IsEmpty failed, expected %t, got %t", tt.expected,
+					tt.input.IsEmpty())
+			}
+			if tt.expected == true && tt.input.IsEmptyNormalized() != tt.expected {
+				t.Errorf("IsEmptyNormalized failed, expected %t, got %t", tt.expected,
+					tt.input.IsEmptyNormalized())
+			}
+			if tt.expected == true && tt.input.IsAlphaNumeric() != false {
+				t.Errorf("IsAlphaNumeric failed, expected %t, got %t", false,
+					tt.input.IsAlphaNumeric())
+			}
+			if tt.expected == true && tt.input.IsAlpha() != false {
+				t.Errorf("IsAlpha failed, expected %t, got %t", false,
+					tt.input.IsAlpha())
+			}
+			if tt.expected == true && tt.input.IsNormalizedUnicode(NFC) != false {
+				t.Errorf("IsNormalizedUnicode failed, expected %t, got %t", false,
+					tt.input.IsNormalizedUnicode(NFC))
+			}
+			if tt.expected == true && tt.input.Contains(compWord) != false {
+				t.Errorf("Contains failed, expected %t, got %t", false,
+					tt.input.Contains(compWord))
+			}
+			if tt.expected == true && tt.input.ContainsIgnoreCase(compWord) != false {
+				t.Errorf("ContainsIgnoreCase failed, expected %t, got %t", false,
+					tt.input.ContainsIgnoreCase(compWord))
+			}
+			if tt.expected == true && tt.input.ContainsAny([]string{compWord}) != false {
+				t.Errorf("ContainsAny failed, expected %t, got %t", false,
+					tt.input.ContainsAny([]string{compWord}))
+			}
+			if tt.expected == true && tt.input.ContainsAnyIgnoreCase([]string{compWord}) != false {
+				t.Errorf("ContainsAnyIgnoreCase failed, expected %t, got %t", false,
+					tt.input.ContainsAnyIgnoreCase([]string{compWord}))
+			}
+			if tt.expected == true && tt.input.ContainsAll([]string{compWord}) != false {
+				t.Errorf("ContainsAll failed, expected %t, got %t", false,
+					tt.input.ContainsAll([]string{compWord}))
+			}
+			if tt.expected == true && tt.input.ContainsAllIgnoreCase([]string{compWord}) != false {
+				t.Errorf("ContainsAllIgnoreCase failed, expected %t, got %t", false,
+					tt.input.ContainsAllIgnoreCase([]string{compWord}))
+			}
+			if tt.expected == true && tt.input.HasPrefix(compWord) != false {
+				t.Errorf("HasPrefix failed, expected %t, got %t", false,
+					tt.input.HasPrefix(compWord))
+			}
+			if tt.expected == true && tt.input.HasSuffix(compWord) != false {
+				t.Errorf("HasSuffix failed, expected %t, got %t", false,
+					tt.input.HasSuffix(compWord))
+			}
+			if tt.input.AddLeftPadding(10).String() == "" != tt.expected {
+				t.Errorf("AddLeftPadding failed, expected %t, got %t", tt.expected,
+					tt.input.AddLeftPadding(10).String() == "")
+			}
+			if tt.input.AddRightPadding(10).String() == "" != tt.expected {
+				t.Errorf("AddRightPadding failed, expected %t, got %t", tt.expected,
+					tt.input.AddRightPadding(10).String() == "")
+			}
+			if tt.input.AddPadding(10).String() == "" != tt.expected {
+				t.Errorf("AddPadding failed, expected %t, got %t", tt.expected,
+					tt.input.AddPadding(10).String() == "")
+			}
+			if tt.input.LeftPadToLength(10).String() == "" != tt.expected {
+				t.Errorf("LeftPadToLength failed, expected %t, got %t", tt.expected,
+					tt.input.LeftPadToLength(10).String() == "")
+			}
+			if tt.input.RightPadToLength(10).String() == "" != tt.expected {
+				t.Errorf("RightPadToLength failed, expected %t, got %t", tt.expected,
+					tt.input.RightPadToLength(10).String() == "")
+			}
+			if tt.input.PadToLength(10, true).String() == "" != tt.expected {
+				t.Errorf("PadToLength failed, expected %t, got %t", tt.expected,
+					tt.input.PadToLength(10, true).String() == "")
 			}
 		})
 	}

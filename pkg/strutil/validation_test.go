@@ -28,13 +28,14 @@ func TestIsEmail(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := isValidEmail(tt.input)
+			helperResult := isEmail(tt.input)
 			result := IsEmail(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsEmail()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			builderErr := New(tt.input).RequireEmail().Error()
-			if isValidEmail(tt.input) && builderErr != nil {
+			if isEmail(tt.input) && builderErr != nil {
 				t.Errorf("IsEmail(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidEmail) {
@@ -75,13 +76,14 @@ func TestIsUrl(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := isValidURL(tt.input)
+			helperResult := isURL(tt.input)
 			result := IsURL(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsURL()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			builderErr := New(tt.input).RequireURL().Error()
-			if isValidURL(tt.input) && builderErr != nil {
+			if isURL(tt.input) && builderErr != nil {
 				t.Errorf("IsURL(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidURL) {
@@ -114,22 +116,23 @@ func TestIsValidLength(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := isLengthInRange(tt.input, tt.min, tt.max)
-			result := IsValidLength(tt.input, tt.min, tt.max)
-			if result != tt.expected || helperResult != tt.expected {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
+			result := IsLengthInRange(tt.input, tt.min, tt.max)
+			builderResult := New(tt.input).IsLengthInRange(tt.min, tt.max)
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("IsLengthInRange(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
 			}
 
 			builderErr := New(tt.input).RequireLength(tt.min, tt.max).Error()
 			if isLengthInRange(tt.input, tt.min, tt.max) && builderErr != nil {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
+				t.Errorf("IsLengthInRange(%q, %d, %d) = %v; want %v", tt.input, tt.min, tt.max, result, tt.expected)
 			}
 			if (tt.min < 0 || tt.max < 0) && !errors.Is(builderErr, errors2.ErrInvalidLengthRange) {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
+				t.Errorf("IsLengthInRange(%q, %d, %d) = %v; want %v",
 					tt.input, tt.min, tt.max, builderErr.Error(), errors2.ErrInvalidLengthRange)
 			}
 
 			if tt.min > tt.max && !errors.Is(builderErr, errors2.ErrInvalidLengthRange) {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
+				t.Errorf("IsLengthInRange(%q, %d, %d) = %v; want %v",
 					tt.input, tt.min, tt.max, builderErr.Error(), errors2.ErrInvalidLengthRange)
 			}
 
@@ -138,7 +141,7 @@ func TestIsValidLength(t *testing.T) {
 				tt.min <= tt.max &&
 				!isLengthInRange(tt.input, tt.min, tt.max) &&
 				!errors.Is(builderErr, errors2.ErrInvalidLength) {
-				t.Errorf("IsValidLength(%q, %d, %d) = %v; want %v",
+				t.Errorf("IsLengthInRange(%q, %d, %d) = %v; want %v",
 					tt.input, tt.min, tt.max, builderErr.Error(), errors2.ErrInvalidLength)
 			}
 		})
@@ -159,7 +162,8 @@ func TestIsEmpty(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := isEmpty(tt.input)
 			result := IsEmpty(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsEmpty()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsEmpty(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 
@@ -200,7 +204,8 @@ func TestIsEmptyNormalized(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := isEmptyNormalized(tt.input)
 			result := IsEmptyNormalized(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsEmptyNormalized()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsEmptyNormalized(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 
@@ -233,15 +238,16 @@ func TestIsAlphaNumericString(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := isAlphaNumericString(tt.input)
 			result := IsAlphaNumericString(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsAlphaNumeric()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			builderResult := New(tt.input).RequireAlphaNumeric().Error()
-			if isAlphaNumericString(tt.input) && builderResult != nil {
+			builderErr := New(tt.input).RequireAlphaNumeric().Error()
+			if isAlphaNumericString(tt.input) && builderErr != nil {
 				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderResult != nil && !errors.Is(builderResult, errors2.ErrInvalidNotAlphaNumeric) {
-				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, builderResult, errors2.ErrInvalidNotAlphaNumeric)
+			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidNotAlphaNumeric) {
+				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, builderErr, errors2.ErrInvalidNotAlphaNumeric)
 			}
 		})
 	}
@@ -264,15 +270,16 @@ func TestIsAlphaString(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := isAlphaString(tt.input)
 			result := IsAlphaString(tt.input)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsAlpha()
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			builderResult := New(tt.input).RequireAlpha().Error()
-			if isAlphaString(tt.input) && builderResult != nil {
+			builderErr := New(tt.input).RequireAlpha().Error()
+			if isAlphaString(tt.input) && builderErr != nil {
 				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
-			if builderResult != nil && !errors.Is(builderResult, errors2.ErrInvalidNotAlpha) {
-				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, builderResult.Error(), errors2.ErrInvalidNotAlpha)
+			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidNotAlpha) {
+				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, builderErr.Error(), errors2.ErrInvalidNotAlpha)
 			}
 		})
 	}
@@ -299,11 +306,15 @@ func TestIsDomain(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := isValidDomain(tt.input)
+			helperResult := isDomain(tt.input)
 			result := IsDomain(tt.input)
+			builderResult := New(tt.input).IsDomain()
 			builderErr := New(tt.input).RequireDomain().Error()
 			ok := builderErr == nil
-			if result != tt.expected || helperResult != tt.expected || ok != tt.expected {
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				ok != tt.expected {
 				t.Errorf("IsDomain - expected %t - got %t", tt.expected, result)
 			}
 		})
@@ -334,7 +345,8 @@ func TestIsNormalizedUnicode(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := isNormalizedUnicode(tt.input, tt.format)
 			result := IsNormalizedUnicode(tt.input, tt.format)
-			if result != tt.expected || helperResult != tt.expected {
+			builderResult := New(tt.input).IsNormalizedUnicode(tt.format)
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
 				t.Errorf("IsNormalizedUnicode(%q, %v) = %v; want %v", tt.input, tt.format, result, tt.expected)
 			}
 			builderErr := New(tt.input).RequireNormalizedUnicode(tt.format)
@@ -370,10 +382,14 @@ func TestContains(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := contains(tt.input, tt.substr)
 			result := Contains(tt.input, tt.substr)
-			builderResult := New(tt.input).RequireContains(tt.substr).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).Contains(tt.substr)
+			builderErr := New(tt.input).RequireContains(tt.substr).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("Contains(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.substr, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.substr, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}
@@ -397,10 +413,14 @@ func TestContainsIgnoreCase(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := containsIgnoreCase(tt.input, tt.substr)
 			result := ContainsIgnoreCase(tt.input, tt.substr)
-			builderResult := New(tt.input).RequireContainsIgnoreCase(tt.substr).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).ContainsIgnoreCase(tt.substr)
+			builderErr := New(tt.input).RequireContainsIgnoreCase(tt.substr).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("ContainsIgnoreCase(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.substr, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.substr, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}
@@ -425,10 +445,14 @@ func TestContainsAny(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := containsAny(tt.input, tt.substrs)
 			result := ContainsAny(tt.input, tt.substrs)
-			builderResult := New(tt.input).RequireContainsAny(tt.substrs).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).ContainsAny(tt.substrs)
+			builderErr := New(tt.input).RequireContainsAny(tt.substrs).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("ContainsAny(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.substrs, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}
@@ -453,10 +477,14 @@ func TestContainsAnyIgnoreCase(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := containsAnyIgnoreCase(tt.input, tt.substrs)
 			result := ContainsAnyIgnoreCase(tt.input, tt.substrs)
-			builderResult := New(tt.input).RequireContainsAnyIgnoreCase(tt.substrs).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).ContainsAnyIgnoreCase(tt.substrs)
+			builderErr := New(tt.input).RequireContainsAnyIgnoreCase(tt.substrs).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("ContainsAnyIgnoreCase(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.substrs, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}
@@ -481,10 +509,14 @@ func TestContainsAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := containsAll(tt.input, tt.substrs)
 			result := ContainsAll(tt.input, tt.substrs)
-			builderResult := New(tt.input).RequireContainsAll(tt.substrs).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).ContainsAll(tt.substrs)
+			builderErr := New(tt.input).RequireContainsAll(tt.substrs).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("ContainsAll(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.substrs, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}
@@ -509,10 +541,14 @@ func TestContainsAllIgnoreCase(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := containsAllIgnoreCase(tt.input, tt.substrs)
 			result := ContainsAllIgnoreCase(tt.input, tt.substrs)
-			builderResult := New(tt.input).RequireContainsAllIgnoreCase(tt.substrs).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).ContainsAllIgnoreCase(tt.substrs)
+			builderErr := New(tt.input).RequireContainsAllIgnoreCase(tt.substrs).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("ContainsAllIgnoreCase(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.substrs, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.substrs, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}
@@ -535,10 +571,14 @@ func TestHasPrefix(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := hasPrefix(tt.input, tt.prefix)
 			result := HasPrefix(tt.input, tt.prefix)
-			builderResult := New(tt.input).RequireHasPrefix(tt.prefix).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).HasPrefix(tt.prefix)
+			builderErr := New(tt.input).RequireHasPrefix(tt.prefix).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("HasPrefix(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.prefix, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.prefix, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}
@@ -561,10 +601,14 @@ func TestHasSuffix(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := hasSuffix(tt.input, tt.suffix)
 			result := HasSuffix(tt.input, tt.suffix)
-			builderResult := New(tt.input).RequireHasSuffix(tt.suffix).Error() == nil
-			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+			builderResult := New(tt.input).HasSuffix(tt.suffix)
+			builderErr := New(tt.input).RequireHasSuffix(tt.suffix).Error() == nil
+			if result != tt.expected ||
+				helperResult != tt.expected ||
+				builderResult != tt.expected ||
+				builderErr != tt.expected {
 				t.Errorf("HasPrefix(%q, %q) = %t/%t/%t; want %t",
-					tt.input, tt.suffix, helperResult, result, builderResult, tt.expected)
+					tt.input, tt.suffix, helperResult, result, builderErr, tt.expected)
 			}
 		})
 	}

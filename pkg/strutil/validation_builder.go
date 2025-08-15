@@ -4,13 +4,166 @@ import (
 	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
+// IsEmail checks if the current StringBuilder value is a valid email format and
+// returns true if valid, false otherwise.
+func (sb *StringBuilder) IsEmail() bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isEmail(sb.value)
+}
+
+// IsDomain checks if the current value of the StringBuilder is a valid domain name
+// based on predefined validation rules.
+func (sb *StringBuilder) IsDomain() bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isDomain(sb.value)
+}
+
+// IsURL determines if the string value of the StringBuilder is a valid URL with a proper scheme and host.
+func (sb *StringBuilder) IsURL() bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isURL(sb.value)
+}
+
+// IsUUID checks if the StringBuilder's value is a valid UUID and returns true if valid, otherwise false.
+func (sb *StringBuilder) IsUUID() bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isUUID(sb.value)
+}
+
+// IsLengthInRange checks if the length of the StringBuilder's value is within the specified inclusive range [min, max].
+func (sb *StringBuilder) IsLengthInRange(min, max int) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isLengthInRange(sb.value, min, max)
+}
+
+// IsEmpty determines whether the StringBuilder contains an empty string, returning true if empty, otherwise false.
+func (sb *StringBuilder) IsEmpty() bool {
+	if !sb.shouldContinueProcessing() {
+		return true
+	}
+	return isEmpty(sb.value)
+}
+
+// IsEmptyNormalized determines if the normalized version of
+// the StringBuilder's value is empty after trimming whitespace.
+func (sb *StringBuilder) IsEmptyNormalized() bool {
+	if !sb.shouldContinueProcessing() {
+		return true
+	}
+	return isEmptyNormalized(sb.value)
+}
+
+// IsAlphaNumeric determines if the underlying string value consists only of
+// alphanumeric characters (letters and digits).
+func (sb *StringBuilder) IsAlphaNumeric() bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isAlphaNumericString(sb.value)
+}
+
+// IsAlpha checks if the StringBuilder's current value contains only alphabetic characters.
+func (sb *StringBuilder) IsAlpha() bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isAlphaString(sb.value)
+}
+
+// IsNormalizedUnicode checks if the StringBuilder's current value is normalized
+// in the given Unicode normalization format.
+func (sb *StringBuilder) IsNormalizedUnicode(format NormalizationFormat) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isNormalizedUnicode(sb.value, format)
+}
+
+// Contains checks if the specified substring exists within the StringBuilder's value.
+// Returns true if found, otherwise false.
+func (sb *StringBuilder) Contains(substr string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return contains(sb.value, substr)
+}
+
+// ContainsIgnoreCase checks if the StringBuilder's value contains the given substring, ignoring case sensitivity.
+func (sb *StringBuilder) ContainsIgnoreCase(substr string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return containsIgnoreCase(sb.value, substr)
+}
+
+// ContainsAny checks if the StringBuilder's value contains any of the strings from the provided slice substrs.
+// Returns true if at least one substring is found, otherwise false.
+func (sb *StringBuilder) ContainsAny(substrs []string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return containsAny(sb.value, substrs)
+}
+
+// ContainsAnyIgnoreCase checks if the StringBuilder contains any of the given substrings, ignoring case sensitivity.
+// Returns false if processing should not continue or the input is invalid.
+func (sb *StringBuilder) ContainsAnyIgnoreCase(substrs []string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return containsAnyIgnoreCase(sb.value, substrs)
+}
+
+// ContainsAll checks if all strings in the provided slice are present in
+// the StringBuilder's value and returns true or false.
+func (sb *StringBuilder) ContainsAll(substrs []string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return containsAll(sb.value, substrs)
+}
+
+// ContainsAllIgnoreCase checks if all substrings in the given slice exist in the StringBuilder's value, ignoring case.
+func (sb *StringBuilder) ContainsAllIgnoreCase(substrs []string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return containsAllIgnoreCase(sb.value, substrs)
+}
+
+// HasPrefix checks if the StringBuilder's value starts with the specified prefix and returns true or false accordingly.
+func (sb *StringBuilder) HasPrefix(prefix string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return hasPrefix(sb.value, prefix)
+}
+
+// HasSuffix determines whether the StringBuilder's value ends with the specified suffix and returns true if it does.
+func (sb *StringBuilder) HasSuffix(suffix string) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return hasSuffix(sb.value, suffix)
+}
+
 // RequireEmail validates if the StringBuilder's value is a valid email format,
 // sets an error if invalid, and returns the instance.
 func (sb *StringBuilder) RequireEmail() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	if !isValidEmail(sb.value) {
+	if !isEmail(sb.value) {
 		return sb.setError(errors.ErrInvalidEmail, true)
 	}
 	return sb
@@ -21,7 +174,7 @@ func (sb *StringBuilder) RequireDomain() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	if !isValidDomain(sb.value) {
+	if !isDomain(sb.value) {
 		return sb.setError(errors.ErrInvalidDomain, true)
 	}
 	return sb
@@ -33,7 +186,7 @@ func (sb *StringBuilder) RequireURL() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	if !isValidURL(sb.value) {
+	if !isURL(sb.value) {
 		return sb.setError(errors.ErrInvalidURL, true)
 	}
 	return sb
@@ -45,7 +198,7 @@ func (sb *StringBuilder) RequireUUID() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	if !isValidUUID(sb.value) {
+	if !isUUID(sb.value) {
 		return sb.setError(errors.ErrInvalidUUID, true)
 	}
 	return sb
