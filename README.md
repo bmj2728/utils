@@ -164,15 +164,17 @@ Track multiple string comparison results in one place:
 // Create a builder with comparison manager
 manager := strutil.New("hello world").
     WithComparisonManager().
-    LevenshteinDistance("hello there").      // Distance: 6
-    JaroSimilarity("hello there").           // Similarity: 0.79
-    LCSLength("hello there").                // LCS: 8
+    LevenshteinDistance("hello there").
+    Similarity("hello there", strutil.JaroWinkler).
+    LCSBacktrack("hello there").
     GetComparisonManager()
 
-// Access individual results
-distance := manager.GetComparisonResult(strutil.Levenshtein, "hello there").Distance
-similarity := manager.GetSimilarityResult(strutil.Jaro, "hello there").Score
-lcsLen := manager.GetLCSResult("hello there").Length
+// Accessing results
+levDist, err := manager.GetComparisonResult(strutil.LevDist, "hello there").(*strutil.ComparisonResultInt).
+GetScoreInt()
+sim, err := manager.GetSimilarityResult(strutil.JaroWinkler, "hello there").GetScore()
+lcs := manager.GetLCSResult(strutil.LCSBacktrackWord, "hello there").GetResult()[0]
+
 
 // Get all results for analysis
 allComparisons := manager.GetComparisonResultsMap()
