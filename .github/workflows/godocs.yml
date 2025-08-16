@@ -1,4 +1,4 @@
-name: godocs.yml
+name: Push Doc Updates
 on:
   push:
     tags:
