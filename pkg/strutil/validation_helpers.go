@@ -6,6 +6,8 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/bmj2728/utils/pkg/internal/convert"
+
 	"github.com/google/uuid"
 	"golang.org/x/text/unicode/norm"
 )
@@ -202,4 +204,53 @@ func hasSuffix(s string, suffix string) bool {
 		return false
 	}
 	return strings.HasSuffix(s, suffix)
+}
+
+// index returns the index for the first occurrence of `substr` in the string `s`.
+// If normalized is true, the string is first normalized to NFC.
+// This represents the byte index.
+func index(s string, substr string, normalized bool) int {
+	if normalized {
+		return strings.Index(normalizeUnicode(s, NFC), normalizeUnicode(substr, NFC))
+	} else {
+		return strings.Index(s, substr)
+	}
+}
+
+// lastIndex returns the last index of substr in s. If normalized is true, both strings are normalized before search.
+func lastIndex(s string, substr string, normalized bool) int {
+	if normalized {
+		return strings.LastIndex(normalizeUnicode(s, NFC), normalizeUnicode(substr, NFC))
+	} else {
+		return strings.LastIndex(s, substr)
+	}
+}
+
+// utf32NormalizedIndex finds the normalized index of substr in s using UTF-32 encoding;
+// this represents the human readable location of the substring in the string.
+// returns -1 if not found or errors occur.
+func utf32NormalizedIndex(s string, substr string) int {
+	s, err := convert.ToUTF32(normalizeUnicode(s, NFC))
+	if err != nil {
+		return -1
+	}
+	substr, err = convert.ToUTF32(normalizeUnicode(substr, NFC))
+	if err != nil {
+		return -1
+	}
+	return strings.Index(s, substr) / 4
+}
+
+// utf32NormalizedLastIndex returns the last index of a UTF-32 normalized substring within a UTF-32 normalized string.
+// Normalization uses NFC form. Returns -1 if normalization or UTF-32 conversion fails.
+func utf32NormalizedLastIndex(s string, substr string) int {
+	s, err := convert.ToUTF32(normalizeUnicode(s, NFC))
+	if err != nil {
+		return -1
+	}
+	substr, err = convert.ToUTF32(normalizeUnicode(substr, NFC))
+	if err != nil {
+		return -1
+	}
+	return strings.LastIndex(s, substr) / 4
 }
