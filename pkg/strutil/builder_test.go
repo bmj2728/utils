@@ -577,6 +577,14 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("IsAlphaNumeric failed, expected %t, got %t", false,
 					tt.input.IsAlphaNumeric())
 			}
+			if tt.expected == true && tt.input.IsNumeric(true) != false {
+				t.Errorf("IsNumeric failed, expected %t, got %t", false,
+					tt.input.IsNumeric(true))
+			}
+			if tt.expected == true && tt.input.IsNumeric(false) != false {
+				t.Errorf("IsNumeric failed, expected %t, got %t", false,
+					tt.input.IsNumeric(false))
+			}
 			if tt.expected == true && tt.input.IsAlpha() != false {
 				t.Errorf("IsAlpha failed, expected %t, got %t", false,
 					tt.input.IsAlpha())
@@ -833,6 +841,31 @@ func TestRequireAlphaNumeric(t *testing.T) {
 		if !tt.passed && tt.input.RequireAlphaNumeric().String() != "" {
 			t.Errorf("RequireAlphaNumeric failed, expected %t, got %t", tt.passed,
 				tt.input.RequireAlphaNumeric().String() == "")
+		}
+	}
+}
+
+func TestRequireNumeric(t *testing.T) {
+	tests := []struct {
+		input  *StringBuilder
+		strict bool
+		passed bool
+	}{
+		{New("123"), true, true},
+		{New("hello world!"), true, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), true, false},
+		{New("123"), false, true},
+		{New("hello world!"), false, false},
+		{New("guy@email").setError(errors.ErrUnknownError, true), false, false},
+	}
+	for _, tt := range tests {
+		if tt.passed && tt.input.RequireNumeric(tt.strict).String() == "" {
+			t.Errorf("RequireNumeric failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNumeric(tt.strict).String() == "")
+		}
+		if !tt.passed && tt.input.RequireNumeric(tt.strict).String() != "" {
+			t.Errorf("RequireNumeric failed, expected %t, got %t", tt.passed,
+				tt.input.RequireNumeric(tt.strict).String() == "")
 		}
 	}
 }

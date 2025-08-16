@@ -232,6 +232,7 @@ func TestIsAlphaNumericString(t *testing.T) {
 		{"AlphaNumericStringValidUpper", "HELLO123", true},
 		{"AlphaNumericStringInvalid", "hello world", false},
 		{"AlphaNumericStringInvalidSpecial", "hello world!", false},
+		{"AlphaNumericStringInvalidEmpty", "", false},
 	}
 
 	for _, tt := range tests {
@@ -253,6 +254,41 @@ func TestIsAlphaNumericString(t *testing.T) {
 	}
 }
 
+func TestIsNumericString(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		strict   bool
+		expected bool
+	}{
+		{"NumericStringValid", "123", true, true},
+		{"NumericStringValidUpper", "123½", true, false},
+		{"NumericStringInvalid", "hello world", true, false},
+		{"NumericStringInvalidSpecial", "hello world!", true, false},
+		{"NumericStringInvalidAlpha", "hello123", true, false},
+		{"NumericStringInvalidAlphaUpper", "HELLO123", true, false},
+		{"NumericStringInvalidEmpty", "", true, false},
+		{"NumericStringValid", "123", false, true},
+		{"NumericStringValidUpper", "123½", false, true},
+		{"NumericStringInvalid", "hello world", false, false},
+		{"NumericStringInvalidSpecial", "hello world!", false, false},
+		{"NumericStringInvalidAlpha", "hello123", false, false},
+		{"NumericStringInvalidAlphaUpper", "HELLO123", false, false},
+		{"NumericStringInvalidEmpty", "", false, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := isNumeric(tt.input, tt.strict)
+			result := IsNumeric(tt.input, tt.strict)
+			builderResult := New(tt.input).IsNumeric(tt.strict)
+			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
+				t.Errorf("IsNumeric(%q, %t) = %t / %t / %t; want %t",
+					tt.input, tt.strict, helperResult, result, builderResult, tt.expected)
+			}
+		})
+	}
+}
+
 func TestIsAlphaString(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -264,6 +300,8 @@ func TestIsAlphaString(t *testing.T) {
 		{"AlphaStringInvalid", "hello world", false},
 		{"AlphaStringInvalidSpecial", "hello world!", false},
 		{"AlphaStringInvalidNumber", "rogue1", false},
+		{"AlphaStringInvalidNumberUpper", "ROGUE1", false},
+		{"AlphaStringInvalidEmpty", "", false},
 	}
 
 	for _, tt := range tests {
