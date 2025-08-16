@@ -19,7 +19,7 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/bmj2728/utils)](https://golang.org/)
 [![Release](https://img.shields.io/github/v/release/bmj2728/utils?include_prereleases)](https://github.com/bmj2728/utils/releases)
 
-> **Status**: Ready for v0.3.0 🚀—Stable API with comprehensive testing
+> **Status**: v0.3.1 🚀—Stable API with comprehensive testing
 
 A comprehensive collection of utility packages for Go, designed to fill the gaps in the standard library and provide a consistent, well-tested set of tools for common programming tasks.
 
@@ -148,11 +148,11 @@ truncated := strutil.Truncate(original, 5, "...")  // "Hello..."
 // Validation
 strutil.IsEmail("test@example.com")     // true
 strutil.IsURL("https://example.com")    // true
-strutil.IsNumeric("12345")              // true
+strutil.IsNumeric("12345", true)        // true
 
 // Lorem ipsum generation
-sentence := strutil.LoremSentence()     // "Lorem ipsum dolor sit amet."
-email := strutil.LoremEmail()           // "lorem@ipsum.com"
+sentence := strutil.LoremSentence()     // "Dapibus dictum sollicitudin congue dignissim hendrerit massa commodo."
+email := strutil.LoremEmail()           // "lorem@ipsum.amet"
 paragraph := strutil.LoremParagraph()   // Full paragraph of lorem text
 ```
 
@@ -188,8 +188,8 @@ Track transformations and revert when needed:
 ```go
 // Enable history tracking
 result, err := strutil.New("  Hello WORLD!  ").
-    WithHistory(10).                    // Track up to 10 transformations
-    CleanWhitespace().                  // "Hello WORLD!"
+    WithHistory(10).                    // Track history, rotating after the tenth change
+    Trim().                             // "Hello WORLD!"
     ToLower().                          // "hello world!"
     ToTitle().                          // "Hello World!"
     Slugify(20).                        // "hello-world"
@@ -198,7 +198,7 @@ result, err := strutil.New("  Hello WORLD!  ").
 // Access transformation history
 history := strutil.New("  Hello WORLD!  ").
     WithHistory(10).
-    CleanWhitespace().
+    Trim().
     ToLower().
     GetHistory()
 
@@ -215,7 +215,7 @@ reverted, err := strutil.New("  Hello WORLD!  ").
 
 ## Documentation 📚
 
-For complete documentation of all available functions and their usage, please refer to the [Go Reference Documentation](https://pkg.go.dev/github.com/bmj2728/utils) (available shortly after v0.1.0 release).
+For complete documentation of all available functions and their usage, please refer to the [Go Reference Documentation](https://pkg.go.dev/github.com/bmj2728/utils).
 
 ## Roadmap 🗺️
 

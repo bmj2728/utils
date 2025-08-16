@@ -69,7 +69,7 @@ func (sb *StringBuilder) IsAlphaNumeric() bool {
 	if !sb.shouldContinueProcessing() {
 		return false
 	}
-	return isAlphaNumericString(sb.value)
+	return isAlphaNumeric(sb.value)
 }
 
 // IsAlpha checks if the StringBuilder's current value contains only alphabetic characters.
@@ -77,7 +77,14 @@ func (sb *StringBuilder) IsAlpha() bool {
 	if !sb.shouldContinueProcessing() {
 		return false
 	}
-	return isAlphaString(sb.value)
+	return isAlpha(sb.value)
+}
+
+func (sb *StringBuilder) IsNumeric(strict bool) bool {
+	if !sb.shouldContinueProcessing() {
+		return false
+	}
+	return isNumeric(sb.value, strict)
 }
 
 // IsNormalizedUnicode checks if the StringBuilder's current value is normalized
@@ -250,8 +257,20 @@ func (sb *StringBuilder) RequireAlphaNumeric() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	if !isAlphaNumericString(sb.value) {
+	if !isAlphaNumeric(sb.value) {
 		return sb.setError(errors.ErrInvalidNotAlphaNumeric, true)
+	}
+	return sb
+}
+
+// RequireNumeric validates if the StringBuilder's value contains only numeric characters, with optional strict mode.
+// If validation fails, it sets an error and halts further processing in the builder.
+func (sb *StringBuilder) RequireNumeric(strict bool) *StringBuilder {
+	if !sb.shouldContinueProcessing() {
+		return sb
+	}
+	if !isNumeric(sb.value, strict) {
+		return sb.setError(errors.ErrInvalidNotNumeric, true)
 	}
 	return sb
 }
@@ -261,7 +280,7 @@ func (sb *StringBuilder) RequireAlpha() *StringBuilder {
 	if !sb.shouldContinueProcessing() {
 		return sb
 	}
-	if !isAlphaString(sb.value) {
+	if !isAlpha(sb.value) {
 		return sb.setError(errors.ErrInvalidNotAlpha, true)
 	}
 	return sb

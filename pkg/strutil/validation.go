@@ -39,15 +39,20 @@ func IsEmptyNormalized(s string) bool {
 	return isEmptyNormalized(s)
 }
 
-// IsAlphaNumericString checks if the input string consists only of alphanumeric characters (letters and digits).
-func IsAlphaNumericString(s string) bool {
-	return isAlphaNumericString(s)
+// IsAlphaNumeric checks if the input string consists only of alphanumeric characters (letters and digits).
+func IsAlphaNumeric(s string) bool {
+	return isAlphaNumeric(s)
 }
 
-// IsAlphaString checks if the given string contains only alphabetic characters.
+// IsAlpha checks if the given string contains only alphabetic characters.
 // Returns true if all characters are letters.
-func IsAlphaString(s string) bool {
-	return isAlphaString(s)
+func IsAlpha(s string) bool {
+	return isAlpha(s)
+}
+
+// IsNumeric determines if a string contains only numeric characters based on the given strictness of the check.
+func IsNumeric(s string, strict bool) bool {
+	return isNumeric(s, strict)
 }
 
 // IsNormalizedUnicode checks if the given string is normalized according to the specified

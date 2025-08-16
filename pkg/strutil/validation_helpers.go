@@ -66,8 +66,8 @@ func isEmptyNormalized(s string) bool {
 	return len(normalizeWhitespace(s, ' ')) == 0
 }
 
-// isAlphaNumericString checks whether a given string consists only of alphanumeric characters (letters and digits).
-func isAlphaNumericString(s string) bool {
+// isAlphaNumeric checks whether a given string consists only of alphanumeric characters (letters and digits).
+func isAlphaNumeric(s string) bool {
 	for _, c := range s {
 		if !IsAlphaNumericRune(c) {
 			return false
@@ -76,8 +76,25 @@ func isAlphaNumericString(s string) bool {
 	return true
 }
 
-// isAlphaString checks if the given string contains only alphabetic characters.
-func isAlphaString(s string) bool {
+// isNumeric checks if the input string contains only numeric characters,
+// optionally enforcing strict digit-only validation.
+func isNumeric(s string, strict bool) bool {
+	for _, c := range s {
+		if strict {
+			if !unicode.IsDigit(c) {
+				return false
+			}
+		} else {
+			if !unicode.IsNumber(c) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// isAlpha checks if the given string contains only alphabetic characters.
+func isAlpha(s string) bool {
 	for _, c := range s {
 		if !unicode.IsLetter(c) {
 			return false

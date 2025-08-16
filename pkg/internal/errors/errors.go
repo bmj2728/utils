@@ -29,6 +29,9 @@ var (
 	// ErrInvalidNotAlphaNumeric indicates that a string contains non-alphanumeric characters.
 	ErrInvalidNotAlphaNumeric = errors.New("string contains non-alphanumeric characters")
 
+	// ErrInvalidNotNumeric indicates that the string contains characters that are not numeric.
+	ErrInvalidNotNumeric = errors.New("string contains non-numeric characters")
+
 	// ErrInvalidNotAlpha indicates that the string contains non-alphabetic characters.
 	ErrInvalidNotAlpha = errors.New("string contains non-alphabetic characters")
 

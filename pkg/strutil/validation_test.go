@@ -236,18 +236,18 @@ func TestIsAlphaNumericString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := isAlphaNumericString(tt.input)
-			result := IsAlphaNumericString(tt.input)
+			helperResult := isAlphaNumeric(tt.input)
+			result := IsAlphaNumeric(tt.input)
 			builderResult := New(tt.input).IsAlphaNumeric()
 			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
-				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
+				t.Errorf("IsAlphaNumeric(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			builderErr := New(tt.input).RequireAlphaNumeric().Error()
-			if isAlphaNumericString(tt.input) && builderErr != nil {
-				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, result, tt.expected)
+			if isAlphaNumeric(tt.input) && builderErr != nil {
+				t.Errorf("IsAlphaNumeric(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidNotAlphaNumeric) {
-				t.Errorf("IsAlphaNumericString(%q) = %v; want %v", tt.input, builderErr, errors2.ErrInvalidNotAlphaNumeric)
+				t.Errorf("IsAlphaNumeric(%q) = %v; want %v", tt.input, builderErr, errors2.ErrInvalidNotAlphaNumeric)
 			}
 		})
 	}
@@ -268,18 +268,18 @@ func TestIsAlphaString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := isAlphaString(tt.input)
-			result := IsAlphaString(tt.input)
+			helperResult := isAlpha(tt.input)
+			result := IsAlpha(tt.input)
 			builderResult := New(tt.input).IsAlpha()
 			if result != tt.expected || helperResult != tt.expected || builderResult != tt.expected {
-				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
+				t.Errorf("IsAlpha(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			builderErr := New(tt.input).RequireAlpha().Error()
-			if isAlphaString(tt.input) && builderErr != nil {
-				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, result, tt.expected)
+			if isAlpha(tt.input) && builderErr != nil {
+				t.Errorf("IsAlpha(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 			if builderErr != nil && !errors.Is(builderErr, errors2.ErrInvalidNotAlpha) {
-				t.Errorf("IsAlphaString(%q) = %v; want %v", tt.input, builderErr.Error(), errors2.ErrInvalidNotAlpha)
+				t.Errorf("IsAlpha(%q) = %v; want %v", tt.input, builderErr.Error(), errors2.ErrInvalidNotAlpha)
 			}
 		})
 	}
