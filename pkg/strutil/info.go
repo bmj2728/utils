@@ -45,3 +45,9 @@ func UTF32NormalizedIndex(s string, substr string) int {
 func UTF32NormalizedLastIndex(s string, substr string) int {
 	return utf32NormalizedLastIndex(s, substr)
 }
+
+// UTF32NormalizedIndexAll returns the starting indices of all occurrences of substr in s,
+// normalized to NFC form. This represents the human-readable location of the substring in the string.
+func UTF32NormalizedIndexAll(s string, substr string) []int {
+	return utf32NormalizedIndexAll(s, substr)
+}

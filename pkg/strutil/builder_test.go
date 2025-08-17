@@ -649,6 +649,50 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("PadToLength failed, expected %t, got %t", tt.expected,
 					tt.input.PadToLength(10, true).String() == "")
 			}
+			if tt.expected == true && tt.input.Index("x", true) != -1 {
+				t.Errorf("Index failed expected %t, got %t",
+					tt.expected, tt.input.Index("x", true) != -1)
+			}
+			if tt.expected == true && tt.input.LastIndex("x", false) != -1 {
+				t.Errorf("Index failed expected %t, got %t",
+					tt.expected, tt.input.Index("x", false) != -1)
+			}
+			if tt.expected == true && tt.input.IndexAll("x", true) != nil {
+				t.Errorf("IndexAll failed expected %t, got %t",
+					tt.expected, tt.input.IndexAll("x", true) != nil)
+			}
+			if tt.expected == true && tt.input.IndexRune('x') != -1 {
+				t.Errorf("IndexRune failed expected %t, got %t",
+					tt.expected, tt.input.IndexRune('x') != -1)
+			}
+			if tt.expected == true && tt.input.LastIndexRune('x') != -1 {
+				t.Errorf("LastIndexRune failed expected %t, got %t",
+					tt.expected, tt.input.LastIndexRune('x') != -1)
+			}
+			if tt.expected == true && tt.input.IndexAllRune('x') != nil {
+				t.Errorf("IndexAllRune failed expected %t, got %t",
+					tt.expected, tt.input.IndexAllRune('x') != nil)
+			}
+			if tt.expected == true && tt.input.UTF32NormalizedIndex("x") != -1 {
+				t.Errorf("UTF32NormalizedIndex failed expected %t, got %t",
+					tt.expected, tt.input.UTF32NormalizedIndex("x") != -1)
+			}
+			if tt.expected == true && tt.input.UTF32NormalizedLastIndex("x") != -1 {
+				t.Errorf("UTF32NormalizedLastIndex failed expected %t, got %t",
+					tt.expected, tt.input.UTF32NormalizedLastIndex("x") != -1)
+			}
+			if tt.expected == true && tt.input.UTF32NormalizedIndexAll("x") != nil {
+				t.Errorf("UTF32NormalizedIndexAll failed expected %t, got %t",
+					tt.expected, tt.input.UTF32NormalizedIndexAll("x") != nil)
+			}
+			if tt.expected == true && tt.input.UTF32NormalizedLastIndex("x") != -1 {
+				t.Errorf("UTF32NormalizedLastIndex failed expected %t, got %t",
+					tt.expected, tt.input.UTF32NormalizedLastIndex("x") != -1)
+			}
+			if tt.expected == true && tt.input.UTF32NormalizedIndexAll("x") != nil {
+				t.Errorf("UTF32NormalizedIndexAll failed expected %t, got %t",
+					tt.expected, tt.input.UTF32NormalizedIndexAll("x") != nil)
+			}
 		})
 	}
 }

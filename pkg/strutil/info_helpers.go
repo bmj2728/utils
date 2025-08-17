@@ -2,9 +2,13 @@ package strutil
 
 import (
 	"regexp"
+	"strings"
 
 	"github.com/bmj2728/utils/pkg/internal/convert"
 )
+
+// Indices represents a slice of integers used for indexing and positional references.
+type Indices []int
 
 // index returns the index for the first occurrence of `substr` in the string `s`.
 // If normalized is true, the string is first normalized to NFC.
@@ -57,7 +61,7 @@ func indexAll(s string, substr string, normalized bool) []int {
 // indexRune returns the index of the first occurrence of the rune r in the string s, or -1 if r is not present in s.
 func indexRune(s string, r rune) int {
 	idx := -1
-	if isEmpty(s) {
+	if isEmpty(s) || r < 1 {
 		return idx
 	}
 	for i, c := range s {
@@ -72,7 +76,7 @@ func indexRune(s string, r rune) int {
 // indexAllRune returns a slice of all indices where the specified rune `r` appears in the string `s`.
 func indexAllRune(s string, r rune) []int {
 	var indices []int
-	if isEmpty(s) {
+	if isEmpty(s) || r < 1 {
 		return indices
 	}
 	for i, c := range s {
@@ -115,7 +119,7 @@ func lastIndex(s string, substr string, normalized bool) int {
 // lastIndexRune returns the index of the last occurrence of the rune r in the string s, or -1 if r is not present in s.
 func lastIndexRune(s string, r rune) int {
 	idx := -1
-	if isEmpty(s) {
+	if isEmpty(s) || r < 1 {
 		return idx
 	}
 	for i, c := range s {
@@ -141,7 +145,7 @@ func utf32NormalizedIndex(s string, substr string) int {
 	if err != nil {
 		return -1
 	}
-	return index(s, substr, false) / 4
+	return strings.Index(s, substr) / 4
 }
 
 // utf32NormalizedLastIndex returns the last index of a UTF-32 normalized substring within a UTF-32 normalized string.
@@ -158,5 +162,46 @@ func utf32NormalizedLastIndex(s string, substr string) int {
 	if err != nil {
 		return -1
 	}
-	return lastIndex(s, substr, false) / 4
+	return strings.LastIndex(s, substr) / 4
+}
+
+// utf32NormalizedIndexAll returns a slice of starting indices of all occurrences of a
+// normalized substring in a string.
+// The function normalizes both the input string and the substring to
+// the NFC Unicode normalization form before processing.
+// Indices in the returned slice correspond to character positions in the UTF-32 representation of the input string.
+// Returns nil if either the input string or the substring is empty, or if
+// any error occurs during normalization or conversion.
+func utf32NormalizedIndexAll(s string, substr string) []int {
+	// set things up
+	if isEmpty(s) || isEmpty(substr) {
+		return nil
+	}
+	s, err := convert.ToUTF32(normalizeUnicode(s, NFC))
+	if err != nil {
+		return nil
+	}
+	substr, err = convert.ToUTF32(normalizeUnicode(substr, NFC))
+	if err != nil {
+		return nil
+	}
+	// need somewhere to store the indices
+	var indices []int
+	// find the first index
+	index := strings.Index(s, substr)
+	// if it's not -1, add it to the slice and keep going'
+	for index > -1 {
+		// add the index to the slice, dividing by 4 to account for UTF-32 encoding
+		indices = append(indices, index/4)
+		// find the next index
+		prevIndex := index
+		newStr := s[index+len(substr):]
+		index = strings.Index(newStr, substr)
+		// if it's not -1, adjust it to account for the string manipulation
+		if index > -1 {
+			index += prevIndex + len(substr)
+		}
+		// if -1 the loop ends, indicating no more matches
+	}
+	return indices
 }

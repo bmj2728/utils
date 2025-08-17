@@ -74,3 +74,12 @@ func (sb *StringBuilder) UTF32NormalizedLastIndex(substr string) int {
 	}
 	return utf32NormalizedLastIndex(sb.value, substr)
 }
+
+// UTF32NormalizedIndexAll returns all starting indices of a UTF-32 normalized substring within
+// the StringBuilder's value.
+func (sb *StringBuilder) UTF32NormalizedIndexAll(substr string) []int {
+	if !sb.shouldContinueProcessing() {
+		return nil
+	}
+	return utf32NormalizedIndexAll(sb.value, substr)
+}
