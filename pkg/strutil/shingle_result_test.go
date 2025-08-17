@@ -156,7 +156,7 @@ func TestShingleSliceResultGetters(t *testing.T) {
 				if !errors.CompareErrors(casted.GetError(), tt.err) {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetError(), tt.err)
 				}
-				if !comparison.CompareStringSlices(casted.GetShinglesSlice(), tt.result, false) {
+				if !comparison.CompareSlices(casted.GetShinglesSlice(), tt.result, false) {
 					t.Errorf("ShingleSliceResultGetters() = %v, want %v", casted.GetShinglesSlice(), tt.result)
 				}
 			}

@@ -108,7 +108,7 @@ func (s *ShingleSliceResult) IsMatch(other ShingleResult) bool {
 		return false
 	}
 	return compareShingleInputFields(s, casted) &&
-		comparison.CompareStringSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
+		comparison.CompareSlices(s.GetShinglesSlice(), casted.GetShinglesSlice(), false) &&
 		errors.CompareErrors(s.GetError(), casted.GetError())
 }
 

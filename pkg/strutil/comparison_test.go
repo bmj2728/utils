@@ -243,9 +243,9 @@ func TestLCSBacktrackAll(t *testing.T) {
 			helperResult := lcsBacktrackAll(tt.input1, tt.input2)
 			result := LCSBacktrackAll(tt.input1, tt.input2)
 			builderResult := New(tt.input1).WithComparisonManager().LCSBacktrackAll(tt.input2).comparisonManager
-			if tt.expected != nil && (!comparison.CompareStringSlices(tt.expected, *helperResult.result, false) ||
-				!comparison.CompareStringSlices(tt.expected, *result.result, false) ||
-				!comparison.CompareStringSlices(tt.expected,
+			if tt.expected != nil && (!comparison.CompareSlices(tt.expected, *helperResult.result, false) ||
+				!comparison.CompareSlices(tt.expected, *result.result, false) ||
+				!comparison.CompareSlices(tt.expected,
 					*builderResult.LCSResults[LCSBacktrackWordAll][tt.input2].result, false)) {
 				t.Errorf("LCSBacktrackAllA - expected %s - got %v / %v / %v",
 					tt.expected, helperResult.result, result.result,
@@ -304,8 +304,8 @@ func TestCompareStringSlices(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := CompareSlices(tt.input1, tt.input2, tt.nulls)
-			result := CompareSlices(tt.input1, tt.input2, tt.nulls)
+			helperResult := comparison.CompareSlices(tt.input1, tt.input2, tt.nulls)
+			result := CompareStringSlices(tt.input1, tt.input2, tt.nulls)
 			if helperResult != tt.expected || result != tt.expected {
 				t.Errorf("CompareStringSlices - expected %t - got %t / %t",
 					tt.expected,
@@ -455,9 +455,9 @@ func TestLCSDiff(t *testing.T) {
 					result,
 					*builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2])
 			}
-			if tt.expected != nil && (!comparison.CompareStringSlices(tt.expected, *helperResult.result, false) ||
-				!comparison.CompareStringSlices(tt.expected, *result.result, false) ||
-				!comparison.CompareStringSlices(tt.expected,
+			if tt.expected != nil && (!comparison.CompareSlices(tt.expected, *helperResult.result, false) ||
+				!comparison.CompareSlices(tt.expected, *result.result, false) ||
+				!comparison.CompareSlices(tt.expected,
 					*builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2].result,
 					false)) {
 				t.Errorf("LCSDiff - expected %s - got %v / %v / %v",
@@ -1205,8 +1205,8 @@ func TestShingleSlice(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := shingleSlice(tt.input, tt.k)
 			result := ShingleSlice(tt.input, tt.k)
-			if !comparison.CompareStringSlices(*helperResult.shingles, tt.expected, false) ||
-				!comparison.CompareStringSlices(*result.shingles, tt.expected, false) {
+			if !comparison.CompareSlices(*helperResult.shingles, tt.expected, false) ||
+				!comparison.CompareSlices(*result.shingles, tt.expected, false) {
 				t.Errorf("ShingleSlice - expected %v - got %v",
 					tt.expected,
 					*helperResult,
@@ -1214,7 +1214,7 @@ func TestShingleSlice(t *testing.T) {
 			}
 			builderResult := New(tt.input).ShingleSlice(tt.k).GetComparisonManager().ShingleResults[ShinglesSlice][tt.k]
 			if brSlice, ok := (*builderResult).(*ShingleSliceResult); ok {
-				if !comparison.CompareStringSlices(*brSlice.shingles, tt.expected, false) {
+				if !comparison.CompareSlices(*brSlice.shingles, tt.expected, false) {
 					t.Errorf("ShingleSlice - expected %v - got %v",
 						tt.expected,
 						*brSlice,

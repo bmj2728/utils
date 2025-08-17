@@ -130,7 +130,7 @@ func TestLCSResultGetters(t *testing.T) {
 				s1 != tt.str1 ||
 				s2 != tt.str2 ||
 				!errors.CompareErrors(res.GetError(), tt.err) ||
-				!comparison.CompareStringSlices(res.GetResult(), tt.result, false) {
+				!comparison.CompareSlices(res.GetResult(), tt.result, false) {
 				t.Errorf("LCSResultGetters() = %v, want %v", res.GetResult(), tt.result)
 			}
 		})

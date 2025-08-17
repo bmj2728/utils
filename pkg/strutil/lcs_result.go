@@ -97,7 +97,7 @@ func (lcs *LCSResult) IsMatch(other *LCSResult) bool {
 		lcs.string1 != other.string1 ||
 		lcs.string2 != other.string2 ||
 		!errors.CompareErrors(lcs.err, other.err) ||
-		!comparison.CompareStringSlices(lcs.GetResult(), other.GetResult(), false) {
+		!comparison.CompareSlices(lcs.GetResult(), other.GetResult(), false) {
 		return false
 	}
 	return true

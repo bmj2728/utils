@@ -2,10 +2,10 @@ package strutil
 
 import "github.com/bmj2728/utils/pkg/internal/comparison"
 
-// CompareSlices compares two slices of strings for equality, with an option
+// CompareStringSlices compares two slices of strings for equality, with an option
 // to treat nil slices as equal if nulls is set to true.
-func CompareSlices(a, b []string, nulls bool) bool {
-	return comparison.CompareStringSlices(a, b, nulls)
+func CompareStringSlices(a, b []string, nulls bool) bool {
+	return comparison.CompareSlices(a, b, nulls)
 }
 
 // LevenshteinDistance calculates the Levenshtein distance between two strings and returns a ComparisonResultInt.

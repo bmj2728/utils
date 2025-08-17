@@ -103,24 +103,3 @@ func HasPrefix(s string, prefix string) bool {
 func HasSuffix(s string, suffix string) bool {
 	return hasSuffix(s, suffix)
 }
-
-// Index finds the index of the first occurrence of `substr` in `s`.
-// If `normalized` is true, both strings are normalized to NFC before comparison.
-// Returns the byte index of the match or -1 if not found.
-func Index(s string, substr string, normalized bool) int {
-	return index(s, substr, normalized)
-}
-
-func LastIndex(s string, substr string, normalized bool) int {
-	return lastIndex(s, substr, normalized)
-}
-
-// UTF32NormalizedIndex returns the UTF-32 normalized index of substr in s, or -1 if substr
-// is not found or an error occurs.
-func UTF32NormalizedIndex(s string, substr string) int {
-	return utf32NormalizedIndex(s, substr)
-}
-
-func UTF32NormalizedLastIndex(s string, substr string) int {
-	return utf32NormalizedLastIndex(s, substr)
-}

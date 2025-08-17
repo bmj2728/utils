@@ -1,23 +1,30 @@
 package comparison
 
-import "slices"
+import (
+	"reflect"
+	"slices"
+)
 
-// CompareStringSlices checks if two slices of strings contain the same elements,
-// regardless of order, with optional nil equality.
-// If `nulls` is true, nil slices are treated as equal.
-// It returns true if slices match, otherwise false.
-func CompareStringSlices(s1, s2 []string, nulls bool) bool {
-	if nulls && s1 == nil && s2 == nil {
+// CompareSlices checks if two slices contain the same elements, regardless of order,
+// with an option to treat nil slices as equal.
+// It requires the elements to be of a comparable type and optionally considers
+// both slices nil as equal if `nulls` is true.
+// Returns true if the slices are equivalent; otherwise, returns false.
+func CompareSlices[T comparable](sl1, sl2 []T, nulls bool) bool {
+	if nulls && sl1 == nil && sl2 == nil {
 		return true
 	}
-	if s1 == nil || s2 == nil {
+	if sl1 == nil || sl2 == nil {
 		return false
 	}
-	if len(s1) != len(s2) {
+	if reflect.TypeOf(sl1[0]) != reflect.TypeOf(sl2[0]) {
 		return false
 	}
-	remaining := slices.Clone(s2)
-	for _, s := range s1 {
+	if len(sl1) != len(sl2) {
+		return false
+	}
+	remaining := slices.Clone(sl2)
+	for _, s := range sl1 {
 		if !slices.Contains(remaining, s) {
 			return false
 		} else {
