@@ -11,8 +11,8 @@ func (sb *StringBuilder) Index(substr string, normalize bool) int {
 }
 
 // IndexAll returns a slice of starting indices of all non-overlapping occurrences
-// of substr in the StringBuilder's value.
-// If normalize is true, both the StringBuilder's value and substr will be normalized to NFC before searching.
+// of subStr in the StringBuilder's value.
+// If normalize is true, both the StringBuilder's value and subStr will be normalized to NFC before searching.
 // Returns nil if processing should not continue.
 func (sb *StringBuilder) IndexAll(substr string, normalize bool) []int {
 	if !sb.shouldContinueProcessing() {
@@ -37,9 +37,9 @@ func (sb *StringBuilder) IndexAllRune(r rune) []int {
 	return indexAllRune(sb.value, r)
 }
 
-// LastIndex finds the last occurrence of substr in the StringBuilder's value.
+// LastIndex finds the last occurrence of subStr in the StringBuilder's value.
 // If normalize is true, the inputs are Unicode normalized before searching.
-// Returns -1 if processing should not continue or substr is not found.
+// Returns -1 if processing should not continue or subStr is not found.
 func (sb *StringBuilder) LastIndex(substr string, normalize bool) int {
 	if !sb.shouldContinueProcessing() {
 		return -1

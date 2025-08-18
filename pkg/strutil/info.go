@@ -1,6 +1,6 @@
 package strutil
 
-// Index finds the index of the first occurrence of `substr` in `s`.
+// Index finds the index of the first occurrence of `subStr` in `s`.
 // If `normalized` is true, both strings are normalized to NFC before comparison.
 // Returns the byte index of the match or -1 if not found.
 func Index(s string, substr string, normalized bool) int {
@@ -23,7 +23,7 @@ func IndexAllRune(s string, r rune) []int {
 	return indexAllRune(s, r)
 }
 
-// LastIndex returns the last index of `substr` in `s`. If `normalized` is true,
+// LastIndex returns the last index of `subStr` in `s`. If `normalized` is true,
 // strings are NFC-normalized before searching.
 func LastIndex(s string, substr string, normalized bool) int {
 	return lastIndex(s, substr, normalized)
@@ -35,7 +35,7 @@ func LastIndexRune(s string, r rune) int {
 	return lastIndexRune(s, r)
 }
 
-// UTF32NormalizedIndex finds the normalized index of substr in s using UTF-32 encoding, returning -1 if not found.
+// UTF32NormalizedIndex finds the normalized index of subStr in s using UTF-32 encoding, returning -1 if not found.
 func UTF32NormalizedIndex(s string, substr string) int {
 	return utf32NormalizedIndex(s, substr)
 }
@@ -46,7 +46,7 @@ func UTF32NormalizedLastIndex(s string, substr string) int {
 	return utf32NormalizedLastIndex(s, substr)
 }
 
-// UTF32NormalizedIndexAll returns the starting indices of all occurrences of substr in s,
+// UTF32NormalizedIndexAll returns the starting indices of all occurrences of subStr in s,
 // normalized to NFC form. This represents the human-readable location of the substring in the string.
 func UTF32NormalizedIndexAll(s string, substr string) []int {
 	return utf32NormalizedIndexAll(s, substr)

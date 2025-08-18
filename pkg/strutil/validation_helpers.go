@@ -117,7 +117,7 @@ func isNormalizedUnicode(s string, format NormalizationFormat) bool {
 	return norm.Form(format).IsNormalString(s)
 }
 
-// contains determines if the substring `substr` exists within the string `s` and returns true if found,
+// contains determines if the substring `subStr` exists within the string `s` and returns true if found,
 // otherwise false.
 func contains(s string, substr string) bool {
 	if isEmpty(s) || isEmpty(substr) {
@@ -126,7 +126,7 @@ func contains(s string, substr string) bool {
 	return strings.Contains(s, substr)
 }
 
-// containsIgnoreCase checks if substr is present in s, ignoring case sensitivity. Returns true if found,
+// containsIgnoreCase checks if subStr is present in s, ignoring case sensitivity. Returns true if found,
 // false otherwise.
 func containsIgnoreCase(s string, substr string) bool {
 	if isEmpty(s) || isEmpty(substr) {

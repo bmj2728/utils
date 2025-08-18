@@ -5,12 +5,10 @@ import (
 	"strings"
 
 	"github.com/bmj2728/utils/pkg/internal/convert"
+	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
-// Indices represents a slice of integers used for indexing and positional references.
-type Indices []int
-
-// index returns the index for the first occurrence of `substr` in the string `s`.
+// index returns the index for the first occurrence of `subStr` in the string `s`.
 // If normalized is true, the string is first normalized to NFC.
 // This represents the byte index.
 func index(s string, substr string, normalized bool) int {
@@ -34,8 +32,8 @@ func index(s string, substr string, normalized bool) int {
 	}
 }
 
-// indexAll returns a slice of starting indices of all non-overlapping occurrences of substr in s.
-// If normalized is true, both s and substr are normalized to NFC before searching.
+// indexAll returns a slice of starting indices of all non-overlapping occurrences of subStr in s.
+// If normalized is true, both s and subStr are normalized to NFC before searching.
 func indexAll(s string, substr string, normalized bool) []int {
 	var indices []int
 	if isEmpty(s) || isEmpty(substr) {
@@ -87,9 +85,9 @@ func indexAllRune(s string, r rune) []int {
 	return indices
 }
 
-// lastIndex finds the last occurrence of substr in the string s.
-// If normalized is true, both s and substr are Unicode normalized before searching.
-// Returns -1 if substr is not found.
+// lastIndex finds the last occurrence of subStr in the string s.
+// If normalized is true, both s and subStr are Unicode normalized before searching.
+// Returns -1 if subStr is not found.
 func lastIndex(s string, substr string, normalized bool) int {
 	idx := -1
 	if isEmpty(s) || isEmpty(substr) {
@@ -130,18 +128,29 @@ func lastIndexRune(s string, r rune) int {
 	return idx
 }
 
-// utf32NormalizedIndex finds the normalized index of substr in s using UTF-32 encoding;
-// this represents the human readable location of the substring in the string.
-// returns -1 if not found or errors occur.
-func utf32NormalizedIndex(s string, substr string) int {
+// convertToUTF32 is a helper function that converts the input string to UTF-32 encoding and normalizes it to NFC form.
+// It returns the converted strings and any errors that occur during conversion or normalization.
+// If either the input string or the substring is empty, the function returns an error.
+func convertToUTF32(s string, substr string) (sUTF32 string, subUTF32 string, err error) {
 	if isEmpty(s) || isEmpty(substr) {
-		return -1
+		return s, substr, errors.ErrInvalidEmpty
 	}
-	s, err := convert.ToUTF32(normalizeUnicode(s, NFC))
+	s, err = convert.ToUTF32(normalizeUnicode(s, NFC))
 	if err != nil {
-		return -1
+		return s, substr, err
 	}
 	substr, err = convert.ToUTF32(normalizeUnicode(substr, NFC))
+	if err != nil {
+		return s, substr, err
+	}
+	return s, substr, nil
+}
+
+// utf32NormalizedIndex finds the normalized index of subStr in s using UTF-32 encoding;
+// this represents the human-readable location of the substring in the string.
+// returns -1 if not found or errors occur.
+func utf32NormalizedIndex(s string, substr string) int {
+	s, substr, err := convertToUTF32(s, substr)
 	if err != nil {
 		return -1
 	}
@@ -151,14 +160,7 @@ func utf32NormalizedIndex(s string, substr string) int {
 // utf32NormalizedLastIndex returns the last index of a UTF-32 normalized substring within a UTF-32 normalized string.
 // Normalization uses NFC form. Returns -1 if normalization or UTF-32 conversion fails.
 func utf32NormalizedLastIndex(s string, substr string) int {
-	if isEmpty(s) || isEmpty(substr) {
-		return -1
-	}
-	s, err := convert.ToUTF32(normalizeUnicode(s, NFC))
-	if err != nil {
-		return -1
-	}
-	substr, err = convert.ToUTF32(normalizeUnicode(substr, NFC))
+	s, substr, err := convertToUTF32(s, substr)
 	if err != nil {
 		return -1
 	}
@@ -173,22 +175,15 @@ func utf32NormalizedLastIndex(s string, substr string) int {
 // Returns nil if either the input string or the substring is empty, or if
 // any error occurs during normalization or conversion.
 func utf32NormalizedIndexAll(s string, substr string) []int {
-	// set things up
-	if isEmpty(s) || isEmpty(substr) {
-		return nil
-	}
-	s, err := convert.ToUTF32(normalizeUnicode(s, NFC))
-	if err != nil {
-		return nil
-	}
-	substr, err = convert.ToUTF32(normalizeUnicode(substr, NFC))
-	if err != nil {
-		return nil
-	}
-	// need somewhere to store the indices
 	var indices []int
+	s, substr, err := convertToUTF32(s, substr)
+	if err != nil {
+		return indices
+	}
+
 	// find the first index
 	index := strings.Index(s, substr)
+
 	// if it's not -1, add it to the slice and keep going'
 	for index > -1 {
 		// add the index to the slice, dividing by 4 to account for UTF-32 encoding
@@ -203,5 +198,6 @@ func utf32NormalizedIndexAll(s string, substr string) []int {
 		}
 		// if -1 the loop ends, indicating no more matches
 	}
+
 	return indices
 }

@@ -61,13 +61,13 @@ func IsNormalizedUnicode(s string, format NormalizationFormat) bool {
 	return isNormalizedUnicode(s, format)
 }
 
-// Contains checks if the substring `substr` is present within the string `s` and
+// Contains checks if the substring `subStr` is present within the string `s` and
 // returns true if found, otherwise false.
 func Contains(s string, substr string) bool {
 	return contains(s, substr)
 }
 
-// ContainsIgnoreCase checks if substr is present in s, ignoring case sensitivity. Returns true if found.
+// ContainsIgnoreCase checks if subStr is present in s, ignoring case sensitivity. Returns true if found.
 func ContainsIgnoreCase(s string, substr string) bool {
 	return containsIgnoreCase(s, substr)
 }
