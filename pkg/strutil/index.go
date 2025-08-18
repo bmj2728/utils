@@ -5,6 +5,8 @@ import (
 	"unicode/utf8"
 )
 
+// TODO implement new struct across info files, create map, implement on builder
+
 // IndexType is an enumerated type used to define various indexing strategies.
 type IndexType int
 

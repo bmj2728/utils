@@ -693,6 +693,22 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("UTF32NormalizedIndexAll failed expected %t, got %t",
 					tt.expected, tt.input.UTF32NormalizedIndexAll("x") != nil)
 			}
+			fm, err := tt.input.FuzzyMatch([]string{"x"}, Cosine)
+			if tt.expected == true && (fm != "" || err == nil) {
+				t.Errorf("FuzzyMatch failed expected %s got %s", "", fm)
+			}
+			fmt, err := tt.input.FuzzyMatchWithThreshold([]string{"x"}, 0.5, Cosine)
+			if tt.expected == true && (fmt != "" || err == nil) {
+				t.Errorf("FuzzyMatchWithThreshold failed expected %s got %s", "", fm)
+			}
+			fms, err := tt.input.FuzzyMatchSet([]string{"x"}, 1, Cosine)
+			if tt.expected == true && (fms != nil || err == nil) {
+				t.Errorf("FuzzyMatchSet failed expected %s got %s", "", fms)
+			}
+			fmst, err := tt.input.FuzzyMatchSetWithThreshold([]string{"x"}, 1, 0.5, Cosine)
+			if tt.expected == true && (fmst != nil || err == nil) {
+				t.Errorf("FuzzyMatchSetWithThreshold failed expected %s got %s", "", fmst)
+			}
 		})
 	}
 }
