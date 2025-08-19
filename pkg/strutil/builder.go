@@ -13,11 +13,8 @@ type StringBuilder struct {
 	originalValue     string
 	comparisonManager *ComparisonManager
 	history           *StringHistory
+	indices           *Indices
 }
-
-// TODO builder logic to be updated re: error handling
-// fatal errors: transforms cause undefined behavior if incomplete and security functions
-// non-fatal errors: other errors e.g. Hamming Dist on unequal lengths
 
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
 func (sb *StringBuilder) Print() *StringBuilder {
@@ -192,6 +189,14 @@ func (sb *StringBuilder) RevertWithFunction(fn func(history *StringHistory) int)
 		}
 	} else {
 		sb.setError(errors.ErrHistoryNotInitialized, false)
+	}
+	return sb
+}
+
+// WithIndices ensures the StringBuilder's indices field is initialized and returns the updated StringBuilder instance.
+func (sb *StringBuilder) WithIndices() *StringBuilder {
+	if sb.indices == nil {
+		sb.indices = NewIndices()
 	}
 	return sb
 }
