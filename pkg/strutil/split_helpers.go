@@ -8,6 +8,9 @@ import (
 // substrings splits the input string `s` by whitespace and returns a slice of substrings.
 // Returns an empty slice if the input string is empty.
 func substrings(s string) []string {
+	if s == "" {
+		return []string{}
+	}
 	return strings.Fields(s)
 }
 

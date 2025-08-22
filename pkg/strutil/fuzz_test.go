@@ -34,6 +34,11 @@ func TestFuzzyMatch(t *testing.T) {
 			[]string{"Catherine", "Kathrine", "Katharine", "Kathryn", "Ellen"},
 			Cosine,
 			"Catherine"},
+		{"FuzzyMatch5",
+			"Katherine",
+			[]string{"Catherine", "Kathrine", "Katharine", "Kathryn", "Ellen"},
+			Hamming,
+			"Catherine"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -95,6 +100,12 @@ func TestFuzzyMatchWithThreshold(t *testing.T) {
 			0.8,
 			Cosine,
 			"Catherine"},
+		{"FuzzyMatch5",
+			"Katherine",
+			[]string{"Catherine", "Kathrine", "Katharine", "Kathryn", "Ellen"},
+			0.8,
+			Hamming,
+			"Catherine"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -135,6 +146,7 @@ var (
 	sorensenExpected = []string{"Catherine", "Kathrine", "Katharine", "Kathryn", ""}
 	damerauExpected  = []string{"Catherine", "Kathrine", "Katharine", "Kathryn", "Ellen"}
 	osadExpected     = []string{"Catherine", "Kathrine", "Katharine", "Kathryn", "Ellen"}
+	hammingExpected  = []string{"Catherine", "Katharine", "", "", ""}
 )
 
 func TestFuzzyMatchSet(t *testing.T) {
@@ -154,6 +166,7 @@ func TestFuzzyMatchSet(t *testing.T) {
 		{"FuzzMatchSet7", input, fuzzSet, QGram, qgramExpected},
 		{"FuzzMatchSet8", input, fuzzSet, Jaccard, jaccardExpected},
 		{"FuzzMatchSet9", input, fuzzSet, Lcs, lcsExpected},
+		{"FuzzMatchSet10", input, fuzzSet, Hamming, hammingExpected},
 	}
 
 	for _, tt := range tests {
@@ -193,6 +206,7 @@ var (
 	sorensenExpectedThresh = []string{"Catherine", "Kathrine", "", "", ""}
 	damerauExpectedThresh  = []string{"Catherine", "Kathrine", "Katharine", "", ""}
 	osadExpectedThresh     = []string{"Catherine", "Kathrine", "Katharine", "", ""}
+	hammingExpectedThresh  = []string{"Catherine", "Katharine", "", "", ""}
 )
 
 func TestFuzzyMatchSetWithThreshold(t *testing.T) {
@@ -213,6 +227,7 @@ func TestFuzzyMatchSetWithThreshold(t *testing.T) {
 		{"FuzzMatchSet7", input, fuzzSet, 0.8, QGram, qgramExpectedThresh},
 		{"FuzzMatchSet8", input, fuzzSet, 0.8, Jaccard, jaccardExpectedThresh},
 		{"FuzzMatchSet9", input, fuzzSet, 0.8, Lcs, lcsExpectedThresh},
+		{"FuzzMatchSet10", input, fuzzSet, 0.8, Hamming, hammingExpectedThresh},
 	}
 
 	for _, tt := range tests {

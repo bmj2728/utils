@@ -135,3 +135,28 @@ func TestCheckRunes(t *testing.T) {
 		})
 	}
 }
+
+func TestIsSentenceTerminatorRune(t *testing.T) {
+	tests := []struct {
+		name     string
+		r        rune
+		expected bool
+	}{
+		{"SentenceTerminatorPeriod", '.', true},
+		{"SentenceTerminatorExclamation", '!', true},
+		{"SentenceTerminatorQuestion", '?', true},
+		{"SentenceTerminatorOtherPunct", ':', false},
+		{"SentenceTerminatorAlphaNumeric", 'a', false},
+		{"SentenceTerminatorSpace", ' ', false},
+		{"SentenceTerminatorNil", 0, false},
+		{"SentenceTerminatorNeg", -1, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if IsSentenceTerminatorRune(tt.r) != tt.expected {
+				t.Errorf("Expected match to be %t, got %t",
+					tt.expected, IsSentenceTerminatorRune(tt.r))
+			}
+		})
+	}
+}

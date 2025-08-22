@@ -352,3 +352,63 @@ func TestUTF32NormalizedIndexAll(t *testing.T) {
 		})
 	}
 }
+
+func TestFirstAlphaNumericIndex(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     string
+		wantIndex int
+	}{
+		{"FirstAlphaNumericIndex1", "Hello World", 0},
+		{"FirstAlphaNumericIndex2", ",Hello World", 1},
+		{"FirstAlphaNumericIndex3", "   Hello World", 3},
+		{"FirstAlphaNumericIndex4", " { 'Hello World' } ", 4},
+		{"FirstAlphaNumericIndex5", "______World", 6},
+		{"FirstAlphaNumericIndex6", " --- Hello World", 5},
+		{"FirstAlphaNumericIndex7", "Hello-World", 0},
+		{"FirstAlphaNumericIndex8", "", -1},
+		{"FirstAlphaNumericIndex9", "%^&*()@#!", -1},
+		{"FirstAlphaNumericIndex10", "1. Hello World", 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := firstAlphaNumericIndex(tt.input)
+			result := FirstAlphaNumericIndex(tt.input)
+			builderResult := New(tt.input).FirstAlphaNumericIndex()
+			if helperResult != tt.wantIndex || result != tt.wantIndex || builderResult != tt.wantIndex {
+				t.Errorf("Got: %d / %d / %d | Wanted: %d",
+					helperResult, result, builderResult, tt.wantIndex)
+			}
+		})
+	}
+}
+
+func TestLastAlphaNumericIndex(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     string
+		wantIndex int
+	}{
+		{"FirstAlphaNumericIndex1", "Hello World", 10},
+		{"FirstAlphaNumericIndex2", "Hello World,", 10},
+		{"FirstAlphaNumericIndex3", "   Hello World", 13},
+		{"FirstAlphaNumericIndex4", " { 'Hello World' } ", 14},
+		{"FirstAlphaNumericIndex5", "______World_____", 10},
+		{"FirstAlphaNumericIndex6", " --- Hello World --- ", 15},
+		{"FirstAlphaNumericIndex7", "Hello-World", 10},
+		{"FirstAlphaNumericIndex8", "", -1},
+		{"FirstAlphaNumericIndex9", "%^&*()@#!", -1},
+		{"FirstAlphaNumericIndex10", "1. Hello World", 13},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := lastAlphaNumericIndex(tt.input)
+			result := LastAlphaNumericIndex(tt.input)
+			builderResult := New(tt.input).LastAlphaNumericIndex()
+			if helperResult != tt.wantIndex || result != tt.wantIndex || builderResult != tt.wantIndex {
+				t.Errorf("Got: %d / %d / %d | Wanted: %d",
+					helperResult, result, builderResult, tt.wantIndex)
+			}
+		})
+	}
+}

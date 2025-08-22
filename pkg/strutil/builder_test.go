@@ -693,6 +693,14 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("UTF32NormalizedIndexAll failed expected %t, got %t",
 					tt.expected, tt.input.UTF32NormalizedIndexAll("x") != nil)
 			}
+			if tt.expected == true && tt.input.FirstAlphaNumericIndex() != -1 {
+				t.Errorf("FirstAlphaNumericIndex failed expected %t, got %t",
+					tt.expected, tt.input.FirstAlphaNumericIndex() != -1)
+			}
+			if tt.expected == true && tt.input.LastAlphaNumericIndex() != -1 {
+				t.Errorf("LastAlphaNumericIndex failed expected %t, got %t",
+					tt.expected, tt.input.LastAlphaNumericIndex() != 1)
+			}
 			fm, err := tt.input.FuzzyMatch([]string{"x"}, Cosine)
 			if tt.expected == true && (fm != "" || err == nil) {
 				t.Errorf("FuzzyMatch failed expected %s got %s", "", fm)
@@ -708,6 +716,34 @@ func TestBuilderError(t *testing.T) {
 			fmst, err := tt.input.FuzzyMatchSetWithThreshold([]string{"x"}, 1, 0.5, Cosine)
 			if tt.expected == true && (fmst != nil || err == nil) {
 				t.Errorf("FuzzyMatchSetWithThreshold failed expected %s got %s", "", fmst)
+			}
+			if tt.input.Substrings() == nil != tt.expected {
+				t.Errorf("Substrings failed, expected %t, got %t", tt.expected,
+					tt.input.Substrings() == nil)
+			}
+			if tt.input.Words() == nil != tt.expected {
+				t.Errorf("Words failed, expected %t, got %t", tt.expected,
+					tt.input.Words() == nil)
+			}
+			if tt.input.WordCount() == -1 != tt.expected {
+				t.Errorf("WordCount failed, expected %t, got %t", tt.expected,
+					tt.input.WordCount() == -1)
+			}
+			if tt.input.WordMap() == nil != tt.expected {
+				t.Errorf("WordMap failed, expected %t, got %t", tt.expected,
+					tt.input.WordMap() == nil)
+			}
+			if tt.input.Split(", ", false) == nil != tt.expected {
+				t.Errorf("Split failed, expected %t, got %t", tt.expected,
+					tt.input.Split(", ", false) == nil)
+			}
+			if tt.input.SplitN(", ", 10, false) == nil != tt.expected {
+				t.Errorf("SplitN failed, expected %t, got %t", tt.expected,
+					tt.input.SplitN(", ", 10, false) == nil)
+			}
+			if tt.input.Lines() == nil != tt.expected {
+				t.Errorf("Lines failed, expected %t, got %t", tt.expected,
+					tt.input.Lines() == nil)
 			}
 		})
 	}
@@ -1159,6 +1195,23 @@ func TestRequireHasSuffix(t *testing.T) {
 		if !tt.passed && tt.input.RequireHasSuffix(tt.comp).String() != "" {
 			t.Errorf("RequireHasSuffix failed, expected %t, got %t", tt.passed,
 				tt.input.RequireHasSuffix(tt.comp).String() == "")
+		}
+	}
+}
+
+func TestWithIndices(t *testing.T) {
+	tests := []struct {
+		name  string
+		input *StringBuilder
+		isNil bool
+	}{
+		{"TestWithIndicesWithout", New("hello world"), true},
+		{"TestWithIndicesWith", New("hello world").WithIndices(), false},
+	}
+	for _, tt := range tests {
+		if tt.input.indices == nil != tt.isNil {
+			t.Errorf("WithIndices failed, expected %t, got %t", tt.isNil,
+				tt.input.indices == nil)
 		}
 	}
 }

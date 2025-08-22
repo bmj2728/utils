@@ -50,42 +50,45 @@ const (
 	Graphic
 	Mark
 	Printable
+	SentenceTerminator
 )
 
 // RuneSets maps predefined RuneSet constants to their respective rune classification functions.
 var RuneSets = map[RuneSet]func(rune) bool{
-	Letter:       unicode.IsLetter,
-	Digit:        unicode.IsDigit,
-	Number:       unicode.IsNumber,
-	AlphaNumeric: IsAlphaNumericRune,
-	WhiteSpace:   unicode.IsSpace,
-	Punctuation:  unicode.IsPunct,
-	Symbol:       unicode.IsSymbol,
-	Upper:        unicode.IsUpper,
-	Lower:        unicode.IsLower,
-	Title:        unicode.IsTitle,
-	Control:      unicode.IsControl,
-	Graphic:      unicode.IsGraphic,
-	Mark:         unicode.IsMark,
-	Printable:    unicode.IsPrint,
+	Letter:             unicode.IsLetter,
+	Digit:              unicode.IsDigit,
+	Number:             unicode.IsNumber,
+	AlphaNumeric:       IsAlphaNumericRune,
+	WhiteSpace:         unicode.IsSpace,
+	Punctuation:        unicode.IsPunct,
+	Symbol:             unicode.IsSymbol,
+	Upper:              unicode.IsUpper,
+	Lower:              unicode.IsLower,
+	Title:              unicode.IsTitle,
+	Control:            unicode.IsControl,
+	Graphic:            unicode.IsGraphic,
+	Mark:               unicode.IsMark,
+	Printable:          unicode.IsPrint,
+	SentenceTerminator: IsSentenceTerminatorRune,
 }
 
 // RuneSetNames is a map associating string keys with predefined RuneSet constants for categorizing runes.
 var RuneSetNames = map[string]RuneSet{
-	"Letter":            Letter,
-	"Digit":             Digit,
-	"Number":            Number,
-	"AlphaNumericChars": AlphaNumeric,
-	"WhiteSpaceChars":   WhiteSpace,
-	"Punctuation":       Punctuation,
-	"Symbol":            Symbol,
-	"Upper":             Upper,
-	"Lower":             Lower,
-	"Title":             Title,
-	"Control":           Control,
-	"Graphic":           Graphic,
-	"Mark":              Mark,
-	"Printable":         Printable,
+	"Letter":             Letter,
+	"Digit":              Digit,
+	"Number":             Number,
+	"AlphaNumericChars":  AlphaNumeric,
+	"WhiteSpaceChars":    WhiteSpace,
+	"Punctuation":        Punctuation,
+	"Symbol":             Symbol,
+	"Upper":              Upper,
+	"Lower":              Lower,
+	"Title":              Title,
+	"Control":            Control,
+	"Graphic":            Graphic,
+	"Mark":               Mark,
+	"Printable":          Printable,
+	"SentenceTerminator": SentenceTerminator,
 }
 
 // GetRuneSet retrieves a RuneSet from the RuneSetNames map by its name.
