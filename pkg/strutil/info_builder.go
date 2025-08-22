@@ -83,3 +83,21 @@ func (sb *StringBuilder) UTF32NormalizedIndexAll(substr string) []int {
 	}
 	return utf32NormalizedIndexAll(sb.value, substr)
 }
+
+// FirstAlphaNumericIndex returns the index of the first alphanumeric character in
+// the StringBuilder's value or -1 if none found.
+func (sb *StringBuilder) FirstAlphaNumericIndex() int {
+	if !sb.shouldContinueProcessing() {
+		return -1
+	}
+	return firstAlphaNumericIndex(sb.value)
+}
+
+// LastAlphaNumericIndex returns the index of the last alphanumeric character in
+// the StringBuilder's value or -1 if none exists.
+func (sb *StringBuilder) LastAlphaNumericIndex() int {
+	if !sb.shouldContinueProcessing() {
+		return -1
+	}
+	return lastAlphaNumericIndex(sb.value)
+}

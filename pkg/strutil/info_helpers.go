@@ -201,3 +201,14 @@ func utf32NormalizedIndexAll(s string, substr string) []int {
 
 	return indices
 }
+
+// firstAlphaNumericIndex returns the index of the first alphanumeric character in the input string `s`.
+// If no alphanumeric character is found, it returns -1.
+func firstAlphaNumericIndex(s string) int {
+	return index(s, "[a-zA-Z0-9]", true)
+}
+
+// lastAlphaNumericIndex returns the index of the last alphanumeric character in the string s or -1 if none is found.
+func lastAlphaNumericIndex(s string) int {
+	return lastIndex(s, "[a-zA-Z0-9]", true)
+}

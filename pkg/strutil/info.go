@@ -51,3 +51,14 @@ func UTF32NormalizedLastIndex(s string, substr string) int {
 func UTF32NormalizedIndexAll(s string, substr string) []int {
 	return utf32NormalizedIndexAll(s, substr)
 }
+
+// FirstAlphaNumericIndex returns the index of the first alphanumeric character in
+// the string `s` or -1 if none is found.
+func FirstAlphaNumericIndex(s string) int {
+	return firstAlphaNumericIndex(s)
+}
+
+// LastAlphaNumericIndex returns the index of the last alphanumeric character in the string s or -1 if none is found.
+func LastAlphaNumericIndex(s string) int {
+	return lastAlphaNumericIndex(s)
+}

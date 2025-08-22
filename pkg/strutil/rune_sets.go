@@ -16,6 +16,11 @@ func IsAlphaNumericRune(r rune) bool {
 	return true
 }
 
+// IsSentenceTerminatorRune checks if the given rune is a valid sentence-terminating character ('.', '!', or '?').
+func IsSentenceTerminatorRune(r rune) bool {
+	return r == '.' || r == '!' || r == '?'
+}
+
 // Letter represents a set of letter runes.
 // Digit represents a set of digit runes.
 // Number represents a set of numeric runes.

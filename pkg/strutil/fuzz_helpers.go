@@ -5,6 +5,9 @@ import "github.com/hbollon/go-edlib"
 // fuzzyMatch performs a fuzzy search on the compList to match the given str using the specified algorithm.
 // Returns the closest matching string and an error if the operation fails.
 func fuzzyMatch(str string, compList []string, algo Algorithm) (string, error) {
+	if algo == Hamming {
+		compList = hammingCleanse(str, compList)
+	}
 	return edlib.FuzzySearch(str, compList, edlib.Algorithm(algo))
 }
 
@@ -13,6 +16,9 @@ func fuzzyMatch(str string, compList []string, algo Algorithm) (string, error) {
 // str is the input string to match, compList is the comparison list, minSim is the similarity threshold,
 // algo is the algorithm used.
 func fuzzyMatchWithThreshold(str string, compList []string, minSim float32, algo Algorithm) (string, error) {
+	if algo == Hamming {
+		compList = hammingCleanse(str, compList)
+	}
 	return edlib.FuzzySearchThreshold(str, compList, minSim, edlib.Algorithm(algo))
 }
 
@@ -23,6 +29,9 @@ func fuzzyMatchWithThreshold(str string, compList []string, minSim float32, algo
 // algo defines the algorithm used for string distance or scoring.
 // Returns a list of matching strings and an error if any occurs during processing.
 func fuzzyMatchSet(str string, compList []string, quantity int, algo Algorithm) ([]string, error) {
+	if algo == Hamming {
+		compList = hammingCleanse(str, compList)
+	}
 	return edlib.FuzzySearchSet(str, compList, quantity, edlib.Algorithm(algo))
 }
 
@@ -39,5 +48,20 @@ func fuzzyMatchSetWithThreshold(str string,
 	quantity int,
 	minSim float32,
 	algo Algorithm) ([]string, error) {
+	if algo == Hamming {
+		compList = hammingCleanse(str, compList)
+	}
 	return edlib.FuzzySearchSetThreshold(str, compList, quantity, minSim, edlib.Algorithm(algo))
+}
+
+// hammingCleanse filters the compWords slice to include only strings with the same length as the input str.
+func hammingCleanse(str string, compWords []string) []string {
+	needs := len(str)
+	cleansed := make([]string, 0)
+	for _, word := range compWords {
+		if len(word) == needs {
+			cleansed = append(cleansed, word)
+		}
+	}
+	return cleansed
 }
