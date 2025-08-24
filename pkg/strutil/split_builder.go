@@ -44,6 +44,16 @@ func (sb *StringBuilder) Split(sep string, preserveSep bool) []string {
 	return split(sb.value, sep, preserveSep)
 }
 
+// SplitAt splits the StringBuilder's value into two substrings at the specified index and
+// returns them as a slice of strings.
+// Returns nil if the processing condition is not met.
+func (sb *StringBuilder) SplitAt(index int) []string {
+	if !sb.shouldContinueProcessing() {
+		return nil
+	}
+	return splitAt(sb.value, index)
+}
+
 // SplitN splits the StringBuilder value into at most n substrings separated by the specified separator.
 // If preserveSep is true, the separator is included in the result.
 // Returns nil if the StringBuilder should not continue processing.
@@ -59,4 +69,31 @@ func (sb *StringBuilder) Lines() []string {
 		return nil
 	}
 	return lines(sb.value)
+}
+
+// LineCount returns the total number of lines stored in the StringBuilder. Returns -1 if
+// processing should not continue.
+func (sb *StringBuilder) LineCount() int {
+	if !sb.shouldContinueProcessing() {
+		return -1
+	}
+	return len(sb.Lines())
+}
+
+// Sentences splits the content of the StringBuilder into sentences based on the specified language and returns them.
+// Supported Languages: "en", "ja", "ru", "zh", "he". Default is "en".
+func (sb *StringBuilder) Sentences(lang string) []string {
+	if !sb.shouldContinueProcessing() {
+		return nil
+	}
+	return sentences(sb.value, lang)
+}
+
+// SentenceCount returns the number of sentences in the StringBuilder. Returns -1 if processing should not continue.
+// Supported Languages: "en", "ja", "ru", "zh", "he". Default is "en".
+func (sb *StringBuilder) SentenceCount(lang string) int {
+	if !sb.shouldContinueProcessing() {
+		return -1
+	}
+	return len(sb.Sentences(lang))
 }

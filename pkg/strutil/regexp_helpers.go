@@ -20,4 +20,8 @@ var (
 
 	// WhiteSpaceRegex is a compiled regular expression that matches one or more whitespace characters.
 	WhiteSpaceRegex = regexp.MustCompile(`\s+`)
+
+	// PunktCleanupRegex is a compiled regular expression for identifying punctuation patterns followed by whitespace
+	// and uppercase letters.
+	PunktCleanupRegex = regexp.MustCompile(`((?:[?!]|[?!.]{2,})\s+)(\p{Lu})`)
 )

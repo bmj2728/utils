@@ -745,6 +745,54 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("Lines failed, expected %t, got %t", tt.expected,
 					tt.input.Lines() == nil)
 			}
+			if tt.input.LineCount() == -1 != tt.expected {
+				t.Errorf("LineCount failed, expected %t, got %t", tt.expected,
+					tt.input.LineCount() == -1)
+			}
+			if tt.input.Sentences("en") == nil != tt.expected {
+				t.Errorf("Sentences failed, expected %t, got %t", tt.expected,
+					tt.input.Sentences("en") == nil)
+			}
+			if tt.input.SentenceCount("en") == -1 != tt.expected {
+				t.Errorf("SentenceCount failed, expected %t, got %t", tt.expected,
+					tt.input.SentenceCount("en") == -1)
+			}
+			if tt.input.SplitAt(0) == nil != tt.expected {
+				t.Errorf("SplitAt failed, expected %t, got %t", tt.expected,
+					tt.input.SplitAt(0) == nil)
+			}
+			if tt.input.PunktSentenceData() == nil != tt.expected {
+				t.Errorf("PunktSentenceData failed, expected %t, got %t", tt.expected,
+					tt.input.PunktSentenceData() == nil)
+			}
+			if tt.input.PunktSentences() == nil != tt.expected {
+				t.Errorf("PunktSentences failed, expected %t, got %t", tt.expected,
+					tt.input.PunktSentences() == nil)
+			}
+			if tt.input.PunktSentenceCount() == -1 != tt.expected {
+				t.Errorf("PunktSentenceCount failed, expected %t, got %t", tt.expected,
+					tt.input.PunktSentenceCount() == -1)
+			}
+			if tt.input.PunktSentencesCleaned() == nil != tt.expected {
+				t.Errorf("PunktSentencesCleaned failed, expected %t, got %t", tt.expected,
+					tt.input.PunktSentencesCleaned() == nil)
+			}
+			if tt.input.PunktSentenceCountCleaned() == -1 != tt.expected {
+				t.Errorf("PunktSentenceCountCleaned failed, expected %t, got %t", tt.expected,
+					tt.input.PunktSentenceCountCleaned() == -1)
+			}
+			if tt.input.PunktAnnotatedTokensData() == nil != tt.expected {
+				t.Errorf("PunktAnnotatedTokensData failed, expected %t, got %t", tt.expected,
+					tt.input.PunktAnnotatedTokensData() == nil)
+			}
+			if tt.input.PunktAnnotatedTokens() == nil != tt.expected {
+				t.Errorf("PunktAnnotatedTokens failed, expected %t, got %t", tt.expected,
+					tt.input.PunktAnnotatedTokens() == nil)
+			}
+			if tt.input.PunktAnnotatedTokenCount() == -1 != tt.expected {
+				t.Errorf("PunktAnnotatedTokenCount failed, expected %t, got %t", tt.expected,
+					tt.input.PunktAnnotatedTokenCount() == -1)
+			}
 		})
 	}
 }

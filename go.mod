@@ -12,6 +12,8 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/mrz1836/go-sanitize v1.5.2
+	github.com/neurosnap/sentences v1.1.2
+	github.com/sentencizer/sentencizer v0.1.8
 	golang.org/x/text v0.28.0
 )
 

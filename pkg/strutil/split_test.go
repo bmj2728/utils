@@ -201,6 +201,43 @@ func TestSplit(t *testing.T) {
 	}
 }
 
+func TestSplitAt(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		index int
+		want  []string
+	}{
+		{"SplitAt1", "hello world!", 5, []string{"hello", "world!"}},
+		{"SplitAt2", "hello world!", 0, []string{"", "hello world!"}},
+		{"SplitAt3", "hello world!", 1, []string{"h", "ello world!"}},
+		{"SplitAt4", "hello world!", 2, []string{"he", "llo world!"}},
+		{"SplitAt5", "hello world!", -1, []string{}},
+		{"SplitAt6", "hello world!", 100, []string{}},
+		{"SplitAt7", "hello world!", 6, []string{"hello", "world!"}},
+		{"SplitAt8", "", 0, []string{"", ""}},
+		{"SplitAt9", "hello world!", 11, []string{"hello world", "!"}},
+		{"SplitAt10", "\n\n\n\n\nHi!", 4, []string{"", "Hi!"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := splitAt(tt.input, tt.index)
+			result := SplitAt(tt.input, tt.index)
+			builderResult := New(tt.input).SplitAt(tt.index)
+			if len(tt.want) > 0 && (!comparison.CompareSlices(helperResult, tt.want, false) ||
+				!comparison.CompareSlices(result, tt.want, false) ||
+				!comparison.CompareSlices(builderResult, tt.want, false)) {
+				t.Errorf("SplitAt - expected %v - got %v / %v / %v",
+					tt.want,
+					helperResult,
+					result,
+					builderResult,
+				)
+			}
+		})
+	}
+}
+
 func TestSplitN(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -280,6 +317,117 @@ func TestLines(t *testing.T) {
 			}
 			if len(tt.want) == 0 && (len(helperResult) > 0 || len(result) > 0 || len(builderResult) > 0) {
 				t.Errorf("Lines - expected %v - got %v / %v / %v",
+					tt.want,
+					helperResult,
+					result,
+					builderResult,
+				)
+			}
+		})
+	}
+}
+
+func TestLineCount(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  int
+	}{
+		{"Lines1", "hello world!", 1},
+		{"Lines2", "hello\nworld", 2},
+		{"Lines3", "hello\n", 1},
+		{"Lines4", "\n\n\n", 3},
+		{"Lines5", "This is\nmulti-line\ntext entry", 3},
+		{"Lines6", "\nHello\nWorld\n", 3},
+		{"Lines7", "", 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := lineCount(tt.input)
+			result := LineCount(tt.input)
+			builderResult := New(tt.input).LineCount()
+			if helperResult != tt.want || result != tt.want || builderResult != tt.want {
+				t.Errorf("LineCount - expected %d - got %d / %d / %d",
+					tt.want,
+					helperResult,
+					result,
+					builderResult,
+				)
+			}
+		})
+	}
+}
+
+func TestSentences(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		lang  string
+		want  []string
+	}{
+		{"Sentences1", "hello world!", "en",
+			[]string{"hello world!"}},
+		{"Sentences2", "hello world. How are you?", "en",
+			[]string{"hello world.", "How are you?"}},
+		{"Sentences3", "hello world. How are you? Hello world. How are you?", "en",
+			[]string{"hello world.", "How are you?", "Hello world.", "How are you?"}},
+		{"Sentences4", "", "en",
+			[]string{}},
+		{"Sentences5", "This is a sentence. This is another sentence.", "xx",
+			[]string{"This is a sentence.", "This is another sentence."}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := sentences(tt.input, tt.lang)
+			result := Sentences(tt.input, tt.lang)
+			builderResult := New(tt.input).Sentences(tt.lang)
+			if len(tt.want) > 0 && (!comparison.CompareSlices(helperResult, tt.want, false) ||
+				!comparison.CompareSlices(result, tt.want, false) ||
+				!comparison.CompareSlices(builderResult, tt.want, false)) {
+				t.Errorf("Sentences - expected %v - got %v / %v / %v",
+					tt.want,
+					helperResult,
+					result,
+					builderResult,
+				)
+			}
+			if len(tt.want) == 0 && (len(helperResult) > 0 || len(result) > 0 || len(builderResult) > 0) {
+				t.Errorf("Sentences - expected %v - got %v / %v / %v",
+					tt.want,
+					helperResult,
+					result,
+					builderResult,
+				)
+			}
+		})
+	}
+}
+
+func TestSentenceCount(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		lang  string
+		want  int
+	}{
+		{"Sentences1", "hello world!", "en",
+			1},
+		{"Sentences2", "hello world. How are you?", "en",
+			2},
+		{"Sentences3", "hello world. How are you? Hello world. How are you?", "en",
+			4},
+		{"Sentences4", "", "en",
+			0},
+		{"Sentences5", "This is a sentence. This is another sentence.", "xx",
+			2},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			helperResult := sentenceCount(tt.input, tt.lang)
+			result := SentenceCount(tt.input, tt.lang)
+			builderResult := New(tt.input).SentenceCount(tt.lang)
+			if helperResult != tt.want || result != tt.want || builderResult != tt.want {
+				t.Errorf("SentenceCount - expected %d - got %d / %d / %d",
 					tt.want,
 					helperResult,
 					result,

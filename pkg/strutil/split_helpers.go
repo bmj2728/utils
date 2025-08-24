@@ -2,8 +2,13 @@ package strutil
 
 import (
 	"bufio"
+	"slices"
 	"strings"
+
+	"github.com/sentencizer/sentencizer"
 )
+
+var supportedLanguages = []string{"en", "ja", "ru", "zh", "he"}
 
 // substrings splits the input string `s` by whitespace and returns a slice of substrings.
 // Returns an empty slice if the input string is empty.
@@ -62,6 +67,16 @@ func splitN(s string, sep string, n int, preserveSep bool) []string {
 	return strings.SplitN(s, sep, n)
 }
 
+// splitAt splits the input string into two substrings at the specified index and returns
+// them as a slice of strings.
+// If the index is out of bounds, it returns a slice containing two empty strings.
+func splitAt(s string, index int) []string {
+	if index < 0 || index >= len(s) {
+		return []string{"", ""}
+	}
+	return []string{trim(s[:index]), trim(s[index:])}
+}
+
 // lines splits the input string s into a slice of strings, each representing a line, and returns the resulting slice.
 func lines(s string) []string {
 	scanner := bufio.NewScanner(strings.NewReader(s))
@@ -71,4 +86,24 @@ func lines(s string) []string {
 		lines = append(lines, scanner.Text())
 	}
 	return lines
+}
+
+// lineCount returns the number of lines in the given string by counting the elements of the split lines.
+func lineCount(s string) int {
+	return len(lines(s))
+}
+
+// sentences splits the input string `s` into sentences based on the specified `language`. Returns a slice of sentences.
+// Supported Languages: "en", "ja", "ru", "zh", "he". Default is "en".
+func sentences(s string, language string) []string {
+	if !slices.Contains(supportedLanguages, language) {
+		language = "en"
+	}
+	return sentencizer.NewSegmenter(language).Segment(s)
+}
+
+// sentenceCount returns the number of sentences in the input string `s` based on the specified `language`.
+// Supported Languages: "en", "ja", "ru", "zh", "he". Default is "en".
+func sentenceCount(s string, language string) int {
+	return len(sentences(s, language))
 }

@@ -27,6 +27,12 @@ func Split(s string, sep string, preserveSep bool) []string {
 	return split(s, sep, preserveSep)
 }
 
+// SplitAt splits the input string into two substrings at the specified index and returns them as a slice of strings.
+// If the index is out of range, it returns a slice with two empty strings.
+func SplitAt(s string, index int) []string {
+	return splitAt(s, index)
+}
+
 // SplitN splits the input string s into at most n substrings separated by sep, optionally preserving the separator.
 func SplitN(s string, sep string, n int, preserveSep bool) []string {
 	return splitN(s, sep, n, preserveSep)
@@ -35,4 +41,21 @@ func SplitN(s string, sep string, n int, preserveSep bool) []string {
 // Lines takes a string input and returns a slice of strings where each string represents a line from the input.
 func Lines(s string) []string {
 	return lines(s)
+}
+
+// LineCount returns the number of lines in the given string. It utilizes an internal helper function for computation.
+func LineCount(s string) int {
+	return lineCount(s)
+}
+
+// Sentences splits the input string `s` into a slice of sentences based on the specified `language`.
+// Supported Languages: "en", "ja", "ru", "zh", "he". Default is "en".
+func Sentences(s string, language string) []string {
+	return sentences(s, language)
+}
+
+// SentenceCount returns the number of sentences in the provided string `s` based on the specified `language`.
+// Supported Languages: "en", "ja", "ru", "zh", "he". Default is "en".
+func SentenceCount(s string, language string) int {
+	return sentenceCount(s, language)
 }
