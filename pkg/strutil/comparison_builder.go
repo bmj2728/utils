@@ -13,34 +13,35 @@ func CompareStringBuilderSlices(a, b []StringBuilder, nulls bool) bool {
 }
 
 // LevenshteinDistance calculates the Levenshtein distance between the current string and another string.
-// It tracks and stores the result using a ComparisonManager.
-// Returns the StringBuilder instance, enabling method chaining.
-func (sb *StringBuilder) LevenshteinDistance(other string) *StringBuilder {
+// It measures the minimum number of edit operations needed to transform the current string into the other string.
+// The result is stored in the StringBuilder's comparison manager if it exists.
+func (sb *StringBuilder) LevenshteinDistance(other string) int {
 	if !sb.shouldContinueProcessing() {
-		return sb
+		return -1
 	}
 	ld := levenshteinDistance(sb.value, other)
-	sb.WithComparisonManager().comparisonManager.AddComparisonResult(ld)
-	if ld.err != nil {
-		return sb.setError(ld.err, false)
+	if sb.comparisonManager != nil || sb.lazyCompMan {
+		res := NewComparisonResultInt(LevDist, sb.value, other, nil, &ld, nil)
+		sb.WithComparisonManager().comparisonManager.AddComparisonResult(res)
 	}
-	return sb
+	return ld
 }
 
 // DamerauLevenshteinDistance computes the Damerau-Levenshtein distance between the StringBuilder
 // value and another string.
 // It calculates the minimum transformation operations including insertion, deletion, substitution, and transposition.
 // The result is stored in the ComparisonManager of the StringBuilder instance.
-func (sb *StringBuilder) DamerauLevenshteinDistance(other string) *StringBuilder {
+func (sb *StringBuilder) DamerauLevenshteinDistance(other string) int {
 	if !sb.shouldContinueProcessing() {
-		return sb
+		return -1
 	}
 	dld := damerauLevenshteinDistance(sb.value, other)
-	sb.WithComparisonManager().comparisonManager.AddComparisonResult(dld)
-	if dld.err != nil {
-		return sb.setError(dld.err, false)
+	if sb.comparisonManager != nil || sb.lazyCompMan {
+		res := NewComparisonResultInt(DamLevDist, sb.value, other, nil, &dld, nil)
+		sb.WithComparisonManager().comparisonManager.AddComparisonResult(res)
 	}
-	return sb
+
+	return dld
 }
 
 // OSADamerauLevenshteinDistance calculates the edit distance between the StringBuilder's
@@ -48,16 +49,19 @@ func (sb *StringBuilder) DamerauLevenshteinDistance(other string) *StringBuilder
 // It uses the optimal string alignment Damerau-Levenshtein distance algorithm and stores the
 // result in the ComparisonManager.
 // Returns the StringBuilder instance for chaining or error handling if an error exists in the current object.
-func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) *StringBuilder {
+func (sb *StringBuilder) OSADamerauLevenshteinDistance(other string) int {
 	if !sb.shouldContinueProcessing() {
-		return sb
+		return -1
 	}
-	osadld := osaDamerauLevenshteinDistance(sb.value, other)
-	sb.WithComparisonManager().comparisonManager.AddComparisonResult(osadld)
-	if osadld.err != nil {
-		return sb.setError(osadld.err, false)
+
+	osaDld := osaDamerauLevenshteinDistance(sb.value, other)
+
+	if sb.comparisonManager != nil || sb.lazyCompMan {
+		res := NewComparisonResultInt(OSADamLevDist, sb.value, other, nil, &osaDld, nil)
+		sb.WithComparisonManager().comparisonManager.AddComparisonResult(res)
 	}
-	return sb
+
+	return osaDld
 }
 
 // LCS computes the longest common subsequence (LCS) between the current string and the provided string.

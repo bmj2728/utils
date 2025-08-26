@@ -2,66 +2,56 @@ package strutil
 
 import "testing"
 
+func generateTestMap1() ComparisonResultsMap {
+	x := New("Hello World").WithComparisonManager()
+	_ = x.LevenshteinDistance("Hello World")
+	_ = x.LevenshteinDistance("Hi")
+	_ = x.DamerauLevenshteinDistance("Hello World")
+	_ = x.OSADamerauLevenshteinDistance("Hello World")
+	_ = x.LCS("Hello World")
+	_ = x.LCSEditDistance("Hello World")
+	_ = x.JaroSimilarity("Hello World")
+	_ = x.JaroWinklerSimilarity("Hello World")
+	_ = x.JaccardSimilarity("Hello World", 3)
+	_ = x.CosineSimilarity("Hello World", 3)
+	_ = x.SorensenDiceCoefficient("Hello World", 3)
+	return x.GetComparisonManager().GetComparisonResultsMap()
+}
+
+func generateTestMap3() ComparisonResultsMap {
+	x := New("Hello, World!").WithComparisonManager()
+	_ = x.LevenshteinDistance("Hello World")
+	_ = x.LevenshteinDistance("Yo")
+	_ = x.DamerauLevenshteinDistance("Hello World")
+	_ = x.OSADamerauLevenshteinDistance("Hello World")
+	_ = x.LCS("Hello World")
+	_ = x.LCSEditDistance("Hello World")
+	_ = x.JaroSimilarity("Hello World")
+	_ = x.JaroWinklerSimilarity("Hello World")
+	_ = x.JaccardSimilarity("Hello World", 3)
+	_ = x.CosineSimilarity("Hello World", 3)
+	_ = x.SorensenDiceCoefficient("Hello World", 3)
+	return x.GetComparisonManager().GetComparisonResultsMap()
+}
+
+func generateTestMap4() ComparisonResultsMap {
+	x := New("Hello, World!").WithComparisonManager()
+	_ = x.LevenshteinDistance("Hello World")
+	_ = x.LevenshteinDistance("Yo")
+	_ = x.DamerauLevenshteinDistance("Hello World")
+	return x.GetComparisonManager().GetComparisonResultsMap()
+}
+
+func generateTestMap5() ComparisonResultsMap {
+	return New("Hello, World!").WithComparisonManager().GetComparisonManager().GetComparisonResultsMap()
+}
+
 var (
-	testMap1 = New("Hello, World!").
-			WithComparisonManager().
-			LevenshteinDistance("Hello World").
-			LevenshteinDistance("Hi").
-			DamerauLevenshteinDistance("Hello World").
-			OSADamerauLevenshteinDistance("Hello World").
-			LCS("Hello World").
-			LCSEditDistance("Hello World").
-			JaroSimilarity("Hello World").
-			JaroWinklerSimilarity("Hello World").
-			JaccardSimilarity("Hello World", 3).
-			CosineSimilarity("Hello World", 3).
-			SorensenDiceCoefficient("Hello World", 3).
-			GetComparisonManager().
-			GetComparisonResultsMap()
-
-	testMap2 = New("Hello, World!").
-			WithComparisonManager().
-			LevenshteinDistance("Hello World").
-			LevenshteinDistance("Hi").
-			DamerauLevenshteinDistance("Hello World").
-			OSADamerauLevenshteinDistance("Hello World").
-			LCS("Hello World").
-			LCSEditDistance("Hello World").
-			JaroSimilarity("Hello World").
-			JaroWinklerSimilarity("Hello World").
-			JaccardSimilarity("Hello World", 3).
-			CosineSimilarity("Hello World", 3).
-			SorensenDiceCoefficient("Hello World", 3).
-			GetComparisonManager().
-			GetComparisonResultsMap()
-
-	testMap3 = New("Hello, World!").
-			WithComparisonManager().
-			LevenshteinDistance("Hello World").
-			LevenshteinDistance("Yo").
-			DamerauLevenshteinDistance("Hello World").
-			OSADamerauLevenshteinDistance("Hello World").
-			LCS("Hello World").
-			LCSEditDistance("Hello World").
-			JaroSimilarity("Hello World").
-			JaroWinklerSimilarity("Hello World").
-			JaccardSimilarity("Hello World", 3).
-			CosineSimilarity("Hello World", 3).
-			SorensenDiceCoefficient("Hello World", 3).
-			GetComparisonManager().
-			GetComparisonResultsMap()
-
-	testMap4 = New("Hello, World!").
-			WithComparisonManager().
-			LevenshteinDistance("Hello World").
-			DamerauLevenshteinDistance("Hello World").
-			GetComparisonManager().
-			GetComparisonResultsMap()
-
-	testMap5 = New("Hello, World!").
-			WithComparisonManager().
-			GetComparisonManager().
-			GetComparisonResultsMap()
+	testMap1 = generateTestMap1()
+	testMap2 = generateTestMap1()
+	testMap3 = generateTestMap3()
+	testMap4 = generateTestMap4()
+	testMap5 = generateTestMap5()
 )
 
 func TestComparisonResultsMapTypeCount(t *testing.T) {
@@ -94,7 +84,7 @@ func TestComparisonResultsMapEntryCount(t *testing.T) {
 		{"EntryCount1", testMap1, 11},
 		{"EntryCount2", testMap2, 11},
 		{"EntryCount3", testMap3, 11},
-		{"EntryCount4", testMap4, 2},
+		{"EntryCount4", testMap4, 3},
 		{"EntryCount5", testMap5, 0},
 	}
 	for _, test := range tests {
@@ -196,7 +186,7 @@ func TestComparisonResultsMapGetByType(t *testing.T) {
 		{"MapGetByCompStr1", testMap1, LevDist, 2},
 		{"MapGetByCompStr2", testMap2, LevDist, 2},
 		{"MapGetByCompStr3", testMap3, LevDist, 2},
-		{"MapGetByCompStr4", testMap4, LevDist, 1},
+		{"MapGetByCompStr4", testMap4, LevDist, 2},
 		{"MapGetByCompStr5", testMap5, LevDist, 0},
 		{"MapGetByCompStr6", testMap1, HammingDist, 0},
 		{"MapGetByCompStr7", testMap2, CosineSim, 1},
@@ -225,7 +215,7 @@ func TestComparisonResultsMapFilterByType(t *testing.T) {
 		{"MapFilterByType1", testMap1, LevDist, 2},
 		{"MapFilterByType2", testMap2, LevDist, 2},
 		{"MapFilterByType3", testMap3, LevDist, 2},
-		{"MapFilterByType4", testMap4, LevDist, 1},
+		{"MapFilterByType4", testMap4, LevDist, 2},
 		{"MapFilterByType5", testMap5, LevDist, 0},
 		{"MapFilterByType6", testMap1, HammingDist, 0},
 		{"MapFilterByType7", testMap2, CosineSim, 1},
@@ -302,6 +292,20 @@ func TestComparisonResultsMapFilterByCompStr(t *testing.T) {
 	}
 }
 
+func generateTestFormatMap1() ComparisonResultsMap {
+	x := New("Hello, World!").WithComparisonManager()
+	_ = x.LevenshteinDistance("Hello World")
+	_ = x.SorensenDiceCoefficient("Hello World", 3)
+	return x.GetComparisonManager().GetComparisonResultsMap()
+}
+
+func generateTestFormatMap2() ComparisonResultsMap {
+	x := New("Hello, World!").WithComparisonManager()
+	_ = x.DamerauLevenshteinDistance("Hello World")
+	_ = x.CosineSimilarity("Hello World", 3)
+	return x.GetComparisonManager().GetComparisonResultsMap()
+}
+
 var (
 	testFormatOpt1 = "***Comparison Results for Levenshtein Distance***\n\n" +
 		"Levenshtein Distance (\"Hello, World!\"/\"Hello World\"): 2\n\n" +
@@ -334,19 +338,9 @@ var (
 		"Second String: Hello World\n" +
 		"Score: 2\n\n"
 
-	testFormatMap1 = New("Hello, World!").
-			WithComparisonManager().
-			LevenshteinDistance("Hello World").
-			SorensenDiceCoefficient("Hello World", 3).
-			GetComparisonManager().
-			GetComparisonResultsMap()
+	testFormatMap1 = generateTestFormatMap1()
 
-	testFormatMap2 = New("Hello, World!").
-			WithComparisonManager().
-			DamerauLevenshteinDistance("Hello World").
-			CosineSimilarity("Hello World", 3).
-			GetComparisonManager().
-			GetComparisonResultsMap()
+	testFormatMap2 = generateTestFormatMap2()
 )
 
 func TestComparisonResultsMapFormat(t *testing.T) {

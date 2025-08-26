@@ -47,13 +47,11 @@ func TestComparisonResultPrint(t *testing.T) {
 		"Second String: With great power comes great responsibility.\n" +
 		"Score: 17\n"
 
-	ls := New(correct).
-		WithComparisonManager().
-		JaroWinklerSimilarity(common).
-		LevenshteinDistance(common).
-		HammingDistance(common).
-		GetComparisonManager().
-		GetComparisonResultsMap()
+	x := New(correct).WithComparisonManager()
+	_ = x.JaroWinklerSimilarity(common)
+	_ = x.LevenshteinDistance(common)
+	_ = x.HammingDistance(common)
+	ls := x.GetComparisonManager().GetComparisonResultsMap()
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -111,22 +109,21 @@ func TestComparisonResultGettersInt(t *testing.T) {
 			"Hello!",
 			0,
 			0,
-			errors.Join(errors2.ErrHammingDistanceFailure, errors.New("Undefined for strings of unequal length")),
+			errors.Join(errors2.ErrHammingDistanceFailure,
+				errors.New("Undefined for strings of unequal length")),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res := New(tt.string1).
-				WithComparisonManager().
-				LevenshteinDistance(tt.string2).
-				OSADamerauLevenshteinDistance(tt.string2).
-				DamerauLevenshteinDistance(tt.string2).
-				LCS(tt.string2).
-				LCSEditDistance(tt.string2).
-				QgramDistance(tt.string2, tt.splitLength).
-				HammingDistance(tt.string2).
-				GetComparisonManager().
-				GetComparisonResultsMap()
+			x := New(tt.string1).WithComparisonManager()
+			_ = x.LevenshteinDistance(tt.string2)
+			_ = x.OSADamerauLevenshteinDistance(tt.string2)
+			_ = x.DamerauLevenshteinDistance(tt.string2)
+			_ = x.LCS(tt.string2)
+			_ = x.LCSEditDistance(tt.string2)
+			_ = x.QgramDistance(tt.string2, tt.splitLength)
+			_ = x.HammingDistance(tt.string2)
+			res := x.GetComparisonManager().GetComparisonResultsMap()
 			entry, ok := res.GetByType(tt.resType)[0].(*ComparisonResultInt)
 			if ok {
 				if entry.GetString1() != tt.string1 {
@@ -264,18 +261,14 @@ func TestComparisonResultIntIsMatch(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res1 := New(tt.input1).
-				WithComparisonManager().
-				LevenshteinDistance(tt.comp1).
-				GetComparisonManager().
-				GetComparisonResultsMap()
+			x := New(tt.input1).WithComparisonManager()
+			_ = x.LevenshteinDistance(tt.comp1)
+			res1 := x.GetComparisonManager().GetComparisonResultsMap()
 			entry1 := res1.GetByType(LevDist)[0]
 
-			res2 := New(tt.input2).
-				WithComparisonManager().
-				LevenshteinDistance(tt.comp2).
-				GetComparisonManager().
-				GetComparisonResultsMap()
+			x2 := New(tt.input2).WithComparisonManager()
+			_ = x2.LevenshteinDistance(tt.comp2)
+			res2 := x2.GetComparisonManager().GetComparisonResultsMap()
 			entry2 := res2.GetByType(LevDist)[0]
 
 			if entry1.IsMatch(entry2) != tt.result {

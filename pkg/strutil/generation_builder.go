@@ -5,6 +5,7 @@ func New(s string) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -15,6 +16,7 @@ func NewRandom(length int, charSet CharacterSet) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -24,6 +26,7 @@ func NewRandomFromCustomCharSet(length int, charSet string) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -33,6 +36,7 @@ func NewRandomAlphaNumeric(length int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -42,6 +46,7 @@ func NewRandomAlpha(length int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -51,6 +56,7 @@ func NewRandomHex(length int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -60,6 +66,7 @@ func NewRandomURLSafe(length int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -69,6 +76,7 @@ func NewUUID() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -78,5 +86,6 @@ func NewUUIDV7() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }

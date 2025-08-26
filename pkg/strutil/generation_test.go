@@ -447,7 +447,7 @@ func TestStringBuilderResult(t *testing.T) {
 			true},
 		{"BuilderResult4",
 			New("Hello World").
-				WithComparisonManager().LevenshteinDistance("Hello World!"),
+				WithComparisonManager(),
 			"Hello World",
 			false,
 			true},

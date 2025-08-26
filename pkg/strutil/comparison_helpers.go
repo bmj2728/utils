@@ -12,27 +12,27 @@ import (
 // levenshteinDistance computes the Levenshtein distance between two strings and returns a ComparisonResultInt.
 // It calculates the minimum number of edits (insertions, deletions, substitutions)
 // required to transform one string into another.
-func levenshteinDistance(s1, s2 string) *ComparisonResultInt {
+func levenshteinDistance(s1, s2 string) int {
 	ld := edlib.LevenshteinDistance(s1, s2)
-	return NewComparisonResultInt(LevDist, s1, s2, nil, &ld, nil)
+	return ld
 }
 
 // damerauLevenshteinDistance computes the Damerau-Levenshtein distance between
 // two strings and returns a comparison result.
 // This distance measures the minimum number of operations required to transform one string into the other.
 // Supported operations include insertion, deletion, substitution, and transposition of adjacent characters.
-func damerauLevenshteinDistance(str1, str2 string) *ComparisonResultInt {
+func damerauLevenshteinDistance(str1, str2 string) int {
 	dld := edlib.DamerauLevenshteinDistance(str1, str2)
-	return NewComparisonResultInt(DamLevDist, str1, str2, nil, &dld, nil)
+	return dld
 }
 
 // osaDamerauLevenshteinDistance computes the optimal string alignment Damerau-Levenshtein distance between two strings.
 // It returns a pointer to a ComparisonResultInt containing the result of the comparison between `str1` and `str2`.
 // The returned structure includes the calculated distance, input strings, and any
 // potential error encountered during computation.
-func osaDamerauLevenshteinDistance(str1, str2 string) *ComparisonResultInt {
+func osaDamerauLevenshteinDistance(str1, str2 string) int {
 	osaDLD := edlib.OSADamerauLevenshteinDistance(str1, str2)
-	return NewComparisonResultInt(OSADamLevDist, str1, str2, nil, &osaDLD, nil)
+	return osaDLD
 }
 
 // lcs returns the length of the longest common subsequence between two input strings, string1 and string2.

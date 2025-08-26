@@ -6,6 +6,7 @@ func NewLoremWord() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -16,6 +17,7 @@ func NewLoremWords(count int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -25,6 +27,7 @@ func NewLoremSentence() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -35,6 +38,7 @@ func NewLoremSentenceCustom(length int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -44,6 +48,7 @@ func NewLoremSentences(count int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -54,6 +59,7 @@ func NewLoremSentencesCustom(count int, length int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -64,6 +70,7 @@ func NewLoremSentencesVariable(count int, min int, max int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -73,6 +80,7 @@ func NewLoremParagraph() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -82,6 +90,7 @@ func NewLoremParagraphs(count int) *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -92,6 +101,7 @@ func NewLoremDomain() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -101,6 +111,7 @@ func NewLoremURL() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }
 
@@ -110,5 +121,6 @@ func NewLoremEmail() *StringBuilder {
 	return &StringBuilder{
 		value:         s,
 		originalValue: s,
+		lazyCompMan:   true,
 	}
 }

@@ -11,8 +11,10 @@ type StringBuilder struct {
 	value             string
 	err               error
 	originalValue     string
+	lazyCompMan       bool
 	comparisonManager *ComparisonManager
 	history           *StringHistory
+	lazyIndices       bool
 	indices           *Indices
 }
 
@@ -45,6 +47,16 @@ func (sb *StringBuilder) GetOriginalValue() string {
 // Error returns the error stored in the StringBuilder instance, or nil if no error is set.
 func (sb *StringBuilder) Error() error {
 	return sb.err
+}
+
+// WithIndices ensures the StringBuilder's indices field is initialized and returns the updated StringBuilder instance.
+func (sb *StringBuilder) WithIndices(isLazy bool) *StringBuilder {
+	if sb.indices == nil && !isLazy {
+		sb.indices = NewIndices()
+	} else {
+		sb.lazyIndices = true
+	}
+	return sb
 }
 
 // WithComparisonManager initializes a new ComparisonManager if it doesn't already exist and assigns it to the builder.
@@ -189,14 +201,6 @@ func (sb *StringBuilder) RevertWithFunction(fn func(history *StringHistory) int)
 		}
 	} else {
 		sb.setError(errors.ErrHistoryNotInitialized, false)
-	}
-	return sb
-}
-
-// WithIndices ensures the StringBuilder's indices field is initialized and returns the updated StringBuilder instance.
-func (sb *StringBuilder) WithIndices() *StringBuilder {
-	if sb.indices == nil {
-		sb.indices = NewIndices()
 	}
 	return sb
 }

@@ -10,19 +10,19 @@ func CompareStringSlices(a, b []string, nulls bool) bool {
 
 // LevenshteinDistance calculates the Levenshtein distance between two strings and returns a ComparisonResultInt.
 // It determines the minimum number of single-character edits (insertions, deletions, or substitutions) required.
-func LevenshteinDistance(s1, s2 string) *ComparisonResultInt {
+func LevenshteinDistance(s1, s2 string) int {
 	return levenshteinDistance(s1, s2)
 }
 
 // DamerauLevenshteinDistance calculates the Damerau-Levenshtein distance between
 // two strings to measure their score.
-func DamerauLevenshteinDistance(s1, s2 string) *ComparisonResultInt {
+func DamerauLevenshteinDistance(s1, s2 string) int {
 	return damerauLevenshteinDistance(s1, s2)
 }
 
 // OSADamerauLevenshteinDistance calculates the optimal string alignment variant of Damerau-Levenshtein distance.
 // It returns a ComparisonResultInt containing the computed distance and details for the input strings.
-func OSADamerauLevenshteinDistance(s1, s2 string) *ComparisonResultInt {
+func OSADamerauLevenshteinDistance(s1, s2 string) int {
 	return osaDamerauLevenshteinDistance(s1, s2)
 }
 
