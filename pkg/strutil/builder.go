@@ -59,10 +59,14 @@ func (sb *StringBuilder) WithIndices(isLazy bool) *StringBuilder {
 	return sb
 }
 
-// WithComparisonManager initializes a new ComparisonManager if it doesn't already exist and assigns it to the builder.
-func (sb *StringBuilder) WithComparisonManager() *StringBuilder {
-	if sb.comparisonManager == nil {
+// WithComparisonManager initializes or queues initialization of a ComparisonManager based on the isLazy flag.
+// If isLazy is false and no ComparisonManager exists, it is initialized immediately.
+// If isLazy is true, initialization is deferred until later use.
+func (sb *StringBuilder) WithComparisonManager(isLazy bool) *StringBuilder {
+	if sb.comparisonManager == nil && !isLazy {
 		sb.comparisonManager = NewComparisonManager()
+	} else {
+		sb.lazyCompMan = true
 	}
 	return sb
 }

@@ -8,7 +8,7 @@ func CompareStringSlices(a, b []string, nulls bool) bool {
 	return comparison.CompareSlices(a, b, nulls)
 }
 
-// LevenshteinDistance calculates the Levenshtein distance between two strings and returns a ComparisonResultInt.
+// LevenshteinDistance calculates the Levenshtein distance between two strings and returns a ComparisonResult.
 // It determines the minimum number of single-character edits (insertions, deletions, or substitutions) required.
 func LevenshteinDistance(s1, s2 string) int {
 	return levenshteinDistance(s1, s2)
@@ -21,45 +21,45 @@ func DamerauLevenshteinDistance(s1, s2 string) int {
 }
 
 // OSADamerauLevenshteinDistance calculates the optimal string alignment variant of Damerau-Levenshtein distance.
-// It returns a ComparisonResultInt containing the computed distance and details for the input strings.
+// It returns a ComparisonResult containing the computed distance and details for the input strings.
 func OSADamerauLevenshteinDistance(s1, s2 string) int {
 	return osaDamerauLevenshteinDistance(s1, s2)
 }
 
 // LCS calculates the length of the longest common subsequence between two input strings s1 and s2.
-func LCS(s1, s2 string) *ComparisonResultInt {
+func LCS(s1, s2 string) int {
 	return lcs(s1, s2)
 }
 
 // LCSEditDistance computes the edit distance between two strings using the Longest Common Subsequence (LCS) method.
-func LCSEditDistance(s1, s2 string) *ComparisonResultInt {
+func LCSEditDistance(s1, s2 string) int {
 	return lcsEditDistance(s1, s2)
 }
 
 // LCSBacktrack computes the longest common subsequence (LCS) between two input strings and returns an LCSResult.
-func LCSBacktrack(s1, s2 string) *LCSResult {
+func LCSBacktrack(s1, s2 string) (string, error) {
 	return lcsBacktrack(s1, s2)
 }
 
 // LCSBacktrackAll computes all longest common subsequences of two input strings and returns them as an LCSResult.
-func LCSBacktrackAll(s1, s2 string) *LCSResult {
+func LCSBacktrackAll(s1, s2 string) ([]string, error) {
 	return lcsBacktrackAll(s1, s2)
 }
 
 // LCSDiff computes the Longest Common Subsequence (LCS) difference
 // between two strings and returns an LCSResult instance.
-func LCSDiff(str1, str2 string) *LCSResult {
+func LCSDiff(str1, str2 string) ([]string, error) {
 	return lcsDiff(str1, str2)
 }
 
-// HammingDistance computes the Hamming distance between two strings s1 and s2, returning a ComparisonResultInt
+// HammingDistance computes the Hamming distance between two strings s1 and s2, returning a ComparisonResult
 // and an error if the strings are of unequal length.
 //
 // The Hamming distance between two equal-length strings of symbols is the number of
 // positions at which the corresponding symbols are different.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Hamming_distance
-func HammingDistance(s1, s2 string) *ComparisonResultInt {
+func HammingDistance(s1, s2 string) (int, error) {
 	return hammingDistance(s1, s2)
 }
 
@@ -69,7 +69,7 @@ func HammingDistance(s1, s2 string) *ComparisonResultInt {
 // The score is normalized such that 0 equates to no similarities and 1 is an exact match
 //
 // Additional Info: https://rosettacode.org/wiki/Jaro_similarity
-func JaroSimilarity(s1, s2 string) *ComparisonResultFloat {
+func JaroSimilarity(s1, s2 string) float32 {
 	return jaroSimilarity(s1, s2)
 }
 
@@ -79,7 +79,7 @@ func JaroSimilarity(s1, s2 string) *ComparisonResultFloat {
 // Uses Jaro score with a more favorable weighting for similar common prefixes.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance#Jaro%E2%80%93Winkler_similarity
-func JaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
+func JaroWinklerSimilarity(s1, s2 string) float32 {
 	return jaroWinklerSimilarity(s1, s2)
 }
 
@@ -91,7 +91,7 @@ func JaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
 // for two given finite, non-empty sets
 //
 // Additional Info: https://en.wikipedia.org/wiki/Jaccard_index
-func JaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
+func JaccardSimilarity(s1, s2 string, splitLength int) float32 {
 	return jaccardSimilarity(s1, s2, splitLength)
 }
 
@@ -102,7 +102,7 @@ func JaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 // Cosine score is the cosine of the angle between the vectors.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Cosine_similarity/
-func CosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
+func CosineSimilarity(s1, s2 string, splitLength int) float32 {
 	return cosineSimilarity(s1, s2, splitLength)
 }
 
@@ -113,25 +113,25 @@ func CosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
 // divided by the sum of the number of elements in each set.
 //
 // Additional Info: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
-func SorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFloat {
+func SorensenDiceCoefficient(s1, s2 string, splitLength int) float32 {
 	return sorensenDiceCoefficient(s1, s2, splitLength)
 }
 
 // QgramDistance calculates the q-gram distance between two strings s1 and s2 using the specified q-gram size q.
-func QgramDistance(s1, s2 string, q int) *ComparisonResultInt {
+func QgramDistance(s1, s2 string, q int) int {
 	return qgramDistance(s1, s2, q)
 }
 
 // QgramDistanceCustomNgram computes the q-gram distance between two n-gram
 // frequency maps represented as string-int maps.
 // It compares the input frequency maps and returns an integer representing the calculated distance.
-func QgramDistanceCustomNgram(nmap1, nmap2 map[string]int, customName string) *ComparisonResultInt {
-	return qgramDistanceCustomNgram(nmap1, nmap2, customName)
+func QgramDistanceCustomNgram(nmap1, nmap2 map[string]int) int {
+	return qgramDistanceCustomNgram(nmap1, nmap2)
 }
 
 // QgramSimilarity calculates the q-gram score between two strings using the specified q-gram size.
 // Returns a pointer to the score score or nil if the q-gram size is less than 1.
-func QgramSimilarity(s1, s2 string, q int) *ComparisonResultFloat {
+func QgramSimilarity(s1, s2 string, q int) float32 {
 	return qgramSimilarity(s1, s2, q)
 }
 

@@ -1,6 +1,10 @@
 package comparison
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/bmj2728/utils/pkg/internal/types"
+)
 
 var (
 	slStr1 = []string{"Hello", "world"}
@@ -106,5 +110,26 @@ func TestCompareSlices(t *testing.T) {
 	}
 	if CompareSlices([]rune{'w', 'o', 'r', 'd'}, []rune{'o', 'd', 'w', 'r'}, false) != true {
 		t.Errorf("26 Expected true, got false")
+	}
+}
+
+func TestCompareFloats(t *testing.T) {
+	tests := []struct {
+		name   string
+		input1 float32
+		input2 float32
+		result bool
+	}{
+		{"CompareFloats1", 1.0, 1.0, true},
+		{"CompareFloats2", 1.0, 2.0, false},
+		{"CompareFloats3", 1.0, 1.1, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := CompareFloats(float64(tt.input1), float64(tt.input2), types.Float64EqualityThreshold)
+			if res != tt.result {
+				t.Errorf("CompareFloats() = %v, want %v", res, tt.result)
+			}
+		})
 	}
 }

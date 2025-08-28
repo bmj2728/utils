@@ -4,7 +4,7 @@ import "testing"
 
 var (
 	testShinMap1 = New("aaaaa").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(5).
 			Shingle(4).
 			Shingle(3).
@@ -19,7 +19,7 @@ var (
 			GetShingleResultsMap()
 
 	testShinMap2 = New("aaaaa").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(5).
 			Shingle(4).
 			Shingle(3).
@@ -34,7 +34,7 @@ var (
 			GetShingleResultsMap()
 
 	testShinMap3 = New("ooooo").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(5).
 			Shingle(4).
 			Shingle(3).
@@ -49,14 +49,14 @@ var (
 			GetShingleResultsMap()
 
 	testShinMap4 = New("xxxxx").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(1).
 			ShingleSlice(1).
 			GetComparisonManager().
 			GetShingleResultsMap()
 
 	testShinMap5 = New("aaaaa").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			GetComparisonManager().
 			GetShingleResultsMap()
 

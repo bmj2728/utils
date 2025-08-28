@@ -7,39 +7,53 @@ import (
 	"github.com/bmj2728/utils/pkg/internal/errors"
 )
 
+func genLCSAll1() LCSResultsMap {
+	x := New("With great power there must also come great responsibility.").WithComparisonManager(false)
+	_, err := x.LCSBacktrack("With great power comes great responsibility.")
+	if err != nil {
+		return nil
+	}
+	_, _ = x.LCSBacktrackAll("With great power comes great responsibility.")
+	_, _ = x.LCSDiff("With great power comes great responsibility.")
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
+func genLCSAll2() LCSResultsMap {
+	x := New("With great power there must also come great responsibility.").WithComparisonManager(false)
+	_, err := x.LCSBacktrack("With great power comes great responsibility.")
+	if err != nil {
+		return nil
+	}
+	_, _ = x.LCSBacktrackAll("With great power comes great responsibility.")
+	_, _ = x.LCSDiff("With great power comes great responsibility.")
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
+func genLCSAll3() LCSResultsMap {
+	x := New("Hello, World!").WithComparisonManager(false)
+	_, err := x.LCSBacktrack("Hello World")
+	if err != nil {
+		return nil
+	}
+	_, _ = x.LCSBacktrackAll("Hello World")
+	_, _ = x.LCSDiff("Hello World")
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
 var (
-	lcsAll1 = New("With great power there must also come great responsibility.").
-		WithComparisonManager().
-		LCSBacktrack("With great power comes great responsibility.").
-		LCSBacktrackAll("With great power comes great responsibility.").
-		LCSDiff("With great power comes great responsibility.").
-		GetComparisonManager().
-		GetLCSResultsMap()
-	bt1  = lcsAll1[LCSBacktrackWord]["With great power comes great responsibility."]
-	bta1 = lcsAll1[LCSBacktrackWordAll]["With great power comes great responsibility."]
-	ld1  = lcsAll1[LCSDiffSlice]["With great power comes great responsibility."]
+	lcsAll1 = genLCSAll1()
+	bt1     = lcsAll1[LCSBacktrackWord]["With great power comes great responsibility."]
+	bta1    = lcsAll1[LCSBacktrackWordAll]["With great power comes great responsibility."]
+	ld1     = lcsAll1[LCSDiffSlice]["With great power comes great responsibility."]
 
-	lcsAll2 = New("With great power there must also come great responsibility.").
-		WithComparisonManager().
-		LCSBacktrack("With great power comes great responsibility.").
-		LCSBacktrackAll("With great power comes great responsibility.").
-		LCSDiff("With great power comes great responsibility.").
-		GetComparisonManager().
-		GetLCSResultsMap()
-	bt2  = lcsAll2[LCSBacktrackWord]["With great power comes great responsibility."]
-	bta2 = lcsAll2[LCSBacktrackWordAll]["With great power comes great responsibility."]
-	ld2  = lcsAll2[LCSDiffSlice]["With great power comes great responsibility."]
+	lcsAll2 = genLCSAll2()
+	bt2     = lcsAll2[LCSBacktrackWord]["With great power comes great responsibility."]
+	bta2    = lcsAll2[LCSBacktrackWordAll]["With great power comes great responsibility."]
+	ld2     = lcsAll2[LCSDiffSlice]["With great power comes great responsibility."]
 
-	lcsAll3 = New("Hello, World!").
-		WithComparisonManager().
-		LCSBacktrack("Hello World").
-		LCSBacktrackAll("Hello World").
-		LCSDiff("Hello World").
-		GetComparisonManager().
-		GetLCSResultsMap()
-	bt3 = lcsAll3[LCSBacktrackWord]["Hello World"]
-
-	ld3 = lcsAll3[LCSDiffSlice]["Hello World"]
+	lcsAll3 = genLCSAll3()
+	bt3     = lcsAll3[LCSBacktrackWord]["Hello World"]
+	ld3     = lcsAll3[LCSDiffSlice]["Hello World"]
 
 	btp1Sh   = "LCS Backtrack: With great power come great responsibility.\n"
 	btp1Verb = "LCS Backtrack:\n" +
@@ -115,12 +129,14 @@ func TestLCSResultGetters(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res := *New(tt.str1).
-				WithComparisonManager().
-				LCSBacktrack(tt.str2).
-				LCSBacktrackAll(tt.str2).
-				LCSDiff(tt.str2).
-				GetComparisonManager().
+			x := New(tt.str1).WithComparisonManager(false)
+			_, err := x.LCSBacktrack(tt.str2)
+			if err != nil {
+				t.Errorf("LCSResultGetters() = %v, want %v", err, tt.err)
+			}
+			_, _ = x.LCSBacktrackAll(tt.str2)
+			_, _ = x.LCSDiff(tt.str2)
+			res := *x.GetComparisonManager().
 				GetLCSResultsMap()[tt.lcsResultType][tt.str2]
 			s1, s2 := res.GetStrings()
 			if res.GetType() != tt.lcsResultType ||

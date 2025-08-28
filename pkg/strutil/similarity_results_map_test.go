@@ -4,7 +4,7 @@ import "testing"
 
 var (
 	simMap1 = New("Hello, World!").
-		WithComparisonManager().
+		WithComparisonManager(false).
 		Similarity("Hello World", Levenshtein).
 		Similarity("Hi", Levenshtein).
 		Similarity("Hello World", DamerauLevenshtein).
@@ -21,7 +21,7 @@ var (
 		GetSimilarityResultsMap()
 
 	simMap2 = New("Hello, World!").
-		WithComparisonManager().
+		WithComparisonManager(false).
 		Similarity("Hello World", Levenshtein).
 		Similarity("Hi", Levenshtein).
 		Similarity("Hello World", DamerauLevenshtein).
@@ -38,7 +38,7 @@ var (
 		GetSimilarityResultsMap()
 
 	simMap3 = New("Hello, World!").
-		WithComparisonManager().
+		WithComparisonManager(false).
 		Similarity("Hello World", Levenshtein).
 		Similarity("Yo", Levenshtein).
 		Similarity("Hello World", DamerauLevenshtein).
@@ -55,14 +55,14 @@ var (
 		GetSimilarityResultsMap()
 
 	simMap4 = New("Hello, World!").
-		WithComparisonManager().
+		WithComparisonManager(false).
 		Similarity("Hello World", Levenshtein).
 		Similarity("Hello World", DamerauLevenshtein).
 		GetComparisonManager().
 		GetSimilarityResultsMap()
 
 	simMap5 = New("Hello, World!").
-		WithComparisonManager().
+		WithComparisonManager(false).
 		GetComparisonManager().
 		GetSimilarityResultsMap()
 )
@@ -308,14 +308,14 @@ func TestSimilarityResultsMapFilterByComparisonString(t *testing.T) {
 
 var (
 	testSimMap1 = New("Hello, World!").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Similarity("Hello World", Levenshtein).
 			Similarity("Hello World", JaroWinkler).
 			GetComparisonManager().
 			GetSimilarityResultsMap()
 
 	testSimMap2 = New("Hello, World!").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Similarity("Hello World", DamerauLevenshtein).
 			Similarity("Hello World", Cosine).
 			GetComparisonManager().

@@ -38,21 +38,6 @@ var (
 	// ErrInvalidDomain indicates that the provided string is not a valid domain.
 	ErrInvalidDomain = errors.New("invalid domain")
 
-	// ErrLCSBacktrackFailure indicates a failure in the
-	// backtracking process to determine the longest common substring.
-	ErrLCSBacktrackFailure = errors.New("error backtracking longest common substring")
-
-	// ErrLCSBacktrackAllFailure indicates an error occurred while attempting to
-	// backtrack for a slice of common substrings.
-	ErrLCSBacktrackAllFailure = errors.New("error backtracking for slice of common substrings")
-
-	// ErrLCSDiffFailure represents an error occurring during the generation of Longest Common Subsequence (LCS) diff.
-	ErrLCSDiffFailure = errors.New("error generating lcs diff")
-
-	// ErrHammingDistanceFailure is returned when there is an error while
-	// calculating the Hamming distance between two strings.
-	ErrHammingDistanceFailure = errors.New("error calculating hamming distance")
-
 	// ErrShingleLengthOutOfRange indicates that the shingle length provided is outside the acceptable range.
 	ErrShingleLengthOutOfRange = errors.New("shingle length out of range")
 

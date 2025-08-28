@@ -55,7 +55,7 @@ func TestSimilarityResultGetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			res := *New(tt.input).
-				WithComparisonManager().
+				WithComparisonManager(false).
 				Similarity(tt.compare, tt.algo).
 				GetComparisonManager().
 				GetSimilarityResultsMap()[tt.algo][tt.compare]
@@ -93,7 +93,7 @@ func TestSimilarityResultGetters(t *testing.T) {
 
 var (
 	fullSimilarityResults1 = New("Hello, World!").
-				WithComparisonManager().
+				WithComparisonManager(false).
 				Similarity("Hello World", Levenshtein).
 				Similarity("Hello World", DamerauLevenshtein).
 				Similarity("Hello World", JaroWinkler).
@@ -109,7 +109,7 @@ var (
 				GetSimilarityResultsMap()
 
 	fullSimilarityResults2 = New("Hi, World!").
-				WithComparisonManager().
+				WithComparisonManager(false).
 				Similarity("Hello World", Levenshtein).
 				Similarity("Hello World", DamerauLevenshtein).
 				Similarity("Hello World", JaroWinkler).
@@ -180,7 +180,7 @@ func TestSimilarityResultFormatOutput(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			res := *New(tt.input).
-				WithComparisonManager().
+				WithComparisonManager(false).
 				Similarity(tt.compare, tt.algo).
 				GetComparisonManager().
 				GetSimilarityResultsMap()[tt.algo][tt.compare]

@@ -30,7 +30,7 @@ func TestLevenshteinDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := levenshteinDistance(tt.input1, tt.input2)
 			result := LevenshteinDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().LevenshteinDistance(tt.input2)
+			builderResult := New(tt.input1).WithComparisonManager(false).LevenshteinDistance(tt.input2)
 			if helperResult != tt.expected ||
 				result != tt.expected ||
 				builderResult != tt.expected {
@@ -61,7 +61,7 @@ func TestDamerauLevenshteinDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := damerauLevenshteinDistance(tt.input1, tt.input2)
 			result := DamerauLevenshteinDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().DamerauLevenshteinDistance(tt.input2)
+			builderResult := New(tt.input1).WithComparisonManager(false).DamerauLevenshteinDistance(tt.input2)
 			if helperResult != tt.expected ||
 				result != tt.expected ||
 				builderResult != tt.expected {
@@ -98,7 +98,7 @@ func TestOSADamerauLevenshteinDistance(t *testing.T) {
 			helperResult := osaDamerauLevenshteinDistance(tt.input1, tt.input2)
 			result := OSADamerauLevenshteinDistance(tt.input1, tt.input2)
 			builderResult := New(tt.input1).
-				WithComparisonManager().
+				WithComparisonManager(false).
 				OSADamerauLevenshteinDistance(tt.input2)
 			if helperResult != tt.expected ||
 				result != tt.expected ||
@@ -141,16 +141,15 @@ func TestLCS(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := lcs(tt.input1, tt.input2)
 			result := LCS(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().LCS(tt.input2).comparisonManager
-			if *helperResult.score != tt.expected || *result.score != tt.expected {
-				t.Errorf("LCS - expected %d - got %d / %d",
-					tt.expected, *helperResult.score, *result.score)
-			}
-			if brInt, ok := (*builderResult.ComparisonResults[LCSLength][tt.input2]).(*ComparisonResultInt); ok {
-				if *brInt.score != tt.expected {
-					t.Errorf("LCS - expected %d - got %d",
-						tt.expected, *brInt.score)
-				}
+			builderResult := New(tt.input1).WithComparisonManager(false).LCS(tt.input2)
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				builderResult != tt.expected {
+				t.Errorf("LCS - expected %d - got %d / %d / %d",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult)
 			}
 		})
 	}
@@ -162,34 +161,54 @@ func TestLCSBacktrack(t *testing.T) {
 		input1   string
 		input2   string
 		expected string
+		err      error
 	}{
-		{"LCSBacktrack1", "hello", "hello", "hello"},
-		{"LCSBacktrack2", "hello", "hello world", "hello"},
-		{"LCSBacktrack3", "ABCDEFG", "abcdefg", ""},
-		{"LCSBacktrack4", "ABCDEFG", "ABCDEFGH", "ABCDEFG"},
-		{"LCSBacktrack5", "rust", "golang", ""},
-		{"LCSBacktrack6", "My name is John", "My name is Jane", "My name is Jn"},
-		{"LCSBacktrack7", "tpyo", "typo", "tpo"},
-		{"LCSBacktrack8", "teal", "tale", "tal"},
-		{"LCSBacktrack9", "For All Mankind", "For All of Maknidn", "For All Manin"},
+		//"Can't process and backtrack any LCS with empty string"
+		{"LCSBacktrack1", "hello", "hello", "hello", nil},
+		{"LCSBacktrack2", "hello", "hello world", "hello", nil},
+		{"LCSBacktrack3", "ABCDEFG", "abcdefg", "", nil},
+		{"LCSBacktrack4", "ABCDEFG", "ABCDEFGH", "ABCDEFG", nil},
+		{"LCSBacktrack5", "rust", "golang", "", nil},
+		{"LCSBacktrack6", "My name is John", "My name is Jane", "My name is Jn", nil},
+		{"LCSBacktrack7", "tpyo", "typo", "tpo", nil},
+		{"LCSBacktrack8", "teal", "tale", "tal", nil},
+		{"LCSBacktrack9", "For All Mankind", "For All of Maknidn", "For All Manin", nil},
 		{"LCSBacktrack10",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 			"Some text dolor sit amet, consectetur an end",
 			"oe  dolor sit amet, consectetur an e",
+			nil,
 		},
+		{"LCSBackTrackErr",
+			"",
+			"hello world",
+			"",
+			errors.New("Can't process and backtrack any LCS with empty string")},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := lcsBacktrack(tt.input1, tt.input2)
-			hrWord := (*helperResult.result)[0]
-			result := LCSBacktrack(tt.input1, tt.input2)
-			rWord := (*result.result)[0]
-			builderResult := New(tt.input1).WithComparisonManager().LCSBacktrack(tt.input2).comparisonManager
-			brWord := (*builderResult.LCSResults[LCSBacktrackWord][tt.input2].result)[0]
-			if hrWord != tt.expected || rWord != tt.expected || brWord != tt.expected {
+			helperResult, helperErr := lcsBacktrack(tt.input1, tt.input2)
+			result, resultErr := LCSBacktrack(tt.input1, tt.input2)
+			builderResult, builderErr := New(tt.input1).WithComparisonManager(false).LCSBacktrack(tt.input2)
+			if !errors2.CompareErrors(helperErr, tt.err) ||
+				!errors2.CompareErrors(resultErr, tt.err) ||
+				!errors2.CompareErrors(builderErr, tt.err) {
 				t.Errorf("LCSBacktrack - expected %s - got %s / %s / %s",
-					tt.expected, hrWord, rWord, brWord)
+					tt.expected,
+					helperResult,
+					result,
+					builderResult)
+			}
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				builderResult != tt.expected {
+				t.Errorf("LCSBacktrack - expected %s - got %s / %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult,
+				)
 			}
 		})
 	}
@@ -201,47 +220,55 @@ func TestLCSBacktrackAll(t *testing.T) {
 		input1   string
 		input2   string
 		expected []string
+		err      error
 	}{
-		{"LCSBacktrackAll1", "hello", "hello", []string{"hello"}},
-		{"LCSBacktrackAll2", "hello", "hello world", []string{"hello"}},
-		{"LCSBacktrackAll3", "ABCDEFG", "abcdefg", []string{""}},
-		{"LCSBacktrackAll4", "ABCDEFG", "ABCDEFGH", []string{"ABCDEFG"}},
-		{"LCSBacktrackAll5", "rust", "golang", []string{""}},
-		{"LCSBacktrackAll6", "My name is John", "My name is Jane", []string{"My name is Jn"}},
-		{"LCSBacktrackAll7", "tpyo", "typo", []string{"tpo", "tyo"}},
-		{"LCSBacktrackAll8", "teal", "tale", []string{"tal"}},
+		{"LCSBacktrackAll1", "hello", "hello", []string{"hello"}, nil},
+		{"LCSBacktrackAll2", "hello", "hello world", []string{"hello"}, nil},
+		{"LCSBacktrackAll3", "ABCDEFG", "abcdefg", []string{""}, nil},
+		{"LCSBacktrackAll4", "ABCDEFG", "ABCDEFGH", []string{"ABCDEFG"}, nil},
+		{"LCSBacktrackAll5", "rust", "golang", []string{""}, nil},
+		{"LCSBacktrackAll6", "My name is John", "My name is Jane", []string{"My name is Jn"},
+			nil},
+		{"LCSBacktrackAll7", "tpyo", "typo", []string{"tpo", "tyo"}, nil},
+		{"LCSBacktrackAll8", "teal", "tale", []string{"tal"}, nil},
 		{"LCSBacktrackAll9",
 			"For All Mankind",
 			"For All of Maknidn",
-			[]string{"For All Makin", "For All Manid", "For All Makid", "For All Maknd", "For All Manin"}},
+			[]string{"For All Makin", "For All Manid", "For All Makid", "For All Maknd", "For All Manin"},
+			nil},
 		{"LCSBacktrackAll10",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 			"Some text dolor sit amet, consectetur an end",
 			[]string{"oe  dolor sit amet, consectetur an e", "om  dolor sit amet, consectetur an e"},
+			nil,
 		},
+		{"LCSBacktrackError", "", "hello world", nil,
+			errors.New("Can't process and backtrack any LCS with empty string")},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := lcsBacktrackAll(tt.input1, tt.input2)
-			result := LCSBacktrackAll(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().LCSBacktrackAll(tt.input2).comparisonManager
-			if tt.expected != nil && (!comparison.CompareSlices(tt.expected, *helperResult.result, false) ||
-				!comparison.CompareSlices(tt.expected, *result.result, false) ||
-				!comparison.CompareSlices(tt.expected,
-					*builderResult.LCSResults[LCSBacktrackWordAll][tt.input2].result, false)) {
-				t.Errorf("LCSBacktrackAllA - expected %s - got %v / %v / %v",
-					tt.expected, helperResult.result, result.result,
-					*builderResult.LCSResults[LCSBacktrackWordAll][tt.input2].result)
+			helperResult, helperErr := lcsBacktrackAll(tt.input1, tt.input2)
+			result, resultErr := LCSBacktrackAll(tt.input1, tt.input2)
+			builderResult, builderErr := New(tt.input1).WithComparisonManager(false).LCSBacktrackAll(tt.input2)
+			if !errors2.CompareErrors(helperErr, tt.err) ||
+				!errors2.CompareErrors(resultErr, tt.err) ||
+				!errors2.CompareErrors(builderErr, tt.err) {
+				t.Errorf("LCSBacktrackAll - expected %s - got %s / %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult)
 			}
-			if tt.expected == nil && (helperResult != nil ||
-				result != nil ||
-				*builderResult.LCSResults[LCSBacktrackWordAll][tt.input2].result != nil) {
-				t.Errorf("LCSBacktrackAllB - expected %d - got %d / %d / %d",
-					len(tt.expected),
-					len(*helperResult.result),
-					len(*result.result),
-					len(*builderResult.LCSResults[LCSBacktrackWordAll][tt.input2].result))
+			if !comparison.CompareSlices(helperResult, tt.expected, true) ||
+				!comparison.CompareSlices(result, tt.expected, true) ||
+				!comparison.CompareSlices(builderResult, tt.expected, true) {
+				t.Errorf("LCSBacktrackAll - expected %s - got %s / %s / %s",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult,
+				)
 			}
 		})
 	}
@@ -385,69 +412,67 @@ func TestLCSDiff(t *testing.T) {
 		input1   string
 		input2   string
 		expected []string
+		err      error
 	}{
 		{"LCSDiff1",
 			"hello",
 			"help",
-			[]string{" h e l p l o", "       + - -"}},
+			[]string{" h e l p l o", "       + - -"},
+			nil},
 		{"LCSDiff2",
 			"",
 			"",
-			nil},
+			nil,
+			errors.New("Can't process LCS diff with empty string")},
 		{"LCSDiff3",
 			"It was the best of times",
 			"It was the worst of times",
 			[]string{" I t   w a s   t h e   w o r b e s t   o f   t i m e s",
 				"                       + + + - -                      "},
+			nil,
 		},
 		{"LCSDiff4",
 			"wEdNeSdAy",
 			"WeDnEsDaY",
-			[]string{" W e D n w E s D a Y d N e S d A y", " + + + + -   + + + + - - - - - - -"}},
+			[]string{" W e D n w E s D a Y d N e S d A y", " + + + + -   + + + + - - - - - - -"},
+			nil,
+		},
 		{"LCSDiff5",
 			"Georgia",
 			"Jorja",
-			[]string{" J G e o r j g i a", " + - -     + - -  "}},
+			[]string{" J G e o r j g i a", " + - -     + - -  "},
+			nil,
+		},
+		{"LCSDiffError",
+			"",
+			"Hello World",
+			nil,
+			errors.New("Can't process LCS diff with empty string")},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := lcsDiff(tt.input1, tt.input2)
-			result := LCSDiff(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().LCSDiff(tt.input2)
-			if builderResult.Error() != nil && !errors.Is(builderResult.Error(), errors2.ErrLCSDiffFailure) {
-				t.Errorf("GetError: %s", builderResult.Error())
+			helperResult, herlperErr := lcsDiff(tt.input1, tt.input2)
+			result, resultErr := LCSDiff(tt.input1, tt.input2)
+			builderResult, builderErr := New(tt.input1).WithComparisonManager(false).LCSDiff(tt.input2)
+			if !errors2.CompareErrors(herlperErr, tt.err) ||
+				!errors2.CompareErrors(builderErr, tt.err) ||
+				!errors2.CompareErrors(resultErr, tt.err) {
+				t.Errorf("LCSDiff - expected %v - got %v / %v / %v",
+					tt.err,
+					herlperErr,
+					resultErr,
+					builderErr,
+				)
 			}
-			if tt.expected != nil &&
-				(helperResult.result == nil ||
-					result.result == nil ||
-					builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2].result == nil) {
-				t.Errorf("LCSDiff - expected %s - got %v / %v / %v",
+			if !comparison.CompareSlices(helperResult, tt.expected, true) ||
+				!comparison.CompareSlices(result, tt.expected, true) ||
+				!comparison.CompareSlices(builderResult, tt.expected, true) {
+				t.Errorf("LCSDiff - expected %v - got %v / %v / %v",
 					tt.expected,
 					helperResult,
 					result,
-					*builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2].result)
-			}
-			if tt.expected == nil &&
-				(helperResult.result != nil ||
-					result.result != nil ||
-					builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2].result != nil) {
-				t.Errorf("LCSDiff - expected %s - got %v / %v / %v",
-					tt.expected,
-					helperResult,
-					result,
-					*builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2])
-			}
-			if tt.expected != nil && (!comparison.CompareSlices(tt.expected, *helperResult.result, false) ||
-				!comparison.CompareSlices(tt.expected, *result.result, false) ||
-				!comparison.CompareSlices(tt.expected,
-					*builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2].result,
-					false)) {
-				t.Errorf("LCSDiff - expected %s - got %v / %v / %v",
-					tt.expected,
-					helperResult,
-					result,
-					*builderResult.comparisonManager.LCSResults[LCSDiffSlice][tt.input2],
+					builderResult,
 				)
 			}
 		})
@@ -492,20 +517,16 @@ func TestLCSEditDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := lcsEditDistance(tt.input1, tt.input2)
 			result := LCSEditDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().LCSEditDistance(tt.input2).comparisonManager
-			if *helperResult.score != tt.expected ||
-				*result.score != tt.expected {
-				t.Errorf("LCSEditDistance - expected %d - got %d / %d",
+			builderResult := New(tt.input1).WithComparisonManager(false).LCSEditDistance(tt.input2)
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				builderResult != tt.expected {
+				t.Errorf("LCSEditDistance - expected %d - got %d / %d / %d",
 					tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
-			}
-			if brInt, ok := (*builderResult.ComparisonResults[LCSDist][tt.input2]).(*ComparisonResultInt); ok {
-				if *brInt.score != tt.expected {
-					t.Errorf("LCS - expected %d - got %d",
-						tt.expected, *brInt.score)
-				}
 			}
 		})
 	}
@@ -513,45 +534,49 @@ func TestLCSEditDistance(t *testing.T) {
 
 func TestHammingDistance(t *testing.T) {
 
-	testVal2 := 3
-	testVal3 := 3
-	testVal4 := 2
-	testVal5 := 5
-	testVal6 := 0
-
 	tests := []struct {
 		name     string
 		input1   string
 		input2   string
-		expected *int
+		expected int
+		err      error
 	}{
-		{"HammingDistance1", "hello", "help", nil},
-		{"HammingDistance2", "karolin", "kathrin", &testVal2},
-		{"HammingDistance3", "karolin", "kerstin", &testVal3},
-		{"HammingDistance4", "10111", "10010", &testVal4},
-		{"HammingDistance5", "00000", "11111", &testVal5},
-		{"HammingDistance6", "11111", "11111", &testVal6},
+		{"HammingDistance1", "hello",
+			"help",
+			-1,
+			errors.New("Undefined for strings of unequal length"),
+		},
+		{"HammingDistance2", "karolin", "kathrin", 3, nil},
+		{"HammingDistance3", "karolin", "kerstin", 3, nil},
+		{"HammingDistance4", "10111", "10010", 2, nil},
+		{"HammingDistance5", "00000", "11111", 5, nil},
+		{"HammingDistance6", "11111", "11111", 0, nil},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := hammingDistance(tt.input1, tt.input2)
-			result := HammingDistance(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().HammingDistance(tt.input2).comparisonManager
-			if tt.expected != nil &&
-				(*helperResult.score != *tt.expected ||
-					*result.score != *tt.expected) {
-				t.Errorf("HammingDistance - expected %d - got %d / %d",
-					*tt.expected,
-					*helperResult.score,
-					*result.score,
+			helperResult, helperErr := hammingDistance(tt.input1, tt.input2)
+			result, resultErr := HammingDistance(tt.input1, tt.input2)
+			builderResult, builderErr := New(tt.input1).WithComparisonManager(false).HammingDistance(tt.input2)
+			if !errors2.CompareErrors(helperErr, tt.err) ||
+				!errors2.CompareErrors(builderErr, tt.err) ||
+				!errors2.CompareErrors(resultErr, tt.err) {
+				t.Errorf("HammingDistance - expected %v - got %v / %v / %v",
+					tt.err,
+					helperErr,
+					resultErr,
+					builderErr,
 				)
 			}
-			if brInt, ok := (*builderResult.ComparisonResults[HammingDist][tt.input2]).(*ComparisonResultInt); ok {
-				if tt.expected != nil && (*brInt.score != *tt.expected) {
-					t.Errorf("LCS - expected %d - got %d",
-						*tt.expected, *brInt.score)
-				}
+			if helperResult != tt.expected ||
+				result != tt.expected ||
+				builderResult != tt.expected {
+				t.Errorf("HammingDistance - expected %d - got %d / %d / %d",
+					tt.expected,
+					helperResult,
+					result,
+					builderResult,
+				)
 			}
 		})
 	}
@@ -574,22 +599,16 @@ func TestJaroSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := jaroSimilarity(tt.input1, tt.input2)
 			result := JaroSimilarity(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().JaroSimilarity(tt.input2).comparisonManager
-			if math.Abs(float64(tt.expected)-float64(*helperResult.score)) > types.Float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold {
-				t.Errorf("JaroSimilarity - expected %f - got %f / %f",
+			builderResult := New(tt.input1).WithComparisonManager(false).JaroSimilarity(tt.input2)
+			if math.Abs(float64(tt.expected)-float64(helperResult)) > types.Float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(result)) > types.Float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(builderResult)) > types.Float64EqualityThreshold {
+				t.Errorf("JaroSimilarity - expected %f - got %f / %f / %f",
 					tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
-			}
-			if brFloat, ok := (*builderResult.ComparisonResults[JaroSim][tt.input2]).(*ComparisonResultFloat); ok {
-				if math.Abs(float64(tt.expected)-float64(*brFloat.score)) > types.Float64EqualityThreshold {
-					t.Errorf("JaroSimilarity - expected %f - got %f",
-						tt.expected,
-						*brFloat.score,
-					)
-				}
 			}
 		})
 	}
@@ -612,22 +631,16 @@ func TestJaroWinklerSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := jaroWinklerSimilarity(tt.input1, tt.input2)
 			result := JaroWinklerSimilarity(tt.input1, tt.input2)
-			builderResult := New(tt.input1).WithComparisonManager().JaroWinklerSimilarity(tt.input2).comparisonManager
-			if math.Abs(float64(tt.expected)-float64(*helperResult.score)) > types.Float64EqualityThreshold ||
-				math.Abs(float64(tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold {
-				t.Errorf("JaroWinklerSimilarity - expected %f - got %f / %f",
+			builderResult := New(tt.input1).WithComparisonManager(false).JaroWinklerSimilarity(tt.input2)
+			if math.Abs(float64(tt.expected)-float64(helperResult)) > types.Float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(result)) > types.Float64EqualityThreshold ||
+				math.Abs(float64(tt.expected)-float64(builderResult)) > types.Float64EqualityThreshold {
+				t.Errorf("JaroWinklerSimilarity - expected %f - got %f / %f / %f",
 					tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
-			}
-			if brFloat, ok := (*builderResult.ComparisonResults[JaroWinklerSim][tt.input2]).(*ComparisonResultFloat); ok {
-				if math.Abs(float64(tt.expected)-float64(*brFloat.score)) > types.Float64EqualityThreshold {
-					t.Errorf("JaroWinklerSimilarity - expected %f - got %f",
-						tt.expected,
-						*brFloat.score,
-					)
-				}
 			}
 		})
 	}
@@ -660,7 +673,7 @@ func TestJaccardSimilarity(t *testing.T) {
 		{"JaccardSimilarity1", "abcd", "abc", 2, &val6},
 		{"JaccardSimilarity1", "abcd", "abc", 1, &val7},
 		{"JaccardSimilarity1", "abcd", "abcd", 4, &val8},
-		{"JaccardSimilarity1", "abcd", "abc", -1, nil},
+		{"JaccardSimilarity1", "abcd", "abc", -1, &val10},
 		{"JaccardSimilarity1", "abc", "xyz", 1, &val10},
 		{"JaccardSimilarity1", "abc", "", 1, &val10},
 		{"JaccardSimilarity1", "", "xyz", 1, &val10},
@@ -671,40 +684,20 @@ func TestJaccardSimilarity(t *testing.T) {
 			helperResult := jaccardSimilarity(tt.input1, tt.input2, tt.splitLength)
 			result := JaccardSimilarity(tt.input1, tt.input2, tt.splitLength)
 			builderResult := New(tt.input1).
-				WithComparisonManager().
-				JaccardSimilarity(tt.input2, tt.splitLength).
-				comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+				WithComparisonManager(false).
+				JaccardSimilarity(tt.input2, tt.splitLength)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(helperResult)) >
 				types.Float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
-				t.Errorf("JaccardSimilarity - expected %f - got %f / %f",
+				math.Abs(float64(*tt.expected)-float64(result)) > types.Float64EqualityThreshold) ||
+				math.Abs(float64(*tt.expected)-float64(builderResult)) > types.Float64EqualityThreshold {
+				t.Errorf("JaccardSimilarity - expected %f - got %f / %f / %f",
 					*tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
 			}
-			if tt.expected == nil && (helperResult.score != nil ||
-				result.score != nil) {
-				t.Errorf("JaccardSimilarity - expected nil - got %f / %f",
-					*helperResult.score,
-					*result.score,
-				)
-			}
-			if brFloat, ok := (*builderResult.ComparisonResults[JaccardSim][tt.input2]).(*ComparisonResultFloat); ok {
-				if tt.expected != nil &&
-					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > types.Float64EqualityThreshold {
-					t.Errorf("JaccardSimilarity - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
-				if tt.expected == nil && brFloat.score != nil {
-					t.Errorf("JaccardSimilarity - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
-			}
+
 		})
 	}
 }
@@ -736,7 +729,7 @@ func TestCosineSimilarity(t *testing.T) {
 		{"CosineSimilarity6", "abcd", "abc", 2, &val6},
 		{"CosineSimilarity7", "abcd", "abc", 1, &val7},
 		{"CosineSimilarity8", "abcd", "abcd", 4, &val8},
-		{"CosineSimilarity9", "abcd", "abc", -1, nil},
+		{"CosineSimilarity9", "abcd", "abc", -1, &val10},
 		{"CosineSimilarity10", "abc", "xyz", 1, &val10},
 		{"CosineSimilarity11", "abc", "", 1, &val10},
 		{"CosineSimilarity12", "", "xyz", 1, &val10},
@@ -746,37 +739,17 @@ func TestCosineSimilarity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := cosineSimilarity(tt.input1, tt.input2, tt.splitLen)
 			result := CosineSimilarity(tt.input1, tt.input2, tt.splitLen)
-			builderResult := New(tt.input1).WithComparisonManager().CosineSimilarity(tt.input2, tt.splitLen).comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+			builderResult := New(tt.input1).WithComparisonManager(false).CosineSimilarity(tt.input2, tt.splitLen)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(helperResult)) >
 				types.Float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
-				t.Errorf("CosineSimilarity - expected %f - got %f / %f",
+				math.Abs(float64(*tt.expected)-float64(result)) > types.Float64EqualityThreshold) ||
+				math.Abs(float64(*tt.expected)-float64(builderResult)) > types.Float64EqualityThreshold {
+				t.Errorf("CosineSimilarity - expected %f - got %f / %f / %f",
 					*tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
-			}
-			if tt.expected == nil && (helperResult.score != nil ||
-				result.score != nil) {
-				t.Errorf("CosineSimilarity - expected nil - got %f / %f",
-					*helperResult.score,
-					*result.score,
-				)
-			}
-			if brFloat, ok := (*builderResult.ComparisonResults[CosineSim][tt.input2]).(*ComparisonResultFloat); ok {
-				if tt.expected != nil &&
-					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > types.Float64EqualityThreshold {
-					t.Errorf("CosineSimilarity - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
-				if tt.expected == nil && brFloat.score != nil {
-					t.Errorf("CosineSimilarity - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
 			}
 		})
 	}
@@ -809,7 +782,7 @@ func TestSorensenDiceCoefficient(t *testing.T) {
 		{"SorensenDiceCoefficient6", "abcd", "abc", 2, &val6},
 		{"SorensenDiceCoefficient7", "abcd", "abc", 1, &val7},
 		{"SorensenDiceCoefficient8", "abcd", "abcd", 4, &val8},
-		{"SorensenDiceCoefficient9", "abcd", "abc", -1, nil},
+		{"SorensenDiceCoefficient9", "abcd", "abc", -1, &val10},
 		{"SorensenDiceCoefficient10", "abc", "xyz", 1, &val10},
 		{"SorensenDiceCoefficient11", "abc", "", 4, &val10},
 		{"SorensenDiceCoefficient12", "", "xyz", 1, &val10},
@@ -820,40 +793,18 @@ func TestSorensenDiceCoefficient(t *testing.T) {
 			helperResult := SorensenDiceCoefficient(tt.input1, tt.input2, tt.splitLen)
 			result := SorensenDiceCoefficient(tt.input1, tt.input2, tt.splitLen)
 			builderResult := New(tt.input1).
-				WithComparisonManager().
-				SorensenDiceCoefficient(tt.input2, tt.splitLen).
-				comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+				WithComparisonManager(false).
+				SorensenDiceCoefficient(tt.input2, tt.splitLen)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(helperResult)) >
 				types.Float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
-				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f",
+				math.Abs(float64(*tt.expected)-float64(result)) > types.Float64EqualityThreshold) ||
+				math.Abs(float64(*tt.expected)-float64(builderResult)) > types.Float64EqualityThreshold {
+				t.Errorf("SorensenDiceCoefficient - expected %f - got %f / %f /%f",
 					*tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
-			}
-			if tt.expected == nil &&
-				(helperResult.score != nil ||
-					result.score != nil) {
-				t.Errorf("SorensenDiceCoefficient - expected nil - got %f / %f",
-					*helperResult.score,
-					*result.score,
-				)
-			}
-			if brFloat, ok := (*builderResult.ComparisonResults[SorensenDiceCo][tt.input2]).(*ComparisonResultFloat); ok {
-				if tt.expected != nil &&
-					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > types.Float64EqualityThreshold {
-					t.Errorf("SorensenDiceCoefficient - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
-				if tt.expected == nil && brFloat.score != nil {
-					t.Errorf("SorensenDiceCoefficient - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
 			}
 		})
 	}
@@ -891,7 +842,7 @@ func TestQGramDistance(t *testing.T) {
 		{"QGramDist8", "abc", "", 2, &val8},
 		{"QGramDist9", "", "xyz", 3, &val9},
 		{"QGramDist10", "HELLO", "hello", 3, &val10},
-		{"QGramDist11", "HELLO", "hello", -5, nil},
+		{"QGramDist11", "HELLO", "hello", -5, &val12},
 		{"QGramDist11", "HELLO", "hellohellohello", 10, &val11},
 		{"QGramDist11", "HELLOHELLOHELLO", "hello", 20, &val12},
 	}
@@ -900,36 +851,16 @@ func TestQGramDistance(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := qgramDistance(tt.input1, tt.input2, tt.q)
 			result := QgramDistance(tt.input1, tt.input2, tt.q)
-			builderResult := New(tt.input1).WithComparisonManager().QgramDistance(tt.input2, tt.q).comparisonManager
-			if tt.expected != nil && (*helperResult.score != *tt.expected ||
-				*result.score != *tt.expected) {
-				t.Errorf("QgramDistance - expected %d - got %d / %d",
+			builderResult := New(tt.input1).WithComparisonManager(false).QgramDistance(tt.input2, tt.q)
+			if tt.expected != nil && (helperResult != *tt.expected ||
+				result != *tt.expected) ||
+				builderResult != *tt.expected {
+				t.Errorf("QgramDistance - expected %d - got %d / %d / %d",
 					*tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
-			}
-			if tt.expected == nil && (helperResult.score != nil ||
-				result.score != nil) {
-				t.Errorf("QgramDistance - expected %d - got %d / %d",
-					tt.expected,
-					helperResult.score,
-					result.score,
-				)
-			}
-			if brInt, ok := (*builderResult.ComparisonResults[QGramDist][tt.input2]).(*ComparisonResultInt); ok {
-				if tt.expected != nil && *brInt.score != *tt.expected {
-					t.Errorf("QgramDistance - expected %d - got %d",
-						*tt.expected,
-						*brInt.score,
-					)
-				}
-				if tt.expected == nil && brInt.score != nil {
-					t.Errorf("QgramDistance - expected %d - got %d",
-						*tt.expected,
-						*brInt.score,
-					)
-				}
 			}
 		})
 	}
@@ -976,13 +907,13 @@ func TestQgramDistanceCustomNgram(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			helperResult := qgramDistanceCustomNgram(tt.input1, tt.input2, "CustomNgram")
-			result := QgramDistanceCustomNgram(tt.input1, tt.input2, "CustomNgram")
-			if *helperResult.score != tt.expected || *result.score != tt.expected {
+			helperResult := qgramDistanceCustomNgram(tt.input1, tt.input2)
+			result := QgramDistanceCustomNgram(tt.input1, tt.input2)
+			if helperResult != tt.expected || result != tt.expected {
 				t.Errorf("QgramDistanceCustomNgram - expected %d - got %d / %d",
 					tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
 				)
 			}
 		})
@@ -1007,23 +938,14 @@ func TestQgramDistanceCustomNgramBuilder(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.input1 == nil {
-				tt.input1 = New("hello").WithComparisonManager().Shingle(2)
+				tt.input1 = New("hello").WithComparisonManager(false).Shingle(2)
 			}
-			builderResult := tt.input1.WithComparisonManager().QgramDistanceCustomNgram(tt.input2, "Test").GetComparisonManager()
-			brInt, ok := (*builderResult.ComparisonResults[QGramDistCust]["Test"]).(*ComparisonResultInt)
-			if ok {
-				if brInt.score != nil && *brInt.score != tt.expected {
-					t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
-						tt.expected,
-						*brInt.score,
-					)
-				}
-				if brInt.score == nil && tt.expected != 0 {
-					t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
-						tt.expected,
-						*brInt.score,
-					)
-				}
+			builderResult := tt.input1.WithComparisonManager(false).QgramDistanceCustomNgram(tt.input2, "Test")
+			if builderResult != tt.expected {
+				t.Errorf("QgramDistanceCustomNgramBuilder - expected %d - got %d",
+					tt.expected,
+					builderResult,
+				)
 			}
 		})
 	}
@@ -1041,6 +963,7 @@ func TestQgramSimilarity(t *testing.T) {
 	var val8 float32 = 0.0
 	var val9 float32 = 0.0
 	var val10 float32 = 0.0
+	var val11 float32 = 0.80000
 
 	tests := []struct {
 		name     string
@@ -1060,37 +983,24 @@ func TestQgramSimilarity(t *testing.T) {
 		{"QgramSim8", "HELLO WORLD", "hello world", 3, &val8},
 		{"QgramSim9", "Hello World", "", 3, &val9},
 		{"QgramSim10", "", "Hello world", 3, &val10},
-		{"QgramSim11", "Hello World", "ello world", -99, nil},
+		{"QgramSim11", "Hello World", "ello world", -99, &val11},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			helperResult := qgramSimilarity(tt.input1, tt.input2, tt.q)
 			result := QgramSimilarity(tt.input1, tt.input2, tt.q)
-			builderResult := New(tt.input1).WithComparisonManager().QgramSimilarity(tt.input2, tt.q).comparisonManager
-			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(*helperResult.score)) >
+			builderResult := New(tt.input1).WithComparisonManager(false).QgramSimilarity(tt.input2, tt.q)
+			if tt.expected != nil && (math.Abs(float64(*tt.expected)-float64(helperResult)) >
 				types.Float64EqualityThreshold ||
-				math.Abs(float64(*tt.expected)-float64(*result.score)) > types.Float64EqualityThreshold) {
-				t.Errorf("QgramSimilarity - expected %f - got %f / %f",
+				math.Abs(float64(*tt.expected)-float64(result)) > types.Float64EqualityThreshold) ||
+				math.Abs(float64(*tt.expected)-float64(builderResult)) > types.Float64EqualityThreshold {
+				t.Errorf("QgramSimilarity - expected %f - got %f / %f / %f",
 					*tt.expected,
-					*helperResult.score,
-					*result.score,
+					helperResult,
+					result,
+					builderResult,
 				)
-			}
-			if brFloat, ok := (*builderResult.ComparisonResults[QGramSim][tt.input2]).(*ComparisonResultFloat); ok {
-				if tt.expected != nil &&
-					math.Abs(float64(*tt.expected)-float64(*brFloat.score)) > types.Float64EqualityThreshold {
-					t.Errorf("QgramSimilarity - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
-				if tt.expected == nil && brFloat.score != nil {
-					t.Errorf("QgramSimilarity - expected %f - got %f",
-						*tt.expected,
-						*brFloat.score,
-					)
-				}
 			}
 		})
 	}
@@ -1131,7 +1041,7 @@ func TestShingle(t *testing.T) {
 					)
 				}
 				builderResult := New(tt.input).
-					WithComparisonManager().
+					WithComparisonManager(false).
 					Shingle(tt.k).
 					GetComparisonManager().
 					ShingleResults[ShinglesMap][tt.k]
@@ -1503,7 +1413,7 @@ func TestSimilarity(t *testing.T) {
 			result := Similarity(tt.input1, tt.input2, tt.algorithm)
 			rScore, rErr := result.GetScore()
 			brSim := New(tt.input1).
-				WithComparisonManager().
+				WithComparisonManager(false).
 				Similarity(tt.input2, tt.algorithm).
 				comparisonManager.
 				SimilarityResults[tt.algorithm][tt.input2]

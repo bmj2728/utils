@@ -412,13 +412,17 @@ func TestStringBuilderPrint(t *testing.T) {
 			}
 			if tt.name == "Test 2" {
 				if New(tt.input).
-					WithComparisonManager().
+					WithComparisonManager(false).
 					setError(errors.New("error"), true).
 					formatOutput() != tt.expected {
-					t.Errorf("Expected %q, got %q for %s", tt.expected,
-						New(tt.input).WithComparisonManager().HammingDistance("ERROR").formatOutput(), tt.name)
+					t.Errorf("Expected %q", tt.expected)
 				}
-				New(tt.input).WithComparisonManager().HammingDistance("ERROR").Print()
+				prt := New(tt.input).WithComparisonManager(false)
+				_, err := prt.HammingDistance("ERROR")
+				if err != nil {
+					prt.Print()
+				}
+				prt.Print()
 			}
 		})
 	}
@@ -435,19 +439,19 @@ func TestStringBuilderResult(t *testing.T) {
 		{"BuilderResult1", New("Hello World"), "Hello World", false, false},
 		{"BuilderResult2",
 			New("Hello World").
-				WithComparisonManager(),
+				WithComparisonManager(false),
 			"Hello World",
 			false,
 			true},
 		{"BuilderResult3",
 			New("Hello World").
-				WithComparisonManager().HammingDistance("oops"),
+				WithComparisonManager(false).setError(errors.New("oops"), false),
 			"Hello World",
 			true,
 			true},
 		{"BuilderResult4",
 			New("Hello World").
-				WithComparisonManager(),
+				WithComparisonManager(false),
 			"Hello World",
 			false,
 			true},
@@ -475,17 +479,17 @@ func TestStringBuilderBuild(t *testing.T) {
 		{"BuilderBuild1", New("Hello World"), "Hello World", false},
 		{"BuilderBuild2",
 			New("Hello World").
-				WithComparisonManager(),
+				WithComparisonManager(false),
 			"Hello World",
 			false},
 		{"BuilderBuild3",
 			New("Hello World").
-				WithComparisonManager().HammingDistance("oops"),
+				WithComparisonManager(false).setError(errors.New("oops"), false),
 			"",
 			true},
 		{"BuilderBuild4",
 			New("Hello World").
-				WithComparisonManager().HammingDistance("Hello World!"),
+				WithComparisonManager(false).setError(errors.New("oops"), false),
 			"",
 			false},
 	}

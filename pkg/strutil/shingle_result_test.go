@@ -10,7 +10,7 @@ import (
 
 var (
 	shinMapPrt = New("ababababababababa").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(2).
 			ShingleSlice(2).
 			GetComparisonManager().
@@ -28,21 +28,21 @@ var (
 		"N-Gram Length: 2\nShingles Slice:\nba\nab\n"
 
 	shinMap1 = New("ooooo").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(2).
 			ShingleSlice(2).
 			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMap2 = New("ooooo").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(2).
 			ShingleSlice(2).
 			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMap3 = New("aaaa").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			Shingle(1).
 			Shingle(2).
 			ShingleSlice(1).
@@ -50,13 +50,13 @@ var (
 			GetShingleResultsMap()
 
 	shinMap4 = New("abab").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			ShingleSlice(1).
 			GetComparisonManager().
 			GetShingleResultsMap()
 
 	shinMap5 = New("none").
-			WithComparisonManager().
+			WithComparisonManager(false).
 			GetComparisonManager().
 			GetShingleResultsMap()
 )

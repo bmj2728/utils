@@ -1,7 +1,6 @@
 package strutil
 
 import (
-	"errors"
 	"slices"
 
 	errors2 "github.com/bmj2728/utils/pkg/internal/errors"
@@ -9,7 +8,7 @@ import (
 	"github.com/hbollon/go-edlib"
 )
 
-// levenshteinDistance computes the Levenshtein distance between two strings and returns a ComparisonResultInt.
+// levenshteinDistance computes the Levenshtein distance between two strings and returns a ComparisonResult.
 // It calculates the minimum number of edits (insertions, deletions, substitutions)
 // required to transform one string into another.
 func levenshteinDistance(s1, s2 string) int {
@@ -27,7 +26,7 @@ func damerauLevenshteinDistance(str1, str2 string) int {
 }
 
 // osaDamerauLevenshteinDistance computes the optimal string alignment Damerau-Levenshtein distance between two strings.
-// It returns a pointer to a ComparisonResultInt containing the result of the comparison between `str1` and `str2`.
+// It returns a pointer to a ComparisonResult containing the result of the comparison between `str1` and `str2`.
 // The returned structure includes the calculated distance, input strings, and any
 // potential error encountered during computation.
 func osaDamerauLevenshteinDistance(str1, str2 string) int {
@@ -36,49 +35,38 @@ func osaDamerauLevenshteinDistance(str1, str2 string) int {
 }
 
 // lcs returns the length of the longest common subsequence between two input strings, string1 and string2.
-func lcs(str1 string, str2 string) *ComparisonResultInt {
+func lcs(str1 string, str2 string) int {
 	l := edlib.LCS(str1, str2)
-	return NewComparisonResultInt(LCSLength, str1, str2, nil, &l, nil)
+	return l
 }
 
 // lcsEditDistance computes the edit distance between two strings based on their Longest Common Subsequence (LCS).
-func lcsEditDistance(s1, s2 string) *ComparisonResultInt {
+func lcsEditDistance(s1, s2 string) int {
 	l := edlib.LCSEditDistance(s1, s2)
-	return NewComparisonResultInt(LCSDist, s1, s2, nil, &l, nil)
+	return l
 }
 
 // lcsBacktrack computes the longest common subsequence (LCS) between two input strings using backtracking.
 // It returns an LCSResult containing the LCS result or an error if the computation fails.
-func lcsBacktrack(str1 string, str2 string) *LCSResult {
-	var resultSlice []string
+func lcsBacktrack(str1 string, str2 string) (string, error) {
 	result, err := edlib.LCSBacktrack(str1, str2)
-	if err != nil {
-		return NewLCSResult(LCSBacktrackWord, str1, str2, nil, errors.Join(errors2.ErrLCSBacktrackFailure, err))
-	}
-	resultSlice = append(resultSlice, result)
-	return NewLCSResult(LCSBacktrackWord, str1, str2, &resultSlice, nil)
+	return result, err
 }
 
 // lcsBacktrackAll computes all possible longest common subsequences between two strings and returns an LCSResult.
 // It utilizes the edlib.LCSBacktrackAll function for computation and wraps the result into an LCSResult instance.
 // If an error occurs during computation, it is captured and included in the returned LCSResult.
-func lcsBacktrackAll(str1 string, str2 string) *LCSResult {
+func lcsBacktrackAll(str1 string, str2 string) ([]string, error) {
 	result, err := edlib.LCSBacktrackAll(str1, str2)
-	if err != nil {
-		return NewLCSResult(LCSBacktrackWordAll, str1, str2, nil, errors.Join(errors2.ErrLCSBacktrackAllFailure, err))
-	}
-	return NewLCSResult(LCSBacktrackWordAll, str1, str2, &result, nil)
+	return result, err
 }
 
 // lcsDiff calculates the LCS difference between two strings and returns a
 // pointer to an LCSResult containing the result.
 // Returns nil for the result if an error occurs during the calculation.
-func lcsDiff(str1, str2 string) *LCSResult {
+func lcsDiff(str1, str2 string) ([]string, error) {
 	result, err := edlib.LCSDiff(str1, str2)
-	if err != nil {
-		return NewLCSResult(LCSDiffSlice, str1, str2, nil, errors.Join(errors2.ErrLCSDiffFailure, err))
-	}
-	return NewLCSResult(LCSDiffSlice, str1, str2, &result, nil)
+	return result, err
 }
 
 // compareStringBuilderSlices compares two slices of StringBuilder for equality,
@@ -110,87 +98,87 @@ func compareStringBuilderSlices(s1, s2 []StringBuilder, nulls bool) bool {
 	return true
 }
 
-// hammingDistance computes the Hamming distance between two strings and returns a ComparisonResultInt instance.
+// hammingDistance computes the Hamming distance between two strings and returns a ComparisonResult instance.
 // Returns an error if the strings are not of equal length or if the distance calculation fails.
-func hammingDistance(s1, s2 string) *ComparisonResultInt {
+func hammingDistance(s1, s2 string) (int, error) {
 	dist, err := edlib.HammingDistance(s1, s2)
 	if err != nil {
-		return NewComparisonResultInt(HammingDist, s1, s2, nil, nil, errors.Join(errors2.ErrHammingDistanceFailure, err))
+		return -1, err
 	}
-	return NewComparisonResultInt(HammingDist, s1, s2, nil, &dist, nil)
+	return dist, err
 }
 
 // jaroSimilarity computes the Jaro similarity between two strings
 // and returns the result as a ComparisonResultFloat object.
-func jaroSimilarity(s1, s2 string) *ComparisonResultFloat {
+func jaroSimilarity(s1, s2 string) float32 {
 	js := edlib.JaroSimilarity(s1, s2)
-	return NewComparisonResultFloat(JaroSim, s1, s2, nil, &js, nil)
+	return js
 }
 
 // jaroWinklerSimilarity computes the Jaro-Winkler similarity between two input strings.
 // Returns a ComparisonResultFloat containing the similarity score and input data.
-func jaroWinklerSimilarity(s1, s2 string) *ComparisonResultFloat {
+func jaroWinklerSimilarity(s1, s2 string) float32 {
 	js := edlib.JaroWinklerSimilarity(s1, s2)
-	return NewComparisonResultFloat(JaroWinklerSim, s1, s2, nil, &js, nil)
+	return js
 }
 
 // jaccardSimilarity calculates the Jaccard similarity coefficient between two strings
 // using k-grams of a specified length.
 // Returns a ComparisonResultFloat object containing the result or an error if the splitLength is invalid (< 0).
-func jaccardSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
+func jaccardSimilarity(s1, s2 string, splitLength int) float32 {
 	if splitLength < 0 {
-		return NewComparisonResultFloat(JaccardSim, s1, s2, &splitLength, nil, errors2.ErrInvalidLengthRange)
+		splitLength = 0
 	}
 	js := edlib.JaccardSimilarity(s1, s2, splitLength)
-	return NewComparisonResultFloat(JaccardSim, s1, s2, &splitLength, &js, nil)
+	return js
 }
 
 // cosineSimilarity calculates the cosine similarity between two strings using n-gram splitting with the given length.
 // Returns a pointer to a ComparisonResultFloat containing the similarity score or an error
 // if the split length is invalid.
-func cosineSimilarity(s1, s2 string, splitLength int) *ComparisonResultFloat {
+func cosineSimilarity(s1, s2 string, splitLength int) float32 {
 	if splitLength < 0 {
-		return NewComparisonResultFloat(CosineSim, s1, s2, &splitLength, nil, errors2.ErrInvalidLengthRange)
+		splitLength = 0
 	}
 	cs := edlib.CosineSimilarity(s1, s2, splitLength)
-	return NewComparisonResultFloat(CosineSim, s1, s2, &splitLength, &cs, nil)
+	return cs
 }
 
 // sorensenDiceCoefficient calculates the Sørensen–Dice coefficient of two strings based on a specified n-gram length.
 // Returns a pointer to a ComparisonResultFloat, containing the coefficient
 // value or an error if the splitLength is invalid.
-func sorensenDiceCoefficient(s1, s2 string, splitLength int) *ComparisonResultFloat {
-	if splitLength < 0 {
-		return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, nil, errors2.ErrInvalidLengthRange)
+func sorensenDiceCoefficient(s1, s2 string, splitLength int) float32 {
+	if splitLength < 1 {
+		splitLength = 1
 	}
 	sdc := edlib.SorensenDiceCoefficient(s1, s2, splitLength)
-	return NewComparisonResultFloat(SorensenDiceCo, s1, s2, &splitLength, &sdc, nil)
+	return sdc
 }
 
 // qgramDistance computes the Q-Gram distance between two strings s1 and s2 using the specified q-gram size q.
-// Returns a ComparisonResultInt containing the computed distance or an error if q is invalid.
-func qgramDistance(s1, s2 string, q int) *ComparisonResultInt {
+// Returns a ComparisonResult containing the computed distance or an error if q is invalid.
+func qgramDistance(s1, s2 string, q int) int {
 	if q < 0 {
-		return NewComparisonResultInt(QGramDist, s1, s2, &q, nil, errors2.ErrInvalidLengthRange)
+		q = 0
 	}
 	qd := edlib.QgramDistance(s1, s2, q)
-	return NewComparisonResultInt(QGramDist, s1, s2, &q, &qd, nil)
+	return qd
 }
 
 // qgramDistanceCustomNgram calculates the Q-Gram distance between two n-gram maps and returns a comparison result.
-func qgramDistanceCustomNgram(nmap1, nmap2 map[string]int, customName string) *ComparisonResultInt {
+func qgramDistanceCustomNgram(nmap1, nmap2 map[string]int) int {
 	qdc := edlib.QgramDistanceCustomNgram(nmap1, nmap2)
-	return NewComparisonResultInt(QGramDistCust, "", customName, nil, &qdc, nil)
+	return qdc
 }
 
 // qgramSimilarity calculates the q-gram similarity between two strings with a specified q size.
 // Returns a ComparisonResultFloat containing the similarity score or an error if q is invalid.
-func qgramSimilarity(s1, s2 string, q int) *ComparisonResultFloat {
+func qgramSimilarity(s1, s2 string, q int) float32 {
 	if q < 1 {
-		return NewComparisonResultFloat(QGramSim, s1, s2, &q, nil, errors2.ErrInvalidLengthRange)
+		q = 1
 	}
 	qs := edlib.QgramSimilarity(s1, s2, q)
-	return NewComparisonResultFloat(QGramSim, s1, s2, &q, &qs, nil)
+	return qs
 }
 
 // shingle generates k-shingles for the given string and returns them

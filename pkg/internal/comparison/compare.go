@@ -1,6 +1,7 @@
 package comparison
 
 import (
+	"math"
 	"reflect"
 	"slices"
 )
@@ -38,4 +39,9 @@ func CompareSlices[T comparable](sl1, sl2 []T, nulls bool) bool {
 		continue
 	}
 	return true
+}
+
+// CompareFloats checks if the absolute difference between two float64 values exceeds a specified threshold.
+func CompareFloats(f1, f2 float64, threshold float64) bool {
+	return math.Abs(f1-f2) < threshold
 }

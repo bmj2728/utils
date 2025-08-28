@@ -2,43 +2,53 @@ package strutil
 
 import "testing"
 
+func genLCSMap1() LCSResultsMap {
+	x := New("With great power there must also come great responsibility.").WithComparisonManager(false)
+	_, _ = x.LCSBacktrack("With great power comes great responsibility.")
+	_, _ = x.LCSBacktrackAll("With great power comes great responsibility.")
+	_, _ = x.LCSDiff("With great power comes great responsibility.")
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
+func genLCSMap2() LCSResultsMap {
+	x := New("With great power there must also come great responsibility.").WithComparisonManager(false)
+	_, _ = x.LCSBacktrack("With great power comes great responsibility.")
+	_, _ = x.LCSBacktrackAll("With great power comes great responsibility.")
+	_, _ = x.LCSDiff("With great power comes great responsibility.")
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
+func genLCSMap3() LCSResultsMap {
+	x := New("Hello, World!").WithComparisonManager(false)
+	_, _ = x.LCSBacktrack("Hello World")
+	_, _ = x.LCSBacktrack("Hello Whirled")
+	_, _ = x.LCSBacktrackAll("Hello World")
+	_, _ = x.LCSDiff("Hello World")
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
+func genLCSMap4() LCSResultsMap {
+	x := New("With great power there must also come great responsibility.").WithComparisonManager(false)
+	_, _ = x.LCSBacktrack("With great power comes great responsibility.")
+	_, _ = x.LCSDiff("With great power comes great responsibility.")
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
+func genLCSMap5() LCSResultsMap {
+	x := New("With great power there must also come great responsibility.").WithComparisonManager(false)
+	return x.GetComparisonManager().GetLCSResultsMap()
+}
+
 var (
-	lcsMap1 = New("With great power there must also come great responsibility.").
-		WithComparisonManager().
-		LCSBacktrack("With great power comes great responsibility.").
-		LCSBacktrackAll("With great power comes great responsibility.").
-		LCSDiff("With great power comes great responsibility.").
-		GetComparisonManager().
-		GetLCSResultsMap()
+	lcsMap1 = genLCSMap1()
 
-	lcsMap2 = New("With great power there must also come great responsibility.").
-		WithComparisonManager().
-		LCSBacktrack("With great power comes great responsibility.").
-		LCSBacktrackAll("With great power comes great responsibility.").
-		LCSDiff("With great power comes great responsibility.").
-		GetComparisonManager().
-		GetLCSResultsMap()
+	lcsMap2 = genLCSMap2()
 
-	lcsMap3 = New("Hello, World!").
-		WithComparisonManager().
-		LCSBacktrack("Hello World").
-		LCSBacktrack("Hello Whirled").
-		LCSBacktrackAll("Hello World").
-		LCSDiff("Hello World").
-		GetComparisonManager().
-		GetLCSResultsMap()
+	lcsMap3 = genLCSMap3()
 
-	lcsMap4 = New("With great power there must also come great responsibility.").
-		WithComparisonManager().
-		LCSBacktrack("With great power comes great responsibility.").
-		LCSDiff("With great power comes great responsibility.").
-		GetComparisonManager().
-		GetLCSResultsMap()
+	lcsMap4 = genLCSMap4()
 
-	lcsMap5 = New("With great power there must also come great responsibility.").
-		WithComparisonManager().
-		GetComparisonManager().
-		GetLCSResultsMap()
+	lcsMap5 = genLCSMap5()
 
 	lcsMapPrintLongOpt1 = "***LCS Results for LCS Backtrack***\n\n" +
 		"LCS Backtrack:\n" +

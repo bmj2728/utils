@@ -23,7 +23,7 @@ func NewComparisonManager() *ComparisonManager {
 // GetComparisonResultsMap returns the ComparisonResultsMap from the ComparisonManager instance.
 func (cm *ComparisonManager) GetComparisonResultsMap() ComparisonResultsMap {
 	if cm.ComparisonResults == nil {
-		return nil
+		cm.ComparisonResults = NewComparisonResultsMap()
 	}
 	return cm.ComparisonResults
 }
@@ -31,13 +31,13 @@ func (cm *ComparisonManager) GetComparisonResultsMap() ComparisonResultsMap {
 // CopyComparisonResultsMap returns a copy of the ComparisonResultsMap from the ComparisonManager instance.
 func (cm *ComparisonManager) CopyComparisonResultsMap() ComparisonResultsMap {
 	if cm.ComparisonResults == nil {
-		return nil
+		cm.ComparisonResults = NewComparisonResultsMap()
 	}
 	return cm.ComparisonResults.GetCopy()
 }
 
 // AddComparisonResult inserts a ComparisonResult into the ComparisonResultsMap, organizing it by type and first string.
-func (cm *ComparisonManager) AddComparisonResult(result ComparisonResult) {
+func (cm *ComparisonManager) AddComparisonResult(result *ComparisonResult) {
 	if cm.ComparisonResults == nil {
 		cm.ComparisonResults = NewComparisonResultsMap()
 	}
@@ -48,24 +48,24 @@ func (cm *ComparisonManager) AddComparisonResult(result ComparisonResult) {
 // provided type and string key.
 func (cm *ComparisonManager) GetComparisonResult(compResType ComparisonResultType, compStr string) ComparisonResult {
 	if cm.ComparisonResults == nil {
-		return nil
+		cm.ComparisonResults = NewComparisonResultsMap()
 	}
-	return cm.ComparisonResults.Get(compResType, compStr)
+	return *cm.ComparisonResults.Get(compResType, compStr)
 }
 
 // FilterComparisonResultsByType filters and returns a map of ComparisonResults matching the specified type.
 func (cm *ComparisonManager) FilterComparisonResultsByType(compType ComparisonResultType) ComparisonResultsMap {
 	if cm.ComparisonResults == nil {
-		return nil
+		cm.ComparisonResults = NewComparisonResultsMap()
 	}
 	return cm.ComparisonResults.FilterByType(compType)
 }
 
 // GetComparisonResultsByType retrieves all ComparisonResults of the
 // specified ComparisonResultType from the ComparisonResults map.
-func (cm *ComparisonManager) GetComparisonResultsByType(compResType ComparisonResultType) []ComparisonResult {
+func (cm *ComparisonManager) GetComparisonResultsByType(compResType ComparisonResultType) []*ComparisonResult {
 	if cm.ComparisonResults == nil {
-		return nil
+		cm.ComparisonResults = NewComparisonResultsMap()
 	}
 	return cm.ComparisonResults.GetByType(compResType)
 }
@@ -74,16 +74,16 @@ func (cm *ComparisonManager) GetComparisonResultsByType(compResType ComparisonRe
 // entries matching compStr.
 func (cm *ComparisonManager) FilterComparisonResultsByComparisonString(compStr string) ComparisonResultsMap {
 	if cm.ComparisonResults == nil {
-		return nil
+		cm.ComparisonResults = NewComparisonResultsMap()
 	}
 	return cm.ComparisonResults.FilterByComparisonString(compStr)
 }
 
 // GetComparisonResultsByString retrieves all ComparisonResult objects
 // associated with the given string key from ComparisonResults.
-func (cm *ComparisonManager) GetComparisonResultsByString(compStr string) []ComparisonResult {
+func (cm *ComparisonManager) GetComparisonResultsByString(compStr string) []*ComparisonResult {
 	if cm.ComparisonResults == nil {
-		return nil
+		cm.ComparisonResults = NewComparisonResultsMap()
 	}
 	return cm.ComparisonResults.GetByComparisonString(compStr)
 }
