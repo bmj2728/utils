@@ -223,11 +223,9 @@ var (
 	compWord     = "Hi"
 	ngramLength  = 2
 	allWithFatal = New(inWord).
-			WithComparisonManager(false).
 			WithHistory(10).
 			setError(errors.ErrUnknownError, true)
 	allWithNonFatal = New(inWord).
-			WithComparisonManager(false).
 			WithHistory(10).
 			setError(errors.ErrUnknownError, false)
 )
@@ -437,103 +435,6 @@ func TestBuilderError(t *testing.T) {
 				t.Errorf("SanitizeHTML failed, expected %t, got %t", tt.expected,
 					tt.input.SanitizeHTML().String() == "")
 			}
-			_ = tt.input.LevenshteinDistance(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("LevenshteinDistance failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.LevenshteinDistance(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("Damarau-LevenshteinDistance failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.OSADamerauLevenshteinDistance(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("OSA Damarau-LevenshteinDistance failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.LCS(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("LCS failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.LCSEditDistance(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("LCSEditDistance failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_, _ = tt.input.LCSBacktrack(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("LCS Backtrack failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_, _ = tt.input.LCSBacktrackAll(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("LCSBacktrackAll failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_, _ = tt.input.LCSDiff(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("LCS Diff failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_, _ = tt.input.HammingDistance(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("HammingDistance failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.JaroSimilarity(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("JaroSimilarity failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.JaroWinklerSimilarity(compWord)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("JaroWinklerSimilarity failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.JaccardSimilarity(compWord, ngramLength)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("JaccardSimilarity failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.CosineSimilarity(compWord, ngramLength)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("CosineSimilarity failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.SorensenDiceCoefficient(compWord, ngramLength)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("SorensenDiceCoefficient failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.QgramDistance(compWord, ngramLength)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("QgramDistance failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.QgramSimilarity(compWord, ngramLength)
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("QgramSimilarity failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			_ = tt.input.QgramDistanceCustomNgram(map[string]int{"hi": 1}, "custom")
-			if tt.input.String() == "" != tt.expected {
-				t.Errorf("QgramDistanceCustom failed, expected %t, got %t", tt.expected,
-					tt.input.String() == "")
-			}
-			if tt.input.Shingle(ngramLength).String() == "" != tt.expected {
-				t.Errorf("Shingle failed, expected %t, got %t", tt.expected,
-					tt.input.Shingle(ngramLength).String() == "")
-			}
-			if tt.input.ShingleSlice(ngramLength).String() == "" != tt.expected {
-				t.Errorf("ShingleSlice failed, expected %t, got %t", tt.expected,
-					tt.input.ShingleSlice(ngramLength).String() == "")
-			}
-			if tt.input.Similarity(compWord, Levenshtein).String() == "" != tt.expected {
-				t.Errorf("Similarity failed, expected %t, got %t", tt.expected,
-					tt.input.Similarity(compWord, Levenshtein).String() == "")
-			}
 			if tt.input.RemoveNonPrintable().String() == "" != tt.expected {
 				t.Errorf("RemoveNonPrintable failed, expected %t, got %t", tt.expected,
 					tt.input.RemoveNonPrintable().String() == "")
@@ -715,22 +616,6 @@ func TestBuilderError(t *testing.T) {
 			if tt.expected == true && tt.input.LastAlphaNumericIndex() != -1 {
 				t.Errorf("LastAlphaNumericIndex failed expected %t, got %t",
 					tt.expected, tt.input.LastAlphaNumericIndex() != 1)
-			}
-			fm, err := tt.input.FuzzyMatch([]string{"x"}, Cosine)
-			if tt.expected == true && (fm != "" || err == nil) {
-				t.Errorf("FuzzyMatch failed expected %s got %s", "", fm)
-			}
-			fmt, err := tt.input.FuzzyMatchWithThreshold([]string{"x"}, 0.5, Cosine)
-			if tt.expected == true && (fmt != "" || err == nil) {
-				t.Errorf("FuzzyMatchWithThreshold failed expected %s got %s", "", fm)
-			}
-			fms, err := tt.input.FuzzyMatchSet([]string{"x"}, 1, Cosine)
-			if tt.expected == true && (fms != nil || err == nil) {
-				t.Errorf("FuzzyMatchSet failed expected %s got %s", "", fms)
-			}
-			fmst, err := tt.input.FuzzyMatchSetWithThreshold([]string{"x"}, 1, 0.5, Cosine)
-			if tt.expected == true && (fmst != nil || err == nil) {
-				t.Errorf("FuzzyMatchSetWithThreshold failed expected %s got %s", "", fmst)
 			}
 			if tt.input.Substrings() == nil != tt.expected {
 				t.Errorf("Substrings failed, expected %t, got %t", tt.expected,

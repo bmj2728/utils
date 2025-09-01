@@ -8,14 +8,12 @@ import (
 
 // StringBuilder Type & Core Methods
 type StringBuilder struct {
-	value             string
-	err               error
-	originalValue     string
-	lazyCompMan       bool
-	comparisonManager *ComparisonManager
-	history           *StringHistory
-	lazyIndices       bool
-	indices           *Indices
+	value         string
+	err           error
+	originalValue string
+	history       *StringHistory
+	lazyIndices   bool
+	indices       *Indices
 }
 
 // Print outputs the value stored in the StringBuilder if no error exists and returns the StringBuilder itself.
@@ -59,18 +57,6 @@ func (sb *StringBuilder) WithIndices(isLazy bool) *StringBuilder {
 	return sb
 }
 
-// WithComparisonManager initializes or queues initialization of a ComparisonManager based on the isLazy flag.
-// If isLazy is false and no ComparisonManager exists, it is initialized immediately.
-// If isLazy is true, initialization is deferred until later use.
-func (sb *StringBuilder) WithComparisonManager(isLazy bool) *StringBuilder {
-	if sb.comparisonManager == nil && !isLazy {
-		sb.comparisonManager = NewComparisonManager()
-	} else {
-		sb.lazyCompMan = true
-	}
-	return sb
-}
-
 // WithHistory initializes the history for the StringBuilder if it does not already exist and returns the instance.
 func (sb *StringBuilder) WithHistory(limit int) *StringBuilder {
 	if sb.history == nil {
@@ -91,11 +77,6 @@ func (sb *StringBuilder) updateHistory(s string) *StringBuilder {
 		sb.history.Add(s)
 	}
 	return sb
-}
-
-// GetComparisonManager returns the associated ComparisonManager instance of the StringBuilder.
-func (sb *StringBuilder) GetComparisonManager() *ComparisonManager {
-	return sb.comparisonManager
 }
 
 // Build constructs the final string from the StringBuilder and returns it along with any encountered error.

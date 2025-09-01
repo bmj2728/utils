@@ -73,6 +73,9 @@ var (
 
 	// ErrMissingSuffix indicates that the required suffix is missing from a string.
 	ErrMissingSuffix = errors.New("missing suffix")
+
+	// ErrInvalidSplitLength indicates that the provided split length is invalid or does not meet the required criteria.
+	ErrInvalidSplitLength = errors.New("invalid split length")
 )
 
 // CompareErrors compares two error values for equality by checking their string representations.
