@@ -38,9 +38,6 @@ var (
 	// ErrInvalidDomain indicates that the provided string is not a valid domain.
 	ErrInvalidDomain = errors.New("invalid domain")
 
-	// ErrShingleLengthOutOfRange indicates that the shingle length provided is outside the acceptable range.
-	ErrShingleLengthOutOfRange = errors.New("shingle length out of range")
-
 	// ErrUnknownError represents an unknown error, typically used when no specific error or score applies.
 	ErrUnknownError = errors.New("no score or error")
 
@@ -50,17 +47,11 @@ var (
 	// ErrNotNormalizedUnicode indicates that a string is not in a normalized Unicode format.
 	ErrNotNormalizedUnicode = errors.New("string is not normalized unicode")
 
-	// ErrNilScore is returned when the expected score is nil but no specific error is associated.
-	ErrNilScore = errors.New("score is nil")
-
 	// ErrInvalidHistoryIndex indicates that the provided index is out of bounds for the history collection.
 	ErrInvalidHistoryIndex = errors.New("invalid history index")
 
 	// ErrHistoryNotInitialized indicates that the history has not been initialized prior to use.
 	ErrHistoryNotInitialized = errors.New("history not initialized")
-
-	// ErrInvalidNgramMap indicates that the provided ngram map is invalid.
-	ErrInvalidNgramMap = errors.New("invalid ngram map")
 
 	// ErrPatternNotFound indicates that the specified pattern could not be found.
 	ErrPatternNotFound = errors.New("pattern not found")
@@ -73,9 +64,6 @@ var (
 
 	// ErrMissingSuffix indicates that the required suffix is missing from a string.
 	ErrMissingSuffix = errors.New("missing suffix")
-
-	// ErrInvalidSplitLength indicates that the provided split length is invalid or does not meet the required criteria.
-	ErrInvalidSplitLength = errors.New("invalid split length")
 )
 
 // CompareErrors compares two error values for equality by checking their string representations.

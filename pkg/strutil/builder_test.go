@@ -221,7 +221,6 @@ func TestRevertNoHistoryFunc(t *testing.T) {
 var (
 	inWord       = "hi"
 	compWord     = "Hi"
-	ngramLength  = 2
 	allWithFatal = New(inWord).
 			WithHistory(10).
 			setError(errors.ErrUnknownError, true)
