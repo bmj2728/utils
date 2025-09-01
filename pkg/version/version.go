@@ -15,12 +15,14 @@ import (
 	"runtime/debug"
 )
 
+const UNKNOWN = "unknown"
+
 // Build information - set by ldflags during compilation
 var (
-	Version    = "dev"     // e.g. "v0.1.0" or "v0.0.0-dev.abc1234"
-	CommitHash = "unknown" // e.g. "abc1234"
-	BuildDate  = "unknown" // e.g. "2025-07-15T10:30:00Z"
-	GoVersion  = "unknown" // e.g. "go1.24.1"
+	Version    = "dev"   // e.g. "v0.1.0" or "v0.0.0-dev.abc1234"
+	CommitHash = UNKNOWN // e.g. "abc1234"
+	BuildDate  = UNKNOWN // e.g. "2025-07-15T10:30:00Z"
+	GoVersion  = UNKNOWN // e.g. "go1.24.1"
 )
 
 // BuildInfo contains version and build information
@@ -75,13 +77,13 @@ func (bi *BuildInfo) String() string {
 
 // IsDevelopment returns true if this is a development build
 func (bi *BuildInfo) IsDevelopment() bool {
-	return bi.Version == "dev" || bi.CommitHash == "unknown"
+	return bi.Version == "dev" || bi.CommitHash == UNKNOWN
 }
 
 // GetShortCommit returns the first 7 characters of the commit hash
 func (bi *BuildInfo) GetShortCommit() string {
-	if bi.CommitHash == "unknown" || bi.CommitHash == "" {
-		return "unknown"
+	if bi.CommitHash == UNKNOWN || bi.CommitHash == "" {
+		return UNKNOWN
 	}
 	if len(bi.CommitHash) >= 7 {
 		return bi.CommitHash[:7]
