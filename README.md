@@ -70,8 +70,7 @@ The heart of the library - comprehensive string manipulation with dual APIs!
 
 - **🎯 Dual API Design**: Choose your style - functional for simplicity, builder for chaining
 - **🧹 Sanitization & Cleaning**: HTML sanitization, whitespace normalization, character filtering
-- **📏 String Comparison**: Levenshtein, Jaro-Winkler, LCS, and more algorithms
-- **📊 Comparison Manager**: Track and organize multiple comparison results *(optional)*
+- **🧭 Indexing**: Build and query multiple index types (byte, rune, normalized UTF-32) *(optional)*
 - **🕐 History Tracking**: Revert transformations with full history *(optional)*
 - **🔧 Text Transformation**: Case conversion, slug generation, truncation, padding
 - **✅ Validation**: Email, URL, numeric, and custom pattern validation
@@ -156,29 +155,29 @@ email := strutil.LoremEmail()           // "lorem@ipsum.amet"
 paragraph := strutil.LoremParagraph()   // Full paragraph of lorem text
 ```
 
-### 📊 Advanced: Comparison Manager *(Optional)*
+### 🧭 Advanced: Indexing (Optional)
 
-Track multiple string comparison results in one place:
+Build and query indices across multiple coordinate systems:
 
 ```go
-// Create a builder with comparison manager
-manager := strutil.New("hello world").
-    WithComparisonManager().
-    LevenshteinDistance("hello there").
-    Similarity("hello there", strutil.JaroWinkler).
-    LCSBacktrack("hello there").
-    GetComparisonManager()
+import "github.com/bmj2728/utils/pkg/strutil"
 
-// Accessing results
-levDist, err := manager.GetComparisonResult(strutil.LevDist, "hello there").(*strutil.ComparisonResultInt).
-GetScoreInt()
-sim, err := manager.GetSimilarityResult(strutil.JaroWinkler, "hello there").GetScore()
-lcs := manager.GetLCSResult(strutil.LCSBacktrackWord, "hello there").GetResult()[0]
+// Create indices and add positions for a string and substring
+idxMap := strutil.NewIndexMap()
+idxMap.Add(strutil.NewStringIndex("Hello, 世界", "世", strutil.Byte, 7))
+idxMap.Add(strutil.NewStringIndex("Hello, 世界", "世", strutil.Rune, 7))
+idxMap.Add(strutil.NewStringIndex("Hello, 世界", "世", strutil.UTF32Norm, 7))
 
+// Retrieve by type
+runeEntries := idxMap.GetByIndexType(strutil.Rune)
 
-// Get all results for analysis
-allComparisons := manager.GetComparisonResultsMap()
-allSimilarities := manager.GetSimilarityResultsMap()
+// Filter by comparison string
+matches := idxMap.GetByComparisonString("Hello, 世界")
+
+// Work with the Indices helper
+indices := strutil.NewIndices()
+indices.IdxMap.Add(strutil.NewStringIndex("abc", "b", strutil.Byte, 1))
+indices.Reset() // clears and prepares for re-indexing after transformations
 ```
 
 ### 🕐 Advanced: History Tracking *(Optional)*
@@ -230,17 +229,16 @@ Exciting utilities coming in future releases:
 
 ## Acknowledgements 🙏
 
-This project stands on the shoulders of giants! We leverage these excellent open-source libraries:
+This project stands on the shoulders of giants—many thanks to the maintainers of these libraries we use:
 
-- [**go-edlib**](https://github.com/hbollon/go-edlib) - String comparison and edit distance algorithms for measuring similarity
-- [**bluemonday**](https://github.com/microcosm-cc/bluemonday) - HTML sanitizer for safe HTML cleaning
-- [**go-sanitize**](https://github.com/mrz1836/go-sanitize) - Powerful string cleaning and sanitization functions
-- [**strcase**](https://github.com/iancoleman/strcase) - Converting strings between different case formats
-- [**camelcase**](https://github.com/fatih/camelcase) - Splitting camelCase/PascalCase words into components
-- [**lorelai**](https://github.com/UltiRequiem/lorelai) - Versatile lorem ipsum generator for placeholder content
-- [**go-diacritics**](https://github.com/Regis24GmbH/go-diacritics) - Lightweight diacritics normalization
-- [**stripansi**](https://github.com/acarl005/stripansi) - ANSI escape sequence removal for clean output
-- [**google/uuid**](https://github.com/google/uuid) - Robust UUID implementation
+- [**bluemonday**](https://github.com/microcosm-cc/bluemonday) - HTML sanitization
+- [**go-sanitize**](https://github.com/mrz1836/go-sanitize) - String cleaning and sanitization helpers
+- [**strcase**](https://github.com/iancoleman/strcase) - Case conversions
+- [**camelcase**](https://github.com/fatih/camelcase) - Word splitting for camel/Pascal case
+- [**lorelai**](https://github.com/UltiRequiem/lorelai) - Lorem ipsum generation
+- [**go-diacritics**](https://github.com/Regis24GmbH/go-diacritics) - Diacritics normalization
+- [**stripansi**](https://github.com/acarl005/stripansi) - ANSI escape removal
+- [**google/uuid**](https://github.com/google/uuid) - UUID utilities
 
 ## License
 
