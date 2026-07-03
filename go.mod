@@ -1,6 +1,6 @@
 module github.com/bmj2728/utils
 
-go 1.24
+go 1.25.0
 
 require (
 	github.com/Regis24GmbH/go-diacritics v1.0.0
@@ -12,11 +12,11 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/mrz1836/go-sanitize v1.5.2
-	golang.org/x/text v0.28.0
+	golang.org/x/text v0.37.0
 )
 
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
-	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 )
